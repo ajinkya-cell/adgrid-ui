@@ -1,0 +1,24 @@
+import { registry } from "@/registry";
+import { NextResponse } from "next/server";
+import fs from "fs";
+import path from "path";
+
+export async function GET(
+  _req: Request,
+  { params }: { params: { slug: string } }
+) {
+  const entry = registry.find((c) => c.slug === params.slug);
+  if (!entry) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
+  const filePath = path.join(
+    process.cwd(),
+    "../../packages/ui/src",
+    entry.packagePath
+  );
+
+  const code = fs.readFileSync(filePath, "utf-8");
+
+  return NextResponse.json({ ...entry, code });
+}

@@ -1,20 +1,21 @@
 {
-  "name": "adgrid-ui",
+  "name": "adgrid-ui-monorepo",
   "private": true,
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "build:registry": "turbo build:registry",
+    "release": "turbo build && pnpm --filter @void-ui/ui publish"
   },
+  "packageManager": "pnpm@10.10.0",
   "devDependencies": {
-    "prettier": "^3.7.4",
-    "turbo": "^2.9.18",
-    "typescript": "5.9.2"
+    "@types/node": "^25.9.3",
+    "turbo": "latest",
+    "typescript": "^5.0.0"
   },
-  "packageManager": "pnpm@9.0.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=18",
+    "pnpm": ">=8"
   }
 }
