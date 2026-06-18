@@ -12,9 +12,11 @@ interface LivePreviewProps {
   dependencies?: string[];
   additionalFiles?: Record<string, string>;
   appCode?: string;
+  showCode?: boolean;
+  isWide?: boolean;
 }
 
-export function LivePreview({ code, componentName, dependencies = [], additionalFiles = {}, appCode }: LivePreviewProps) {
+export function LivePreview({ code, componentName, dependencies = [], additionalFiles = {}, appCode, showCode = false, isWide = false }: LivePreviewProps) {
   const defaultAppCode = `
 import { ${componentName} } from "./${componentName}";
 
@@ -46,6 +48,39 @@ export default function App() {
       files={{
         "/App.tsx": appCodeValue,
         [`/${componentName}.tsx`]: code,
+        "node_modules/next/image.tsx": `
+import React from "react";
+
+export default function MockImage({ src, alt, fill, width, height, className, style, ...props }: any) {
+  const imgStyle: React.CSSProperties = fill
+    ? {
+        position: "absolute",
+        height: "100%",
+        width: "100%",
+        left: 0,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        objectFit: "cover",
+        ...style,
+      }
+    : {
+        width: width ? \`\${width}px\` : undefined,
+        height: height ? \`\${height}px\` : undefined,
+        ...style,
+      };
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={className}
+      style={imgStyle}
+      {...props}
+    />
+  );
+}
+        `.trim(),
         ...additionalFiles,
       }}
       customSetup={{
@@ -53,15 +88,18 @@ export default function App() {
           "framer-motion": "latest",
           "clsx": "latest",
           "tailwind-merge": "latest",
+          "next": "latest",
           ...depVersions,
         },
       }}
       options={{ externalResources: ["https://cdn.tailwindcss.com"] }}
     >
       <SandpackLayout>
-        <SandpackCodeEditor showTabs showLineNumbers style={{ height: 380 }} />
-        <SandpackPreview style={{ height: 380 }} showOpenInCodeSandbox={false} />
+        {showCode && (
+          <SandpackCodeEditor showTabs showLineNumbers style={{ height: isWide ? 600 : 480 }} />
+        )}
+        <SandpackPreview style={{ height: isWide ? 600 : 480 }} showOpenInCodeSandbox={false} />
       </SandpackLayout>
     </SandpackProvider>
   );
-}
+}

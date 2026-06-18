@@ -1,0 +1,31 @@
+{
+  "name": "Fade In",
+  "slug": "fade-in",
+  "category": "animated",
+  "description": "Viewport-triggered fade with directional slide.",
+  "dependencies": [
+    "framer-motion"
+  ],
+  "packagePath": "animated/FadeIn.tsx",
+  "variants": [
+    {
+      "name": "Up",
+      "props": {
+        "direction": "up"
+      }
+    },
+    {
+      "name": "Left",
+      "props": {
+        "direction": "left"
+      }
+    },
+    {
+      "name": "Right",
+      "props": {
+        "direction": "right"
+      }
+    }
+  ],
+  "code": "\"use client\";\r\nimport { motion, type Variants } from \"framer-motion\";\r\n\r\nexport interface FadeInProps {\r\n  children: React.ReactNode;\r\n  direction?: \"up\" | \"down\" | \"left\" | \"right\";\r\n  delay?: number;\r\n  duration?: number;\r\n  className?: string;\r\n}\r\n\r\nconst directions = {\r\n  up: { y: 24 },\r\n  down: { y: -24 },\r\n  left: { x: 24 },\r\n  right: { x: -24 },\r\n};\r\n\r\nexport function FadeIn({\r\n  children,\r\n  direction = \"up\",\r\n  delay = 0,\r\n  duration = 0.5,\r\n  className,\r\n}: FadeInProps) {\r\n  const variants: Variants = {\r\n    hidden: { opacity: 0, ...directions[direction] },\r\n    visible: { opacity: 1, x: 0, y: 0 },\r\n  };\r\n\r\n  return (\r\n    <motion.div\r\n      initial=\"hidden\"\r\n      whileInView=\"visible\"\r\n      viewport={{ once: true, margin: \"-50px\" }}\r\n      transition={{ duration, delay, ease: [0.21, 0.47, 0.32, 0.98] }}\r\n      variants={variants}\r\n      className={className}\r\n    >\r\n      {children}\r\n    </motion.div>\r\n  );\r\n}"
+}

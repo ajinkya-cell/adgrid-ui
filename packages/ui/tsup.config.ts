@@ -7,6 +7,6 @@ export default defineConfig({
   splitting: true,
   sourcemap: true,
   clean: true,
-  external: ["react", "react-dom", "framer-motion", "gsap"],
+  external: ["react", "react-dom", "framer-motion", "gsap", "next", "next/image"],
   treeshake: true,
 });

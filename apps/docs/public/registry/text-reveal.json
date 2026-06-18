@@ -1,0 +1,11 @@
+{
+  "name": "Text Reveal",
+  "slug": "text-reveal",
+  "category": "animated",
+  "description": "Words fade in as you scroll past them.",
+  "dependencies": [
+    "framer-motion"
+  ],
+  "packagePath": "animated/TextReveal.tsx",
+  "code": "\"use client\";\r\nimport { useRef } from \"react\";\r\nimport { motion, useScroll, useTransform } from \"framer-motion\";\r\n\r\nexport interface TextRevealProps {\r\n  text: string;\r\n  className?: string;\r\n}\r\n\r\nexport function TextReveal({ text, className }: TextRevealProps) {\r\n  const ref = useRef<HTMLDivElement>(null);\r\n  const { scrollYProgress } = useScroll({\r\n    target: ref,\r\n    offset: [\"start 0.9\", \"end 0.3\"],\r\n  });\r\n\r\n  const words = text.split(\" \");\r\n\r\n  return (\r\n    <div ref={ref} className={className}>\r\n      <p className=\"flex flex-wrap gap-x-2\">\r\n        {words.map((word, i) => {\r\n          const start = i / words.length;\r\n          const end = (i + 1) / words.length;\r\n          return (\r\n            <Word key={i} progress={scrollYProgress} range={[start, end]}>\r\n              {word}\r\n            </Word>\r\n          );\r\n        })}\r\n      </p>\r\n    </div>\r\n  );\r\n}\r\n\r\nfunction Word({\r\n  children,\r\n  progress,\r\n  range,\r\n}: {\r\n  children: string;\r\n  progress: any;\r\n  range: [number, number];\r\n}) {\r\n  const opacity = useTransform(progress, range, [0.15, 1]);\r\n  return (\r\n    <motion.span style={{ opacity }} className=\"text-white font-display font-bold text-4xl tracking-tight\">\r\n      {children}\r\n    </motion.span>\r\n  );\r\n}"
+}

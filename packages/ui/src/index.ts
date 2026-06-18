@@ -15,6 +15,17 @@ export { GlitchText } from "./animated/GlitchText";
 export type { GlitchTextProps } from "./animated/GlitchText";
 export { CountUp } from "./animated/CountUp";
 export type { CountUpProps } from "./animated/CountUp";
+export { ImageReveal } from "./animated/ImageReveal";
+export type { ImageRevealProps } from "./animated/ImageReveal";
+export { ImageStack } from "./animated/ImageStack";
+export type { ImageStackProps } from "./animated/ImageStack";
+export { ImageParallax } from "./animated/ImageParallax";
+export type { ImageParallaxProps } from "./animated/ImageParallax";
+export { LivingText } from "./animated/LivingText";
+export type { LivingTextProps } from "./animated/LivingText";
+export { GravityCardStack } from "./animated/GravityCardStack";
+export { MorphingNav } from "./animated/MorphingNav";
+export { StoryTimeline } from "./animated/StoryTimeline";
 
 // utils
 export { cn } from "./lib/utils";

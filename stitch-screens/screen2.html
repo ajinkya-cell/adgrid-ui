@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MagneticButton - void/ui</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+        }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: #000000; }
+        ::-webkit-scrollbar-thumb { background: #262626; border-radius: 0px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ffffff; }
+        
+        .code-gradient {
+            background: linear-gradient(135deg, #0A0A0A 0%, #000000 100%);
+        }
+        
+        @keyframes pulse-border {
+            0% { border-color: #262626; }
+            50% { border-color: #ffffff; }
+            100% { border-color: #262626; }
+        }
+        .animate-border-pulse {
+            animation: pulse-border 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        .magnetic-wrap {
+            transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-fixed": "#e2e2e2",
+                      "secondary": "#c9c6c5",
+                      "inverse-primary": "#5d5f5f",
+                      "error-container": "#93000a",
+                      "secondary-fixed": "#e5e2e1",
+                      "surface-charcoal": "#0A0A0A",
+                      "background": "#141313",
+                      "secondary-container": "#4a4949",
+                      "surface-tint": "#c6c6c7",
+                      "tertiary": "#ffffff",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "primary-fixed-dim": "#c6c6c7",
+                      "on-primary-container": "#636565",
+                      "on-surface": "#e5e2e1",
+                      "surface": "#141313",
+                      "on-tertiary-fixed": "#1a1c1c",
+                      "surface-container-lowest": "#0e0e0e",
+                      "inverse-surface": "#e5e2e1",
+                      "on-secondary-fixed-variant": "#474646",
+                      "border-hairline": "#262626",
+                      "surface-variant": "#353434",
+                      "text-muted": "#888888",
+                      "pure-black": "#000000",
+                      "on-surface-variant": "#c4c7c8",
+                      "tertiary-fixed-dim": "#c6c6c7",
+                      "surface-container-low": "#1c1b1b",
+                      "surface-container": "#201f1f",
+                      "on-secondary": "#313030",
+                      "on-secondary-container": "#bab8b7",
+                      "primary": "#ffffff",
+                      "error": "#ffb4ab",
+                      "on-primary-fixed-variant": "#454747",
+                      "on-primary-fixed": "#1a1c1c",
+                      "inverse-on-surface": "#313030",
+                      "on-error-container": "#ffdad6",
+                      "outline": "#8e9192",
+                      "outline-variant": "#444748",
+                      "on-error": "#690005",
+                      "surface-container-high": "#2a2a2a",
+                      "on-tertiary": "#2f3131",
+                      "surface-bright": "#3a3939",
+                      "tertiary-container": "#e2e2e2",
+                      "on-tertiary-fixed-variant": "#454747",
+                      "on-primary": "#2f3131",
+                      "surface-dim": "#141313",
+                      "primary-container": "#e2e2e2",
+                      "secondary-fixed-dim": "#c9c6c5",
+                      "surface-container-highest": "#353434",
+                      "on-tertiary-container": "#636565",
+                      "on-background": "#e5e2e1",
+                      "primary-fixed": "#e2e2e2"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin": "24px",
+                      "column-12": "minmax(0, 1fr)",
+                      "gutter": "16px",
+                      "base": "4px"
+              },
+              "fontFamily": {
+                      "display-2xl": ["Space Grotesk"],
+                      "headline-lg": ["Space Grotesk"],
+                      "code-sm": ["JetBrains Mono"],
+                      "label-caps": ["JetBrains Mono"],
+                      "headline-lg-mobile": ["Space Grotesk"],
+                      "body-md": ["Inter"]
+              },
+              "fontSize": {
+                      "display-2xl": ["72px", {"lineHeight": "72px", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "code-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary selection:text-pure-black">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-background border-b border-border-hairline">
+<div class="flex justify-between items-center h-16 px-margin max-w-[1440px] mx-auto">
+<div class="font-display-2xl text-headline-lg-mobile uppercase tracking-tighter text-primary">void/ui</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-primary border-b-2 border-primary pb-1 font-body-md text-body-md hover:text-primary transition-colors" href="#">Components</a>
+<a class="text-text-muted font-body-md text-body-md hover:text-primary transition-colors" href="#">Hooks</a>
+<a class="text-text-muted font-body-md text-body-md hover:text-primary transition-colors" href="#">Showcase</a>
+<a class="text-text-muted font-body-md text-body-md hover:text-primary transition-colors" href="#">Templates</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary hover:bg-surface-container p-2 transition-colors">terminal</button>
+<button class="material-symbols-outlined text-primary hover:bg-surface-container p-2 transition-colors">dark_mode</button>
+</div>
+</div>
+</header>
+<div class="max-w-[1440px] mx-auto flex pt-16 min-h-screen">
+<!-- SideNavBar (Left Sidebar) -->
+<aside class="hidden lg:flex flex-col py-6 overflow-y-auto h-[calc(100vh-64px)] w-64 sticky top-16 border-r border-border-hairline bg-surface-charcoal font-code-sm text-code-sm">
+<div class="px-6 mb-8">
+<div class="font-display-2xl text-headline-lg text-primary leading-tight">Documentation</div>
+<div class="text-text-muted text-[10px] uppercase tracking-widest mt-1">v1.0.4-beta</div>
+</div>
+<div class="flex-1 space-y-1">
+<div class="px-6 py-2 text-text-muted uppercase text-[11px] font-bold tracking-widest">Foundation</div>
+<a class="flex items-center gap-3 px-6 py-2 text-text-muted hover:bg-surface-container-high hover:text-on-surface transition-none" href="#">
+<span class="material-symbols-outlined text-[18px]">rocket_launch</span> Getting Started
+                </a>
+<a class="flex items-center gap-3 px-6 py-2 text-text-muted hover:bg-surface-container-high hover:text-on-surface transition-none" href="#">
+<span class="material-symbols-outlined text-[18px]">download</span> Installation
+                </a>
+<a class="flex items-center gap-3 px-6 py-2 text-text-muted hover:bg-surface-container-high hover:text-on-surface transition-none" href="#">
+<span class="material-symbols-outlined text-[18px]">palette</span> Theming
+                </a>
+<div class="px-6 py-2 mt-6 text-text-muted uppercase text-[11px] font-bold tracking-widest">Components</div>
+<a class="flex items-center gap-3 px-6 py-2 bg-surface-container text-primary border-l-2 border-primary transition-none" href="#">
+<span class="material-symbols-outlined text-[18px]">animation</span> Animated
+                </a>
+<a class="flex items-center gap-3 px-6 py-2 text-text-muted hover:bg-surface-container-high hover:text-on-surface transition-none" href="#">
+<span class="material-symbols-outlined text-[18px]">category</span> Primitives
+                </a>
+<a class="flex items-center gap-3 px-6 py-2 text-text-muted hover:bg-surface-container-high hover:text-on-surface transition-none" href="#">
+<span class="material-symbols-outlined text-[18px]">bar_chart</span> Charts
+                </a>
+</div>
+<div class="mt-auto px-6 py-4 border-t border-border-hairline space-y-2">
+<a class="flex items-center gap-2 text-text-muted hover:text-primary transition-none" href="#">
+<span class="material-symbols-outlined text-[16px]">code</span> GitHub
+                </a>
+<a class="flex items-center gap-2 text-text-muted hover:text-primary transition-none" href="#">
+<span class="material-symbols-outlined text-[16px]">package</span> NPM
+                </a>
+</div>
+</aside>
+<!-- Main Content (Center) -->
+<main class="flex-1 px-8 py-12 max-w-4xl">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 text-text-muted font-code-sm text-code-sm mb-6">
+<a class="hover:text-primary" href="#">Docs</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<a class="hover:text-primary" href="#">Components</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary">MagneticButton</span>
+</nav>
+<!-- Title & Header -->
+<div class="flex items-start justify-between mb-8">
+<div>
+<div class="flex items-center gap-4 mb-2">
+<h1 class="font-display-2xl text-[48px] leading-none text-primary">MagneticButton</h1>
+<span class="px-2 py-0.5 border border-primary text-[10px] font-bold tracking-tighter uppercase animate-border-pulse">Beta Component</span>
+</div>
+<p class="text-text-muted text-lg max-w-2xl font-body-md">
+                        A high-performance interactive trigger that attracts towards the user's cursor within a defined radius. Perfect for CTAs that demand attention.
+                    </p>
+</div>
+</div>
+<!-- Preview Area -->
+<section class="relative h-96 w-full border border-border-hairline bg-pure-black overflow-hidden mb-12 flex items-center justify-center">
+<div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: radial-gradient(#262626 1px, transparent 1px); background-size: 20px 20px;"></div>
+<div class="relative z-10 p-24" id="magnetic-container">
+<button class="magnetic-wrap group relative px-8 py-4 bg-transparent border border-primary text-primary font-code-sm text-code-sm overflow-hidden flex items-center gap-2" id="magnetic-element">
+<span class="relative z-10 group-hover:text-pure-black transition-colors duration-0 uppercase tracking-widest font-bold">Initialize Sequence</span>
+<span class="material-symbols-outlined relative z-10 group-hover:text-pure-black transition-colors duration-0">arrow_forward</span>
+<div class="absolute inset-0 bg-primary translate-y-full group-hover:translate-y-0 transition-transform duration-0"></div>
+</button>
+</div>
+<div class="absolute bottom-4 right-4 flex items-center gap-4">
+<div class="flex items-center gap-2 text-text-muted font-code-sm text-[11px] uppercase tracking-wider">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span> Sandbox Active
+                    </div>
+</div>
+</section>
+<!-- Installation Section -->
+<section class="mb-12">
+<h2 class="font-display-2xl text-headline-lg text-primary mb-4">Installation</h2>
+<div class="border border-border-hairline bg-surface-charcoal p-1 font-code-sm">
+<div class="flex items-center justify-between px-4 py-2 border-b border-border-hairline bg-surface-container">
+<span class="text-text-muted text-[11px] uppercase font-bold">Terminal</span>
+<button class="material-symbols-outlined text-text-muted hover:text-primary text-[18px]">content_copy</button>
+</div>
+<div class="p-4 overflow-x-auto text-on-surface">
+<span class="text-primary">npx</span> void-ui add magnetic-button
+                    </div>
+</div>
+</section>
+<!-- Usage Section -->
+<section class="mb-12">
+<h2 class="font-display-2xl text-headline-lg text-primary mb-4">Usage</h2>
+<div class="border border-border-hairline bg-surface-charcoal font-code-sm">
+<div class="flex items-center justify-between px-4 py-2 border-b border-border-hairline bg-surface-container">
+<span class="text-text-muted text-[11px] uppercase font-bold">Component.tsx</span>
+<button class="material-symbols-outlined text-text-muted hover:text-primary text-[18px]">content_copy</button>
+</div>
+<div class="p-6 space-y-1">
+<div class="flex gap-4"><span class="text-text-muted w-4">1</span><span class="text-blue-400">import</span> { MagneticButton } <span class="text-blue-400">from</span> <span class="text-emerald-400">"@void/ui"</span>;</div>
+<div class="flex gap-4"><span class="text-text-muted w-4">2</span> </div>
+<div class="flex gap-4"><span class="text-text-muted w-4">3</span><span class="text-blue-400">export default function</span> <span class="text-yellow-200">App</span>() {</div>
+<div class="flex gap-4"><span class="text-text-muted w-4">4</span>  <span class="text-blue-400">return</span> (</div>
+<div class="flex gap-4"><span class="text-text-muted w-4">5</span>    &lt;<span class="text-primary">MagneticButton</span></div>
+<div class="flex gap-4"><span class="text-text-muted w-4">6</span>      <span class="text-secondary">strength</span>={<span class="text-orange-300">0.5</span>}</div>
+<div class="flex gap-4"><span class="text-text-muted w-4">7</span>      <span class="text-secondary">radius</span>={<span class="text-orange-300">200</span>}</div>
+<div class="flex gap-4"><span class="text-text-muted w-4">8</span>    &gt;</div>
+<div class="flex gap-4"><span class="text-text-muted w-4">9</span>      Launch Mission</div>
+<div class="flex gap-4"><span class="text-text-muted w-4">10</span>    &lt;/<span class="text-primary">MagneticButton</span>&gt;</div>
+<div class="flex gap-4"><span class="text-text-muted w-4">11</span>  );</div>
+<div class="flex gap-4"><span class="text-text-muted w-4">12</span>}</div>
+</div>
+</div>
+</section>
+<!-- Props Table -->
+<section class="mb-12">
+<h2 class="font-display-2xl text-headline-lg text-primary mb-6">Props API</h2>
+<div class="border border-border-hairline overflow-hidden">
+<table class="w-full text-left font-code-sm text-code-sm border-collapse">
+<thead>
+<tr class="bg-surface-charcoal border-b border-border-hairline">
+<th class="px-4 py-3 text-text-muted font-bold uppercase tracking-wider">Property</th>
+<th class="px-4 py-3 text-text-muted font-bold uppercase tracking-wider">Type</th>
+<th class="px-4 py-3 text-text-muted font-bold uppercase tracking-wider">Default</th>
+<th class="px-4 py-3 text-text-muted font-bold uppercase tracking-wider">Description</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-hairline">
+<tr class="hover:bg-surface-container transition-colors">
+<td class="px-4 py-4 text-primary">strength</td>
+<td class="px-4 py-4 text-secondary">number</td>
+<td class="px-4 py-4 text-text-muted">0.3</td>
+<td class="px-4 py-4">Pull force multiplier (0-1).</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors">
+<td class="px-4 py-4 text-primary">radius</td>
+<td class="px-4 py-4 text-secondary">number</td>
+<td class="px-4 py-4 text-text-muted">150</td>
+<td class="px-4 py-4">Detection radius in pixels.</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors">
+<td class="px-4 py-4 text-primary">damping</td>
+<td class="px-4 py-4 text-secondary">number</td>
+<td class="px-4 py-4 text-text-muted">0.15</td>
+<td class="px-4 py-4">Elasticity of the return snap.</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors">
+<td class="px-4 py-4 text-primary">variant</td>
+<td class="px-4 py-4 text-secondary">'solid' | 'outline'</td>
+<td class="px-4 py-4 text-text-muted">'outline'</td>
+<td class="px-4 py-4">Visual style preset.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</main>
+<!-- Table of Contents (Right Sidebar) -->
+<aside class="hidden xl:block w-64 h-[calc(100vh-64px)] sticky top-16 border-l border-border-hairline px-8 py-12">
+<div class="font-code-sm text-code-sm">
+<div class="text-text-muted uppercase text-[11px] font-bold tracking-widest mb-4">On This Page</div>
+<nav class="space-y-3">
+<a class="block text-primary hover:text-primary border-l-2 border-primary pl-4 -ml-[2px]" href="#preview">Component Preview</a>
+<a class="block text-text-muted hover:text-primary border-l-2 border-transparent pl-4 -ml-[2px]" href="#installation">Installation</a>
+<a class="block text-text-muted hover:text-primary border-l-2 border-transparent pl-4 -ml-[2px]" href="#usage">Usage</a>
+<a class="block text-text-muted hover:text-primary border-l-2 border-transparent pl-4 -ml-[2px]" href="#props">Props API</a>
+<a class="block text-text-muted hover:text-primary border-l-2 border-transparent pl-4 -ml-[2px]" href="#examples">Examples</a>
+</nav>
+<div class="mt-12 p-6 border border-border-hairline bg-surface-charcoal">
+<div class="text-primary font-bold mb-2">Need Help?</div>
+<p class="text-text-muted text-[13px] mb-4">Join our Discord community for real-time support.</p>
+<button class="w-full py-2 bg-primary text-pure-black font-bold uppercase text-[11px] tracking-widest hover:bg-white transition-colors">Join Discord</button>
+</div>
+</div>
+</aside>
+</div>
+<!-- Footer -->
+<footer class="w-full py-12 bg-pure-black border-t border-border-hairline mt-24">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin max-w-[1440px] mx-auto gap-gutter font-label-caps text-label-caps">
+<div class="text-text-muted">© 2024 VOID/UI CORE TEAM. BUILT FOR THE VOID.</div>
+<div class="flex gap-8">
+<a class="text-text-muted hover:text-white underline transition-none" href="#">Privacy Policy</a>
+<a class="text-text-muted hover:text-white underline transition-none" href="#">Terms of Service</a>
+<a class="text-text-muted hover:text-white underline transition-none" href="#">Security</a>
+<a class="text-text-muted hover:text-white underline transition-none" href="#">Status</a>
+</div>
+</div>
+</footer>
+<script>
+        // Magnetic Button Micro-interaction logic
+        const container = document.getElementById('magnetic-container');
+        const element = document.getElementById('magnetic-element');
+        
+        if (container && element) {
+            container.addEventListener('mousemove', (e) => {
+                const rect = element.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                
+                const distanceX = e.clientX - centerX;
+                const distanceY = e.clientY - centerY;
+                
+                // Sensitivity settings
+                const strength = 0.35;
+                const maxDistance = 150;
+                
+                const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+                
+                if (distance < maxDistance) {
+                    const pullX = distanceX * strength;
+                    const pullY = distanceY * strength;
+                    element.style.transform = `translate(${pullX}px, ${pullY}px)`;
+                } else {
+                    element.style.transform = `translate(0px, 0px)`;
+                }
+            });
+
+            container.addEventListener('mouseleave', () => {
+                element.style.transform = `translate(0px, 0px)`;
+            });
+        }
+
+        // Active State Logic for sidebar
+        const navLinks = document.querySelectorAll('aside a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                navLinks.forEach(l => {
+                    l.classList.remove('bg-surface-container', 'text-primary', 'border-l-2', 'border-primary');
+                    l.classList.add('text-text-muted');
+                });
+                link.classList.add('bg-surface-container', 'text-primary', 'border-l-2', 'border-primary');
+                link.classList.remove('text-text-muted');
+            });
+        });
+    </script>
+</body></html>

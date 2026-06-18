@@ -14,6 +14,14 @@ const config: NextConfig = {
   experimental: {
     mdxRs: true,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+    ],
+  },
 };
 
 export default withMDX(config);

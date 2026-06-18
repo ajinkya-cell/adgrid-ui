@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>void/ui - Component Listing</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;family=Inter:wght@300..700&amp;family=JetBrains+Mono:wght@300..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            background-color: #141313;
+            color: #e5e2e1;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for technical aesthetic */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0A0A0A;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #262626;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ffffff;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-fixed": "#e2e2e2",
+                      "secondary": "#c9c6c5",
+                      "inverse-primary": "#5d5f5f",
+                      "error-container": "#93000a",
+                      "secondary-fixed": "#e5e2e1",
+                      "surface-charcoal": "#0A0A0A",
+                      "background": "#141313",
+                      "secondary-container": "#4a4949",
+                      "surface-tint": "#c6c6c7",
+                      "tertiary": "#ffffff",
+                      "on-secondary-fixed": "#1c1b1b",
+                      "primary-fixed-dim": "#c6c6c7",
+                      "on-primary-container": "#636565",
+                      "on-surface": "#e5e2e1",
+                      "surface": "#141313",
+                      "on-tertiary-fixed": "#1a1c1c",
+                      "surface-container-lowest": "#0e0e0e",
+                      "inverse-surface": "#e5e2e1",
+                      "on-secondary-fixed-variant": "#474646",
+                      "border-hairline": "#262626",
+                      "surface-variant": "#353434",
+                      "text-muted": "#888888",
+                      "pure-black": "#000000",
+                      "on-surface-variant": "#c4c7c8",
+                      "tertiary-fixed-dim": "#c6c6c7",
+                      "surface-container-low": "#1c1b1b",
+                      "surface-container": "#201f1f",
+                      "on-secondary": "#313030",
+                      "on-secondary-container": "#bab8b7",
+                      "primary": "#ffffff",
+                      "error": "#ffb4ab",
+                      "on-primary-fixed-variant": "#454747",
+                      "on-primary-fixed": "#1a1c1c",
+                      "inverse-on-surface": "#313030",
+                      "on-error-container": "#ffdad6",
+                      "outline": "#8e9192",
+                      "outline-variant": "#444748",
+                      "on-error": "#690005",
+                      "surface-container-high": "#2a2a2a",
+                      "on-tertiary": "#2f3131",
+                      "surface-bright": "#3a3939",
+                      "tertiary-container": "#e2e2e2",
+                      "on-tertiary-fixed-variant": "#454747",
+                      "on-primary": "#2f3131",
+                      "surface-dim": "#141313",
+                      "primary-container": "#e2e2e2",
+                      "secondary-fixed-dim": "#c9c6c5",
+                      "surface-container-highest": "#353434",
+                      "on-tertiary-container": "#636565",
+                      "on-background": "#e5e2e1",
+                      "primary-fixed": "#e2e2e2"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin": "24px",
+                      "column-12": "minmax(0, 1fr)",
+                      "gutter": "16px",
+                      "base": "4px"
+              },
+              "fontFamily": {
+                      "display-2xl": ["Space Grotesk"],
+                      "headline-lg": ["Space Grotesk"],
+                      "code-sm": ["JetBrains Mono"],
+                      "label-caps": ["JetBrains Mono"],
+                      "headline-lg-mobile": ["Space Grotesk"],
+                      "body-md": ["Inter"]
+              },
+              "fontSize": {
+                      "display-2xl": ["72px", {"lineHeight": "72px", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "code-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="font-body-md text-on-background selection:bg-primary selection:text-pure-black">
+<!-- TopNavBar Implementation -->
+<header class="fixed top-0 w-full z-50 bg-background dark:bg-background border-b border-border-hairline">
+<div class="flex justify-between items-center h-16 px-margin max-w-[1440px] mx-auto">
+<div class="flex items-center gap-8">
+<span class="font-display-2xl text-headline-lg-mobile uppercase tracking-tighter text-primary">void/ui</span>
+<nav class="hidden md:flex items-center gap-6 font-body-md text-body-md">
+<a class="text-primary border-b-2 border-primary pb-1" href="#">Components</a>
+<a class="text-text-muted hover:text-primary hover:bg-surface-container transition-colors duration-0" href="#">Hooks</a>
+<a class="text-text-muted hover:text-primary hover:bg-surface-container transition-colors duration-0" href="#">Showcase</a>
+<a class="text-text-muted hover:text-primary hover:bg-surface-container transition-colors duration-0" href="#">Templates</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-[18px]">search</span>
+<input class="bg-surface-container border border-border-hairline text-code-sm font-code-sm py-1.5 pl-10 pr-4 w-64 focus:outline-none focus:border-primary" placeholder="Search components..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center hover:bg-surface-container active:bg-surface-variant text-primary">
+<span class="material-symbols-outlined">terminal</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center hover:bg-surface-container active:bg-surface-variant text-primary">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+</div>
+</div>
+</div>
+</header>
+<div class="flex pt-16 min-h-screen">
+<!-- SideNavBar Implementation -->
+<aside class="h-screen w-64 sticky top-16 hidden lg:flex flex-col py-6 overflow-y-auto bg-surface-charcoal dark:bg-surface-charcoal border-r border-border-hairline">
+<div class="px-6 mb-8">
+<h2 class="font-headline-lg text-[20px] text-primary leading-none mb-1">Documentation</h2>
+<span class="font-code-sm text-code-sm text-text-muted">v1.0.4-beta</span>
+</div>
+<nav class="flex-1 px-3 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 font-code-sm text-code-sm text-text-muted hover:bg-surface-container-high hover:text-on-surface transition-none" href="#">
+<span class="material-symbols-outlined text-[20px]">rocket_launch</span> Getting Started
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 font-code-sm text-code-sm text-text-muted hover:bg-surface-container-high hover:text-on-surface transition-none" href="#">
+<span class="material-symbols-outlined text-[20px]">download</span> Installation
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 font-code-sm text-code-sm text-text-muted hover:bg-surface-container-high hover:text-on-surface transition-none" href="#">
+<span class="material-symbols-outlined text-[20px]">palette</span> Theming
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 font-code-sm text-code-sm bg-surface-container text-primary border-l-2 border-primary transition-none" href="#">
+<span class="material-symbols-outlined text-[20px]">animation</span> Animated
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 font-code-sm text-code-sm text-text-muted hover:bg-surface-container-high hover:text-on-surface transition-none" href="#">
+<span class="material-symbols-outlined text-[20px]">category</span> Primitives
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 font-code-sm text-code-sm text-text-muted hover:bg-surface-container-high hover:text-on-surface transition-none" href="#">
+<span class="material-symbols-outlined text-[20px]">bar_chart</span> Charts
+                </a>
+</nav>
+<div class="px-3 pt-6 border-t border-border-hairline mt-auto pb-20">
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 font-code-sm text-code-sm text-text-muted hover:bg-surface-container-high hover:text-on-surface transition-none" href="#">
+<span class="material-symbols-outlined text-[20px]">code</span> GitHub
+                    </a>
+<a class="flex items-center gap-3 px-3 py-2 font-code-sm text-code-sm text-text-muted hover:bg-surface-container-high hover:text-on-surface transition-none" href="#">
+<span class="material-symbols-outlined text-[20px]">package</span> NPM
+                    </a>
+<a class="flex items-center gap-3 px-3 py-2 font-code-sm text-code-sm text-text-muted hover:bg-surface-container-high hover:text-on-surface transition-none" href="#">
+<span class="material-symbols-outlined text-[20px]">forum</span> Discord
+                    </a>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 max-w-[1440px] px-8 py-12 mx-auto">
+<header class="mb-12 border-b border-border-hairline pb-8">
+<div class="flex items-center gap-3 mb-4">
+<span class="font-label-caps text-label-caps text-primary border border-primary px-2 py-0.5">COMPONENTS</span>
+<span class="font-code-sm text-code-sm text-text-muted">v1.0.4-beta RELEASE</span>
+</div>
+<h1 class="font-display-2xl text-headline-lg md:text-[64px] text-primary mb-4 leading-tight">THE COMPONENT VOID.</h1>
+<p class="font-body-md text-body-md text-text-muted max-w-2xl">
+                    High-performance, technical primitives for the modern web. Built for density, speed, and precision. Optimized for zero-bloat environments.
+                </p>
+</header>
+<!-- Categorized Grid Section -->
+<div class="space-y-16">
+<!-- Category: Animated -->
+<section>
+<div class="flex items-center gap-4 mb-6">
+<span class="material-symbols-outlined text-primary">animation</span>
+<h2 class="font-headline-lg text-headline-lg text-primary">Animated</h2>
+<div class="flex-1 h-px bg-border-hairline"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-0 border-t border-l border-border-hairline">
+<!-- Card 1 -->
+<div class="border-r border-b border-border-hairline p-6 hover:bg-surface-container transition-colors group cursor-pointer relative overflow-hidden">
+<div class="mb-8 h-48 bg-pure-black relative flex items-center justify-center overflow-hidden">
+
+<span class="font-code-sm text-code-sm text-primary z-10 uppercase tracking-widest bg-pure-black/80 px-4 py-1 border border-border-hairline">Flux Motion</span>
+</div>
+<h3 class="font-headline-lg text-[20px] text-primary mb-2">Flux Motion</h3>
+<p class="font-body-md text-code-sm text-text-muted mb-4">Fluid dynamics calculated via GPU shaders for background atmospheric effects.</p>
+<div class="flex gap-2">
+<span class="font-label-caps text-[10px] px-2 py-0.5 border border-border-hairline">WEBGL</span>
+<span class="font-label-caps text-[10px] px-2 py-0.5 border border-border-hairline">PERFORMANCE</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="border-r border-b border-border-hairline p-6 hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="mb-8 h-48 bg-pure-black relative flex items-center justify-center">
+
+<span class="font-code-sm text-code-sm text-primary z-10 uppercase tracking-widest bg-pure-black/80 px-4 py-1 border border-border-hairline">Vector Bloom</span>
+</div>
+<h3 class="font-headline-lg text-[20px] text-primary mb-2">Vector Bloom</h3>
+<p class="font-body-md text-code-sm text-text-muted mb-4">Responsive SVG path animations for landing sections and visual anchors.</p>
+<div class="flex gap-2">
+<span class="font-label-caps text-[10px] px-2 py-0.5 border border-border-hairline">SVG</span>
+<span class="font-label-caps text-[10px] px-2 py-0.5 border border-border-hairline">LIGHTWEIGHT</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="border-r border-b border-border-hairline p-6 hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="mb-8 h-48 bg-pure-black relative flex items-center justify-center">
+
+<span class="font-code-sm text-code-sm text-primary z-10 uppercase tracking-widest bg-pure-black/80 px-4 py-1 border border-border-hairline">Depth Array</span>
+</div>
+<h3 class="font-headline-lg text-[20px] text-primary mb-2">Depth Array</h3>
+<p class="font-body-md text-code-sm text-text-muted mb-4">3D voxelized layouts with real-time perspective and mouse tracking.</p>
+<div class="flex gap-2">
+<span class="font-label-caps text-[10px] px-2 py-0.5 border border-border-hairline">THREE.JS</span>
+<span class="font-label-caps text-[10px] px-2 py-0.5 border border-border-hairline">IMMERSIVE</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Category: Primitives -->
+<section>
+<div class="flex items-center gap-4 mb-6">
+<span class="material-symbols-outlined text-primary">category</span>
+<h2 class="font-headline-lg text-headline-lg text-primary">Primitives</h2>
+<div class="flex-1 h-px bg-border-hairline"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-0 border-t border-l border-border-hairline">
+<!-- Card 1 -->
+<div class="border-r border-b border-border-hairline p-6 hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="mb-8 h-48 bg-surface-charcoal border border-border-hairline p-4 flex flex-col justify-center">
+<div class="space-y-3">
+<div class="h-1 w-full bg-border-hairline"></div>
+<div class="h-1 w-3/4 bg-primary"></div>
+<div class="h-1 w-1/2 bg-border-hairline"></div>
+</div>
+</div>
+<h3 class="font-headline-lg text-[20px] text-primary mb-2">Density Tables</h3>
+<p class="font-body-md text-code-sm text-text-muted mb-4">Calculated for maximum data throughput per pixel. 1px hairline rules.</p>
+<div class="flex gap-2">
+<span class="font-label-caps text-[10px] px-2 py-0.5 border border-border-hairline">GRID</span>
+<span class="font-label-caps text-[10px] px-2 py-0.5 border border-border-hairline">ACCESSIBLE</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="border-r border-b border-border-hairline p-6 hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="mb-8 h-48 bg-surface-charcoal border border-border-hairline flex flex-col justify-center items-center gap-4">
+<div class="w-32 h-8 border border-primary flex items-center justify-center text-[10px] font-code-sm">PRIMARY_EXEC</div>
+<div class="w-32 h-8 border border-border-hairline flex items-center justify-center text-[10px] font-code-sm">GHOST_CALL</div>
+</div>
+<h3 class="font-headline-lg text-[20px] text-primary mb-2">Monolith Actions</h3>
+<p class="font-body-md text-code-sm text-text-muted mb-4">Square-edge, zero-radius buttons with instant state-switching logic.</p>
+<div class="flex gap-2">
+<span class="font-label-caps text-[10px] px-2 py-0.5 border border-border-hairline">BRUTALIST</span>
+<span class="font-label-caps text-[10px] px-2 py-0.5 border border-border-hairline">HIGH-CONTRAST</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="border-r border-b border-border-hairline p-6 hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="mb-8 h-48 bg-surface-charcoal border border-border-hairline p-6 space-y-4">
+<div class="flex gap-2">
+<div class="w-3 h-3 bg-primary"></div>
+<div class="w-3 h-3 border border-border-hairline"></div>
+<div class="w-3 h-3 border border-border-hairline"></div>
+</div>
+<div class="h-2 w-full bg-border-hairline relative">
+<div class="absolute left-0 top-0 h-full w-1/3 bg-primary"></div>
+</div>
+</div>
+<h3 class="font-headline-lg text-[20px] text-primary mb-2">Signal System</h3>
+<p class="font-body-md text-code-sm text-text-muted mb-4">Indicators for status, progress, and binary state tracking.</p>
+<div class="flex gap-2">
+<span class="font-label-caps text-[10px] px-2 py-0.5 border border-border-hairline">SEMANTIC</span>
+<span class="font-label-caps text-[10px] px-2 py-0.5 border border-border-hairline">UTILITY</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Category: Charts -->
+<section>
+<div class="flex items-center gap-4 mb-6">
+<span class="material-symbols-outlined text-primary">bar_chart</span>
+<h2 class="font-headline-lg text-headline-lg text-primary">Charts</h2>
+<div class="flex-1 h-px bg-border-hairline"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-0 border-t border-l border-border-hairline">
+<!-- Card 1 -->
+<div class="border-r border-b border-border-hairline p-6 hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="mb-8 h-48 bg-pure-black border border-border-hairline relative flex items-end p-2 gap-1 overflow-hidden">
+<div class="flex-1 bg-border-hairline h-[40%]"></div>
+<div class="flex-1 bg-border-hairline h-[60%]"></div>
+<div class="flex-1 bg-primary h-[85%]"></div>
+<div class="flex-1 bg-border-hairline h-[50%]"></div>
+<div class="flex-1 bg-border-hairline h-[70%]"></div>
+<div class="flex-1 bg-border-hairline h-[30%]"></div>
+</div>
+<h3 class="font-headline-lg text-[20px] text-primary mb-2">Metric Grid</h3>
+<p class="font-body-md text-code-sm text-text-muted mb-4">Histogram and frequency distribution components for telemetry data.</p>
+<div class="flex gap-2">
+<span class="font-label-caps text-[10px] px-2 py-0.5 border border-border-hairline">TELEMETRY</span>
+<span class="font-label-caps text-[10px] px-2 py-0.5 border border-border-hairline">CANVAS</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="border-r border-b border-border-hairline p-6 hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="mb-8 h-48 bg-pure-black border border-border-hairline flex items-center justify-center">
+<div class="w-32 h-32 border-4 border-border-hairline rounded-full relative">
+<div class="absolute top-[-4px] left-[-4px] w-32 h-32 border-4 border-primary rounded-full border-t-transparent border-l-transparent -rotate-45"></div>
+<div class="absolute inset-0 flex items-center justify-center font-code-sm text-primary">74.2%</div>
+</div>
+</div>
+<h3 class="font-headline-lg text-[20px] text-primary mb-2">Circular Buffer</h3>
+<p class="font-body-md text-code-sm text-text-muted mb-4">Real-time resource utilization gauges with sub-millisecond updates.</p>
+<div class="flex gap-2">
+<span class="font-label-caps text-[10px] px-2 py-0.5 border border-border-hairline">REAL-TIME</span>
+<span class="font-label-caps text-[10px] px-2 py-0.5 border border-border-hairline">GAUGE</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="border-r border-b border-border-hairline p-6 hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="mb-8 h-48 bg-pure-black border border-border-hairline relative overflow-hidden">
+<div class="absolute inset-0 grid grid-cols-8 grid-rows-8 opacity-20">
+<div class="border border-border-hairline"></div><div class="border border-border-hairline"></div><div class="border border-border-hairline"></div><div class="border border-border-hairline"></div>
+<div class="border border-border-hairline"></div><div class="border border-border-hairline"></div><div class="border border-border-hairline"></div><div class="border border-border-hairline"></div>
+<div class="border border-border-hairline"></div><div class="border border-border-hairline"></div><div class="border border-border-hairline"></div><div class="border border-border-hairline"></div>
+<div class="border border-border-hairline"></div><div class="border border-border-hairline"></div><div class="border border-border-hairline"></div><div class="border border-border-hairline"></div>
+</div>
+<div class="absolute bottom-4 left-4 right-4 h-px bg-primary/40"></div>
+<div class="absolute bottom-4 left-4 w-1/2 h-24 border-t-2 border-primary rotate-[10deg] origin-bottom-left"></div>
+</div>
+<h3 class="font-headline-lg text-[20px] text-primary mb-2">Sparse Line</h3>
+<p class="font-body-md text-code-sm text-text-muted mb-4">Clean, minimalist line charts for trend observation without noise.</p>
+<div class="flex gap-2">
+<span class="font-label-caps text-[10px] px-2 py-0.5 border border-border-hairline">CHART.JS</span>
+<span class="font-label-caps text-[10px] px-2 py-0.5 border border-border-hairline">D3</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+<!-- Footer Implementation -->
+<footer class="w-full py-12 bg-pure-black dark:bg-pure-black border-t border-border-hairline">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin max-w-[1440px] mx-auto gap-gutter">
+<div class="flex flex-col gap-2">
+<span class="font-display-2xl text-headline-lg text-primary">void/ui</span>
+<p class="font-label-caps text-label-caps text-text-muted uppercase tracking-wider">© 2024 VOID/UI CORE TEAM. BUILT FOR THE VOID.</p>
+</div>
+<div class="flex gap-8">
+<a class="font-label-caps text-label-caps text-text-muted hover:text-white underline" href="#">Privacy Policy</a>
+<a class="font-label-caps text-label-caps text-text-muted hover:text-white underline" href="#">Terms of Service</a>
+<a class="font-label-caps text-label-caps text-text-muted hover:text-white underline" href="#">Security</a>
+<a class="font-label-caps text-label-caps text-text-muted hover:text-white underline" href="#">Status</a>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interactions for technical feedback
+        document.querySelectorAll('.group').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                // Flash effect simulation
+                card.style.borderColor = '#ffffff';
+                setTimeout(() => {
+                    card.style.borderColor = '#262626';
+                }, 50);
+            });
+        });
+
+        // Search bar block cursor simulation
+        const searchInput = document.querySelector('input');
+        if(searchInput) {
+            searchInput.addEventListener('focus', () => {
+                searchInput.classList.add('border-primary');
+            });
+            searchInput.addEventListener('blur', () => {
+                searchInput.classList.remove('border-primary');
+            });
+        }
+    </script>
+</body></html>

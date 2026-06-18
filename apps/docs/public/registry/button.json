@@ -1,0 +1,42 @@
+{
+  "name": "Button",
+  "slug": "button",
+  "category": "primitives",
+  "description": "Core button with variant and size support.",
+  "dependencies": [
+    "clsx",
+    "tailwind-merge"
+  ],
+  "packagePath": "primitives/Button.tsx",
+  "variants": [
+    {
+      "name": "Primary",
+      "props": {
+        "variant": "primary",
+        "children": "Primary"
+      }
+    },
+    {
+      "name": "Ghost",
+      "props": {
+        "variant": "ghost",
+        "children": "Ghost"
+      }
+    },
+    {
+      "name": "Outline",
+      "props": {
+        "variant": "outline",
+        "children": "Outline"
+      }
+    },
+    {
+      "name": "Danger",
+      "props": {
+        "variant": "danger",
+        "children": "Delete"
+      }
+    }
+  ],
+  "code": "\"use client\";\r\nimport { ReactNode, ButtonHTMLAttributes } from \"react\";\r\nimport { cn } from \"../lib/utils\";\r\n\r\nexport type ButtonVariant = \"default\" | \"outline\" | \"secondary\" | \"ghost\";\r\nexport type ButtonSize = \"sm\" | \"md\" | \"lg\";\r\n\r\nexport interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {\r\n  children: ReactNode;\r\n  variant?: ButtonVariant;\r\n  size?: ButtonSize;\r\n}\r\n\r\nconst variants = {\r\n  default: \"bg-white text-black hover:bg-white/90\",\r\n  outline: \"border border-white/20 text-white hover:border-white/40 hover:bg-white/5\",\r\n  secondary: \"bg-white/10 text-white hover:bg-white/20\",\r\n  ghost: \"text-white hover:bg-white/10\",\r\n};\r\n\r\nconst sizes = {\r\n  sm: \"px-3 py-1.5 text-sm\",\r\n  md: \"px-4 py-2 text-base\",\r\n  lg: \"px-6 py-3 text-lg\",\r\n};\r\n\r\nexport const Button = ({\r\n  children,\r\n  className,\r\n  variant = \"default\",\r\n  size = \"md\",\r\n  ...props\r\n}: ButtonProps) => {\r\n  return (\r\n    <button\r\n      className={cn(\r\n        \"inline-flex items-center justify-center font-medium rounded-sm transition-colors duration-200 cursor-pointer\",\r\n        variants[variant],\r\n        sizes[size],\r\n        className\r\n      )}\r\n      {...props}\r\n    >\r\n      {children}\r\n    </button>\r\n  );\r\n};\r\n"
+}

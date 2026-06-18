@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "skipLibCheck": true,
     "lib": ["dom", "dom.iterable", "esnext"],
     "plugins": [{ "name": "next" }],
     "paths": {

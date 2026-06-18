@@ -3,6 +3,7 @@ import { useState } from "react";
 import { LivePreview } from "./LivePreview";
 import { CopyButton } from "./CopyButton";
 import type { RegistryEntry } from "@/registry";
+import { useComponentPage } from "./ComponentPageLayout";
 
 type Tab = "preview" | "code" | "install";
 
@@ -24,7 +25,7 @@ function HtmlBlock({ html, code }: { html: string; code: string }) {
         <CopyButton text={code} />
       </div>
       <div
-        className="rounded-sm overflow-auto text-sm [&>pre]:p-5 [&>pre]:overflow-auto [&>pre]:bg-[#0d1117]!"
+        className="overflow-auto text-sm [&>pre]:p-5 [&>pre]:overflow-auto [&>pre]:bg-[#0d1117]!"
         dangerouslySetInnerHTML={{ __html: html }}
       />
     </div>
@@ -33,18 +34,19 @@ function HtmlBlock({ html, code }: { html: string; code: string }) {
 
 export function ComponentTabs({ rawCode, npmInstall, importCode, entry, additionalFiles, appCode, tsxHtml, bashHtml }: Props) {
   const [tab, setTab] = useState<Tab>("preview");
+  const { isWide } = useComponentPage();
 
   return (
-    <div className="border border-white/10 rounded-sm overflow-hidden">
-      <div className="flex items-center border-b border-white/10 bg-[#0a0a0a] px-4">
+    <div id="preview" className="border border-border-hairline overflow-hidden">
+      <div className="flex items-center border-b border-border-hairline bg-surface-charcoal px-4">
         {(["preview", "code", "install"] as Tab[]).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`px-4 py-3 text-xs font-mono transition-colors ${
+            className={`px-4 py-3 text-xs font-mono transition-colors uppercase tracking-wider select-none cursor-pointer ${
               tab === t
-                ? "text-white border-b border-white"
-                : "text-white/30 hover:text-white/60"
+                ? "text-white border-b-2 border-white"
+                : "text-text-muted hover:text-white"
             }`}
           >
             {t}
@@ -59,27 +61,35 @@ export function ComponentTabs({ rawCode, npmInstall, importCode, entry, addition
           dependencies={entry.dependencies}
           additionalFiles={additionalFiles}
           appCode={appCode}
+          showCode={false}
+          isWide={isWide}
         />
       )}
 
-      {tab === "code" && tsxHtml && (
-        <div className="bg-[#0d1117]">
-          <HtmlBlock html={tsxHtml} code={rawCode} />
-        </div>
+      {tab === "code" && (
+        <LivePreview
+          code={rawCode}
+          componentName={entry.name.replace(/\s/g, "")}
+          dependencies={entry.dependencies}
+          additionalFiles={additionalFiles}
+          appCode={appCode}
+          showCode={true}
+          isWide={isWide}
+        />
       )}
 
       {tab === "install" && bashHtml && tsxHtml && (
-        <div className="p-6 space-y-6 bg-[#0a0a0a]">
+        <div className="p-6 space-y-6 bg-surface-charcoal">
           <div>
-            <p className="text-xs font-mono text-white/25 mb-3">npm package</p>
+            <p className="text-[10px] font-mono text-text-muted uppercase tracking-widest mb-3">npm package</p>
             <HtmlBlock html={bashHtml} code={npmInstall} />
           </div>
           <div>
-            <p className="text-xs font-mono text-white/25 mb-3">then import</p>
+            <p className="text-[10px] font-mono text-text-muted uppercase tracking-widest mb-3">then import</p>
             <HtmlBlock html={tsxHtml} code={importCode} />
           </div>
           <div>
-            <p className="text-xs font-mono text-white/25 mb-3">or copy-paste</p>
+            <p className="text-[10px] font-mono text-text-muted uppercase tracking-widest mb-3">or copy-paste</p>
             <HtmlBlock html={tsxHtml} code={rawCode} />
           </div>
         </div>

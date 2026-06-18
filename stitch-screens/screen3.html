@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>void/ui — Engineered for the Void</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Inter:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            font-size: 20px;
+        }
+        body {
+            background-color: #141313;
+            color: #e5e2e1;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .hairline-border { border: 1px solid #262626; }
+        .hairline-r { border-right: 1px solid #262626; }
+        .hairline-l { border-left: 1px solid #262626; }
+        .hairline-t { border-top: 1px solid #262626; }
+        .hairline-b { border-bottom: 1px solid #262626; }
+        
+        .instant-hover:hover {
+            background-color: #ffffff;
+            color: #000000;
+            transition: none;
+        }
+        
+        .bento-card {
+            background-color: #0A0A0A;
+            transition: border-color 0.2s ease;
+        }
+        .bento-card:hover {
+            border-color: #ffffff;
+        }
+
+        /* Scanline effect for technical feel */
+        .scanline::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-charcoal": "#0A0A0A",
+                      "background": "#141313",
+                      "border-hairline": "#262626",
+                      "text-muted": "#888888",
+                      "pure-black": "#000000",
+                      "primary": "#ffffff",
+                      "on-surface": "#e5e2e1",
+              },
+              "fontFamily": {
+                      "display-2xl": ["Space Grotesk"],
+                      "headline-lg": ["Space Grotesk"],
+                      "code-sm": ["JetBrains Mono"],
+                      "label-caps": ["JetBrains Mono"],
+                      "body-md": ["Inter"]
+              }
+            }
+          }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-background border-b border-border-hairline">
+<nav class="flex justify-between items-center h-16 px-margin max-w-[1440px] mx-auto">
+<div class="flex items-center gap-8">
+<span class="font-display-2xl text-2xl uppercase tracking-tighter text-primary font-bold">void/ui</span>
+<div class="hidden md:flex gap-6">
+<a class="font-body-md text-sm text-primary border-b-2 border-primary pb-1" href="#">Components</a>
+<a class="font-body-md text-sm text-text-muted hover:text-primary transition-colors" href="#">Hooks</a>
+<a class="font-body-md text-sm text-text-muted hover:text-primary transition-colors" href="#">Showcase</a>
+<a class="font-body-md text-sm text-text-muted hover:text-primary transition-colors" href="#">Templates</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-surface-charcoal transition-colors">
+<span class="material-symbols-outlined" data-icon="terminal">terminal</span>
+</button>
+<button class="p-2 hover:bg-surface-charcoal transition-colors">
+<span class="material-symbols-outlined" data-icon="dark_mode">dark_mode</span>
+</button>
+</div>
+</nav>
+</header>
+<main class="pt-16">
+<!-- Hero Section -->
+<section class="relative h-[921px] flex items-center justify-center overflow-hidden border-b border-border-hairline">
+<!-- Animation Background -->
+
+<div class="relative z-10 text-center px-margin max-w-5xl">
+<div class="inline-block px-3 py-1 border border-border-hairline bg-surface-charcoal font-label-caps text-[10px] tracking-widest text-text-muted mb-8 uppercase">
+                    SYSTEM_STATUS: STABLE // V1.0.4
+                </div>
+<h1 class="font-display-2xl text-[clamp(3rem,8vw,6rem)] leading-[0.9] uppercase tracking-tighter mb-12">
+                    ENGINEERED FOR <br/> <span class="text-primary opacity-90">THE VOID.</span>
+</h1>
+<div class="flex flex-col md:flex-row items-center justify-center gap-4">
+<button class="w-full md:w-auto px-10 py-4 bg-primary text-pure-black font-label-caps font-bold text-sm tracking-widest border border-primary hover:bg-transparent hover:text-primary transition-all duration-0">
+                        GET STARTED
+                    </button>
+<button class="w-full md:w-auto px-10 py-4 bg-transparent text-primary font-label-caps font-bold text-sm tracking-widest border border-border-hairline hover:border-primary transition-all duration-0">
+                        EXPLORE REGISTRY
+                    </button>
+</div>
+</div>
+<!-- Absolute Positioning Decorations -->
+<div class="absolute bottom-10 left-10 hidden lg:block">
+<div class="font-code-sm text-[10px] text-text-muted leading-relaxed uppercase">
+                    [00] INITIALIZING_CORE<br/>
+                    [01] LOADING_SHADERS...<br/>
+                    [02] READY.
+                </div>
+</div>
+<div class="absolute bottom-10 right-10 hidden lg:block text-right">
+<div class="font-code-sm text-[10px] text-text-muted leading-relaxed uppercase">
+                    COORD_X: 144.02<br/>
+                    COORD_Y: 28.00<br/>
+                    LATENCY: 4MS
+                </div>
+</div>
+</section>
+<!-- Bento Grid Showcase -->
+<section class="py-24 px-margin max-w-[1440px] mx-auto border-b border-border-hairline">
+<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+<div>
+<h2 class="font-headline-lg text-4xl uppercase mb-2">Component Protocol</h2>
+<p class="font-body-md text-text-muted max-w-md">Precision-machined primitives designed for maximum performance and technical clarity.</p>
+</div>
+<div class="font-code-sm text-sm text-text-muted">
+                    DISPLAYING 04 / 128 ASSETS
+                </div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Card 1: MagneticButton -->
+<div class="md:col-span-7 h-80 hairline-border bento-card p-8 flex flex-col justify-between group relative overflow-hidden">
+<div class="flex justify-between items-start z-10">
+<span class="font-label-caps text-xs text-primary bg-surface-variant px-2 py-1">VOID_01</span>
+<span class="font-code-sm text-[10px] text-text-muted">PHYSICS_ENGINE_V2</span>
+</div>
+<div class="flex flex-col gap-2 z-10">
+<h3 class="font-display-2xl text-3xl uppercase">MagneticButton</h3>
+<p class="font-body-md text-text-muted max-w-xs text-sm">Force-field interactions based on cursor proximity and velocity.</p>
+</div>
+<div class="absolute right-0 bottom-0 opacity-10 group-hover:opacity-30 transition-opacity">
+<span class="material-symbols-outlined text-[120px]" style="font-variation-settings: 'FILL' 1;">mouse</span>
+</div>
+<div class="mt-4 hairline-t pt-4 flex gap-4">
+<div class="flex flex-col">
+<span class="font-code-sm text-[10px] text-text-muted">WEIGHT</span>
+<span class="font-code-sm text-xs">1.2KB</span>
+</div>
+<div class="flex flex-col">
+<span class="font-code-sm text-[10px] text-text-muted">DAMPING</span>
+<span class="font-code-sm text-xs">0.45</span>
+</div>
+</div>
+</div>
+<!-- Card 2: GlitchText -->
+<div class="md:col-span-5 h-80 hairline-border bento-card p-8 flex flex-col justify-between bg-pure-black relative overflow-hidden group">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-xs text-primary bg-surface-variant px-2 py-1">VOID_02</span>
+</div>
+<div class="text-center py-8">
+<h3 class="font-display-2xl text-4xl uppercase tracking-widest text-primary glitch-effect">GLITCH</h3>
+</div>
+<div class="hairline-t pt-4">
+<div class="flex justify-between font-code-sm text-[10px] text-text-muted uppercase">
+<span>Component: GlitchText</span>
+<span>Freq: 0.12Hz</span>
+</div>
+</div>
+</div>
+<!-- Card 3: TextReveal -->
+<div class="md:col-span-5 h-80 hairline-border bento-card p-8 flex flex-col justify-between relative group">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-xs text-primary bg-surface-variant px-2 py-1">VOID_03</span>
+</div>
+<div class="flex flex-col gap-4">
+<div class="h-1 bg-primary w-0 group-hover:w-full transition-all duration-700"></div>
+<h3 class="font-display-2xl text-3xl uppercase">TextReveal</h3>
+<p class="font-body-md text-text-muted text-sm">Staggered character animation for high-impact headers.</p>
+</div>
+<div class="hairline-t pt-4 grid grid-cols-2 gap-4">
+<div class="flex flex-col">
+<span class="font-code-sm text-[10px] text-text-muted uppercase">Stagger</span>
+<span class="font-code-sm text-xs">0.05s</span>
+</div>
+<div class="flex flex-col">
+<span class="font-code-sm text-[10px] text-text-muted uppercase">Easing</span>
+<span class="font-code-sm text-xs">Expo.out</span>
+</div>
+</div>
+</div>
+<!-- Card 4: FadeIn -->
+<div class="md:col-span-7 h-80 hairline-border bento-card p-8 flex flex-col justify-between group overflow-hidden">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-xs text-primary bg-surface-variant px-2 py-1">VOID_04</span>
+<div class="w-12 h-12 hairline-border flex items-center justify-center">
+<span class="material-symbols-outlined text-text-muted group-hover:text-primary">visibility</span>
+</div>
+</div>
+<div>
+<h3 class="font-display-2xl text-3xl uppercase mb-2">FadeIn</h3>
+<p class="font-body-md text-text-muted max-w-sm text-sm">GPU-accelerated intersection observer transitions for seamless content discovery.</p>
+</div>
+<div class="hairline-t pt-4 flex gap-8">
+<span class="font-code-sm text-[10px] text-text-muted uppercase">Observer: Active</span>
+<span class="font-code-sm text-[10px] text-text-muted uppercase">Threshold: 0.1</span>
+<span class="font-code-sm text-[10px] text-text-muted uppercase">Duration: 400ms</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Tech Stack Section -->
+<section class="py-24 px-margin max-w-[1440px] mx-auto overflow-hidden">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div>
+<h2 class="font-headline-lg text-4xl uppercase mb-6">Built for Performance</h2>
+<p class="font-body-md text-text-muted text-lg mb-8 max-w-lg">
+                        VOID/UI is not a library; it's a technical standard. Optimized for core web vitals and developer ergonomics.
+                    </p>
+<ul class="flex flex-col gap-0">
+<li class="hairline-t py-6 flex justify-between items-center group cursor-default">
+<span class="font-display-2xl text-2xl uppercase group-hover:pl-4 transition-all duration-300">Next.js 15+</span>
+<span class="font-code-sm text-xs text-text-muted group-hover:text-primary">SSR_READY</span>
+</li>
+<li class="hairline-t py-6 flex justify-between items-center group cursor-default">
+<span class="font-display-2xl text-2xl uppercase group-hover:pl-4 transition-all duration-300">TypeScript</span>
+<span class="font-code-sm text-xs text-text-muted group-hover:text-primary">STRICT_TYPES</span>
+</li>
+<li class="hairline-t py-6 flex justify-between items-center group cursor-default">
+<span class="font-display-2xl text-2xl uppercase group-hover:pl-4 transition-all duration-300">Tailwind 4</span>
+<span class="font-code-sm text-xs text-text-muted group-hover:text-primary">JIT_COMPILER</span>
+</li>
+<li class="hairline-t hairline-b py-6 flex justify-between items-center group cursor-default">
+<span class="font-display-2xl text-2xl uppercase group-hover:pl-4 transition-all duration-300">Framer Motion</span>
+<span class="font-code-sm text-xs text-text-muted group-hover:text-primary">60_FPS</span>
+</li>
+</ul>
+</div>
+<div class="relative aspect-square hairline-border bg-pure-black flex items-center justify-center p-12 overflow-hidden">
+<!-- Tech Visualization -->
+<div class="absolute inset-0 opacity-10">
+<div class="grid grid-cols-10 grid-rows-10 h-full w-full">
+<!-- JS Loop would generate these, static placeholders for now -->
+<div class="border-[0.5px] border-border-hairline"></div><div class="border-[0.5px] border-border-hairline"></div><div class="border-[0.5px] border-border-hairline"></div><div class="border-[0.5px] border-border-hairline"></div><div class="border-[0.5px] border-border-hairline"></div><div class="border-[0.5px] border-border-hairline"></div><div class="border-[0.5px] border-border-hairline"></div><div class="border-[0.5px] border-border-hairline"></div><div class="border-[0.5px] border-border-hairline"></div><div class="border-[0.5px] border-border-hairline"></div>
+</div>
+</div>
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-32 h-32 border-2 border-primary mb-6 flex items-center justify-center">
+<span class="material-symbols-outlined text-5xl" style="font-variation-settings: 'FILL' 1;">package_2</span>
+</div>
+<div class="font-label-caps text-xs text-text-muted tracking-[0.4em] uppercase mb-2">Core Bundle Size</div>
+<div class="font-display-2xl text-5xl text-primary uppercase">4.2kb <span class="text-xs">Gzip</span></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA Section -->
+<section class="py-32 px-margin max-w-[1440px] mx-auto text-center border-t border-border-hairline">
+<h2 class="font-display-2xl text-5xl md:text-7xl uppercase mb-12 tracking-tighter">Enter the Void</h2>
+<div class="inline-flex flex-col md:flex-row border border-border-hairline p-1 bg-surface-charcoal">
+<input class="bg-transparent border-none focus:ring-0 font-code-sm text-sm px-6 py-4 md:min-w-[400px] text-primary" id="npm-install" placeholder="npm install @void/ui" readonly="" type="text"/>
+<button class="bg-primary text-pure-black font-label-caps font-bold px-8 py-4 hover:bg-on-surface transition-colors flex items-center justify-center gap-2" onclick="copyToClipboard()">
+<span class="material-symbols-outlined text-sm" data-icon="content_copy">content_copy</span>
+                    COPY
+                </button>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-pure-black border-t border-border-hairline py-12">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin max-w-[1440px] mx-auto gap-gutter">
+<div class="flex flex-col gap-2 items-center md:items-start">
+<span class="font-display-2xl text-2xl text-primary font-bold uppercase">void/ui</span>
+<span class="font-label-caps text-[10px] text-text-muted tracking-widest uppercase">© 2024 VOID/UI CORE TEAM. BUILT FOR THE VOID.</span>
+</div>
+<div class="flex gap-8">
+<a class="font-label-caps text-[10px] text-text-muted hover:text-white underline uppercase" href="#">Privacy Policy</a>
+<a class="font-label-caps text-[10px] text-text-muted hover:text-white underline uppercase" href="#">Terms of Service</a>
+<a class="font-label-caps text-[10px] text-text-muted hover:text-white underline uppercase" href="#">Security</a>
+<a class="font-label-caps text-[10px] text-text-muted hover:text-white underline uppercase" href="#">Status</a>
+</div>
+<div class="flex gap-4">
+<a class="p-2 border border-border-hairline text-text-muted hover:text-primary hover:border-primary" href="#">
+<span class="material-symbols-outlined" data-icon="code">code</span>
+</a>
+<a class="p-2 border border-border-hairline text-text-muted hover:text-primary hover:border-primary" href="#">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+</a>
+</div>
+</div>
+</footer>
+<script>
+        function copyToClipboard() {
+            const input = document.getElementById('npm-install');
+            input.select();
+            document.execCommand('copy');
+            
+            const btn = event.currentTarget;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="material-symbols-outlined text-sm">check</span> COPIED';
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+            }, 2000);
+        }
+
+        // Lightweight atmospheric effect: mouse interaction with grid lines
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.bento-card');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                if (x > 0 && x < rect.width && y > 0 && y < rect.height) {
+                    card.style.borderColor = `rgba(255, 255, 255, ${0.1 + (Math.random() * 0.2)})`;
+                } else {
+                    card.style.borderColor = '#262626';
+                }
+            });
+        });
+    </script>
+</body></html>

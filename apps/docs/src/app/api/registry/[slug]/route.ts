@@ -5,9 +5,10 @@ import path from "path";
 
 export async function GET(
   _req: Request,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
-  const entry = registry.find((c) => c.slug === params.slug);
+  const { slug } = await params;
+  const entry = registry.find((c) => c.slug === slug);
   if (!entry) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }

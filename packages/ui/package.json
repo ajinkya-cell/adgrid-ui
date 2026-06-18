@@ -13,17 +13,22 @@
     },
     "./styles": "./src/styles/globals.css"
   },
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
-    "react": ">=18",
-    "react-dom": ">=18",
     "framer-motion": ">=11",
     "gsap": ">=3",
+    "lucide-react": ">=0.300",
+    "matter-js": ">=0.19",
+    "react": ">=18",
+    "react-dom": ">=18",
     "tailwindcss": ">=4"
   },
   "dependencies": {
@@ -31,16 +36,25 @@
     "tailwind-merge": "^2.3.0"
   },
   "devDependencies": {
-    "tsup": "^8.0.0",
-    "typescript": "^5.0.0",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
+    "@react-three/postprocessing": "^3.0.4",
+    "@types/matter-js": "^0.19.6",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/three": "^0.184.1",
+    "autoprefixer": "^10.4.17",
     "framer-motion": "^11.0.0",
     "gsap": "^3.12.0",
-    "tailwindcss": "^4.0.0",
+    "lucide-react": "^0.468.0",
+    "matter-js": "^0.19.0",
+    "next": "^16.2.9",
     "postcss": "^8.4.38",
-    "autoprefixer": "^10.4.17"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^4.0.0",
+    "three": "^0.184.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
   }
 }

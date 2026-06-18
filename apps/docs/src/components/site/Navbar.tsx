@@ -1,39 +1,51 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function Navbar() {
+  const pathname = usePathname();
+
+  const links = [
+    { label: "Components", href: "/components" },
+    { label: "Hooks", href: "#" },
+    { label: "Showcase", href: "#" },
+    { label: "Templates", href: "#" },
+  ];
+
   return (
-    <header className="sticky top-0 z-50 px-4 md:px-6 pt-4">
-      <nav className="max-w-7xl mx-auto bg-[#0a0a0a] border border-white/[0.06] rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.4)] h-14 flex items-center justify-between px-4 md:px-6">
-        <Link href="/" className="font-display font-bold text-white tracking-tight">
-          void<span className="text-white/30">/</span>ui
-        </Link>
-        <div className="hidden md:flex items-center gap-8">
-          {[
-            ["Components", "/components"],
-            ["Docs", "/docs/getting-started"],
-            ["Playground", "/playground"],
-          ].map(([label, href]) => (
-            <Link
-              key={href}
-              href={href}
-              className="text-sm text-white/50 hover:text-white transition-all duration-150 font-mono"
-            >
-              {label}
-            </Link>
-          ))}
+    <header className="fixed top-0 left-0 w-full z-50 bg-background border-b border-border-hairline h-16">
+      <nav className="flex justify-between items-center h-full px-6 max-w-[1440px] mx-auto w-full">
+        <div className="flex items-center gap-8">
+          <Link href="/" className="font-display text-2xl uppercase tracking-tighter text-white font-bold select-none">
+            void<span className="text-white/30">/</span>ui
+          </Link>
+          <div className="hidden md:flex gap-6">
+            {links.map((link) => {
+              const active = pathname.startsWith(link.href) && link.href !== "#";
+              return (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className={`font-body text-sm ${
+                    active
+                      ? "text-white border-b-2 border-white pb-1"
+                      : "text-text-muted hover:text-white transition-colors duration-200"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </div>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="text-xs font-mono text-white/30 border border-white/10 px-2 py-1 rounded-lg bg-gradient-to-b from-white/[0.04] to-white/[0.02] shadow-[0_2px_8px_rgba(0,0,0,0.3)]">
-            v0.1.0
-          </span>
-          <a
-            href="https://github.com/yourusername/adgrid-ui"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm text-white/50 hover:text-white transition-all duration-150 font-mono"
-          >
-            GitHub ↗
-          </a>
+        <div className="flex items-center gap-2">
+          <button className="w-10 h-10 flex items-center justify-center hover:bg-surface-container active:bg-surface-variant text-white cursor-pointer transition-colors">
+            <span className="material-symbols-outlined text-[20px]">terminal</span>
+          </button>
+          <button className="w-10 h-10 flex items-center justify-center hover:bg-surface-container active:bg-surface-variant text-white cursor-pointer transition-colors">
+            <span className="material-symbols-outlined text-[20px]">dark_mode</span>
+          </button>
         </div>
       </nav>
     </header>

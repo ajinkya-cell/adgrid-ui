@@ -25,10 +25,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
-      <body className="bg-black text-white font-body antialiased">
+    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} dark`}>
+      <head>
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+      </head>
+      <body className="bg-background text-on-surface font-body antialiased selection:bg-white selection:text-black">
         <Navbar />
-        {children}
+        <div className="pt-16 min-h-screen flex flex-col">
+          {children}
+        </div>
       </body>
     </html>
   );
