@@ -3,7 +3,8 @@ export type ComponentCategory =
   | "primitives"
   | "charts"
   | "widgets"
-  | "buttons";
+  | "buttons"
+  | "backgrounds";
 
 export interface PropDefinition {
   name: string;
@@ -187,5 +188,37 @@ export const registry: RegistryEntry[] = [
     description: "Watch dial Guilloché patterns generating Moire wave shapes under the cursor spotlight.",
     dependencies: ["framer-motion"],
     packagePath: "animated/GuillocheButton.tsx",
+  },
+  {
+    name: "Pixel Melt",
+    slug: "pixel-melt",
+    category: "backgrounds",
+    description: "A full-viewport pixel grid that glows and cools under cursor heat, leaving behind a slow melt trail.",
+    dependencies: [],
+    packagePath: "backgrounds/PixelMelt.tsx",
+  },
+  {
+    name: "Breathing Grid",
+    slug: "breathing-grid",
+    category: "backgrounds",
+    description: "An orthogonal grid with a slow left-to-right traveling wave, with local brightness boost near the cursor.",
+    dependencies: [],
+    packagePath: "backgrounds/BreathingGrid.tsx",
+  },
+  {
+    name: "Floating Embers",
+    slug: "floating-embers",
+    category: "backgrounds",
+    description: "Glowing ember particles that float upward with a gentle sway, reacting subtly to cursor and scroll.",
+    dependencies: [],
+    packagePath: "backgrounds/FloatingEmbers.tsx",
+  },
+  {
+    name: "Scanline Drift",
+    slug: "scanline-drift",
+    category: "backgrounds",
+    description: "A horizontal band of light that drifts across the screen, available in three moods: warm CRT afterglow, ethereal aurora, or zen shimmer.",
+    dependencies: [],
+    packagePath: "backgrounds/ScanlineDrift.tsx",
   },
 ];

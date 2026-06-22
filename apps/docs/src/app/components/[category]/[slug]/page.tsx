@@ -477,6 +477,212 @@ export default function App() {
   );
 }
 `.trim();
+  } else if (entry.slug === "breathing-grid") {
+    appCode = `
+import { BreathingGrid } from "./BreathingGrid";
+
+export default function App() {
+  return (
+    <div style={{
+      background: "#000",
+      minHeight: "100vh",
+      position: "relative",
+      overflow: "hidden",
+    }}>
+      <BreathingGrid />
+      <div style={{
+        position: "relative",
+        zIndex: 1,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+        gap: "0.5rem",
+      }}>
+        <span style={{
+          color: "#fff",
+          fontFamily: "monospace",
+          fontSize: "11px",
+          letterSpacing: "0.15em",
+          textTransform: "uppercase",
+          opacity: 0.4,
+        }}>
+          Watch the grid breathe
+        </span>
+        <span style={{
+          color: "#fff",
+          fontFamily: "monospace",
+          fontSize: "9px",
+          letterSpacing: "0.1em",
+          opacity: 0.15,
+        }}>
+          8s sweep — left to right
+        </span>
+      </div>
+    </div>
+  );
+}
+`.trim();
+  } else if (entry.slug === "floating-embers") {
+    appCode = `
+import { FloatingEmbers } from "./FloatingEmbers";
+
+export default function App() {
+  return (
+    <div style={{
+      background: "#000",
+      minHeight: "100vh",
+      position: "relative",
+      overflow: "hidden",
+    }}>
+      <FloatingEmbers />
+      <div style={{
+        position: "relative",
+        zIndex: 1,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+        gap: "0.5rem",
+      }}>
+        <span style={{
+          color: "#fff",
+          fontFamily: "monospace",
+          fontSize: "11px",
+          letterSpacing: "0.15em",
+          textTransform: "uppercase",
+          opacity: 0.4,
+        }}>
+          Floating embers
+        </span>
+        <span style={{
+          color: "#fff",
+          fontFamily: "monospace",
+          fontSize: "9px",
+          letterSpacing: "0.1em",
+          opacity: 0.15,
+        }}>
+          Cursor and scroll gently influence the drift
+        </span>
+      </div>
+    </div>
+  );
+}
+`.trim();
+  } else if (entry.slug === "scanline-drift") {
+    appCode = `
+import { useState } from "react";
+import { ScanlineDrift } from "./ScanlineDrift";
+
+const VARIANTS = ["afterglow", "aurora", "shimmer"] as const;
+type V = (typeof VARIANTS)[number];
+
+export default function App() {
+  const [v, setV] = useState<V>("afterglow");
+  return (
+    <div style={{
+      background: "#000",
+      minHeight: "100vh",
+      position: "relative",
+      overflow: "hidden",
+    }}>
+      <ScanlineDrift variant={v} />
+      <div style={{
+        position: "relative",
+        zIndex: 1,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+        gap: "2rem",
+      }}>
+        <div style={{ display: "flex", gap: "0.5rem" }}>
+          {VARIANTS.map((name) => (
+            <button
+              key={name}
+              onClick={() => setV(name)}
+              style={{
+                padding: "0.5rem 1.25rem",
+                border: v === name ? "1px solid rgba(255,255,255,0.4)" : "1px solid rgba(255,255,255,0.1)",
+                background: v === name ? "rgba(255,255,255,0.08)" : "transparent",
+                color: "#fff",
+                fontFamily: "monospace",
+                fontSize: "10px",
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                cursor: "pointer",
+                transition: "all 0.2s",
+                opacity: v === name ? 1 : 0.35,
+              }}
+            >
+              {name}
+            </button>
+          ))}
+        </div>
+        <span style={{
+          color: "#fff",
+          fontFamily: "monospace",
+          fontSize: "8px",
+          letterSpacing: "0.1em",
+          opacity: 0.15,
+        }}>
+          Click to change mood
+        </span>
+      </div>
+    </div>
+  );
+}
+`.trim();
+  } else if (entry.slug === "pixel-melt") {
+    appCode = `
+import { PixelMeltBackground } from "./PixelMelt";
+
+export default function App() {
+  return (
+    <div style={{
+      background: "#000",
+      minHeight: "100vh",
+      position: "relative",
+      overflow: "hidden",
+    }}>
+      <PixelMeltBackground />
+      <div style={{
+        position: "relative",
+        zIndex: 1,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+        gap: "0.5rem",
+      }}>
+        <span style={{
+          color: "#fff",
+          fontFamily: "monospace",
+          fontSize: "11px",
+          letterSpacing: "0.15em",
+          textTransform: "uppercase",
+          opacity: 0.4,
+        }}>
+          Move your cursor
+        </span>
+        <span style={{
+          color: "#fff",
+          fontFamily: "monospace",
+          fontSize: "9px",
+          letterSpacing: "0.1em",
+          opacity: 0.15,
+        }}>
+          Pixel heat simulation
+        </span>
+      </div>
+    </div>
+  );
+}
+`.trim();
   }
 
   const props = extractProps(rawCode);
@@ -489,7 +695,7 @@ export default function App() {
     codeToHtml(npmInstall, { lang: "bash", theme: "github-dark-dimmed" }),
   ]);
 
-  const isDefaultWide = entry.slug === "story-timeline";
+  const isDefaultWide = entry.slug === "story-timeline" || entry.slug === "pixel-melt" || entry.slug === "breathing-grid" || entry.slug === "floating-embers" || entry.slug === "scanline-drift";
 
   return (
     <div className="flex w-full">

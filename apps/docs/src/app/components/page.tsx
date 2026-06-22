@@ -12,6 +12,7 @@ const categoryIcons: Record<ComponentCategory, string> = {
   charts: "bar_chart",
   widgets: "widgets",
   buttons: "smart_button",
+  backgrounds: "blur_on",
 };
 
 const categoryTags: Record<string, string[]> = {
@@ -33,13 +34,17 @@ const categoryTags: Record<string, string[]> = {
   "brushed-titanium-button": ["METALWORK", "ANISOTROPIC"],
   "liquid-gold-button": ["LIQUID-METAL", "CONIC-GRAD"],
   "guilloche-button": ["WATCH-DIAL", "MOIRE"],
+  "pixel-melt": ["CANVAS", "HEAT-MAP", "MOUSE"],
+  "breathing-grid": ["CANVAS", "PULSE", "DUAL-LAYER"],
+  "floating-embers": ["CANVAS", "PARTICLE", "AMBIENT"],
+  "scanline-drift": ["CANVAS", "AMBIENT", "VARIANT"],
 };
 
 export default function ComponentsPage() {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
-  const categories: ComponentCategory[] = ["animated", "primitives", "charts", "widgets", "buttons"];
+  const categories: ComponentCategory[] = ["animated", "primitives", "charts", "widgets", "buttons", "backgrounds"];
 
   // Filter registry entries
   const filteredRegistry = registry.filter(
@@ -244,6 +249,91 @@ export default function ComponentsPage() {
                           {item.slug === "guilloche-button" && (
                             <div className="w-20 h-8 bg-slate-950 border border-blue-900/40 flex items-center justify-center font-mono text-[8px] uppercase tracking-wider text-slate-300 select-none">
                               GUILLOCHÉ
+                            </div>
+                          )}
+                          {item.slug === "pixel-melt" && (
+                            <div className="w-28 h-28 bg-pure-black border border-white/10 relative overflow-hidden select-none">
+                              <div className="absolute inset-0 flex flex-wrap gap-[1px] p-2">
+                                {Array.from({ length: 64 }).map((_, i) => {
+                                  const row = Math.floor(i / 8);
+                                  const col = i % 8;
+                                  const heat = Math.max(0, 1 - (Math.abs(row - 4) + Math.abs(col - 4)) / 8);
+                                  return (
+                                    <div
+                                      key={i}
+                                      className="w-[6px] h-[6px] transition-all duration-200"
+                                      style={{
+                                        background: `rgb(${Math.round(heat * 255)},${Math.round(heat * 255)},${Math.round(heat * 255)})`,
+                                        opacity: Math.max(0.03, heat),
+                                      }}
+                                    />
+                                  );
+                                })}
+                              </div>
+                              <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-4 h-4 bg-white/5 rounded-full blur-sm group-hover:bg-white/20 group-hover:scale-150 transition-all duration-500" />
+                            </div>
+                          )}
+                          {item.slug === "breathing-grid" && (
+                            <div className="w-28 h-28 bg-pure-black border border-white/10 relative overflow-hidden select-none">
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="w-24 h-24 grid grid-cols-5 gap-[1px]">
+                                  {Array.from({ length: 25 }).map((_, i) => {
+                                    const row = Math.floor(i / 5);
+                                    const col = i % 5;
+                                    const dist = Math.abs(row - 2) + Math.abs(col - 2);
+                                    const breath = Math.sin((dist * 0.5 + Date.now() * 0.001) * Math.PI) * 0.5 + 0.5;
+                                    const opacity = 0.03 + breath * 0.1;
+                                    return (
+                                      <div
+                                        key={i}
+                                        className="border border-white/10 transition-all duration-300"
+                                        style={{ opacity }}
+                                      />
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                              <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_48%,rgba(255,255,255,0.03)_50%,transparent_52%)]" />
+                            </div>
+                          )}
+                          {item.slug === "floating-embers" && (
+                            <div className="w-28 h-28 bg-pure-black border border-white/10 relative overflow-hidden select-none">
+                              <div className="absolute inset-0">
+                                {Array.from({ length: 12 }).map((_, i) => {
+                                  const left = 10 + (i * 23 + i * i * 7) % 80;
+                                  const delay = i * 0.4;
+                                  const size = 1 + (i % 3) * 0.8;
+                                  return (
+                                    <div
+                                      key={i}
+                                      className="absolute rounded-full"
+                                      style={{
+                                        left: `${left}%`,
+                                        bottom: `${10 + (i * 13) % 60}%`,
+                                        width: `${size * 2}px`,
+                                        height: `${size * 2}px`,
+                                        background: `hsl(${30 + i * 3}, 100%, ${55 + i * 3}%)`,
+                                        boxShadow: `0 0 ${4 + size * 2}px hsl(${35 + i * 2}, 100%, 60%)`,
+                                        opacity: 0.7 - i * 0.04,
+                                        animation: `none`,
+                                      }}
+                                    />
+                                  );
+                                })}
+                              </div>
+                              <div className="absolute bottom-2 right-2 w-4 h-4 rounded-full bg-amber-200/5 blur-[3px]" />
+                            </div>
+                          )}
+                          {item.slug === "scanline-drift" && (
+                            <div className="w-28 h-28 bg-pure-black border border-white/10 relative overflow-hidden select-none">
+                              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                <div className="w-24 h-[2px] bg-gradient-to-r from-transparent via-amber-300/30 to-transparent blur-sm" />
+                                <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-amber-400/20 to-transparent blur-[2px] mt-[1px]" />
+                                <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-amber-300/10 to-transparent blur-[1px] mt-[2px]" />
+                              </div>
+                              <div className="absolute bottom-2 right-2 text-[7px] font-mono text-white/10">
+                                3× mood
+                              </div>
                             </div>
                           )}
                         </div>

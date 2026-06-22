@@ -31,5 +31,12 @@ export { BrushedTitaniumButton } from "./animated/BrushedTitaniumButton";
 export { LiquidGoldButton } from "./animated/LiquidGoldButton";
 export { GuillocheButton } from "./animated/GuillocheButton";
 
+// backgrounds
+export { PixelMeltBackground } from "./backgrounds/PixelMelt";
+export { BreathingGrid } from "./backgrounds/BreathingGrid";
+export { FloatingEmbers } from "./backgrounds/FloatingEmbers";
+export { ScanlineDrift } from "./backgrounds/ScanlineDrift";
+export type { ScanlineVariant } from "./backgrounds/ScanlineDrift";
+
 // utils
 export { cn } from "./lib/utils";
