@@ -70,6 +70,7 @@ export function GravityCardStack() {
 
   const initPhysics = useCallback(() => {
     if (!containerRef.current || !canvasRef.current) return;
+    bodiesRef.current = [];
 
     const { width, height } = containerRef.current.getBoundingClientRect();
 

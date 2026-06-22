@@ -2,7 +2,8 @@ export type ComponentCategory =
   | "animated"
   | "primitives"
   | "charts"
-  | "widgets";
+  | "widgets"
+  | "buttons";
 
 export interface PropDefinition {
   name: string;
@@ -154,5 +155,37 @@ export const registry: RegistryEntry[] = [
     description: "A scroll-animated vertical narrative timeline with counting stats and slide-in nodes.",
     dependencies: ["gsap", "lucide-react"],
     packagePath: "animated/StoryTimeline.tsx",
+  },
+  {
+    name: "Void Button",
+    slug: "void-button",
+    category: "buttons",
+    description: "Pure black button that reveals a luxury gold gradient under the cursor via a smooth radial mask.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/VoidButton.tsx",
+  },
+  {
+    name: "Brushed Titanium Button",
+    slug: "brushed-titanium-button",
+    category: "buttons",
+    description: "Machined titanium texture with anisotropic highlight sweeps and reactive spotlight illumination.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/BrushedTitaniumButton.tsx",
+  },
+  {
+    name: "Liquid Gold Button",
+    slug: "liquid-gold-button",
+    category: "buttons",
+    description: "Conic gradient rotating behind a frosted glass blur layer, with a 1px border that catches light only at the top.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/LiquidGoldButton.tsx",
+  },
+  {
+    name: "Guilloche Button",
+    slug: "guilloche-button",
+    category: "buttons",
+    description: "Watch dial Guilloché patterns generating Moire wave shapes under the cursor spotlight.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/GuillocheButton.tsx",
   },
 ];

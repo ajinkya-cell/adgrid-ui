@@ -26,6 +26,10 @@ export type { LivingTextProps } from "./animated/LivingText";
 export { GravityCardStack } from "./animated/GravityCardStack";
 export { MorphingNav } from "./animated/MorphingNav";
 export { StoryTimeline } from "./animated/StoryTimeline";
+export { VoidButton } from "./animated/VoidButton";
+export { BrushedTitaniumButton } from "./animated/BrushedTitaniumButton";
+export { LiquidGoldButton } from "./animated/LiquidGoldButton";
+export { GuillocheButton } from "./animated/GuillocheButton";
 
 // utils
 export { cn } from "./lib/utils";

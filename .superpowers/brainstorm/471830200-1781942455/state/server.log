@@ -1,0 +1,2 @@
+{"type":"server-started","port":62984,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:62984/?key=3b2dcffbb7b277f55e257b04c121584a148007d48cae8e1e4650aaa950b32f7d","screen_dir":"C:\\Users\\ajink\\OneDrive\\Desktop\\personal - coding - ventures\\adgrid-ui\\adgrid-ui\\.superpowers\\brainstorm\\471830200-1781942455\\content","state_dir":"C:\\Users\\ajink\\OneDrive\\Desktop\\personal - coding - ventures\\adgrid-ui\\adgrid-ui\\.superpowers\\brainstorm\\471830200-1781942455\\state","idle_timeout_ms":14400000}
+{"type":"server-stopped","reason":"idle timeout"}

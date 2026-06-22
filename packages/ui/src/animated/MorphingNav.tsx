@@ -59,8 +59,8 @@ export function MorphingNav() {
   const navRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
 
-  const closedPath = "M20,20 Q50,20 80,20 L80,20 Q50,20 20,20 Z";
-  const openPath = "M20,20 Q50,20 80,20 L380,20 Q410,20 410,50 L410,300 Q410,330 380,330 L20,330 Q-10,330 -10,300 L-10,50 Q-10,20 20,20 Z";
+  const closedPath = "M30,5 Q55,5 80,5 L400,5 Q425,5 425,30 L425,50 Q425,75 400,75 L30,75 Q5,75 5,50 L5,30 Q5,5 30,5 Z";
+  const openPath = "M30,5 Q55,5 80,5 L400,5 Q425,5 425,30 L425,320 Q425,345 400,345 L30,345 Q5,345 5,320 L5,30 Q5,5 30,5 Z";
 
   useEffect(() => {
     if (isOpen && activeItem) {
@@ -86,7 +86,7 @@ export function MorphingNav() {
         ref={navRef}
         className="absolute top-6 left-6 right-6 z-50"
       >
-        <div className="relative max-w-xl mx-auto">
+        <div className="relative max-w-xl mx-auto rounded-2xl backdrop-blur-md">
           {/* Background morph shape */}
           <svg
             ref={svgRef}
@@ -97,8 +97,8 @@ export function MorphingNav() {
           >
             <motion.path
               d={morphPath}
-              fill="rgba(10, 10, 10, 0.95)"
-              stroke="rgba(255,255,255,0.15)"
+              fill="rgba(8, 8, 8, 0.85)"
+              stroke="rgba(255,255,255,0.12)"
               strokeWidth="1.5"
               animate={{ d: morphPath }}
               transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }}
@@ -106,20 +106,20 @@ export function MorphingNav() {
           </svg>
 
           {/* Nav content */}
-          <div className="relative flex items-center justify-between p-5 z-10">
+          <div className="relative flex items-center justify-between p-4 sm:p-5 z-10">
             <motion.div
-              className="text-lg font-black tracking-widest text-white font-display uppercase"
+              className="text-sm sm:text-base md:text-lg font-black tracking-widest text-white font-display uppercase"
               whileHover={{ scale: 1.05 }}
             >
               VOID
             </motion.div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2">
               {navItems.map((item) => (
                 <motion.button
                   key={item.label}
                   onClick={() => handleItemClick(item.label)}
-                  className={`relative px-4 py-2 rounded-lg text-xs font-mono tracking-wider uppercase transition-colors ${
+                  className={`relative px-2 py-1 sm:px-4 sm:py-2 rounded-lg text-[10px] sm:text-xs font-mono tracking-wider uppercase transition-colors ${
                     activeItem === item.label
                       ? "text-white"
                       : "text-white/60 hover:text-white"
@@ -139,7 +139,7 @@ export function MorphingNav() {
               ))}
 
               <motion.button
-                className="ml-3 px-5 py-2 bg-white text-black font-mono uppercase text-xs font-bold rounded-lg tracking-wider hover:bg-white/90 transition-colors"
+                className="ml-1 sm:ml-3 px-3 py-1.5 sm:px-5 sm:py-2 bg-white text-black font-mono uppercase text-[10px] sm:text-xs font-bold rounded-lg tracking-wider hover:bg-white/90 transition-colors"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -156,7 +156,7 @@ export function MorphingNav() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.3, delay: 0.1 }}
-                className="relative mt-4 grid grid-cols-2 gap-4 p-6 z-10"
+                className="relative mt-2 grid grid-cols-1 sm:grid-cols-2 gap-3 p-5 sm:p-6 z-10"
               >
                 {navItems
                   .find((i) => i.label === activeItem)
@@ -182,7 +182,7 @@ export function MorphingNav() {
                     </motion.a>
                   ))}
 
-                <div className="col-span-2 mt-4 pt-4 border-t border-white/10">
+                <div className="col-span-1 sm:col-span-2 mt-4 pt-4 border-t border-white/10">
                   <div className="flex items-center justify-between">
                     <p className="text-white/40 text-[10px] font-mono uppercase">
                       {navItems.find((i) => i.label === activeItem)?.description}

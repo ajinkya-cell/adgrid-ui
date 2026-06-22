@@ -14,7 +14,7 @@ export function Navbar() {
   ];
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-background border-b border-border-hairline h-16">
+    <header className="fixed top-0 left-0 w-full z-50 bg-background/85 backdrop-blur-md border-b border-border-hairline h-16">
       <nav className="flex justify-between items-center h-full px-6 max-w-[1440px] mx-auto w-full">
         <div className="flex items-center gap-8">
           <Link href="/" className="font-display text-2xl uppercase tracking-tighter text-white font-bold select-none">

@@ -36,6 +36,9 @@ export default function App() {
 `.trim();
 
   const appCodeValue = appCode ?? defaultAppCode;
+  const finalAppCode = appCodeValue.includes("./styles.css") 
+    ? appCodeValue 
+    : `import "./styles.css";\n${appCodeValue}`;
 
   const depVersions = Object.fromEntries(
     dependencies.map((d) => [d, "latest"])
@@ -46,8 +49,49 @@ export default function App() {
       template="react-ts"
       theme="dark"
       files={{
-        "/App.tsx": appCodeValue,
+        "/App.tsx": finalAppCode,
         [`/${componentName}.tsx`]: code,
+        "/styles.css": `
+body {
+  margin: 0;
+  padding: 0;
+  background: #0a0a0a;
+  color: #fff;
+  font-family: monospace;
+}
+/* Custom scrollbar for technical aesthetic */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #262626;
+  border-radius: 0px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ffffff;
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #262626 transparent;
+}
+*::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: #262626;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #ffffff;
+}
+        `.trim(),
         "node_modules/next/image.tsx": `
 import React from "react";
 

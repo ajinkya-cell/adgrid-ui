@@ -43,12 +43,156 @@ main {
   height: 4px;
 }
 ::-webkit-scrollbar-track {
-  background: #0A0A0A;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
   background: #262626;
+  border-radius: 0px;
 }
 ::-webkit-scrollbar-thumb:hover {
+  background: #ffffff;
+}
+
+/* Force custom scrollbars on nested codeblocks and sandpack containers */
+.sp-wrapper *, 
+.sp-layout *, 
+[class^="sp-"] *, 
+.overflow-auto,
+pre,
+code,
+.cm-scroller {
+  scrollbar-width: thin;
+  scrollbar-color: #262626 transparent;
+}
+
+.sp-wrapper *::-webkit-scrollbar,
+.sp-layout *::-webkit-scrollbar,
+[class^="sp-"] *::-webkit-scrollbar,
+.overflow-auto::-webkit-scrollbar,
+pre::-webkit-scrollbar,
+code::-webkit-scrollbar,
+.cm-scroller::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.sp-wrapper *::-webkit-scrollbar-track,
+.sp-layout *::-webkit-scrollbar-track,
+[class^="sp-"] *::-webkit-scrollbar-track,
+.overflow-auto::-webkit-scrollbar-track,
+pre::-webkit-scrollbar-track,
+code::-webkit-scrollbar-track,
+.cm-scroller::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.sp-wrapper *::-webkit-scrollbar-thumb,
+.sp-layout *::-webkit-scrollbar-thumb,
+[class^="sp-"] *::-webkit-scrollbar-thumb,
+.overflow-auto::-webkit-scrollbar-thumb,
+pre::-webkit-scrollbar-thumb,
+code::-webkit-scrollbar-thumb,
+.cm-scroller::-webkit-scrollbar-thumb {
+  background: #262626 !important;
+  border-radius: 0px !important;
+  border: none !important;
+}
+
+.sp-wrapper *::-webkit-scrollbar-thumb:hover,
+.sp-layout *::-webkit-scrollbar-thumb:hover,
+[class^="sp-"] *::-webkit-scrollbar-thumb:hover,
+.overflow-auto::-webkit-scrollbar-thumb:hover,
+pre::-webkit-scrollbar-thumb:hover,
+code::-webkit-scrollbar-thumb:hover,
+.cm-scroller::-webkit-scrollbar-thumb:hover {
+  background: #555555 !important;
+}
+
+/* Override Sandpack default styling to remove white/light borders */
+.sp-layout {
+  border: 1px solid #262626 !important;
+  border-radius: 0px !important;
+  background: #0a0a0a !important;
+}
+.sp-wrapper {
+  --sp-colors-border: #262626 !important;
+  --sp-colors-clickable: #888888 !important;
+  --sp-colors-hover: #ffffff !important;
+  --sp-colors-surface1: #0a0a0a !important;
+  --sp-colors-surface2: #141313 !important;
+}
+.sp-code-editor, .sp-preview {
+  border: none !important;
+}
+.sp-preview-container {
+  background: #0a0a0a !important;
+}
+
+/* ─── HUD Spotlight & Border Beam Sweeps ─── */
+
+@keyframes border-sweep {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.border-glow-card {
+  position: relative;
+  background: #0a0a0a;
+}
+
+.border-glow-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent, rgba(255, 255, 255, 0.12), transparent);
+  background-size: 200% 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.border-glow-card:hover::before {
+  opacity: 1;
+  animation: border-sweep 3s linear infinite;
+}
+
+.border-glow-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Mouse spotlight backdrops */
+.spotlight-card {
+  position: relative;
+}
+.spotlight-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle 180px at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(255, 255, 255, 0.05), transparent 100%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+.spotlight-card:hover .spotlight-overlay {
+  opacity: 1;
+}
+
+/* Scrollbar tweaks */
+.scrollbar-thin::-webkit-scrollbar {
+  height: 3px;
+  width: 3px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #333333;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
   background: #ffffff;
 }
 

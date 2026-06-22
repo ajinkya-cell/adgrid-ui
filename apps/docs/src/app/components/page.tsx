@@ -11,6 +11,7 @@ const categoryIcons: Record<ComponentCategory, string> = {
   primitives: "category",
   charts: "bar_chart",
   widgets: "widgets",
+  buttons: "smart_button",
 };
 
 const categoryTags: Record<string, string[]> = {
@@ -28,12 +29,17 @@ const categoryTags: Record<string, string[]> = {
   "gravity-card-stack": ["PHYSICS", "SCROLL-TRIGGER"],
   "morphing-nav": ["SVG-MORPH", "NAVBAR"],
   "story-timeline": ["TIMELINE", "GSAP"],
+  "void-button": ["THE-VOID", "MASK-REVEAL"],
+  "brushed-titanium-button": ["METALWORK", "ANISOTROPIC"],
+  "liquid-gold-button": ["LIQUID-METAL", "CONIC-GRAD"],
+  "guilloche-button": ["WATCH-DIAL", "MOIRE"],
 };
 
 export default function ComponentsPage() {
   const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
-  const categories: ComponentCategory[] = ["animated", "primitives", "charts", "widgets"];
+  const categories: ComponentCategory[] = ["animated", "primitives", "charts", "widgets", "buttons"];
 
   // Filter registry entries
   const filteredRegistry = registry.filter(
@@ -42,6 +48,10 @@ export default function ComponentsPage() {
       item.description.toLowerCase().includes(search.toLowerCase()) ||
       item.category.toLowerCase().includes(search.toLowerCase())
   );
+
+  const displayCategories = selectedCategory === "all"
+    ? categories
+    : [selectedCategory as ComponentCategory];
 
   return (
     <div className="flex">
@@ -66,23 +76,46 @@ export default function ComponentsPage() {
             </p>
           </header>
 
-          {/* Search bar */}
-          <div className="mb-12 max-w-md relative select-none">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-[18px]">
-              search
-            </span>
-            <input
-              type="text"
-              placeholder="Search components..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="bg-surface-charcoal border border-border-hairline text-xs font-mono py-3.5 pl-10 pr-4 w-full focus:outline-none focus:border-white focus:ring-0 text-white placeholder-text-muted transition-colors duration-200"
-            />
+          {/* Search & Filter Controls */}
+          <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 mb-12 select-none">
+            {/* Search bar */}
+            <div className="w-full max-w-md relative">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-[18px]">
+                search
+              </span>
+              <input
+                type="text"
+                placeholder="Search components..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="bg-surface-charcoal border border-border-hairline text-xs font-mono py-3.5 pl-10 pr-4 w-full focus:outline-none focus:border-white focus:ring-0 text-white placeholder-text-muted transition-colors duration-200"
+              />
+            </div>
+
+            {/* Category tabs */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 xl:pb-0 font-mono text-[10px] scrollbar-thin">
+              {["all", ...categories].map((cat) => {
+                const active = selectedCategory === cat;
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => setSelectedCategory(cat)}
+                    className={`px-4 py-2.5 border transition-all duration-200 uppercase tracking-wider cursor-pointer font-bold shrink-0 ${
+                      active
+                        ? "bg-white text-black border-white shadow-[0_0_12px_rgba(255,255,255,0.15)]"
+                        : "border-border-hairline text-text-muted bg-surface-charcoal/30 hover:border-white/40 hover:text-white"
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Categorized Grid Section */}
           <div className="space-y-16">
-            {categories.map((cat) => {
+            {displayCategories.map((cat) => {
               const items = filteredRegistry.filter((c) => c.category === cat);
               if (!items.length) return null;
 
@@ -191,6 +224,26 @@ export default function ComponentsPage() {
                               <div className="w-3 h-3 rounded-full border-2 border-white/80 bg-pure-black relative z-10 group-hover:translate-y-6 transition-transform duration-700" />
                               <div className="absolute top-2 left-6 w-3 h-3 rounded bg-white/10 group-hover:opacity-100 transition-opacity" />
                               <div className="absolute bottom-2 right-6 w-3 h-3 rounded bg-white/15 group-hover:opacity-100 transition-opacity" />
+                            </div>
+                          )}
+                          {item.slug === "void-button" && (
+                            <div className="w-20 h-8 bg-pure-black border border-white/10 flex items-center justify-center font-mono text-[8px] uppercase tracking-wider text-white select-none">
+                              THE VOID
+                            </div>
+                          )}
+                          {item.slug === "brushed-titanium-button" && (
+                            <div className="w-20 h-8 bg-neutral-900 border border-neutral-700/60 flex items-center justify-center font-mono text-[8px] uppercase tracking-wider text-neutral-300 select-none">
+                              TITANIUM
+                            </div>
+                          )}
+                          {item.slug === "liquid-gold-button" && (
+                            <div className="w-20 h-8 bg-amber-500/10 border border-[#ffe066]/30 flex items-center justify-center font-mono text-[8px] uppercase tracking-wider text-amber-300 select-none">
+                              LIQUID GOLD
+                            </div>
+                          )}
+                          {item.slug === "guilloche-button" && (
+                            <div className="w-20 h-8 bg-slate-950 border border-blue-900/40 flex items-center justify-center font-mono text-[8px] uppercase tracking-wider text-slate-300 select-none">
+                              GUILLOCHÉ
                             </div>
                           )}
                         </div>

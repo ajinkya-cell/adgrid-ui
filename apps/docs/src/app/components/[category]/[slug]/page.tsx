@@ -429,6 +429,54 @@ export default function App() {
   );
 }
 `.trim();
+  } else if (entry.slug === "void-button") {
+    appCode = `
+import { VoidButton } from "./VoidButton";
+
+export default function App() {
+  return (
+    <div style={{ background: "#050505", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <VoidButton />
+    </div>
+  );
+}
+`.trim();
+  } else if (entry.slug === "brushed-titanium-button") {
+    appCode = `
+import { BrushedTitaniumButton } from "./BrushedTitaniumButton";
+
+export default function App() {
+  return (
+    <div style={{ background: "#050505", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <BrushedTitaniumButton />
+    </div>
+  );
+}
+`.trim();
+  } else if (entry.slug === "liquid-gold-button") {
+    appCode = `
+import { LiquidGoldButton } from "./LiquidGoldButton";
+
+export default function App() {
+  return (
+    <div style={{ background: "#050505", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <LiquidGoldButton />
+    </div>
+  );
+}
+`.trim();
+  } else if (entry.slug === "guilloche-button") {
+    appCode = `
+import { GuillocheButton } from "./GuillocheButton";
+
+export default function App() {
+  return (
+    <div style={{ background: "#050505", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <GuillocheButton />
+    </div>
+  );
+}
+`.trim();
   }
 
   const props = extractProps(rawCode);
