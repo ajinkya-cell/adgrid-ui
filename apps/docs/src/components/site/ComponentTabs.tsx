@@ -4,6 +4,7 @@ import { LivePreview } from "./LivePreview";
 import { CopyButton } from "./CopyButton";
 import type { RegistryEntry } from "@/registry";
 import { useComponentPage } from "./ComponentPageLayout";
+import type { PropDefinition } from "./PropsEditor";
 
 type Tab = "preview" | "code" | "install";
 
@@ -16,6 +17,7 @@ interface Props {
   appCode?: string;
   tsxHtml?: string;
   bashHtml?: string;
+  editableProps?: PropDefinition[];
 }
 
 function HtmlBlock({ html, code }: { html: string; code: string }) {
@@ -32,7 +34,7 @@ function HtmlBlock({ html, code }: { html: string; code: string }) {
   );
 }
 
-export function ComponentTabs({ rawCode, npmInstall, importCode, entry, additionalFiles, appCode, tsxHtml, bashHtml }: Props) {
+export function ComponentTabs({ rawCode, npmInstall, importCode, entry, additionalFiles, appCode, tsxHtml, bashHtml, editableProps }: Props) {
   const [tab, setTab] = useState<Tab>("preview");
   const { isWide } = useComponentPage();
 
@@ -63,6 +65,7 @@ export function ComponentTabs({ rawCode, npmInstall, importCode, entry, addition
           appCode={appCode}
           showCode={false}
           isWide={isWide}
+          editableProps={editableProps}
         />
       )}
 
@@ -75,6 +78,7 @@ export function ComponentTabs({ rawCode, npmInstall, importCode, entry, addition
           appCode={appCode}
           showCode={true}
           isWide={isWide}
+          editableProps={editableProps}
         />
       )}
 

@@ -4,6 +4,7 @@ import React, { useRef, useState } from "react";
 import { motion, useMotionValue, useSpring, useMotionTemplate } from "framer-motion";
 import { cn } from "../lib/utils";
 
+/** Pure black button that reveals a luxury gold gradient under the cursor via a smooth radial mask. */
 export interface VoidButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
 
 export function VoidButton({ className, children, ...props }: VoidButtonProps) {

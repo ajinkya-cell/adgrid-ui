@@ -4,6 +4,7 @@ import React, { useRef, useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate } from "framer-motion";
 import { cn } from "../lib/utils";
 
+/** Brushed titanium machined-metal button with anisotropic highlight sweeps and reactive spotlight illumination. */
 export interface BrushedTitaniumButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
 
 export function BrushedTitaniumButton({ className, children, ...props }: BrushedTitaniumButtonProps) {

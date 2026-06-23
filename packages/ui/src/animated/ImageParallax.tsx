@@ -5,11 +5,13 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import Image from "next/image";
 
 export interface ImageParallaxProps {
+  /** Image source URL */
   src: string;
+  /** Alt text */
   alt: string;
-  /** Container width (CSS value) */
+  /** Container width — any CSS value (default: "100%") */
   width?: string | number;
-  /** Container height (CSS value) */
+  /** Container height — any CSS value (default: 420) */
   height?: string | number;
   /** How many px the image travels on full mouse sweep */
   depth?: number;
@@ -21,6 +23,7 @@ export interface ImageParallaxProps {
   subcaption?: string;
   /** Drive parallax from scroll instead of mouse (uses IntersectionObserver + scroll) */
   mode?: "mouse" | "scroll";
+  /** Container class name */
   className?: string;
 }
 

@@ -14,6 +14,75 @@ import {
   ComponentPageSidebar,
   WideViewToggle,
 } from "@/components/site/ComponentPageLayout";
+import type { PropDefinition } from "@/components/site/PropsEditor";
+
+const PROP_SCHEMAS: Record<string, PropDefinition[]> = {
+  "image-reveal": [
+    { name: "src", type: "string", label: "Image URL", defaultValue: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80", required: true },
+    { name: "alt", type: "string", label: "Alt Text", defaultValue: "Mountain landscape", required: true },
+    { name: "width", type: "number", label: "Width", defaultValue: 360, min: 100, max: 800, step: 10 },
+    { name: "height", type: "number", label: "Height", defaultValue: 480, min: 100, max: 800, step: 10 },
+    { name: "stripeAngle", type: "number", label: "Stripe Angle", defaultValue: -55, min: -90, max: 90, step: 1 },
+    { name: "stripeWidth", type: "number", label: "Stripe Width", defaultValue: 20, min: 5, max: 100, step: 1 },
+    { name: "stripeColor", type: "color", label: "Stripe Color", defaultValue: "#0f172a" },
+    { name: "stripeBg", type: "color", label: "Stripe Background", defaultValue: "#1e293b" },
+    { name: "trigger", type: "select", label: "Trigger", defaultValue: "hover", options: [
+      { label: "Hover", value: "hover" },
+      { label: "Click", value: "click" },
+    ]},
+  ],
+  "living-text": [
+    { name: "text", type: "string", label: "Text", defaultValue: "LIVING TEXT" },
+    { name: "radius", type: "number", label: "Radius", defaultValue: 150, min: 50, max: 400, step: 10 },
+    { name: "strength", type: "number", label: "Strength", defaultValue: 40, min: 5, max: 120, step: 5 },
+    { name: "mode", type: "select", label: "Mode", defaultValue: "repel", options: [
+      { label: "Repel", value: "repel" },
+      { label: "Magnetize", value: "magnetize" },
+      { label: "Stretch", value: "stretch" },
+      { label: "Rotate", value: "rotate" },
+      { label: "Ripple", value: "ripple" },
+      { label: "All", value: "all" },
+    ]},
+    { name: "liquify", type: "boolean", label: "Liquify", defaultValue: true },
+  ],
+  "scanline-drift": [
+    { name: "variant", type: "select", label: "Variant", defaultValue: "afterglow", options: [
+      { label: "Afterglow", value: "afterglow" },
+      { label: "Aurora", value: "aurora" },
+      { label: "Shimmer", value: "shimmer" },
+    ]},
+  ],
+  "void-button": [
+    { name: "children", type: "string", label: "Label", defaultValue: "THE VOID" }
+  ],
+  "brushed-titanium-button": [
+    { name: "children", type: "string", label: "Label", defaultValue: "TITANIUM" }
+  ],
+  "liquid-gold-button": [
+    { name: "children", type: "string", label: "Label", defaultValue: "LIQUID GOLD" }
+  ],
+  "guilloche-button": [
+    { name: "children", type: "string", label: "Label", defaultValue: "GUILLOCHÉ" }
+  ],
+  "image-parallax": [
+    { name: "src", type: "string", label: "Image URL", defaultValue: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=900&q=80", required: true },
+    { name: "alt", type: "string", label: "Alt Text", defaultValue: "Aerial mountain landscape", required: true },
+    { name: "height", type: "number", label: "Height", defaultValue: 320, min: 100, max: 800, step: 10 },
+    { name: "depth", type: "number", label: "Depth", defaultValue: 40, min: 5, max: 150, step: 5 },
+    { name: "overlayColor", type: "color", label: "Overlay Color", defaultValue: "#000000" },
+    { name: "caption", type: "string", label: "Caption", defaultValue: "Above the Clouds" },
+    { name: "subcaption", type: "string", label: "Subcaption", defaultValue: "Aerial landscape · Swiss Alps" },
+    { name: "mode", type: "select", label: "Mode", defaultValue: "mouse", options: [
+      { label: "Mouse", value: "mouse" },
+      { label: "Scroll", value: "scroll" },
+    ]},
+  ],
+  "image-stack": [
+    { name: "width", type: "number", label: "Width", defaultValue: 240, min: 100, max: 500, step: 10 },
+    { name: "height", type: "number", label: "Height", defaultValue: 320, min: 100, max: 600, step: 10 },
+    { name: "dismissThreshold", type: "number", label: "Dismiss Threshold", defaultValue: 100, min: 30, max: 300, step: 10 },
+  ]
+};
 
 // extract props from TSDoc comments in source
 function extractProps(code: string) {
@@ -66,318 +135,11 @@ export default async function ComponentPage({
     additionalFiles["/lib/utils.ts"] = utilsCode;
   }
 
+  const editableProps = PROP_SCHEMAS[entry.slug];
   let appCode: string | undefined;
   const componentName = entry.name.replace(/\s/g, "");
   
-  if (entry.slug === "text-reveal") {
-    appCode = `
-import { TextReveal } from "./TextReveal";
-
-export default function App() {
-  return (
-    <div style={{
-      background: "#0a0a0a",
-      minHeight: "200vh",
-      padding: "10vh 2rem",
-    }}>
-      <p style={{ color: "#444", fontSize: "12px", fontFamily: "monospace", marginBottom: "40vh" }}>
-        SCROLL DOWN TO REVEAL
-      </p>
-      <TextReveal text="Components built for the void. Zero bloat. High performance." />
-    </div>
-  );
-}
-`.trim();
-  } else if (entry.slug === "fade-in") {
-    appCode = `
-import { FadeIn } from "./FadeIn";
-
-export default function App() {
-  return (
-    <div style={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      minHeight: "100vh",
-      background: "#0a0a0a",
-      gap: "1.5rem",
-    }}>
-      <FadeIn direction="up" delay={0.1}>
-        <div style={{
-          padding: "2rem",
-          border: "1px solid #262626",
-          background: "#0a0a0a",
-          color: "#fff",
-          fontFamily: "monospace",
-          fontSize: "12px"
-        }}>
-          FADED IN FROM BOTTOM
-        </div>
-      </FadeIn>
-      <FadeIn direction="left" delay={0.3}>
-        <div style={{
-          padding: "2rem",
-          border: "1px solid #262626",
-          background: "#0a0a0a",
-          color: "#fff",
-          fontFamily: "monospace",
-          fontSize: "12px"
-        }}>
-          FADED IN FROM RIGHT
-        </div>
-      </FadeIn>
-    </div>
-  );
-}
-`.trim();
-  } else if (entry.slug === "glitch-text") {
-    appCode = `
-import { GlitchText } from "./GlitchText";
-
-export default function App() {
-  return (
-    <div style={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      minHeight: "100vh",
-      background: "#0a0a0a",
-    }}>
-      <GlitchText 
-        text="VOID_PROTOCOL" 
-        className="text-white text-5xl uppercase tracking-widest font-black"
-      />
-    </div>
-  );
-}
-`.trim();
-  } else if (entry.slug === "count-up") {
-    appCode = `
-import { CountUp } from "./CountUp";
-
-export default function App() {
-  return (
-    <div style={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      minHeight: "100vh",
-      background: "#0a0a0a",
-      fontFamily: "monospace",
-      color: "#fff"
-    }}>
-      <CountUp 
-        to={100} 
-        duration={2.5} 
-        suffix="%" 
-        className="text-6xl font-bold font-display"
-      />
-      <p style={{ color: "#555", fontSize: "11px", marginTop: "1rem" }}>
-        TELEMETRY_LOAD_SEQUENCE
-      </p>
-    </div>
-  );
-}
-`.trim();
-  } else if (entry.slug === "magnetic-button") {
-    appCode = `
-import { MagneticButton } from "./MagneticButton";
-
-export default function App() {
-  return (
-    <div style={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      minHeight: "100vh",
-      background: "#0a0a0a",
-    }}>
-      <MagneticButton strength={0.4}>
-        <button style={{
-          padding: "1rem 2rem",
-          background: "transparent",
-          border: "1px solid #fff",
-          color: "#fff",
-          fontFamily: "monospace",
-          fontSize: "12px",
-          textTransform: "uppercase",
-          letterSpacing: "0.1em",
-          cursor: "pointer"
-        }}>
-          Hover Pull
-        </button>
-      </MagneticButton>
-    </div>
-  );
-}
-`.trim();
-  } else if (entry.slug === "button") {
-    appCode = `
-import { Button } from "./Button";
-
-export default function App() {
-  return (
-    <div style={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      minHeight: "100vh",
-      background: "#0a0a0a",
-      gap: "1rem"
-    }}>
-      <Button variant="primary">Primary Action</Button>
-      <Button variant="outline">Secondary Line</Button>
-      <Button variant="ghost">Ghost Command</Button>
-    </div>
-  );
-}
-`.trim();
-  } else if (entry.slug === "card") {
-    appCode = `
-import { Card, CardHeader, CardTitle, CardBody } from "./Card";
-
-export default function App() {
-  return (
-    <div style={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      minHeight: "100vh",
-      background: "#0a0a0a",
-      padding: "2rem"
-    }}>
-      <Card style={{ maxWidth: "400px", width: "100%" }}>
-        <CardHeader>
-          <CardTitle>SYSTEM_MANIFEST</CardTitle>
-        </CardHeader>
-        <CardBody style={{ color: "#888", fontSize: "13px", fontFamily: "monospace" }}>
-          Core system components loaded successfully. All sensors online. Ready to deploy.
-        </CardBody>
-      </Card>
-    </div>
-  );
-}
-`.trim();
-  } else if (entry.slug === "image-reveal") {
-    appCode = `
-import { ImageReveal } from "./ImageReveal";
-
-export default function App() {
-  return (
-    <div style={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      minHeight: "100vh",
-      background: "#0a0a0a",
-      padding: "2rem",
-    }}>
-      <ImageReveal
-        src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80"
-        alt="Mountain landscape"
-        width={260}
-        height={340}
-        stripeColor="#0a0a0a"
-        stripeBg="#262626"
-      />
-    </div>
-  );
-}
-`.trim();
-  } else if (entry.slug === "image-stack") {
-    appCode = `
-import { ImageStack } from "./ImageStack";
-
-export default function App() {
-  const cards = [
-    {
-      src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80",
-      alt: "Mountain",
-      label: "SUMMIT_MANIFEST",
-    },
-    {
-      src: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&q=80",
-      alt: "Stars",
-      label: "CELESTIAL_OBSERVATION",
-    },
-    {
-      src: "https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=600&q=80",
-      alt: "Forest",
-      label: "TERRESTRIAL_ARRAY",
-    },
-  ];
-
-  return (
-    <div style={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      minHeight: "100vh",
-      background: "#0a0a0a",
-      padding: "2rem",
-    }}>
-      <ImageStack cards={cards} width={240} height={320} />
-    </div>
-  );
-}
-`.trim();
-  } else if (entry.slug === "image-parallax") {
-    appCode = `
-import { ImageParallax } from "./ImageParallax";
-
-export default function App() {
-  return (
-    <div style={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      minHeight: "100vh",
-      background: "#0a0a0a",
-      padding: "2rem",
-      width: "100%"
-    }}>
-      <ImageParallax
-        src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=900&q=80"
-        alt="Aerial mountain landscape"
-        height={320}
-        caption="Above the Clouds"
-        subcaption="Aerial landscape · Swiss Alps"
-        mode="mouse"
-      />
-    </div>
-  );
-}
-`.trim();
-  } else if (entry.slug === "living-text") {
-    appCode = `
-import { LivingText } from "./LivingText";
-
-export default function App() {
-  return (
-    <div style={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      minHeight: "100vh",
-      background: "#0a0a0a",
-      padding: "2rem",
-      width: "100%"
-    }}>
-      <LivingText 
-        text="LIVING TEXT"
-        radius={200}
-        strength={50}
-        mode="all"
-        liquify={true}
-      />
-    </div>
-  );
-}
-`.trim();
-  } else if (entry.slug === "gravity-card-stack") {
+  if (entry.slug === "gravity-card-stack") {
     appCode = `
 import { GravityCardStack } from "./GravityCardStack";
 
@@ -425,54 +187,6 @@ export default function App() {
   return (
     <div style={{ background: "#050505", minHeight: "100vh" }}>
       <StoryTimeline />
-    </div>
-  );
-}
-`.trim();
-  } else if (entry.slug === "void-button") {
-    appCode = `
-import { VoidButton } from "./VoidButton";
-
-export default function App() {
-  return (
-    <div style={{ background: "#050505", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <VoidButton />
-    </div>
-  );
-}
-`.trim();
-  } else if (entry.slug === "brushed-titanium-button") {
-    appCode = `
-import { BrushedTitaniumButton } from "./BrushedTitaniumButton";
-
-export default function App() {
-  return (
-    <div style={{ background: "#050505", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <BrushedTitaniumButton />
-    </div>
-  );
-}
-`.trim();
-  } else if (entry.slug === "liquid-gold-button") {
-    appCode = `
-import { LiquidGoldButton } from "./LiquidGoldButton";
-
-export default function App() {
-  return (
-    <div style={{ background: "#050505", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <LiquidGoldButton />
-    </div>
-  );
-}
-`.trim();
-  } else if (entry.slug === "guilloche-button") {
-    appCode = `
-import { GuillocheButton } from "./GuillocheButton";
-
-export default function App() {
-  return (
-    <div style={{ background: "#050505", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <GuillocheButton />
     </div>
   );
 }
@@ -565,71 +279,6 @@ export default function App() {
           opacity: 0.15,
         }}>
           Cursor and scroll gently influence the drift
-        </span>
-      </div>
-    </div>
-  );
-}
-`.trim();
-  } else if (entry.slug === "scanline-drift") {
-    appCode = `
-import { useState } from "react";
-import { ScanlineDrift } from "./ScanlineDrift";
-
-const VARIANTS = ["afterglow", "aurora", "shimmer"] as const;
-type V = (typeof VARIANTS)[number];
-
-export default function App() {
-  const [v, setV] = useState<V>("afterglow");
-  return (
-    <div style={{
-      background: "#000",
-      minHeight: "100vh",
-      position: "relative",
-      overflow: "hidden",
-    }}>
-      <ScanlineDrift variant={v} />
-      <div style={{
-        position: "relative",
-        zIndex: 1,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "100vh",
-        gap: "2rem",
-      }}>
-        <div style={{ display: "flex", gap: "0.5rem" }}>
-          {VARIANTS.map((name) => (
-            <button
-              key={name}
-              onClick={() => setV(name)}
-              style={{
-                padding: "0.5rem 1.25rem",
-                border: v === name ? "1px solid rgba(255,255,255,0.4)" : "1px solid rgba(255,255,255,0.1)",
-                background: v === name ? "rgba(255,255,255,0.08)" : "transparent",
-                color: "#fff",
-                fontFamily: "monospace",
-                fontSize: "10px",
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                cursor: "pointer",
-                transition: "all 0.2s",
-                opacity: v === name ? 1 : 0.35,
-              }}
-            >
-              {name}
-            </button>
-          ))}
-        </div>
-        <span style={{
-          color: "#fff",
-          fontFamily: "monospace",
-          fontSize: "8px",
-          letterSpacing: "0.1em",
-          opacity: 0.15,
-        }}>
-          Click to change mood
         </span>
       </div>
     </div>
@@ -744,6 +393,7 @@ export default function App() {
                   appCode={appCode}
                   tsxHtml={tsxHtml}
                   bashHtml={bashHtml}
+                  editableProps={editableProps}
                 />
               </section>
 

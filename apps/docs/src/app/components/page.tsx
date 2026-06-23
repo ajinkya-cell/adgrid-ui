@@ -16,13 +16,6 @@ const categoryIcons: Record<ComponentCategory, string> = {
 };
 
 const categoryTags: Record<string, string[]> = {
-  "magnetic-button": ["PHYSICS", "INTERACTIVE"],
-  "text-reveal": ["SCROLL", "FADE"],
-  "fade-in": ["VIEWPORT", "GPU"],
-  "glitch-text": ["RGB-SPLIT", "HOVER"],
-  "count-up": ["TELEMETRY", "SCROLL"],
-  "button": ["BRUTALIST", "HIGH-CONTRAST"],
-  "card": ["SURFACE", "HAIRLINE"],
   "image-reveal": ["IMAGE", "MASK"],
   "image-stack": ["CARDS", "SWIPE"],
   "image-parallax": ["PERSPECTIVE", "MOUSE"],
@@ -145,40 +138,6 @@ export default function ComponentsPage() {
                         <div className="mb-6 h-36 bg-pure-black border border-border-hairline flex items-center justify-center relative overflow-hidden select-none">
                           <div className="absolute inset-0 opacity-5 pointer-events-none bg-[radial-gradient(#262626_1px,transparent_1px)] bg-[size:10px_10px]" />
                           
-                          {item.slug === "magnetic-button" && (
-                            <div className="px-4 py-2 border border-white/40 text-white/40 font-mono text-[9px] uppercase tracking-wider group-hover:border-white group-hover:text-white transition-colors duration-300">
-                              Attract Grid
-                            </div>
-                          )}
-                          {item.slug === "text-reveal" && (
-                            <div className="flex flex-col gap-1 items-center">
-                              <span className="font-mono text-[10px] text-white/20 line-through">invisible_state</span>
-                              <span className="font-mono text-[10px] text-white/80 uppercase tracking-widest font-bold group-hover:scale-105 transition-transform duration-300">Reveal State</span>
-                            </div>
-                          )}
-                          {item.slug === "fade-in" && (
-                            <div className="w-8 h-8 rounded-full border border-dashed border-white/30 flex items-center justify-center group-hover:rotate-45 transition-transform duration-500">
-                              <span className="material-symbols-outlined text-[16px] text-white/40 group-hover:text-white transition-colors">arrow_upward</span>
-                            </div>
-                          )}
-                          {item.slug === "glitch-text" && (
-                            <span className="font-display text-lg font-bold tracking-widest text-white/40 group-hover:text-white transition-all duration-150 select-none">
-                              GLITCH
-                            </span>
-                          )}
-                          {item.slug === "count-up" && (
-                            <span className="font-mono text-xl font-bold text-white/50 group-hover:text-white transition-colors select-none">
-                              74.2%
-                            </span>
-                          )}
-                          {item.slug === "button" && (
-                            <div className="px-4 py-1.5 bg-white text-black font-mono text-[9px] uppercase tracking-wider font-bold">
-                              ACTION
-                            </div>
-                          )}
-                          {item.slug === "card" && (
-                            <div className="w-24 h-12 border border-white/20 group-hover:border-white/50 transition-colors bg-surface-charcoal" />
-                          )}
                           {item.slug === "image-reveal" && (
                             <div className="w-16 h-20 border border-white/20 relative overflow-hidden flex items-center justify-center">
                               <div className="absolute inset-0 bg-white/5 group-hover:bg-white/10 group-hover:skew-x-12 transition-all duration-500" />
@@ -301,7 +260,6 @@ export default function ComponentsPage() {
                               <div className="absolute inset-0">
                                 {Array.from({ length: 12 }).map((_, i) => {
                                   const left = 10 + (i * 23 + i * i * 7) % 80;
-                                  const delay = i * 0.4;
                                   const size = 1 + (i % 3) * 0.8;
                                   return (
                                     <div

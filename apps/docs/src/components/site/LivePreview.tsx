@@ -1,10 +1,13 @@
 "use client";
+import { useState, useEffect, useRef } from "react";
 import {
   SandpackProvider,
   SandpackLayout,
   SandpackPreview,
   SandpackCodeEditor,
+  useSandpack,
 } from "@codesandbox/sandpack-react";
+import { PropsEditor, type PropDefinition } from "./PropsEditor";
 
 interface LivePreviewProps {
   code: string;
@@ -14,9 +17,104 @@ interface LivePreviewProps {
   appCode?: string;
   showCode?: boolean;
   isWide?: boolean;
+  editableProps?: PropDefinition[];
 }
 
-export function LivePreview({ code, componentName, dependencies = [], additionalFiles = {}, appCode, showCode = false, isWide = false }: LivePreviewProps) {
+function SandpackFileSyncer({ appCode }: { appCode: string }) {
+  const { sandpack } = useSandpack();
+  const prevRef = useRef(appCode);
+
+  useEffect(() => {
+    if (appCode !== prevRef.current) {
+      prevRef.current = appCode;
+      sandpack.updateFile("/App.tsx", appCode);
+    }
+  }, [appCode, sandpack]);
+
+  return null;
+}
+
+function generateAppCode(
+  componentName: string,
+  propDefs: PropDefinition[],
+  values: Record<string, unknown>
+): string {
+  let extraProps = "";
+  let extraVariables = "";
+
+  if (componentName === "ImageStack") {
+    extraVariables = `
+  const cards = [
+    {
+      src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80",
+      alt: "Mountain",
+      label: "SUMMIT_MANIFEST",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&q=80",
+      alt: "Stars",
+      label: "CELESTIAL_OBSERVATION",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=600&q=80",
+      alt: "Forest",
+      label: "TERRESTRIAL_ARRAY",
+    },
+  ];
+`;
+    extraProps = "\n        cards={cards}";
+  }
+
+  const propsStr = propDefs
+    .filter((def) => {
+      const val = values[def.name] ?? def.defaultValue;
+      return val !== undefined;
+    })
+    .map((def) => {
+      const val = values[def.name] ?? def.defaultValue;
+      if (def.type === "number" || def.type === "boolean") {
+        return `\n        ${def.name}={${val}}`;
+      }
+      // string, color, select -> string attributes
+      return `\n        ${def.name}="${String(val).replace(/"/g, '&quot;')}"`;
+    })
+    .join("") + extraProps;
+
+  return `import { ${componentName} } from "./${componentName}";
+
+export default function App() {${extraVariables}
+  return (
+    <div style={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      minHeight: "100vh",
+      background: "#0a0a0a",
+      padding: "2rem",
+    }}>
+      <${componentName}${propsStr}
+      />
+    </div>
+  );
+}`.trim();
+}
+
+export function LivePreview({
+  code,
+  componentName,
+  dependencies = [],
+  additionalFiles = {},
+  appCode,
+  showCode = false,
+  isWide = false,
+  editableProps = [],
+}: LivePreviewProps) {
+  const hasEditableProps = editableProps && editableProps.length > 0;
+
+  const [propValues, setPropValues] = useState<Record<string, unknown>>(() =>
+    Object.fromEntries(editableProps.map((p) => [p.name, p.defaultValue]))
+  );
+
   const defaultAppCode = `
 import { ${componentName} } from "./${componentName}";
 
@@ -35,9 +133,12 @@ export default function App() {
 }
 `.trim();
 
-  const appCodeValue = appCode ?? defaultAppCode;
-  const finalAppCode = appCodeValue.includes("./styles.css") 
-    ? appCodeValue 
+  const appCodeValue = hasEditableProps
+    ? generateAppCode(componentName, editableProps, propValues)
+    : (appCode ?? defaultAppCode);
+
+  const finalAppCode = appCodeValue.includes("./styles.css")
+    ? appCodeValue
     : `import "./styles.css";\n${appCodeValue}`;
 
   const depVersions = Object.fromEntries(
@@ -138,12 +239,23 @@ export default function MockImage({ src, alt, fill, width, height, className, st
       }}
       options={{ externalResources: ["https://cdn.tailwindcss.com"] }}
     >
+      {hasEditableProps && <SandpackFileSyncer appCode={finalAppCode} />}
       <SandpackLayout>
         {showCode && (
           <SandpackCodeEditor showTabs showLineNumbers style={{ height: isWide ? 600 : 480 }} />
         )}
         <SandpackPreview style={{ height: isWide ? 600 : 480 }} showOpenInCodeSandbox={false} />
       </SandpackLayout>
+      {hasEditableProps && (
+        <PropsEditor
+          title={componentName}
+          propDefs={editableProps}
+          values={propValues}
+          onChange={(name, value) => {
+            setPropValues((prev) => ({ ...prev, [name]: value }));
+          }}
+        />
+      )}
     </SandpackProvider>
   );
-}
+}

@@ -57,11 +57,14 @@ function makeBand(ch: number, c: Cfg): Band {
   };
 }
 
+export interface ScanlineDriftProps {
+  /** Visual mood: "afterglow" for warm CRT afterglow, "aurora" for ethereal aurora, "shimmer" for zen shimmer */
+  variant?: ScanlineVariant;
+}
+
 export function ScanlineDrift({
   variant = "afterglow",
-}: {
-  variant?: ScanlineVariant;
-}) {
+}: ScanlineDriftProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
   const mouseRef = useRef({ x: -999, y: -999 });

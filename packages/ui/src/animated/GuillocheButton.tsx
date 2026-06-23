@@ -4,6 +4,7 @@ import React, { useRef, useState } from "react";
 import { motion, useMotionValue, useSpring, useMotionTemplate } from "framer-motion";
 import { cn } from "../lib/utils";
 
+/** Watch-dial Guilloché button generating Moire wave patterns under the cursor spotlight. */
 export interface GuillocheButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
 
 export function GuillocheButton({ className, children, ...props }: GuillocheButtonProps) {

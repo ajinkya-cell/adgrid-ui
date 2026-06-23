@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "../lib/utils";
 
+/** Liquid-gold button with rotating conic gradient behind a frosted glass blur layer, with a 1px border that catches light only at the top. */
 export interface LiquidGoldButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
 
 export function LiquidGoldButton({ className, children, ...props }: LiquidGoldButtonProps) {

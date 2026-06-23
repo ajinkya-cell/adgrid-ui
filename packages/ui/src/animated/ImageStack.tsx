@@ -11,19 +11,26 @@ import {
 import Image from "next/image";
 
 export interface StackCard {
+  /** Image URL */
   src: string;
+  /** Alt text */
   alt: string;
+  /** Optional label shown on the top card */
   label?: string;
 }
 
 export interface ImageStackProps {
+  /** Array of cards to display */
   cards: StackCard[];
+  /** Card width in px (default: 260) */
   width?: number;
+  /** Card height in px (default: 340) */
   height?: number;
-  /** px threshold for a swipe to count as a dismiss */
+  /** Px threshold for a swipe to count as a dismiss (default: 100) */
   dismissThreshold?: number;
   /** Called when a card is dismissed (index in original array) */
   onDismiss?: (card: StackCard, index: number) => void;
+  /** Container class name */
   className?: string;
 }
 

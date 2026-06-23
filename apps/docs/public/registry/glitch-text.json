@@ -1,9 +1,0 @@
-{
-  "name": "Glitch Text",
-  "slug": "glitch-text",
-  "category": "animated",
-  "description": "RGB-split glitch effect on hover.",
-  "dependencies": [],
-  "packagePath": "animated/GlitchText.tsx",
-  "code": "\"use client\";\r\nimport { cn } from \"../lib/utils\";\r\n\r\nexport interface GlitchTextProps {\r\n  text: string;\r\n  className?: string;\r\n}\r\n\r\nexport function GlitchText({ text, className }: GlitchTextProps) {\r\n  return (\r\n    <span\r\n      className={cn(\"relative inline-block font-display font-bold group\", className)}\r\n      data-text={text}\r\n    >\r\n      <style>{`\r\n        .glitch-text { position: relative; }\r\n        .glitch-text::before,\r\n        .glitch-text::after {\r\n          content: attr(data-text);\r\n          position: absolute;\r\n          inset: 0;\r\n          opacity: 0;\r\n        }\r\n        .glitch-text::before { color: #ff0040; clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%); }\r\n        .glitch-text::after  { color: #00ffcc; clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%); }\r\n        .glitch-text:hover::before { opacity: 0.8; animation: glitch-before 0.3s steps(2) infinite; }\r\n        .glitch-text:hover::after  { opacity: 0.8; animation: glitch-after  0.3s steps(2) infinite; }\r\n        @keyframes glitch-before { 0%,100%{transform:translate(0)} 33%{transform:translate(-3px,1px)} 66%{transform:translate(3px,-1px)} }\r\n        @keyframes glitch-after  { 0%,100%{transform:translate(0)} 33%{transform:translate(3px,-1px)} 66%{transform:translate(-3px,1px)} }\r\n      `}</style>\r\n      <span className=\"glitch-text\" data-text={text}>{text}</span>\r\n    </span>\r\n  );\r\n}"
-}
