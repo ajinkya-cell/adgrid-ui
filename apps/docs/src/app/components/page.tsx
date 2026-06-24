@@ -31,6 +31,7 @@ const categoryTags: Record<string, string[]> = {
   "breathing-grid": ["CANVAS", "PULSE", "DUAL-LAYER"],
   "floating-embers": ["CANVAS", "PARTICLE", "AMBIENT"],
   "scanline-drift": ["CANVAS", "AMBIENT", "VARIANT"],
+  "molten-obsidian": ["WEBGL", "OBSIDIAN", "SPECULAR"],
 };
 
 export default function ComponentsPage() {
@@ -291,6 +292,16 @@ export default function ComponentsPage() {
                               </div>
                               <div className="absolute bottom-2 right-2 text-[7px] font-mono text-white/10">
                                 3× mood
+                              </div>
+                            </div>
+                          )}
+                          {item.slug === "molten-obsidian" && (
+                            <div className="w-28 h-28 bg-pure-black border border-white/10 relative overflow-hidden select-none">
+                              <div className="absolute inset-0 bg-gradient-to-br from-[#050508] via-[#030304] to-[#010101]" />
+                              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,rgba(255,255,255,0.06)_0%,transparent_50%)]" />
+                              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_80%,rgba(255,255,255,0.03)_0%,transparent_40%)]" />
+                              <div className="absolute bottom-2 right-2 text-[7px] font-mono text-white/10">
+                                WEBGL
                               </div>
                             </div>
                           )}

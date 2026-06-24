@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 
+const UI_SRC = path.join(process.cwd(), "../../packages/ui/src");
+
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ slug: string }> }
@@ -13,13 +15,33 @@ export async function GET(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  const filePath = path.join(
-    process.cwd(),
-    "../../packages/ui/src",
-    entry.packagePath
-  );
+  // Read main component source
+  const componentPath = path.join(UI_SRC, entry.packagePath);
+  if (!fs.existsSync(componentPath)) {
+    return NextResponse.json({ error: "Component file not found" }, { status: 500 });
+  }
+  const code = fs.readFileSync(componentPath, "utf-8");
 
-  const code = fs.readFileSync(filePath, "utf-8");
+  // Build files map — includes component + dependencies
+  const files: Record<string, string> = {
+    [`components/ui/${entry.slug}.tsx`]: code,
+  };
 
-  return NextResponse.json({ ...entry, code });
+  // If component imports ../lib/utils, include it
+  if (code.includes("../lib/utils")) {
+    const utilsPath = path.join(UI_SRC, "lib/utils.ts");
+    if (fs.existsSync(utilsPath)) {
+      files["lib/utils.ts"] = fs.readFileSync(utilsPath, "utf-8");
+    }
+  }
+
+  return NextResponse.json({
+    name: entry.name,
+    slug: entry.slug,
+    description: entry.description,
+    dependencies: entry.dependencies,
+    code,
+    files,
+    registryDependencies: [],
+  });
 }

@@ -150,4 +150,28 @@ export const registry: RegistryEntry[] = [
     dependencies: [],
     packagePath: "backgrounds/ScanlineDrift.tsx",
   },
+  {
+    name: "Molten Obsidian",
+    slug: "molten-obsidian",
+    category: "backgrounds",
+    description: "A WebGL obsidian material background with fractal stone texture, flowing veins, cursor-reactive molten glow, and multiple color variants.",
+    dependencies: [],
+    packagePath: "backgrounds/MoltenObsidian.tsx",
+  },
+  {
+    name: "Monolithic Shadow Gaps",
+    slug: "monolithic-shadow-gaps",
+    category: "backgrounds",
+    description: "A brutalist structural grid with orthogonal cells separated by fine shadow gaps, featuring a raking spotlight that follows cursor movement.",
+    dependencies: ["framer-motion"],
+    packagePath: "backgrounds/MonolithicShadowGaps.tsx",
+  },
+  {
+    name: "Specular Carbon Weave",
+    slug: "specular-carbon-weave",
+    category: "backgrounds",
+    description: "A canvas-rendered carbon fiber weave pattern with dynamic specular highlights that react to cursor position.",
+    dependencies: [],
+    packagePath: "backgrounds/SpecularCarbonWeave.tsx",
+  },
 ];

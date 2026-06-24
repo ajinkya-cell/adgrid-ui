@@ -81,7 +81,7 @@ const PROP_SCHEMAS: Record<string, PropDefinition[]> = {
     { name: "width", type: "number", label: "Width", defaultValue: 240, min: 100, max: 500, step: 10 },
     { name: "height", type: "number", label: "Height", defaultValue: 320, min: 100, max: 600, step: 10 },
     { name: "dismissThreshold", type: "number", label: "Dismiss Threshold", defaultValue: 100, min: 30, max: 300, step: 10 },
-  ]
+  ],
 };
 
 // extract props from TSDoc comments in source
@@ -285,6 +285,53 @@ export default function App() {
   );
 }
 `.trim();
+  } else if (entry.slug === "molten-obsidian") {
+    appCode = `
+import { MoltenObsidian } from "./MoltenObsidian";
+
+export default function App() {
+  return (
+    <div style={{
+      background: "#000",
+      minHeight: "100vh",
+      position: "relative",
+      overflow: "hidden",
+    }}>
+      <MoltenObsidian />
+      <div style={{
+        position: "relative",
+        zIndex: 1,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+        gap: "0.5rem",
+      }}>
+        <span style={{
+          color: "#fff",
+          fontFamily: "monospace",
+          fontSize: "11px",
+          letterSpacing: "0.15em",
+          textTransform: "uppercase",
+          opacity: 0.4,
+        }}>
+          Move your cursor
+        </span>
+        <span style={{
+          color: "#fff",
+          fontFamily: "monospace",
+          fontSize: "9px",
+          letterSpacing: "0.1em",
+          opacity: 0.15,
+        }}>
+          WebGL obsidian specular
+        </span>
+      </div>
+    </div>
+  );
+}
+`.trim();
   } else if (entry.slug === "pixel-melt") {
     appCode = `
 import { PixelMeltBackground } from "./PixelMelt";
@@ -344,7 +391,7 @@ export default function App() {
     codeToHtml(npmInstall, { lang: "bash", theme: "github-dark-dimmed" }),
   ]);
 
-  const isDefaultWide = entry.slug === "story-timeline" || entry.slug === "pixel-melt" || entry.slug === "breathing-grid" || entry.slug === "floating-embers" || entry.slug === "scanline-drift";
+  const isDefaultWide = entry.slug === "story-timeline" || entry.slug === "pixel-melt" || entry.slug === "breathing-grid" || entry.slug === "floating-embers" || entry.slug === "scanline-drift" || entry.slug === "molten-obsidian";
 
   return (
     <div className="flex w-full">

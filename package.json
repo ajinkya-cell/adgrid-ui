@@ -6,7 +6,7 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "build:registry": "turbo build:registry",
-    "release": "turbo build && pnpm --filter @void-ui/ui publish"
+    "release": "turbo build && pnpm --filter void-ui publish --access public"
   },
   "packageManager": "pnpm@10.10.0",
   "devDependencies": {
