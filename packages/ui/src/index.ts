@@ -26,6 +26,9 @@ export { MonolithicShadowGaps } from "./backgrounds/MonolithicShadowGaps";
 export type { MonolithicShadowGapsProps } from "./backgrounds/MonolithicShadowGaps";
 export { SpecularCarbonWeave } from "./backgrounds/SpecularCarbonWeave";
 export type { SpecularCarbonWeaveProps } from "./backgrounds/SpecularCarbonWeave";
+export { SpotlightGrid } from "./backgrounds/SpotlightGrid";
+export { LuminaWave } from "./backgrounds/LuminaWave";
+export type { LuminaWaveProps } from "./backgrounds/LuminaWave";
 
 // utils
 export { cn } from "./lib/utils";
