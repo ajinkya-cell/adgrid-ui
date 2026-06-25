@@ -16,7 +16,6 @@ export const SpotlightGrid = ({ children }: { children?: React.ReactNode }) => {
   const cursorActiveRef = useRef(false);
   const coordsRef = useRef({ x: -9999, y: -9999 });
   const springCoordsRef = useRef({ x: -9999, y: -9999 });
-  const hasActiveCellsRef = useRef(false);
   const spotlightRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -65,16 +64,6 @@ export const SpotlightGrid = ({ children }: { children?: React.ReactNode }) => {
         return;
       }
 
-      // Perform fast culling check to sleep the CPU when cursor & cells are idle
-      if (!cursorActiveRef.current && !hasActiveCellsRef.current) {
-        const spotlightEl = spotlightRef.current;
-        if (spotlightEl) {
-          spotlightEl.style.opacity = "0";
-        }
-        rafRef.current = requestAnimationFrame(tick);
-        return;
-      }
-
       const targetX = coordsRef.current.x;
       const targetY = coordsRef.current.y;
 
@@ -83,8 +72,8 @@ export const SpotlightGrid = ({ children }: { children?: React.ReactNode }) => {
           springCoordsRef.current.x = targetX;
           springCoordsRef.current.y = targetY;
         } else {
-          // Smooth spring damping interpolation (dampens cursor trajectory lag)
-          const easeSpeed = 0.08;
+          // Responsive spring tracking for the light hover glow
+          const easeSpeed = 0.15;
           springCoordsRef.current.x += (targetX - springCoordsRef.current.x) * easeSpeed;
           springCoordsRef.current.y += (targetY - springCoordsRef.current.y) * easeSpeed;
         }
@@ -99,7 +88,7 @@ export const SpotlightGrid = ({ children }: { children?: React.ReactNode }) => {
         perspectiveEl.style.perspectiveOrigin = `${x}px ${y}px`;
       }
 
-      // Update dual color-blend spotlight coordinates
+      // Update dual spotlight overlay position and opacity
       const spotlightEl = spotlightRef.current;
       if (spotlightEl) {
         if (cursorActiveRef.current && x !== -9999) {
@@ -114,60 +103,68 @@ export const SpotlightGrid = ({ children }: { children?: React.ReactNode }) => {
         }
       }
 
-      const elapsed = timeRef.current * 0.008; // Propagation speed
-      const maxRadius = 500;
-      const maxLift = 12; // Maximum px z-elevation
-      const frequency = 0.012; // Wave peak frequency density
-      const sensitivity = 0.02; // Tilt response multiplier
-
-      let cellsCurrentlyActive = false;
+      const elapsed = timeRef.current * 0.002; // Very slow and gentle ambient flow
+      const maxRadius = 400; // Glow influence radius
 
       for (let i = 0; i < total; i++) {
         const el = cellsRef.current.get(i);
         if (!el) continue;
         const { cx, cy } = centers.get(i)!;
-        const dx = x - cx;
-        const dy = y - cy;
-        const dist = Math.sqrt(dx * dx + dy * dy);
 
-        if (dist < maxRadius && cursorActiveRef.current && x !== -9999) {
-          cellsCurrentlyActive = true;
-          
-          const decay = Math.pow(1 - dist / maxRadius, 1.5);
-          const theta = elapsed - dist * frequency;
-          const R = Math.sin(theta);
+        if (cursorActiveRef.current && x !== -9999) {
+          // --- CURSOR INTERACTING: Just show the glow (No 3D tilt/lift) ---
+          const dx = x - cx;
+          const dy = y - cy;
+          const dist = Math.sqrt(dx * dx + dy * dy);
 
-          const lift = R * decay * maxLift;
-          const tx = dy * R * decay * sensitivity;
-          const ty = -dx * R * decay * sensitivity;
+          if (dist < maxRadius) {
+            const intensity = Math.pow(1 - dist / maxRadius, 2);
+            
+            // Slate border: idle (30,41,59, 0.15) to active (148,163,184, 0.35) + teal sheen
+            const borderRed = Math.round(30 + (148 - 30) * intensity);
+            const borderGreen = Math.round(41 + (163 - 41) * intensity + 48 * intensity);
+            const borderBlue = Math.round(59 + (184 - 59) * intensity + 7 * intensity);
+            const borderAlpha = 0.15 + (0.35 - 0.15) * intensity;
 
-          const peakIntensity = (R * 0.5 + 0.5) * decay;
-
-          // Transition slate-800/15 (30,41,59, 0.15) to slate-400 (148,163,184, 0.4) + teal (45,212,191, 0.25)
-          const borderRed = Math.round(30 + (148 - 30) * peakIntensity);
-          const borderGreen = Math.round(41 + (163 - 41) * peakIntensity + 48 * peakIntensity);
-          const borderBlue = Math.round(59 + (184 - 59) * peakIntensity + 7 * peakIntensity);
-          const borderAlpha = 0.15 + (0.4 - 0.15) * peakIntensity;
-
-          el.style.transform = `perspective(500px) rotateX(${tx}deg) rotateY(${ty}deg) translateZ(${lift}px)`;
-          el.style.borderColor = `rgba(${borderRed}, ${borderGreen}, ${borderBlue}, ${borderAlpha})`;
-          el.style.boxShadow = `0 ${Math.max(0, lift) * 0.3}px ${Math.max(0, lift) * 0.6}px rgba(148, 163, 184, ${peakIntensity * 0.08})`;
-          el.style.background = `radial-gradient(circle at 50% 50%, rgba(148, 163, 184, ${peakIntensity * 0.03}), transparent 80%)`;
-          el.style.zIndex = lift > 0.5 ? "1" : "";
-          el.setAttribute("data-active", "true");
-        } else {
-          if (el.getAttribute("data-active") === "true") {
-            el.removeAttribute("data-active");
             el.style.transform = "";
-            el.style.borderColor = "";
-            el.style.boxShadow = "";
-            el.style.background = "";
-            el.style.zIndex = "";
+            el.style.borderColor = `rgba(${borderRed}, ${borderGreen}, ${borderBlue}, ${borderAlpha})`;
+            el.style.boxShadow = `0 1px 4px rgba(148, 163, 184, ${intensity * 0.04})`;
+            el.style.background = `radial-gradient(circle at 50% 50%, rgba(148, 163, 184, ${intensity * 0.035}), transparent 70%)`;
+            el.style.zIndex = "1";
+            el.setAttribute("data-active", "true");
+          } else {
+            if (el.getAttribute("data-active") === "true") {
+              el.removeAttribute("data-active");
+              el.style.transform = "";
+              el.style.borderColor = "";
+              el.style.boxShadow = "";
+              el.style.background = "";
+              el.style.zIndex = "";
+            }
           }
+        } else {
+          // --- CURSOR NOT INTERACTING: Simple, gentle ambient wave ---
+          const waveX = Math.sin(elapsed + cx * 0.005 + cy * 0.005) * 0.4;
+          const waveY = Math.cos(elapsed * 0.7 + cx * 0.005 - cy * 0.005) * 0.4;
+          const waveLift = (Math.sin(elapsed * 0.5 + cx * 0.008 + cy * 0.008) * 0.5 + 0.5) * 2;
+          
+          const pulse = Math.sin(elapsed * 0.8 + cx * 0.006 + cy * 0.006) * 0.5 + 0.5;
+          const ambientGlow = pulse * 0.12;
+
+          const borderRed = Math.round(30 + (70 - 30) * ambientGlow);
+          const borderGreen = Math.round(41 + (90 - 41) * ambientGlow);
+          const borderBlue = Math.round(59 + (110 - 59) * ambientGlow);
+          const borderAlpha = 0.12 + 0.08 * ambientGlow;
+
+          el.style.transform = `perspective(500px) rotateX(${waveX}deg) rotateY(${waveY}deg) translateZ(${waveLift}px)`;
+          el.style.borderColor = `rgba(${borderRed}, ${borderGreen}, ${borderBlue}, ${borderAlpha})`;
+          el.style.boxShadow = `0 ${waveLift * 0.2}px ${waveLift * 0.4}px rgba(148, 163, 184, ${ambientGlow * 0.015})`;
+          el.style.background = `radial-gradient(circle at 50% 50%, rgba(148, 163, 184, ${ambientGlow * 0.012}), transparent 80%)`;
+          el.style.zIndex = "";
+          el.setAttribute("data-active", "true");
         }
       }
 
-      hasActiveCellsRef.current = cellsCurrentlyActive;
       rafRef.current = requestAnimationFrame(tick);
     };
 
