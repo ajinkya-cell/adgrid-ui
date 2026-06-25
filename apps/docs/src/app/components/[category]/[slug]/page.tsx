@@ -45,11 +45,17 @@ const PROP_SCHEMAS: Record<string, PropDefinition[]> = {
     ]},
     { name: "liquify", type: "boolean", label: "Liquify", defaultValue: true },
   ],
-  "scanline-drift": [
-    { name: "variant", type: "select", label: "Variant", defaultValue: "afterglow", options: [
-      { label: "Afterglow", value: "afterglow" },
-      { label: "Aurora", value: "aurora" },
-      { label: "Shimmer", value: "shimmer" },
+
+  "lumina-wave": [
+    { name: "speed", type: "number", label: "Speed", defaultValue: 1.0, min: 0.1, max: 5.0, step: 0.1 },
+    { name: "intensity", type: "number", label: "Intensity", defaultValue: 1.0, min: 0.1, max: 3.0, step: 0.1 },
+    { name: "colorPrimary", type: "color", label: "Primary Color", defaultValue: "#2563eb" },
+    { name: "colorSecondary", type: "color", label: "Secondary Color", defaultValue: "#6610f2" },
+    { name: "mouseReactivity", type: "number", label: "Mouse Reactivity", defaultValue: 0.5, min: 0.0, max: 2.0, step: 0.1 },
+    { name: "quality", type: "select", label: "Quality", defaultValue: "medium", options: [
+      { label: "High", value: "high" },
+      { label: "Medium", value: "medium" },
+      { label: "Low", value: "low" },
     ]},
   ],
   "void-button": [
@@ -285,22 +291,14 @@ export default function App() {
   );
 }
 `.trim();
-  } else if (entry.slug === "molten-obsidian") {
+  } else if (entry.slug === "spotlight-grid") {
     appCode = `
-import { MoltenObsidian } from "./MoltenObsidian";
+import { SpotlightGrid } from "./SpotlightGrid";
 
 export default function App() {
   return (
-    <div style={{
-      background: "#000",
-      minHeight: "100vh",
-      position: "relative",
-      overflow: "hidden",
-    }}>
-      <MoltenObsidian />
+    <SpotlightGrid>
       <div style={{
-        position: "relative",
-        zIndex: 1,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -325,10 +323,10 @@ export default function App() {
           letterSpacing: "0.1em",
           opacity: 0.15,
         }}>
-          WebGL obsidian specular
+          Indigo + sky blue dual spotlight
         </span>
       </div>
-    </div>
+    </SpotlightGrid>
   );
 }
 `.trim();
@@ -379,6 +377,53 @@ export default function App() {
   );
 }
 `.trim();
+  } else if (entry.slug === "lumina-wave") {
+    appCode = `
+import { LuminaWave } from "./LuminaWave";
+
+export default function App() {
+  return (
+    <div style={{
+      background: "#000",
+      minHeight: "100vh",
+      position: "relative",
+      overflow: "hidden",
+    }}>
+      <LuminaWave />
+      <div style={{
+        position: "relative",
+        zIndex: 1,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+        gap: "0.5rem",
+      }}>
+        <span style={{
+          color: "#fff",
+          fontFamily: "monospace",
+          fontSize: "11px",
+          letterSpacing: "0.15em",
+          textTransform: "uppercase",
+          opacity: 0.4,
+        }}>
+          Move your cursor
+        </span>
+        <span style={{
+          color: "#fff",
+          fontFamily: "monospace",
+          fontSize: "9px",
+          letterSpacing: "0.1em",
+          opacity: 0.15,
+        }}>
+          Undulating aurora waves
+        </span>
+      </div>
+    </div>
+  );
+}
+`.trim();
   }
 
   const props = extractProps(rawCode);
@@ -391,7 +436,7 @@ export default function App() {
     codeToHtml(npmInstall, { lang: "bash", theme: "github-dark-dimmed" }),
   ]);
 
-  const isDefaultWide = entry.slug === "story-timeline" || entry.slug === "pixel-melt" || entry.slug === "breathing-grid" || entry.slug === "floating-embers" || entry.slug === "scanline-drift" || entry.slug === "molten-obsidian";
+  const isDefaultWide = entry.slug === "story-timeline" || entry.slug === "pixel-melt" || entry.slug === "breathing-grid" || entry.slug === "floating-embers" || entry.slug === "spotlight-grid" || entry.slug === "lumina-wave";
 
   return (
     <div className="flex w-full">

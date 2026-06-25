@@ -18,14 +18,7 @@ export { GuillocheButton } from "./animated/GuillocheButton";
 export { PixelMeltBackground } from "./backgrounds/PixelMelt";
 export { BreathingGrid } from "./backgrounds/BreathingGrid";
 export { FloatingEmbers } from "./backgrounds/FloatingEmbers";
-export { ScanlineDrift } from "./backgrounds/ScanlineDrift";
-export type { ScanlineVariant, ScanlineDriftProps } from "./backgrounds/ScanlineDrift";
-export { MoltenObsidian } from "./backgrounds/MoltenObsidian";
-export type { ObsidianVariant, MoltenObsidianProps } from "./backgrounds/MoltenObsidian";
-export { MonolithicShadowGaps } from "./backgrounds/MonolithicShadowGaps";
-export type { MonolithicShadowGapsProps } from "./backgrounds/MonolithicShadowGaps";
-export { SpecularCarbonWeave } from "./backgrounds/SpecularCarbonWeave";
-export type { SpecularCarbonWeaveProps } from "./backgrounds/SpecularCarbonWeave";
+
 export { SpotlightGrid } from "./backgrounds/SpotlightGrid";
 export { LuminaWave } from "./backgrounds/LuminaWave";
 export type { LuminaWaveProps } from "./backgrounds/LuminaWave";
