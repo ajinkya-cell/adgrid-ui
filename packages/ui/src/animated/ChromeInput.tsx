@@ -10,7 +10,7 @@ export interface ChromeInputProps extends React.InputHTMLAttributes<HTMLInputEle
 }
 
 export const ChromeInput = React.forwardRef<HTMLInputElement, ChromeInputProps>(
-  ({ className, type = "text", error, label, ...props }, ref) => {
+  ({ className, type = "text", error, label, children, ...props }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [isHovered, setIsHovered] = useState(false);
     const [isFocused, setIsFocused] = useState(false);

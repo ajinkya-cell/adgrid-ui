@@ -141,11 +141,74 @@ export default async function ComponentPage({
     additionalFiles["/lib/utils.ts"] = utilsCode;
   }
 
+  // Load nested component dependencies for MetallicForm
+  if (entry.slug === "metallic-form") {
+    const chromeInputPath = path.join(srcDir, "animated/ChromeInput.tsx");
+    const chromeSelectPath = path.join(srcDir, "animated/ChromeSelect.tsx");
+    const brushedTitaniumButtonPath = path.join(srcDir, "animated/BrushedTitaniumButton.tsx");
+
+    if (fs.existsSync(chromeInputPath)) {
+      additionalFiles["/ChromeInput.tsx"] = fs.readFileSync(chromeInputPath, "utf-8");
+    }
+    if (fs.existsSync(chromeSelectPath)) {
+      additionalFiles["/ChromeSelect.tsx"] = fs.readFileSync(chromeSelectPath, "utf-8");
+    }
+    if (fs.existsSync(brushedTitaniumButtonPath)) {
+      additionalFiles["/BrushedTitaniumButton.tsx"] = fs.readFileSync(brushedTitaniumButtonPath, "utf-8");
+    }
+  }
+
   const editableProps = PROP_SCHEMAS[entry.slug];
   let appCode: string | undefined;
   const componentName = entry.name.replace(/\s/g, "");
   
-  if (entry.slug === "gravity-card-stack") {
+  if (entry.slug === "metallic-form") {
+    appCode = `
+import { MetallicForm } from "./MetallicForm";
+
+export default function App() {
+  const fields = [
+    { name: "name", label: "Full Name", type: "text", required: true, placeholder: "John Doe" },
+    { name: "email", label: "Email Address", type: "email", required: true, placeholder: "john@example.com" },
+    {
+      name: "department",
+      label: "Department",
+      type: "select",
+      options: [
+        { value: "engineering", label: "Engineering" },
+        { value: "design", label: "Design" },
+        { value: "ops", label: "Operations" }
+      ]
+    },
+    { name: "message", label: "Message", type: "textarea", placeholder: "Tell us about your project..." }
+  ];
+
+  const handleSubmit = (data: any) => {
+    console.log("Form Submitted:", data);
+    return new Promise((resolve) => setTimeout(resolve, 2000));
+  };
+
+  return (
+    <div style={{
+      background: "#050505",
+      minHeight: "100vh",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "2rem 1rem",
+    }}>
+      <MetallicForm
+        title="Metallic Intake"
+        subtitle="Secure encrypted telemetry transmission portal"
+        fields={fields}
+        onSubmit={handleSubmit}
+        submitLabel="TRANSMIT DATA"
+      />
+    </div>
+  );
+}
+`.trim();
+  } else if (entry.slug === "gravity-card-stack") {
     appCode = `
 import { GravityCardStack } from "./GravityCardStack";
 

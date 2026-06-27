@@ -16,7 +16,7 @@ export interface ChromeSelectProps extends React.SelectHTMLAttributes<HTMLSelect
 }
 
 export const ChromeSelect = React.forwardRef<HTMLSelectElement, ChromeSelectProps>(
-  ({ className, options, error, label, ...props }, ref) => {
+  ({ className, options = [], error, label, children, ...props }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [isHovered, setIsHovered] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
