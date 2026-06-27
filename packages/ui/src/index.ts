@@ -13,6 +13,12 @@ export { VoidButton } from "./animated/VoidButton";
 export { BrushedTitaniumButton } from "./animated/BrushedTitaniumButton";
 export { LiquidGoldButton } from "./animated/LiquidGoldButton";
 export { GuillocheButton } from "./animated/GuillocheButton";
+export { ChromeInput } from "./animated/ChromeInput";
+export type { ChromeInputProps } from "./animated/ChromeInput";
+export { ChromeSelect } from "./animated/ChromeSelect";
+export type { ChromeSelectProps, ChromeSelectOption } from "./animated/ChromeSelect";
+export { MetallicForm } from "./animated/MetallicForm";
+export type { MetallicFormProps, FormField } from "./animated/MetallicForm";
 
 // backgrounds
 export { PixelMeltBackground } from "./backgrounds/PixelMelt";

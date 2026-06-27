@@ -159,4 +159,28 @@ export const registry: RegistryEntry[] = [
     dependencies: [],
     packagePath: "backgrounds/LuminaWave.tsx",
   },
+  {
+    name: "Chrome Input",
+    slug: "chrome-input",
+    category: "primitives",
+    description: "Deep obsidian input with dynamic border glowing highlights and cursor-responsive spotlight tracking.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/ChromeInput.tsx",
+  },
+  {
+    name: "Chrome Select",
+    slug: "chrome-select",
+    category: "primitives",
+    description: "Deep obsidian dropdown selector with custom arrow overlays and focus glow animations.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/ChromeSelect.tsx",
+  },
+  {
+    name: "Metallic Form",
+    slug: "metallic-form",
+    category: "animated",
+    description: "A machined-metal obsidian form container with sequential entry animations, validation overlays, and typing state signals.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/MetallicForm.tsx",
+  },
 ];
