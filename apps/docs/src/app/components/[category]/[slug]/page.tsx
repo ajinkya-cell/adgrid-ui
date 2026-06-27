@@ -59,7 +59,15 @@ const PROP_SCHEMAS: Record<string, PropDefinition[]> = {
     ]},
   ],
   "void-button": [
-    { name: "children", type: "string", label: "Label", defaultValue: "THE VOID" }
+    { name: "children", type: "string", label: "Label", defaultValue: "THE VOID" },
+    { name: "variant", type: "select", label: "Variant", defaultValue: "ambient", options: [
+      { label: "Ambient Silver", value: "ambient" },
+      { label: "Classic Gold", value: "classic-gold" },
+      { label: "Neon Edge", value: "neon-edge" },
+      { label: "Metallic Sheen", value: "metallic-sheen" },
+      { label: "Glassmorphic", value: "glassmorphic" },
+      { label: "Cyber Laser", value: "cyber-laser" },
+    ]}
   ],
   "brushed-titanium-button": [
     { name: "children", type: "string", label: "Label", defaultValue: "TITANIUM" }
@@ -304,6 +312,69 @@ export default function App() {
       color: "#fff"
     }}>
       <MechanicalTimer />
+    </div>
+  );
+}
+`.trim();
+  } else if (entry.slug === "liquid-mercury-pad") {
+    appCode = `
+import { LiquidMercuryPad } from "./LiquidMercuryPad";
+
+export default function App() {
+  return (
+    <div style={{
+      background: "#050505",
+      minHeight: "100vh",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "2rem",
+      color: "#fff"
+    }}>
+      <LiquidMercuryPad />
+    </div>
+  );
+}
+`.trim();
+  } else if (entry.slug === "slingshot-chassis") {
+    appCode = `
+import { SlingshotChassis } from "./SlingshotChassis";
+
+export default function App() {
+  return (
+    <div style={{
+      background: "#050505",
+      minHeight: "100vh",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "2rem",
+      color: "#fff"
+    }}>
+      <SlingshotChassis />
+    </div>
+  );
+}
+`.trim();
+  } else if (entry.slug === "laser-vault-password") {
+    appCode = `
+import { LaserVaultPassword } from "./LaserVaultPassword";
+
+export default function App() {
+  return (
+    <div style={{
+      background: "#050505",
+      minHeight: "100vh",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "2rem",
+      color: "#fff"
+    }}>
+      <LaserVaultPassword />
     </div>
   );
 }

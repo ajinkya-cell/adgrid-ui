@@ -199,4 +199,28 @@ export const registry: RegistryEntry[] = [
     dependencies: ["framer-motion", "lucide-react"],
     packagePath: "animated/MechanicalTimer.tsx",
   },
+  {
+    name: "Liquid Mercury Pad",
+    slug: "liquid-mercury-pad",
+    category: "animated",
+    description: "GPU-accelerated liquid mercury pad using SVG Specular Lighting + Color Matrix filters, dynamic stroke velocity thickness, and geometric snap engine.",
+    dependencies: ["framer-motion", "lucide-react"],
+    packagePath: "animated/LiquidMercuryPad.tsx",
+  },
+  {
+    name: "Slingshot Chassis",
+    slug: "slingshot-chassis",
+    category: "animated",
+    description: "Elastic-drag container with real-time SVG edge deformation, spring release oscillation solvers, Web Audio snap synthesis, and reveal drawers.",
+    dependencies: ["framer-motion", "lucide-react"],
+    packagePath: "animated/SlingshotChassis.tsx",
+  },
+  {
+    name: "Laser Vault Password",
+    slug: "laser-vault-password",
+    category: "widgets",
+    description: "Passcode vault keypad with laser-etch cooling characters, dynamic cursor sweeps, tactile clicks, container rattles, and friction-metal creak alarms.",
+    dependencies: ["framer-motion", "lucide-react"],
+    packagePath: "animated/LaserVaultPassword.tsx",
+  },
 ];

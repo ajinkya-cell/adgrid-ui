@@ -22,6 +22,9 @@ export type { MetallicFormProps, FormField } from "./animated/MetallicForm";
 export { AnisotropicKnob } from "./animated/AnisotropicKnob";
 export type { AnisotropicKnobProps } from "./animated/AnisotropicKnob";
 export { MechanicalTimer } from "./animated/MechanicalTimer";
+export { LiquidMercuryPad } from "./animated/LiquidMercuryPad";
+export { SlingshotChassis } from "./animated/SlingshotChassis";
+export { LaserVaultPassword } from "./animated/LaserVaultPassword";
 
 // backgrounds
 export { PixelMeltBackground } from "./backgrounds/PixelMelt";
