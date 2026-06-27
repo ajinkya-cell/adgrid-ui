@@ -66,14 +66,14 @@ export const ChromeSelect = React.forwardRef<HTMLSelectElement, ChromeSelectProp
           error
             ? "border-red-500/40 shadow-[0_0_12px_rgba(239,68,68,0.1)]"
             : isFocused
-            ? "border-neutral-500 shadow-[0_0_16px_rgba(255,255,255,0.06)]"
+            ? "border-neutral-500 shadow-[0_0_16px_rgba(255,255,255,0.04)]"
             : isHovered
-            ? "border-neutral-700"
-            : "border-neutral-800"
+            ? "border-neutral-700/80"
+            : "border-neutral-800/80"
         )}
         style={{
-          backgroundImage: "linear-gradient(to bottom, #0a0a0c, #151518)",
-          boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 8px rgba(0, 0, 0, 0.4)",
+          backgroundImage: "linear-gradient(to bottom, #0a0a0d, #121215)",
+          boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 2px 8px rgba(0, 0, 0, 0.5)",
         }}
       >
         {/* Brushed Micro-lines Texture */}
@@ -106,7 +106,7 @@ export const ChromeSelect = React.forwardRef<HTMLSelectElement, ChromeSelectProp
         />
 
         {/* Dropdown Container Wrapper */}
-        <div className="relative z-10 flex items-center justify-between w-full h-10 px-4">
+        <div className="relative z-10 flex items-center justify-between w-full h-11 px-4">
           <select
             ref={ref}
             onFocus={(e) => {
@@ -118,7 +118,7 @@ export const ChromeSelect = React.forwardRef<HTMLSelectElement, ChromeSelectProp
               props.onBlur?.(e);
             }}
             className={cn(
-              "w-full bg-transparent text-neutral-100 font-mono text-sm outline-none border-none appearance-none cursor-pointer pr-8",
+              "w-full bg-transparent text-neutral-100 font-sans text-sm outline-none border-none appearance-none cursor-pointer pr-8",
               className
             )}
             {...props}

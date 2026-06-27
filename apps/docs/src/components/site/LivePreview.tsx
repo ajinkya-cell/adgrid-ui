@@ -242,9 +242,16 @@ export default function MockImage({ src, alt, fill, width, height, className, st
       {hasEditableProps && <SandpackFileSyncer appCode={finalAppCode} />}
       <SandpackLayout>
         {showCode && (
-          <SandpackCodeEditor showTabs showLineNumbers style={{ height: isWide ? 600 : 480 }} />
+          <SandpackCodeEditor 
+            showTabs 
+            showLineNumbers 
+            style={{ height: componentName === "MetallicForm" ? 780 : isWide ? 600 : 480 }} 
+          />
         )}
-        <SandpackPreview style={{ height: isWide ? 600 : 480 }} showOpenInCodeSandbox={false} />
+        <SandpackPreview 
+          style={{ height: componentName === "MetallicForm" ? 780 : isWide ? 600 : 480 }} 
+          showOpenInCodeSandbox={false} 
+        />
       </SandpackLayout>
       {hasEditableProps && (
         <PropsEditor

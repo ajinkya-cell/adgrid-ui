@@ -240,189 +240,194 @@ export function MetallicForm({
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          <AnimatePresence mode="wait">
-            {fields.map((field, index) => (
-              <motion.div
-                key={field.name}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ delay: index * 0.08, duration: 0.4 }}
-                className="space-y-2"
-              >
-                {/* Field label */}
-                <div className="flex items-center justify-between gap-2">
-                  <motion.label
-                    className={cn(
-                      "block text-xs uppercase tracking-widest font-mono transition-colors duration-300",
-                      savedFields.has(field.name)
-                        ? "text-neutral-400"
-                        : focusedField === field.name
-                        ? "text-neutral-200"
-                        : errors[field.name]
-                        ? "text-red-400"
-                        : "text-neutral-600"
-                    )}
-                  >
-                    {field.label}
-                    {field.required && <span className="text-neutral-500 ml-1">*</span>}
-                  </motion.label>
-                  
-                  {/* Typing indicator */}
-                  {typingFields.has(field.name) && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="flex items-center gap-1"
-                    >
-                      <motion.div
-                        animate={{ y: [0, -4, 0] }}
-                        transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
-                        className="w-1 h-1 rounded-full bg-neutral-500"
-                      />
-                      <motion.div
-                        animate={{ y: [0, -4, 0] }}
-                        transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
-                        className="w-1 h-1 rounded-full bg-neutral-500"
-                      />
-                      <motion.div
-                        animate={{ y: [0, -4, 0] }}
-                        transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
-                        className="w-1 h-1 rounded-full bg-neutral-500"
-                      />
-                    </motion.div>
-                  )}
-                </div>
-
-                {/* Input field variants */}
-                {field.type === "textarea" ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+            <AnimatePresence mode="wait">
+              {fields.map((field, index) => {
+                const isFullWidth = field.type === "textarea";
+                return (
                   <motion.div
-                    className={cn(
-                      "relative rounded-lg overflow-hidden border transition-all duration-300",
-                      errors[field.name]
-                        ? "border-red-500/40 shadow-[0_0_12px_rgba(239,68,68,0.1)]"
-                        : focusedField === field.name
-                        ? "border-neutral-500 shadow-[0_0_16px_rgba(255,255,255,0.06)]"
-                        : hoveredField === field.name
-                        ? "border-neutral-700"
-                        : "border-neutral-800"
-                    )}
-                    onMouseEnter={() => {
-                      setFocusedField(field.name);
-                      setHoveredField(field.name);
-                    }}
-                    onMouseLeave={() => {
-                      setFocusedField(null);
-                      setHoveredField(null);
-                    }}
-                    onMouseMove={handleTextareaMouseMove}
-                    style={{
-                      backgroundImage: "linear-gradient(to bottom, #0a0a0c, #151518)",
-                      boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 8px rgba(0, 0, 0, 0.4)",
-                    }}
+                    key={field.name}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ delay: index * 0.08, duration: 0.4 }}
+                    className={cn("space-y-2", isFullWidth ? "md:col-span-2" : "col-span-1")}
                   >
-                    {/* Brushed micro-lines texture inside textarea wrapper */}
-                    <div
-                      className="absolute inset-0 opacity-20 pointer-events-none mix-blend-overlay"
-                      style={{
-                        backgroundImage:
-                          "repeating-linear-gradient(0deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 2px)",
-                      }}
-                    />
-
-                    {/* Spotlight overlay inside textarea wrapper */}
-                    <motion.div
-                      className="absolute inset-0 pointer-events-none"
-                      animate={{ opacity: focusedField === field.name || hoveredField === field.name ? 1 : 0 }}
-                      transition={{ duration: 0.3 }}
-                      style={{ background: textareaSpotlightBg }}
-                    />
-
-                    <textarea
-                      value={formData[field.name]}
-                      onChange={(e) => handleFieldChange(field.name, e.target.value)}
-                      onFocus={() => setFocusedField(field.name)}
-                      onBlur={() => {
-                        setFocusedField(null);
-                        handleFieldBlur(field.name);
-                      }}
-                      placeholder={field.placeholder}
-                      className={cn(
-                        "relative z-10 w-full h-32 px-4 py-3 bg-transparent text-neutral-100 font-mono text-sm outline-none border-none resize-none",
-                        "placeholder:text-neutral-700"
+                    {/* Field label */}
+                    <div className="flex items-center justify-between gap-2">
+                      <motion.label
+                        className={cn(
+                          "block text-xs uppercase tracking-widest font-mono transition-colors duration-300",
+                          savedFields.has(field.name)
+                            ? "text-neutral-400"
+                            : focusedField === field.name
+                            ? "text-neutral-200"
+                            : errors[field.name]
+                            ? "text-red-400"
+                            : "text-neutral-600"
+                        )}
+                      >
+                        {field.label}
+                        {field.required && <span className="text-neutral-500 ml-1">*</span>}
+                      </motion.label>
+                      
+                      {/* Typing indicator */}
+                      {typingFields.has(field.name) && (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className="flex items-center gap-1"
+                        >
+                          <motion.div
+                            animate={{ y: [0, -4, 0] }}
+                            transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
+                            className="w-1 h-1 rounded-full bg-neutral-500"
+                          />
+                          <motion.div
+                            animate={{ y: [0, -4, 0] }}
+                            transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
+                            className="w-1 h-1 rounded-full bg-neutral-500"
+                          />
+                          <motion.div
+                            animate={{ y: [0, -4, 0] }}
+                            transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
+                            className="w-1 h-1 rounded-full bg-neutral-500"
+                          />
+                        </motion.div>
                       )}
-                    />
+                    </div>
 
-                    {/* Bezel inner shadow */}
-                    <div className="absolute inset-0 border border-transparent rounded-lg pointer-events-none shadow-[inset_0_1px_1px_rgba(255,255,255,0.04)]" />
+                    {/* Input field variants */}
+                    {field.type === "textarea" ? (
+                      <motion.div
+                        className={cn(
+                          "relative rounded-lg overflow-hidden border transition-all duration-300",
+                          errors[field.name]
+                            ? "border-red-500/40 shadow-[0_0_12px_rgba(239,68,68,0.1)]"
+                            : focusedField === field.name
+                            ? "border-neutral-500 shadow-[0_0_16px_rgba(255,255,255,0.06)]"
+                            : hoveredField === field.name
+                            ? "border-neutral-700"
+                            : "border-neutral-800"
+                        )}
+                        onMouseEnter={() => {
+                          setFocusedField(field.name);
+                          setHoveredField(field.name);
+                        }}
+                        onMouseLeave={() => {
+                          setFocusedField(null);
+                          setHoveredField(null);
+                        }}
+                        onMouseMove={handleTextareaMouseMove}
+                        style={{
+                          backgroundImage: "linear-gradient(to bottom, #0a0a0c, #151518)",
+                          boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 8px rgba(0, 0, 0, 0.4)",
+                        }}
+                      >
+                        {/* Brushed micro-lines texture inside textarea wrapper */}
+                        <div
+                          className="absolute inset-0 opacity-20 pointer-events-none mix-blend-overlay"
+                          style={{
+                            backgroundImage:
+                              "repeating-linear-gradient(0deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 2px)",
+                          }}
+                        />
+
+                        {/* Spotlight overlay inside textarea wrapper */}
+                        <motion.div
+                          className="absolute inset-0 pointer-events-none"
+                          animate={{ opacity: focusedField === field.name || hoveredField === field.name ? 1 : 0 }}
+                          transition={{ duration: 0.3 }}
+                          style={{ background: textareaSpotlightBg }}
+                        />
+
+                        <textarea
+                          value={formData[field.name]}
+                          onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                          onFocus={() => setFocusedField(field.name)}
+                          onBlur={() => {
+                            setFocusedField(null);
+                            handleFieldBlur(field.name);
+                          }}
+                          placeholder={field.placeholder}
+                          className={cn(
+                            "relative z-10 w-full h-32 px-4 py-3 bg-transparent text-neutral-100 font-mono text-sm outline-none border-none resize-none",
+                            "placeholder:text-neutral-700"
+                          )}
+                        />
+
+                        {/* Bezel inner shadow */}
+                        <div className="absolute inset-0 border border-transparent rounded-lg pointer-events-none shadow-[inset_0_1px_1px_rgba(255,255,255,0.04)]" />
+                      </motion.div>
+                    ) : field.type === "select" && field.options ? (
+                      <div
+                        onMouseEnter={() => {
+                          setFocusedField(field.name);
+                          setHoveredField(field.name);
+                        }}
+                        onMouseLeave={() => {
+                          setFocusedField(null);
+                          setHoveredField(null);
+                        }}
+                      >
+                        <ChromeSelect
+                          value={formData[field.name]}
+                          options={field.options}
+                          onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                          onFocus={() => setFocusedField(field.name)}
+                          onBlur={() => {
+                            setFocusedField(null);
+                            handleFieldBlur(field.name);
+                          }}
+                          error={errors[field.name]}
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        onMouseEnter={() => {
+                          setFocusedField(field.name);
+                          setHoveredField(field.name);
+                        }}
+                        onMouseLeave={() => {
+                          setFocusedField(null);
+                          setHoveredField(null);
+                        }}
+                      >
+                        <ChromeInput
+                          type={field.type || "text"}
+                          value={formData[field.name]}
+                          onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                          onFocus={() => setFocusedField(field.name)}
+                          onBlur={() => {
+                            setFocusedField(null);
+                            handleFieldBlur(field.name);
+                          }}
+                          placeholder={field.placeholder}
+                          error={errors[field.name]}
+                        />
+                      </div>
+                    )}
+
+                    {/* Field error */}
+                    <AnimatePresence>
+                      {errors[field.name] && (
+                        <motion.p
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          transition={{ duration: 0.2 }}
+                          className="text-xs text-red-400 font-mono mt-1"
+                        >
+                          {errors[field.name]}
+                        </motion.p>
+                      )}
+                    </AnimatePresence>
                   </motion.div>
-                ) : field.type === "select" && field.options ? (
-                  <div
-                    onMouseEnter={() => {
-                      setFocusedField(field.name);
-                      setHoveredField(field.name);
-                    }}
-                    onMouseLeave={() => {
-                      setFocusedField(null);
-                      setHoveredField(null);
-                    }}
-                  >
-                    <ChromeSelect
-                      value={formData[field.name]}
-                      options={field.options}
-                      onChange={(e) => handleFieldChange(field.name, e.target.value)}
-                      onFocus={() => setFocusedField(field.name)}
-                      onBlur={() => {
-                        setFocusedField(null);
-                        handleFieldBlur(field.name);
-                      }}
-                      error={errors[field.name]}
-                    />
-                  </div>
-                ) : (
-                  <div
-                    onMouseEnter={() => {
-                      setFocusedField(field.name);
-                      setHoveredField(field.name);
-                    }}
-                    onMouseLeave={() => {
-                      setFocusedField(null);
-                      setHoveredField(null);
-                    }}
-                  >
-                    <ChromeInput
-                      type={field.type || "text"}
-                      value={formData[field.name]}
-                      onChange={(e) => handleFieldChange(field.name, e.target.value)}
-                      onFocus={() => setFocusedField(field.name)}
-                      onBlur={() => {
-                        setFocusedField(null);
-                        handleFieldBlur(field.name);
-                      }}
-                      placeholder={field.placeholder}
-                      error={errors[field.name]}
-                    />
-                  </div>
-                )}
-
-                {/* Field error */}
-                <AnimatePresence>
-                  {errors[field.name] && (
-                    <motion.p
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.2 }}
-                      className="text-xs text-red-400 font-mono mt-1"
-                    >
-                      {errors[field.name]}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+                );
+              })}
+            </AnimatePresence>
+          </div>
 
           {/* Submit button with loading state */}
           <motion.div

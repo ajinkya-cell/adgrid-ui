@@ -56,7 +56,9 @@ export function Sidebar() {
           </div>
           <div className="space-y-4">
             {categories.map((cat) => {
-              const items = registry.filter((c) => c.category === cat);
+              const items = registry.filter(
+                (c) => c.category === cat && c.slug !== "chrome-input" && c.slug !== "chrome-select"
+              );
               if (!items.length) return null;
 
               return (

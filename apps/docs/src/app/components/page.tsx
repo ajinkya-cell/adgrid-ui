@@ -40,7 +40,10 @@ export default function ComponentsPage() {
   const categories: ComponentCategory[] = ["animated", "primitives", "charts", "widgets", "buttons", "backgrounds"];
 
   // Filter registry entries
-  const filteredRegistry = registry.filter(
+  const visibleRegistry = registry.filter(
+    (item) => item.slug !== "chrome-input" && item.slug !== "chrome-select"
+  );
+  const filteredRegistry = visibleRegistry.filter(
     (item) =>
       item.name.toLowerCase().includes(search.toLowerCase()) ||
       item.description.toLowerCase().includes(search.toLowerCase()) ||
