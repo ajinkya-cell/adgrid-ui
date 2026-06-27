@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Zap,
@@ -21,33 +21,33 @@ interface NavItem {
 const navItems: NavItem[] = [
   {
     label: "Products",
-    icon: <Box className="w-5 h-5" />,
-    description: "Our suite of tools",
+    icon: <Box className="w-4 h-4 text-neutral-400" />,
+    description: "Enterprise system architecture and developer platforms.",
     items: [
-      { name: "AI Platform", desc: "Machine learning infrastructure", icon: <Zap className="w-4 h-4" /> },
-      { name: "DevTools", desc: "Developer productivity suite", icon: <Code2 className="w-4 h-4" /> },
-      { name: "APIs", desc: "REST & GraphQL endpoints", icon: <Layers className="w-4 h-4" /> },
-      { name: "Templates", desc: "Pre-built solutions", icon: <Box className="w-4 h-4" /> },
+      { name: "Core Engine", desc: "High-performance processing logic", icon: <Zap className="w-4 h-4 text-white" /> },
+      { name: "Dev Suite", desc: "Precision tooling workspace", icon: <Code2 className="w-4 h-4 text-white" /> },
+      { name: "API Portal", desc: "Encrypted secure network nodes", icon: <Layers className="w-4 h-4 text-white" /> },
+      { name: "Templates", desc: "Pre-milled code layouts", icon: <Box className="w-4 h-4 text-white" /> },
     ],
   },
   {
     label: "Solutions",
-    icon: <Layers className="w-5 h-5" />,
-    description: "Industry specific",
+    icon: <Layers className="w-4 h-4 text-neutral-400" />,
+    description: "Optimized network configurations tailored to scale.",
     items: [
-      { name: "Enterprise", desc: "Scale with confidence", icon: <Box className="w-4 h-4" /> },
-      { name: "Startups", desc: "Grow fast, stay lean", icon: <Zap className="w-4 h-4" /> },
-      { name: "Agencies", desc: "Deliver faster", icon: <Code2 className="w-4 h-4" /> },
+      { name: "Enterprise", desc: "Redundant grid computing", icon: <Box className="w-4 h-4 text-white" /> },
+      { name: "Startups", desc: "Elastic burst-capacity nodes", icon: <Zap className="w-4 h-4 text-white" /> },
+      { name: "Agencies", desc: "Multi-tenant workspace control", icon: <Code2 className="w-4 h-4 text-white" /> },
     ],
   },
   {
     label: "Resources",
-    icon: <Code2 className="w-5 h-5" />,
-    description: "Learn and grow",
+    icon: <Code2 className="w-4 h-4 text-neutral-400" />,
+    description: "Deep documentation, guides, and engineering notes.",
     items: [
-      { name: "Documentation", desc: "Comprehensive guides", icon: <Layers className="w-4 h-4" /> },
-      { name: "Blog", desc: "Latest insights", icon: <Zap className="w-4 h-4" /> },
-      { name: "Community", desc: "Join the conversation", icon: <Box className="w-4 h-4" /> },
+      { name: "Docs", desc: "Comprehensive registry manual", icon: <Layers className="w-4 h-4 text-white" /> },
+      { name: "Tech Blog", desc: "Anisotropic rendering insights", icon: <Zap className="w-4 h-4 text-white" /> },
+      { name: "Chassis Repo", desc: "Open-source styling primitives", icon: <Box className="w-4 h-4 text-white" /> },
     ],
   },
 ];
@@ -55,18 +55,35 @@ const navItems: NavItem[] = [
 export function MorphingNav() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeItem, setActiveItem] = useState<string | null>(null);
-  const [morphPath, setMorphPath] = useState("M0,0 L100,0 L100,100 L0,100 Z");
+  const [morphPath, setMorphPath] = useState("");
   const navRef = useRef<HTMLDivElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
 
-  const closedPath = "M30,5 Q55,5 80,5 L400,5 Q425,5 425,30 L425,50 Q425,75 400,75 L30,75 Q5,75 5,50 L5,30 Q5,5 30,5 Z";
-  const openPath = "M30,5 Q55,5 80,5 L400,5 Q425,5 425,30 L425,320 Q425,345 400,345 L30,345 Q5,345 5,320 L5,30 Q5,5 30,5 Z";
+  // SVG Paths with identical 10-command quadratic bezier curves for perfect interpolation.
+  // All paths span the full viewBox height (5 to 345) to prevent squishing or text slicing.
+  const closedPath =
+    "M30,5 Q215,5 400,5 Q425,5 425,170 Q425,180 425,180 Q425,345 400,345 Q215,345 30,345 Q5,345 5,180 Q5,170 5,170 Q5,5 30,5 Z";
+
+  const productsPath =
+    "M30,5 Q215,5 400,5 Q425,5 425,170 Q425,180 425,180 Q425,345 400,345 Q215,365 30,345 Q5,345 5,180 Q5,170 5,170 Q5,5 30,5 Z";
+
+  const solutionsPath =
+    "M30,5 Q215,5 400,5 Q425,5 425,170 Q425,180 425,180 Q425,345 400,345 Q215,355 30,345 Q5,345 5,180 Q5,170 5,170 Q5,5 30,5 Z";
+
+  const resourcesPath =
+    "M30,5 Q215,5 400,5 Q425,5 425,170 Q425,180 425,180 Q425,345 400,345 Q215,358 30,345 Q5,345 5,180 Q5,170 5,170 Q5,5 30,5 Z";
 
   useEffect(() => {
-    if (isOpen && activeItem) {
-      setMorphPath(openPath);
-    } else {
+    if (!isOpen || !activeItem) {
       setMorphPath(closedPath);
+      return;
+    }
+
+    if (activeItem === "Products") {
+      setMorphPath(productsPath);
+    } else if (activeItem === "Solutions") {
+      setMorphPath(solutionsPath);
+    } else {
+      setMorphPath(resourcesPath);
     }
   }, [isOpen, activeItem]);
 
@@ -80,132 +97,25 @@ export function MorphingNav() {
     }
   };
 
+  const activeIndex = navItems.findIndex((i) => i.label === activeItem);
+
+  // Dynamic height configuration matching expanded submenu content densities
+  const getNavHeight = () => {
+    if (!isOpen || !activeItem) return 70;
+    if (activeItem === "Products") return 330;
+    return 270;
+  };
+
   return (
-    <div className="w-full relative min-h-[480px] p-6">
-      <nav
-        ref={navRef}
-        className="absolute top-6 left-6 right-6 z-50"
-      >
-        <div className="relative max-w-xl mx-auto rounded-2xl backdrop-blur-md">
-          {/* Background morph shape */}
-          <svg
-            ref={svgRef}
-            className="absolute top-0 left-0 w-full h-full pointer-events-none"
-            viewBox="0 0 430 350"
-            preserveAspectRatio="none"
-            style={{ filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.5))" }}
-          >
-            <motion.path
-              d={morphPath}
-              fill="rgba(8, 8, 8, 0.85)"
-              stroke="rgba(255,255,255,0.12)"
-              strokeWidth="1.5"
-              animate={{ d: morphPath }}
-              transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }}
-            />
-          </svg>
-
-          {/* Nav content */}
-          <div className="relative flex items-center justify-between p-4 sm:p-5 z-10">
-            <motion.div
-              className="text-sm sm:text-base md:text-lg font-black tracking-widest text-white font-display uppercase"
-              whileHover={{ scale: 1.05 }}
-            >
-              VOID
-            </motion.div>
-
-            <div className="flex items-center gap-1 sm:gap-2">
-              {navItems.map((item) => (
-                <motion.button
-                  key={item.label}
-                  onClick={() => handleItemClick(item.label)}
-                  className={`relative px-2 py-1 sm:px-4 sm:py-2 rounded-lg text-[10px] sm:text-xs font-mono tracking-wider uppercase transition-colors ${
-                    activeItem === item.label
-                      ? "text-white"
-                      : "text-white/60 hover:text-white"
-                  }`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {item.label}
-                  {activeItem === item.label && (
-                    <motion.div
-                      layoutId="activeNav"
-                      className="absolute inset-0 bg-white/10 rounded-lg"
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                    />
-                  )}
-                </motion.button>
-              ))}
-
-              <motion.button
-                className="ml-1 sm:ml-3 px-3 py-1.5 sm:px-5 sm:py-2 bg-white text-black font-mono uppercase text-[10px] sm:text-xs font-bold rounded-lg tracking-wider hover:bg-white/90 transition-colors"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Start
-              </motion.button>
-            </div>
-          </div>
-
-          {/* Expanded content */}
-          <AnimatePresence>
-            {isOpen && activeItem && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3, delay: 0.1 }}
-                className="relative mt-2 grid grid-cols-1 sm:grid-cols-2 gap-3 p-5 sm:p-6 z-10"
-              >
-                {navItems
-                  .find((i) => i.label === activeItem)
-                  ?.items?.map((subItem, index) => (
-                    <motion.a
-                      key={subItem.name}
-                      href="#"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.05 * index }}
-                      className="group flex items-start gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors"
-                    >
-                      <div className="p-2 rounded-lg bg-white/10 text-white group-hover:bg-white/20 transition-colors">
-                        {subItem.icon}
-                      </div>
-                      <div>
-                        <h4 className="text-white font-medium text-xs mb-0.5 flex items-center gap-1 uppercase tracking-wider font-mono">
-                          {subItem.name}
-                          <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </h4>
-                        <p className="text-white/50 text-[10px] leading-snug">{subItem.desc}</p>
-                      </div>
-                    </motion.a>
-                  ))}
-
-                <div className="col-span-1 sm:col-span-2 mt-4 pt-4 border-t border-white/10">
-                  <div className="flex items-center justify-between">
-                    <p className="text-white/40 text-[10px] font-mono uppercase">
-                      {navItems.find((i) => i.label === activeItem)?.description}
-                    </p>
-                    <button className="text-[10px] text-white/60 hover:text-white flex items-center gap-0.5 transition-colors font-mono uppercase tracking-wider">
-                      View all <ChevronRight className="w-3 h-3" />
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </nav>
-
-      {/* Backdrop */}
+    <div className="w-full relative min-h-[480px] p-6 flex flex-col justify-start items-center">
+      {/* Backplate Click Handler (Full Screen Overlay) */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-black/40 backdrop-blur-xs z-40 rounded-xl"
+            className="fixed inset-0 w-screen h-screen bg-black/60 backdrop-blur-sm z-30 cursor-pointer"
             onClick={() => {
               setIsOpen(false);
               setActiveItem(null);
@@ -213,6 +123,192 @@ export function MorphingNav() {
           />
         )}
       </AnimatePresence>
+
+      <nav
+        ref={navRef}
+        className="w-full max-w-xl z-40 relative mt-4"
+      >
+        {/* Soft Ambient Glow following the active selection */}
+        <AnimatePresence>
+          {isOpen && activeItem && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 0.12, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.5 }}
+              className="absolute -inset-20 rounded-full blur-[100px] bg-white pointer-events-none z-20"
+              style={{
+                left: activeIndex === 0 ? "-20%" : activeIndex === 1 ? "10%" : "40%",
+                width: "60%",
+                height: "80%",
+              }}
+            />
+          )}
+        </AnimatePresence>
+
+        {/* SVG Canvas sits behind the content, OUTSIDE the overflow-hidden container so its drop shadow is not clipped */}
+        <svg
+          className="absolute inset-0 w-full h-full pointer-events-none z-10"
+          viewBox="0 0 430 350"
+          preserveAspectRatio="none"
+        >
+          <defs>
+            {/* Obsidian Linear Base Gradient */}
+            <linearGradient id="chassis-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#121215" stopOpacity="0.95" />
+              <stop offset="100%" stopColor="#08080a" stopOpacity="0.98" />
+            </linearGradient>
+
+            {/* Molten Metal Highlight Bezel Stroke */}
+            <linearGradient id="bezel-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="rgba(255, 255, 255, 0.16)" />
+              <stop offset="40%" stopColor="rgba(255, 255, 255, 0.04)" />
+              <stop offset="100%" stopColor="rgba(255, 255, 255, 0.22)" />
+            </linearGradient>
+          </defs>
+
+          <motion.path
+            d={morphPath || closedPath}
+            fill="url(#chassis-grad)"
+            stroke="url(#bezel-grad)"
+            strokeWidth="1.5"
+            animate={{ d: morphPath || closedPath }}
+            // Jelly/Spring transition makes the SVG look elastic and fluid
+            transition={{
+              type: "spring",
+              stiffness: 90,
+              damping: 10,
+              mass: 0.8,
+            }}
+            style={{
+              filter: "drop-shadow(0 24px 48px rgba(0,0,0,0.6))",
+            }}
+          />
+        </svg>
+
+        {/* Animated Container Height Chassis (Has overflow-hidden to mask the dropdown submenu) */}
+        <motion.div
+          animate={{ height: getNavHeight() }}
+          transition={{
+            type: "spring",
+            stiffness: 110,
+            damping: 14,
+            mass: 0.9,
+          }}
+          className="relative w-full rounded-2xl overflow-hidden z-20"
+        >
+          {/* Navigation Bar Header (Logo & Menu buttons, fixed h-70) */}
+          <div className="relative flex items-center justify-between h-[70px] px-5 z-10">
+            {/* Logo */}
+            <motion.div
+              className="text-sm font-black tracking-widest text-white font-mono uppercase pl-2 cursor-pointer select-none"
+              whileHover={{ scale: 1.05 }}
+              onClick={() => {
+                setIsOpen(false);
+                setActiveItem(null);
+              }}
+            >
+              VOID.NAV
+            </motion.div>
+
+            {/* Menu Buttons */}
+            <div className="flex items-center gap-1">
+              {navItems.map((item) => {
+                const active = activeItem === item.label;
+                return (
+                  <button
+                    key={item.label}
+                    onClick={() => handleItemClick(item.label)}
+                    className={`relative px-3 py-1.5 rounded-lg text-[10px] font-mono tracking-wider uppercase font-bold transition-all duration-300 outline-none cursor-pointer ${
+                      active ? "text-white" : "text-neutral-400 hover:text-white"
+                    }`}
+                  >
+                    <span className="relative z-10">{item.label}</span>
+                    {active && (
+                      <motion.div
+                        layoutId="activeNavTab"
+                        className="absolute inset-0 bg-white/[0.06] border border-white/10 rounded-lg"
+                        transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
+                      />
+                    )}
+                  </button>
+                );
+              })}
+
+              <motion.button
+                className="ml-2 px-4 py-1.5 bg-white text-black font-mono uppercase text-[10px] font-bold rounded-lg tracking-wider hover:bg-neutral-200 transition-colors cursor-pointer"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Access
+              </motion.button>
+            </div>
+          </div>
+
+          {/* Submenu Dropdown Panel (Absolute positioned at top-70) */}
+          <AnimatePresence>
+            {isOpen && activeItem && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="absolute top-[70px] left-0 right-0 grid grid-cols-1 sm:grid-cols-2 gap-2 px-6 pb-6 z-10"
+              >
+                {navItems
+                  .find((i) => i.label === activeItem)
+                  ?.items?.map((subItem, index) => (
+                    <motion.a
+                      key={subItem.name}
+                      href="#"
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 120,
+                        damping: 14,
+                        delay: 0.03 * index,
+                      }}
+                      className="group flex items-start gap-3 p-3 rounded-xl hover:bg-white/[0.03] border border-transparent hover:border-white/5 transition-all duration-300"
+                    >
+                      <div className="p-2 rounded-lg bg-neutral-900 border border-neutral-800 text-neutral-400 group-hover:text-white group-hover:border-neutral-700 transition-all duration-300">
+                        {subItem.icon}
+                      </div>
+                      <div>
+                        <h4 className="text-neutral-200 font-semibold text-xs mb-0.5 flex items-center gap-1.5 uppercase tracking-wider font-mono transition-colors group-hover:text-white">
+                          {subItem.name}
+                          <ArrowRight className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                        </h4>
+                        <p className="text-neutral-500 text-[10px] leading-relaxed transition-colors group-hover:text-neutral-400">
+                          {subItem.desc}
+                        </p>
+                      </div>
+                    </motion.a>
+                  ))}
+
+                {/* Dropdown Panel Footer */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ delay: 0.15 }}
+                  className="col-span-1 sm:col-span-2 mt-2 pt-4 border-t border-neutral-800/80"
+                >
+                  <div className="flex items-center justify-between px-2">
+                    <p className="text-neutral-500 text-[9px] font-mono uppercase tracking-wider">
+                      {navItems.find((i) => i.label === activeItem)?.description}
+                    </p>
+                    <button className="text-[9px] text-neutral-400 hover:text-white flex items-center gap-1 transition-colors font-mono uppercase tracking-widest font-bold cursor-pointer">
+                      Console Logs <ChevronRight className="w-3 h-3" />
+                    </button>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </nav>
     </div>
   );
 }

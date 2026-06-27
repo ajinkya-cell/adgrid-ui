@@ -17,6 +17,42 @@ export interface AnisotropicKnobProps {
   className?: string;
 }
 
+let audioCtx: AudioContext | null = null;
+
+function playClickSound() {
+  if (typeof window === "undefined") return;
+  try {
+    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioContextClass) return;
+    
+    if (!audioCtx) {
+      audioCtx = new AudioContextClass();
+    }
+    
+    if (audioCtx.state === "suspended") {
+      audioCtx.resume();
+    }
+    
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.012);
+    
+    gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.012);
+    
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.012);
+  } catch (e) {
+    // Fail silently if context is blocked
+  }
+}
+
 export const AnisotropicKnob = React.forwardRef<HTMLDivElement, AnisotropicKnobProps>(
   (
     {
@@ -43,6 +79,16 @@ export const AnisotropicKnob = React.forwardRef<HTMLDivElement, AnisotropicKnobP
     const prevAngleRef = useRef(0);
     const accumulatedAngleRef = useRef(0);
     const containerRef = useRef<HTMLDivElement>(null);
+
+    const lastValueRef = useRef(activeValue);
+
+    // Play click sound on snap changes
+    useEffect(() => {
+      if (activeValue !== lastValueRef.current) {
+        playClickSound();
+        lastValueRef.current = activeValue;
+      }
+    }, [activeValue]);
 
     // Sync angle with activeValue for bounded slider mode on external changes
     useEffect(() => {

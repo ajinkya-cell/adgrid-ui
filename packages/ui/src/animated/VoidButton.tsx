@@ -5,9 +5,18 @@ import { motion, useMotionValue, useSpring, useMotionTemplate } from "framer-mot
 import { cn } from "../lib/utils";
 
 /** Pure black button that reveals a luxury gold gradient under the cursor via a smooth radial mask. */
-export interface VoidButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+export interface VoidButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  activeGradientClass?: string;
+  activeTextClass?: string;
+}
 
-export function VoidButton({ className, children, ...props }: VoidButtonProps) {
+export function VoidButton({
+  className,
+  children,
+  activeGradientClass = "bg-gradient-to-r from-[#ffe066] via-[#f39c12] to-[#ffffff]",
+  activeTextClass = "text-black",
+  ...props
+}: VoidButtonProps) {
   const containerRef = useRef<HTMLButtonElement>(null);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -49,9 +58,12 @@ export function VoidButton({ className, children, ...props }: VoidButtonProps) {
         {children || "THE VOID"}
       </span>
 
-      {/* Active Reveal Layer: Dark text on luxury gold gradient */}
+      {/* Active Reveal Layer: Dark text on customizable gradient */}
       <motion.div
-        className="absolute inset-0 pointer-events-none bg-gradient-to-r from-[#ffe066] via-[#f39c12] to-[#ffffff] flex items-center justify-center"
+        className={cn(
+          "absolute inset-0 pointer-events-none flex items-center justify-center",
+          activeGradientClass
+        )}
         initial={{ opacity: 0 }}
         animate={{ opacity: isHovered ? 1 : 0 }}
         transition={{ duration: 0.3 }}
@@ -60,7 +72,7 @@ export function VoidButton({ className, children, ...props }: VoidButtonProps) {
           maskImage: maskTemplate,
         }}
       >
-        <span className="text-black font-black">
+        <span className={cn("font-black", activeTextClass)}>
           {children || "THE VOID"}
         </span>
       </motion.div>

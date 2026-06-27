@@ -33,7 +33,7 @@ export function ImageParallax({
   width = "100%",
   height = 420,
   depth = 40,
-  overlayColor = "rgba(0,0,0,0.07)",
+  overlayColor = "rgba(255,255,255,0.04)",
   caption,
   subcaption,
   mode = "mouse",
@@ -49,13 +49,21 @@ export function ImageParallax({
   const springX = useSpring(rawX, { stiffness: 60, damping: 20, mass: 0.5 });
   const springY = useSpring(rawY, { stiffness: 60, damping: 20, mass: 0.5 });
 
+  // 3D Tilting transforms for container card (Yaw and Pitch rotation)
+  const rotateX = useTransform(springY, [0, 1], [5, -5]);
+  const rotateY = useTransform(springX, [0, 1], [-5, 5]);
+
   // Image translates in one direction
   const imgX = useTransform(springX, [0, 1], [depth / 2, -depth / 2]);
   const imgY = useTransform(springY, [0, 1], [depth / 2, -depth / 2]);
 
   // Overlay grid drifts the opposite direction (creates depth illusion)
-  const overlayX = useTransform(springX, [0, 1], [-depth * 0.6, depth * 0.6]);
-  const overlayY = useTransform(springY, [0, 1], [-depth * 0.6, depth * 0.6]);
+  const overlayX = useTransform(springX, [0, 1], [-depth * 0.5, depth * 0.5]);
+  const overlayY = useTransform(springY, [0, 1], [-depth * 0.5, depth * 0.5]);
+
+  // Floating caption box drifts slightly for multi-layered depth
+  const captionX = useTransform(springX, [0, 1], [-depth * 0.15, depth * 0.15]);
+  const captionY = useTransform(springY, [0, 1], [-depth * 0.15, depth * 0.15]);
 
   // Subtle scale breathes on hover
   const scale = useSpring(1, { stiffness: 100, damping: 20 });
@@ -70,7 +78,7 @@ export function ImageParallax({
     [rawX, rawY]
   );
 
-  const handleMouseEnter = useCallback(() => scale.set(1.03), [scale]);
+  const handleMouseEnter = useCallback(() => scale.set(1.02), [scale]);
   const handleMouseLeave = useCallback(() => {
     rawX.set(0.5);
     rawY.set(0.5);
@@ -100,90 +108,102 @@ export function ImageParallax({
     height,
     position: "relative",
     overflow: "hidden",
-    borderRadius: "1rem",
+    borderRadius: "1.25rem",
+    border: "1px solid rgba(255, 255, 255, 0.08)",
   };
 
   return (
-    <div
-      ref={wrapRef}
-      className={`group ${className}`}
-      style={containerStyle}
-      onMouseMove={mode === "mouse" ? handleMouseMove : undefined}
-      onMouseEnter={mode === "mouse" ? handleMouseEnter : undefined}
-      onMouseLeave={mode === "mouse" ? handleMouseLeave : undefined}
-    >
-      {/* Parallax image — oversized so it can travel without gaps */}
+    <div style={{ perspective: "1200px", width }}>
       <motion.div
-        className="absolute"
+        ref={wrapRef}
+        className={`group relative overflow-hidden ${className}`}
         style={{
-          inset: `-${depth + 10}px`,
-          x: imgX,
-          y: imgY,
-          scale,
+          ...containerStyle,
+          rotateX: mode === "mouse" ? rotateX : 0,
+          rotateY: mode === "mouse" ? rotateY : 0,
+          transformStyle: "preserve-3d",
           willChange: "transform",
         }}
+        onMouseMove={mode === "mouse" ? handleMouseMove : undefined}
+        onMouseEnter={mode === "mouse" ? handleMouseEnter : undefined}
+        onMouseLeave={mode === "mouse" ? handleMouseLeave : undefined}
       >
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          className="object-cover pointer-events-none"
-          sizes="100vw"
-          priority
+        {/* Specular Inner Highlight Overlay Bevel */}
+        <div className="absolute inset-0 rounded-[1.25rem] border border-transparent shadow-[inset_0_1px_1px_rgba(255,255,255,0.06),0_8px_32px_rgba(0,0,0,0.6)] pointer-events-none z-20" />
+
+        {/* Parallax image — oversized so it can travel without gaps */}
+        <motion.div
+          className="absolute"
+          style={{
+            inset: `-${depth + 10}px`,
+            x: imgX,
+            y: imgY,
+            scale,
+            transformStyle: "preserve-3d",
+            willChange: "transform",
+          }}
+        >
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            className="object-cover pointer-events-none"
+            sizes="100vw"
+            priority
+          />
+        </motion.div>
+
+        {/* Repeating diagonal grid overlay — drifts opposite the image */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none mix-blend-overlay opacity-15"
+          style={{
+            backgroundImage: `repeating-linear-gradient(
+              45deg,
+              ${overlayColor} 0px,
+              ${overlayColor} 1px,
+              transparent 1px,
+              transparent 10px
+            )`,
+            backgroundSize: "14px 14px",
+            x: overlayX,
+            y: overlayY,
+            willChange: "transform",
+          }}
         />
+
+        {/* Very subtle ambient bottom shadow gradient */}
+        <div
+          className="absolute inset-0 pointer-events-none z-10"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.02) 40%, transparent 100%)",
+          }}
+        />
+
+        {/* Premium Frosted Glass Caption Panel */}
+        {(caption || subcaption) && (
+          <motion.div
+            className="absolute bottom-6 left-6 right-6 p-4 rounded-xl border border-white/10 bg-black/25 backdrop-blur-md shadow-[0_4px_24px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.05)] z-25 pointer-events-none"
+            style={{
+              x: mode === "mouse" ? captionX : 0,
+              y: mode === "mouse" ? captionY : 0,
+              transformStyle: "preserve-3d",
+              willChange: "transform",
+            }}
+          >
+            {caption && (
+              <h4 className="text-white font-mono text-[9px] uppercase tracking-widest font-bold opacity-60 mb-1.5">
+                {caption}
+              </h4>
+            )}
+            {subcaption && (
+              <p className="text-neutral-100 font-sans text-xs font-medium leading-relaxed">
+                {subcaption}
+              </p>
+            )}
+          </motion.div>
+        )}
       </motion.div>
-
-      {/* Repeating diagonal grid overlay — drifts opposite the image */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none mix-blend-multiply"
-        style={{
-          backgroundImage: `repeating-linear-gradient(
-            45deg,
-            ${overlayColor} 0px,
-            ${overlayColor} 1px,
-            transparent 1px,
-            transparent 10px
-          )`,
-          backgroundSize: "14px 14px",
-          x: overlayX,
-          y: overlayY,
-          willChange: "background-position, transform",
-        }}
-      />
-
-      {/* Dark vignette bottom gradient */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 45%, transparent 100%)",
-        }}
-      />
-
-      {/* Caption */}
-      {(caption || subcaption) && (
-        <div className="absolute bottom-5 left-6 right-6">
-          {caption && (
-            <motion.p
-              className="text-white font-semibold text-lg leading-tight"
-              style={{ textShadow: "0 1px 12px rgba(0,0,0,0.6)" }}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              {caption}
-            </motion.p>
-          )}
-          {subcaption && (
-            <p
-              className="text-white/60 text-sm mt-1 font-normal"
-              style={{ textShadow: "0 1px 8px rgba(0,0,0,0.5)" }}
-            >
-              {subcaption}
-            </p>
-          )}
-        </div>
-      )}
     </div>
   );
 }

@@ -191,4 +191,12 @@ export const registry: RegistryEntry[] = [
     dependencies: ["framer-motion"],
     packagePath: "animated/AnisotropicKnob.tsx",
   },
+  {
+    name: "Mechanical Timer",
+    slug: "mechanical-timer",
+    category: "widgets",
+    description: "Machined metal tactile timer/stopwatch component with dragging physical dials, mechanical cogwheel meshes, Web Audio click synthesis ticks, and glowing segment MM:SS.CC timer displays.",
+    dependencies: ["framer-motion", "lucide-react"],
+    packagePath: "animated/MechanicalTimer.tsx",
+  },
 ];

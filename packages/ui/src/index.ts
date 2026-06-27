@@ -21,6 +21,7 @@ export { MetallicForm } from "./animated/MetallicForm";
 export type { MetallicFormProps, FormField } from "./animated/MetallicForm";
 export { AnisotropicKnob } from "./animated/AnisotropicKnob";
 export type { AnisotropicKnobProps } from "./animated/AnisotropicKnob";
+export { MechanicalTimer } from "./animated/MechanicalTimer";
 
 // backgrounds
 export { PixelMeltBackground } from "./backgrounds/PixelMelt";

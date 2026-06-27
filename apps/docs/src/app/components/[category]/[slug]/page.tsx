@@ -93,9 +93,6 @@ const PROP_SCHEMAS: Record<string, PropDefinition[]> = {
       { label: "Slider (Bounded)", value: "slider" },
       { label: "Infinite (Unbounded)", value: "infinite" },
     ]},
-    { name: "min", type: "number", label: "Min Value", defaultValue: 0, min: -100, max: 100, step: 5 },
-    { name: "max", type: "number", label: "Max Value", defaultValue: 100, min: 0, max: 500, step: 10 },
-    { name: "step", type: "number", label: "Step Resolution", defaultValue: 1, min: 0.1, max: 20, step: 0.5 },
     { name: "size", type: "number", label: "Size (Diameter)", defaultValue: 112, min: 64, max: 200, step: 8 },
     { name: "label", type: "string", label: "Descriptor Label", defaultValue: "DECIBELS" },
   ],
@@ -286,6 +283,27 @@ export default function App() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+`.trim();
+  } else if (entry.slug === "mechanical-timer") {
+    appCode = `
+import { MechanicalTimer } from "./MechanicalTimer";
+
+export default function App() {
+  return (
+    <div style={{
+      background: "#050505",
+      minHeight: "100vh",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "2rem",
+      color: "#fff"
+    }}>
+      <MechanicalTimer />
     </div>
   );
 }
