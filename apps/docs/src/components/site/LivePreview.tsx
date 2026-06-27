@@ -245,11 +245,11 @@ export default function MockImage({ src, alt, fill, width, height, className, st
           <SandpackCodeEditor 
             showTabs 
             showLineNumbers 
-            style={{ height: componentName === "MetallicForm" ? 780 : isWide ? 600 : 480 }} 
+            style={{ height: componentName === "MetallicForm" ? 780 : componentName === "MechanicalTimer" ? 640 : isWide ? 600 : 480 }} 
           />
         )}
         <SandpackPreview 
-          style={{ height: componentName === "MetallicForm" ? 780 : isWide ? 600 : 480 }} 
+          style={{ height: componentName === "MetallicForm" ? 780 : componentName === "MechanicalTimer" ? 640 : isWide ? 600 : 480 }} 
           showOpenInCodeSandbox={false} 
         />
       </SandpackLayout>
