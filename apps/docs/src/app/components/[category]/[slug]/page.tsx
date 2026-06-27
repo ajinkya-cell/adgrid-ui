@@ -88,6 +88,17 @@ const PROP_SCHEMAS: Record<string, PropDefinition[]> = {
     { name: "height", type: "number", label: "Height", defaultValue: 320, min: 100, max: 600, step: 10 },
     { name: "dismissThreshold", type: "number", label: "Dismiss Threshold", defaultValue: 100, min: 30, max: 300, step: 10 },
   ],
+  "anisotropic-knob": [
+    { name: "variant", type: "select", label: "Variant", defaultValue: "slider", options: [
+      { label: "Slider (Bounded)", value: "slider" },
+      { label: "Infinite (Unbounded)", value: "infinite" },
+    ]},
+    { name: "min", type: "number", label: "Min Value", defaultValue: 0, min: -100, max: 100, step: 5 },
+    { name: "max", type: "number", label: "Max Value", defaultValue: 100, min: 0, max: 500, step: 10 },
+    { name: "step", type: "number", label: "Step Resolution", defaultValue: 1, min: 0.1, max: 20, step: 0.5 },
+    { name: "size", type: "number", label: "Size (Diameter)", defaultValue: 112, min: 64, max: 200, step: 8 },
+    { name: "label", type: "string", label: "Descriptor Label", defaultValue: "DECIBELS" },
+  ],
 };
 
 // extract props from TSDoc comments in source
@@ -204,6 +215,77 @@ export default function App() {
         onSubmit={handleSubmit}
         submitLabel="TRANSMIT DATA"
       />
+    </div>
+  );
+}
+`.trim();
+  } else if (entry.slug === "anisotropic-knob") {
+    appCode = `
+import { AnisotropicKnob } from "./AnisotropicKnob";
+import { useState } from "react";
+
+export default function App() {
+  const [vol, setVol] = useState(40);
+  const [freq, setFreq] = useState(0);
+
+  return (
+    <div style={{
+      background: "#050505",
+      minHeight: "100vh",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "2rem",
+      gap: "2rem",
+      color: "#fff"
+    }}>
+      {/* Decorative Bezel Chassis */}
+      <div style={{
+        background: "linear-gradient(135deg, #0a0a0d 0%, #121215 100%)",
+        border: "1px solid #1a1a1f",
+        padding: "3rem",
+        borderRadius: "1rem",
+        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06), 0 12px 40px rgba(0,0,0,0.8)",
+        display: "flex",
+        gap: "4rem",
+        alignItems: "center",
+        justifyContent: "center",
+        flexWrap: "wrap"
+      }}>
+        {/* Bounded Knob */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <AnisotropicKnob
+            variant="slider"
+            min={0}
+            max={100}
+            value={vol}
+            onChange={setVol}
+            step={1}
+            label="MASTER VOLUME"
+          />
+          <div style={{ marginTop: "1rem", opacity: 0.4, fontSize: "9px", fontFamily: "monospace" }}>
+            RANGE: 0 - 100 Snaps
+          </div>
+        </div>
+
+        {/* Vertical Divider */}
+        <div style={{ width: "1px", height: "120px", background: "rgba(255,255,255,0.06)" }} className="hidden md:block" />
+
+        {/* Infinite Knob */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <AnisotropicKnob
+            variant="infinite"
+            value={freq}
+            onChange={setFreq}
+            step={5}
+            label="TUNING FREQ"
+          />
+          <div style={{ marginTop: "1rem", opacity: 0.4, fontSize: "9px", fontFamily: "monospace" }}>
+            REVOLUTIONS: UNBOUNDED
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

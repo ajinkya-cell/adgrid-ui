@@ -30,7 +30,7 @@ const categoryTags: Record<string, string[]> = {
   "pixel-melt": ["CANVAS", "HEAT-MAP", "MOUSE"],
   "breathing-grid": ["CANVAS", "PULSE", "DUAL-LAYER"],
   "floating-embers": ["CANVAS", "PARTICLE", "AMBIENT"],
-
+  "anisotropic-knob": ["DIAL", "TACTILE", "MACHINED-METAL"],
 };
 
 export default function ComponentsPage() {

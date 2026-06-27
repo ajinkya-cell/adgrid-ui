@@ -183,4 +183,12 @@ export const registry: RegistryEntry[] = [
     dependencies: ["framer-motion"],
     packagePath: "animated/MetallicForm.tsx",
   },
+  {
+    name: "Anisotropic Knob",
+    slug: "anisotropic-knob",
+    category: "primitives",
+    description: "Machined metal rotary dial knob component with dynamic rotating anisotropic highlights, snapper increments, and accessibility controls.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/AnisotropicKnob.tsx",
+  },
 ];

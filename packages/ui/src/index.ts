@@ -19,6 +19,8 @@ export { ChromeSelect } from "./animated/ChromeSelect";
 export type { ChromeSelectProps, ChromeSelectOption } from "./animated/ChromeSelect";
 export { MetallicForm } from "./animated/MetallicForm";
 export type { MetallicFormProps, FormField } from "./animated/MetallicForm";
+export { AnisotropicKnob } from "./animated/AnisotropicKnob";
+export type { AnisotropicKnobProps } from "./animated/AnisotropicKnob";
 
 // backgrounds
 export { PixelMeltBackground } from "./backgrounds/PixelMelt";
