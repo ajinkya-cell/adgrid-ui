@@ -239,7 +239,7 @@ export const AnisotropicKnob = React.forwardRef<HTMLDivElement, AnisotropicKnobP
       <div className={cn("flex flex-col items-center justify-center select-none", className)}>
         {/* Label */}
         {label && (
-          <span className="font-mono text-[9px] text-neutral-500 uppercase tracking-widest mb-3">
+          <span className="font-syncopate text-[8px] text-neutral-500 uppercase tracking-[0.2em] mb-3">
             {label}
           </span>
         )}
@@ -348,7 +348,7 @@ export const AnisotropicKnob = React.forwardRef<HTMLDivElement, AnisotropicKnobP
         </div>
 
         {/* Value Readout */}
-        <div className="mt-2 font-mono text-[11px] tabular-nums text-neutral-400">
+        <div className="mt-2 font-share-mono text-[11px] tabular-nums text-neutral-400">
           {variant === "slider" ? `${activeValue}` : `${activeValue > 0 ? "+" : ""}${activeValue}`}
         </div>
       </div>

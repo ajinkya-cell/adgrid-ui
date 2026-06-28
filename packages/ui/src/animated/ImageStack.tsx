@@ -103,8 +103,9 @@ function StackCardItem({
         top: 0,
         left: 0,
         willChange: "transform",
-        boxShadow:
-          "0 20px 60px rgba(0,0,0,0.25), 0 4px 16px rgba(0,0,0,0.12)",
+        boxShadow: isTop 
+          ? "0 30px 70px rgba(0,0,0,0.7), 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)"
+          : "0 15px 40px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05)",
       }}
       drag={isTop}
       dragConstraints={{ left: -400, right: 400, top: -400, bottom: 400 }}
@@ -133,7 +134,7 @@ function StackCardItem({
       {/* Label */}
       {card.label && isTop && (
         <motion.div
-          className="absolute bottom-4 left-4 right-4 text-white text-sm font-medium"
+          className="absolute bottom-4 left-4 right-4 text-white font-syncopate text-[9px] uppercase tracking-[0.2em] font-bold bg-black/65 backdrop-blur-md px-2.5 py-1.5 border border-white/10 rounded-lg text-center"
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
@@ -211,8 +212,8 @@ export function ImageStack({
         })}
       </div>
 
-      <p className="text-xs text-neutral-400 tracking-wider uppercase">
-        drag top card to cycle
+      <p className="text-[9px] font-jura tracking-wider uppercase font-semibold text-neutral-500">
+        swipe card
       </p>
     </div>
   );

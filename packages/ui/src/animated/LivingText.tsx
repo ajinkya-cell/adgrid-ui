@@ -231,7 +231,7 @@ function Character({
         mass: 0.8,
       }}
       className={cn(
-        "inline-block cursor-default font-display font-black text-6xl md:text-8xl select-none will-change-transform text-white",
+        "inline-block cursor-default font-syne font-black text-6xl md:text-8xl select-none will-change-transform text-white",
         charClassName
       )}
     >

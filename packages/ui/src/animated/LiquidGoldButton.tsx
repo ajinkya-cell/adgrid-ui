@@ -15,7 +15,7 @@ export function LiquidGoldButton({ className, children, ...props }: LiquidGoldBu
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={cn(
-        "relative w-48 h-12 rounded font-mono text-xs uppercase tracking-widest cursor-pointer select-none overflow-hidden outline-none transition-all duration-300",
+        "relative w-48 h-12 rounded font-syncopate text-[9px] uppercase tracking-[0.25em] font-bold cursor-pointer select-none overflow-hidden outline-none transition-all duration-300",
         className
       )}
       style={{
@@ -49,7 +49,7 @@ export function LiquidGoldButton({ className, children, ...props }: LiquidGoldBu
 
       {/* Button Text */}
       <span className="relative z-10 flex items-center justify-center h-full text-white font-black tracking-widest drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-        {children || "LIQUID GOLD"}
+        {children || "GOLD"}
       </span>
     </button>
   );

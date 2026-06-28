@@ -45,10 +45,12 @@ export function VoidButton({
   let activeText = activeTextClass || "text-white font-bold";
   let defaultShadow = "inset 0 3px 8px rgba(0,0,0,0.9), inset 0 -1px 2px rgba(255,255,255,0.03), 0 2px 4px rgba(0,0,0,0.4)";
   let tappedShadow = "inset 0 8px 24px rgba(0,0,0,0.95), 0 1px 1px rgba(0,0,0,0.8)";
+  let fontClass = "font-syncopate text-[9px] uppercase tracking-[0.2em] font-bold";
 
   if (variant === "classic-gold") {
     activeGrad = activeGradientClass || "bg-gradient-to-r from-[#ffe066] via-[#f39c12] to-[#ffffff]";
     activeText = activeTextClass || "text-black font-black";
+    fontClass = "font-cinzel text-xs uppercase tracking-widest font-black";
   } else if (variant === "ambient") {
     activeGrad = activeGradientClass || "bg-gradient-to-r from-[#161619] via-[#2d2d35] to-[#161619]";
     activeText = activeTextClass || "text-white/95 font-semibold";
@@ -84,7 +86,8 @@ export function VoidButton({
       }}
       transition={{ type: "spring", stiffness: 450, damping: 18 }}
       className={cn(
-        "relative w-48 h-12 rounded-xl border font-mono text-xs uppercase tracking-widest cursor-pointer select-none overflow-hidden outline-none transition-colors duration-300 flex items-center justify-center",
+        "relative w-48 h-12 rounded-xl border cursor-pointer select-none overflow-hidden outline-none transition-colors duration-300 flex items-center justify-center",
+        fontClass,
         baseStyleClass,
         className
       )}
@@ -95,7 +98,7 @@ export function VoidButton({
     >
       {/* Base inactive text layer */}
       <span className="absolute inset-0 flex items-center justify-center font-medium transition-opacity duration-300">
-        {children || "THE VOID"}
+        {children || "VOID"}
       </span>
 
       {/* Dynamic Conic Specular Sheen (Anisotropic response) */}
@@ -146,7 +149,7 @@ export function VoidButton({
         }}
       >
         <span className={cn(activeText)}>
-          {children || "THE VOID"}
+          {children || "VOID"}
         </span>
       </motion.div>
     </motion.button>

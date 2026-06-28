@@ -53,7 +53,7 @@ export function BrushedTitaniumButton({ className, children, ...props }: Brushed
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        "relative w-48 h-12 rounded font-mono text-xs uppercase tracking-widest cursor-pointer select-none overflow-hidden outline-none border border-neutral-700/60 bg-neutral-900 transition-shadow duration-300",
+        "relative w-48 h-12 rounded font-syncopate text-[9px] uppercase tracking-[0.25em] font-bold cursor-pointer select-none overflow-hidden outline-none border border-neutral-700/60 bg-neutral-900 transition-shadow duration-300",
         className
       )}
       style={{

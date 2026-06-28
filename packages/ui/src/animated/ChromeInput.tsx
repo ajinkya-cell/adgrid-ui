@@ -114,8 +114,8 @@ export const ChromeInput = React.forwardRef<HTMLInputElement, ChromeInputProps>(
             props.onBlur?.(e);
           }}
           className={cn(
-            "relative z-10 w-full h-11 px-4 bg-transparent text-neutral-100 font-sans text-sm outline-none border-none",
-            "placeholder:text-neutral-600/70",
+            "relative z-10 w-full h-11 px-4 bg-transparent text-neutral-100 font-plus-jakarta text-sm outline-none border-none",
+            "placeholder:text-neutral-600/70 placeholder:font-jura placeholder:text-[10px] placeholder:uppercase placeholder:tracking-wider placeholder:font-semibold",
             className
           )}
           {...props}

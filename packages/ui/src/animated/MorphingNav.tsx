@@ -201,7 +201,7 @@ export function MorphingNav() {
           <div className="relative flex items-center justify-between h-[70px] px-5 z-10">
             {/* Logo */}
             <motion.div
-              className="text-sm font-black tracking-widest text-white font-mono uppercase pl-2 cursor-pointer select-none"
+              className="text-xs font-bold tracking-[0.25em] text-white font-syncopate uppercase pl-2 cursor-pointer select-none"
               whileHover={{ scale: 1.05 }}
               onClick={() => {
                 setIsOpen(false);
@@ -219,7 +219,7 @@ export function MorphingNav() {
                   <button
                     key={item.label}
                     onClick={() => handleItemClick(item.label)}
-                    className={`relative px-3 py-1.5 rounded-lg text-[10px] font-mono tracking-wider uppercase font-bold transition-all duration-300 outline-none cursor-pointer ${
+                    className={`relative px-3 py-1.5 rounded-lg text-[8px] font-syncopate tracking-[0.2em] uppercase font-bold transition-all duration-300 outline-none cursor-pointer ${
                       active ? "text-white" : "text-neutral-400 hover:text-white"
                     }`}
                   >
@@ -236,7 +236,7 @@ export function MorphingNav() {
               })}
 
               <motion.button
-                className="ml-2 px-4 py-1.5 bg-white text-black font-mono uppercase text-[10px] font-bold rounded-lg tracking-wider hover:bg-neutral-200 transition-colors cursor-pointer"
+                className="ml-2 px-4 py-1.5 bg-white text-black font-syncopate uppercase text-[8px] font-bold rounded-lg tracking-[0.2em] hover:bg-neutral-200 transition-colors cursor-pointer"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -276,11 +276,11 @@ export function MorphingNav() {
                         {subItem.icon}
                       </div>
                       <div>
-                        <h4 className="text-neutral-200 font-semibold text-xs mb-0.5 flex items-center gap-1.5 uppercase tracking-wider font-mono transition-colors group-hover:text-white">
+                        <h4 className="text-neutral-200 font-bold text-[10px] mb-0.5 flex items-center gap-1.5 uppercase tracking-wider font-jura transition-colors group-hover:text-white">
                           {subItem.name}
                           <ArrowRight className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                         </h4>
-                        <p className="text-neutral-500 text-[10px] leading-relaxed transition-colors group-hover:text-neutral-400">
+                        <p className="text-neutral-500 text-[10px] leading-relaxed transition-colors group-hover:text-neutral-400 font-plus-jakarta">
                           {subItem.desc}
                         </p>
                       </div>
@@ -296,11 +296,11 @@ export function MorphingNav() {
                   className="col-span-1 sm:col-span-2 mt-2 pt-4 border-t border-neutral-800/80"
                 >
                   <div className="flex items-center justify-between px-2">
-                    <p className="text-neutral-500 text-[9px] font-mono uppercase tracking-wider">
+                    <p className="text-neutral-500 text-[8px] font-jura uppercase tracking-wider font-semibold">
                       {navItems.find((i) => i.label === activeItem)?.description}
                     </p>
-                    <button className="text-[9px] text-neutral-400 hover:text-white flex items-center gap-1 transition-colors font-mono uppercase tracking-widest font-bold cursor-pointer">
-                      Console Logs <ChevronRight className="w-3 h-3" />
+                    <button className="text-[8px] text-neutral-400 hover:text-white flex items-center gap-1 transition-colors font-syncopate uppercase tracking-[0.2em] font-bold cursor-pointer">
+                      LOGS <ChevronRight className="w-3 h-3" />
                     </button>
                   </div>
                 </motion.div>

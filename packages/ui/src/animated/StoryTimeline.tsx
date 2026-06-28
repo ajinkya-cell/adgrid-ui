@@ -17,7 +17,7 @@ const timelineData: TimelineNode[] = [
     year: "2022",
     title: "The Beginning",
     description:
-      "Started with a simple idea: make the web feel alive. Our first prototype was built in a garage with nothing but passion and coffee.",
+      "A simple idea: make the web feel alive. Our first prototype built in a garage.",
     image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&h=500&fit=crop",
     status: "INIT_SEQUENCE",
   },
@@ -25,7 +25,7 @@ const timelineData: TimelineNode[] = [
     year: "2023",
     title: "First Launch",
     description:
-      "Released our beta to 10,000 users. The feedback was overwhelming. We knew we were onto something special.",
+      "Released beta to 10,000 users. The feedback was overwhelming.",
     image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=500&fit=crop",
     status: "DEPLOYED_BETA",
   },
@@ -33,7 +33,7 @@ const timelineData: TimelineNode[] = [
     year: "2024",
     title: "Rapid Growth",
     description:
-      "Scaled to 100,000 users. Raised Series A. Expanded team to 25. Opened offices in SF and London.",
+      "Scaled to 100,000 users. Raised Series A. Expanded team globally.",
     image: "https://images.unsplash.com/photo-1553729459-afe14f8b51e7?w=800&h=500&fit=crop",
     status: "SERIES_A_LOAD",
   },
@@ -41,7 +41,7 @@ const timelineData: TimelineNode[] = [
     year: "2025",
     title: "Global Scale",
     description:
-      "Now serving 1M+ users across 50 countries. IPO preparation underway. The journey continues.",
+      "Serving 1M+ users across 50 countries. IPO prep underway.",
     image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=500&fit=crop",
     status: "GLOBAL_ARRAY",
   },
@@ -103,10 +103,10 @@ export function StoryTimeline() {
       {/* LEFT COLUMN: Sticky Navigation Rail */}
       <aside className="md:sticky md:top-24 h-fit md:w-48 shrink-0 flex md:flex-col items-center md:items-start gap-6 select-none z-20">
         <div className="flex flex-col">
-          <span className="font-mono text-[9px] text-white/40 tracking-widest font-bold w-fit mb-1 uppercase select-none">
+          <span className="font-syncopate text-[8px] text-white/40 tracking-[0.2em] font-bold w-fit mb-1 uppercase select-none">
             LOG_PROTOCOL
           </span>
-          <h2 className="font-display text-lg font-black text-white tracking-wider uppercase">
+          <h2 className="font-syncopate text-base font-bold text-white tracking-[0.2em] uppercase">
             TIMELINE
           </h2>
         </div>
@@ -144,13 +144,13 @@ export function StoryTimeline() {
                 <div className="hidden md:flex flex-col items-start text-left">
                   <span
                     className={cn(
-                      "font-display text-sm font-black transition-colors duration-300",
+                      "font-syncopate text-[10px] font-bold tracking-wider transition-colors duration-300",
                       isActive ? "text-white" : "text-neutral-500 group-hover:text-neutral-300"
                     )}
                   >
                     {node.year}
                   </span>
-                  <span className="font-mono text-[8px] text-neutral-600 uppercase tracking-widest leading-none">
+                  <span className="font-share-mono text-[8px] text-neutral-600 uppercase tracking-wider leading-none">
                     {node.status}
                   </span>
                 </div>
@@ -182,7 +182,7 @@ export function StoryTimeline() {
                 )}
               >
                 {/* Giant background year outline */}
-                <div className="absolute -top-12 -left-4 font-display text-[7rem] md:text-[9rem] font-black text-neutral-900/10 pointer-events-none select-none select-none z-0">
+                <div className="absolute -top-12 -left-4 font-syncopate text-[6rem] md:text-[8rem] font-bold text-neutral-900/10 pointer-events-none select-none z-0">
                   {node.year}
                 </div>
 
@@ -200,19 +200,19 @@ export function StoryTimeline() {
                   </div>
 
                   {/* Header info */}
-                  <div className="flex items-center gap-3 mb-2 font-mono text-[9px] uppercase tracking-widest text-neutral-500">
+                  <div className="flex items-center gap-3 mb-2 font-share-mono text-[9px] uppercase tracking-wider text-neutral-500">
                     <span>0{index + 1}</span>
                     <span className="w-1 h-1 rounded-full bg-neutral-500" />
                     <span>{node.status}</span>
                   </div>
 
                   {/* Title */}
-                  <h3 className="font-display text-xl sm:text-2xl font-bold uppercase tracking-tight text-white mb-3">
+                  <h3 className="font-jura text-lg sm:text-xl font-bold uppercase tracking-wider text-white mb-2">
                     {node.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="font-body text-xs sm:text-sm text-neutral-400 leading-relaxed max-w-xl select-none">
+                  <p className="font-plus-jakarta text-xs text-neutral-400 leading-relaxed max-w-xl select-none">
                     {node.description}
                   </p>
                 </div>

@@ -123,7 +123,8 @@ export function SlingshotChassis({ className = "" }: { className?: string }) {
   const currentInnerDragX = useRef(0);
   const innerSpringFrame = useRef<number | null>(null);
 
-  const helveticaFont = { fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif" };
+  const juraFont = { fontFamily: "Jura, sans-serif" };
+  const shareMonoFont = { fontFamily: "Share Tech Mono, monospace" };
 
   useEffect(() => {
     synthRef.current = new SlingshotSynth();
@@ -340,13 +341,13 @@ export function SlingshotChassis({ className = "" }: { className?: string }) {
           {dragX > 10 ? (
             <div className="flex flex-col items-center">
               <span
-                style={helveticaFont}
-                className="text-[8px] text-white/40 tracking-widest animate-pulse uppercase font-semibold"
+                style={juraFont}
+                className="text-[8px] text-white/40 tracking-[0.2em] animate-pulse uppercase font-bold"
               >
-                RELEASE TO SNAP
+                RELEASE
               </span>
               <span
-                style={helveticaFont}
+                style={shareMonoFont}
                 className="text-[16px] text-white font-black mt-1"
               >
                 {Math.round((dragX / 95) * 100)}%
@@ -356,10 +357,10 @@ export function SlingshotChassis({ className = "" }: { className?: string }) {
             <div className="flex flex-col items-center gap-1.5">
               <ChevronRight className="w-4 h-4 text-neutral-400 animate-bounce" />
               <span
-                style={helveticaFont}
-                className="text-[8px] text-neutral-500 tracking-widest uppercase font-semibold text-center px-2"
+                style={juraFont}
+                className="text-[8px] text-neutral-500 tracking-[0.2em] uppercase font-bold text-center px-2"
               >
-                {isOpen ? "CLICK LEFT TAB TO CLOSE" : "DRAG COVER TO SLINGSHOT"}
+                {isOpen ? "TAP LEFT TAB" : "DRAG COVER"}
               </span>
             </div>
           )}

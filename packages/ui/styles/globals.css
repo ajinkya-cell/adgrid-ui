@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Jura:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Share+Tech+Mono&family=Syncopate:wght@400;700&family=Syne:wght@400;700;800&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -7,6 +8,13 @@
   
   --font-display: system-ui, -apple-system, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, monospace;
+  
+  --font-syncopate: "Syncopate", sans-serif;
+  --font-jura: "Jura", sans-serif;
+  --font-share-mono: "Share Tech Mono", monospace;
+  --font-plus-jakarta: "Plus Jakarta Sans", sans-serif;
+  --font-syne: "Syne", sans-serif;
+  --font-cinzel: "Cinzel", serif;
   
   --spacing-gutter: 1rem;
 }

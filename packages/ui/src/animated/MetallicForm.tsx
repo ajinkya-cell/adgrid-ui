@@ -190,7 +190,7 @@ export function MetallicForm({
     <div
       ref={containerRef}
       className={cn(
-        "relative w-full max-w-2xl mx-auto rounded-xl overflow-hidden",
+        "relative w-full max-w-2xl mx-auto rounded-xl overflow-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] border border-neutral-800/40",
         className
       )}
       onMouseMove={handleMouseMove}
@@ -227,12 +227,12 @@ export function MetallicForm({
             className="mb-8"
           >
             {title && (
-              <h2 className="text-3xl font-bold text-white font-mono uppercase tracking-widest mb-2">
+              <h2 className="text-2xl font-bold text-white font-syncopate uppercase tracking-[0.2em] mb-2">
                 {title}
               </h2>
             )}
             {subtitle && (
-              <p className="text-neutral-500 text-sm font-mono">{subtitle}</p>
+              <p className="text-neutral-500 text-xs font-plus-jakarta">{subtitle}</p>
             )}
             <div className="h-px bg-neutral-800/50 mt-4" />
           </motion.div>
@@ -257,7 +257,7 @@ export function MetallicForm({
                     <div className="flex items-center justify-between gap-2">
                       <motion.label
                         className={cn(
-                          "block text-xs uppercase tracking-widest font-mono transition-colors duration-300",
+                          "block text-[10px] uppercase tracking-wider font-jura font-bold transition-colors duration-300",
                           savedFields.has(field.name)
                             ? "text-neutral-400"
                             : focusedField === field.name
@@ -352,8 +352,8 @@ export function MetallicForm({
                           }}
                           placeholder={field.placeholder}
                           className={cn(
-                            "relative z-10 w-full h-32 px-4 py-3 bg-transparent text-neutral-100 font-mono text-sm outline-none border-none resize-none",
-                            "placeholder:text-neutral-700"
+                            "relative z-10 w-full h-32 px-4 py-3 bg-transparent text-neutral-100 font-plus-jakarta text-sm outline-none border-none resize-none",
+                            "placeholder:text-neutral-700 placeholder:font-jura placeholder:text-[10px] placeholder:uppercase placeholder:tracking-wider placeholder:font-semibold"
                           )}
                         />
 
@@ -417,7 +417,7 @@ export function MetallicForm({
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -10 }}
                           transition={{ duration: 0.2 }}
-                          className="text-xs text-red-400 font-mono mt-1"
+                          className="text-[10px] text-red-400 font-jura font-semibold uppercase tracking-wider mt-1"
                         >
                           {errors[field.name]}
                         </motion.p>
@@ -441,7 +441,7 @@ export function MetallicForm({
               disabled={isSubmitting}
               className="w-full relative group cursor-pointer border-none bg-transparent p-0 outline-none"
             >
-              <BrushedTitaniumButton className="w-full h-12 uppercase tracking-widest font-mono text-sm">
+              <BrushedTitaniumButton className="w-full h-12 uppercase tracking-[0.25em] font-syncopate text-xs">
                 {isSubmitting ? "PROCESSING..." : submitLabel}
               </BrushedTitaniumButton>
             </button>
@@ -458,7 +458,7 @@ export function MetallicForm({
               transition={{ type: "spring", stiffness: 100, damping: 20 }}
               className="mt-6 p-4 rounded-lg bg-neutral-900/40 border border-neutral-800/80 shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
             >
-              <p className="text-sm font-mono text-neutral-300 text-center flex items-center justify-center gap-2">
+              <p className="text-xs font-jura uppercase tracking-wider font-semibold text-neutral-300 text-center flex items-center justify-center gap-2">
                 <span className="text-emerald-500">✓</span> Form submitted successfully
               </p>
             </motion.div>

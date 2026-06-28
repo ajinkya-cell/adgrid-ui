@@ -82,13 +82,12 @@ export function VoidButton({
       }}
       transition={{ type: "spring", stiffness: 450, damping: 18 }}
       className={cn(
-        "relative w-full h-12 rounded-xl border font-sans text-xs uppercase tracking-widest cursor-pointer select-none overflow-hidden outline-none transition-colors duration-300 flex items-center justify-center",
+        "relative w-full h-12 rounded-xl border font-syncopate text-[9px] uppercase tracking-[0.2em] font-bold cursor-pointer select-none overflow-hidden outline-none transition-colors duration-300 flex items-center justify-center",
         baseStyleClass,
         className
       )}
       style={{
         boxShadow: defaultShadow,
-        fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif",
       }}
       {...(props as any)}
     >
@@ -541,10 +540,9 @@ export function LiquidMercuryPad({ className = "" }: { className?: string }) {
         {strokes.length === 0 && currentStroke.length === 0 && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <span
-              style={{ fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif" }}
-              className="text-[9px] uppercase tracking-widest text-neutral-600 animate-pulse font-semibold"
+              className="text-[8px] uppercase tracking-[0.2em] text-neutral-600 animate-pulse font-bold font-syncopate"
             >
-              DRAW SIGNATURE / GESTURE OR SHAPES
+              DRAW GESTURE
             </span>
           </div>
         )}
@@ -558,10 +556,10 @@ export function LiquidMercuryPad({ className = "" }: { className?: string }) {
           disabled={strokes.length === 0}
           activeGradientClass="bg-gradient-to-r from-neutral-200 via-white to-neutral-200"
           activeTextClass="text-black font-black"
-          className="flex-1 h-11 border-neutral-800/80 rounded-xl text-xs tracking-widest font-bold disabled:opacity-25 disabled:cursor-not-allowed"
+          className="flex-1 h-11 border-neutral-800/80 rounded-xl text-[9px] tracking-[0.2em] font-bold disabled:opacity-25 disabled:cursor-not-allowed"
         >
           <div className="flex items-center justify-center gap-2">
-            <CheckCircle className="w-3.5 h-3.5" /> Analyze & Snap
+            <CheckCircle className="w-3.5 h-3.5" /> SNAP
           </div>
         </VoidButton>
 
@@ -571,10 +569,10 @@ export function LiquidMercuryPad({ className = "" }: { className?: string }) {
           disabled={strokes.length === 0}
           activeGradientClass="bg-gradient-to-r from-[#ffd369] via-[#f39c12] to-[#ffffff]"
           activeTextClass="text-black font-black"
-          className="flex-1 h-11 border-neutral-800/80 rounded-xl text-[10px] tracking-wider disabled:opacity-25 disabled:cursor-not-allowed"
+          className="flex-1 h-11 border-neutral-800/80 rounded-xl text-[9px] tracking-[0.2em] font-bold disabled:opacity-25 disabled:cursor-not-allowed"
         >
           <div className="flex items-center justify-center gap-1.5">
-            <RefreshCw className="w-3 h-3" /> Clear Pad
+            <RefreshCw className="w-3 h-3" /> CLEAR
           </div>
         </VoidButton>
       </div>

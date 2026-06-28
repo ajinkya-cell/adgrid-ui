@@ -118,7 +118,7 @@ export const ChromeSelect = React.forwardRef<HTMLSelectElement, ChromeSelectProp
               props.onBlur?.(e);
             }}
             className={cn(
-              "w-full bg-transparent text-neutral-100 font-sans text-sm outline-none border-none appearance-none cursor-pointer pr-8",
+              "w-full bg-transparent text-neutral-100 font-plus-jakarta text-sm outline-none border-none appearance-none cursor-pointer pr-8",
               className
             )}
             {...props}

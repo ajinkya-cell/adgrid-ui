@@ -108,12 +108,12 @@ export function ImageReveal({
 
       {/* Hint label */}
       <motion.span
-        className="absolute bottom-4 right-4 text-xs font-medium tracking-widest uppercase"
+        className="absolute bottom-4 right-4 font-syncopate text-[8px] font-bold tracking-[0.2em] uppercase"
         style={{ color: "rgba(255,255,255,0.5)" }}
         animate={{ opacity: revealed ? 0 : 1 }}
         transition={{ duration: 0.3 }}
       >
-        {trigger === "hover" ? "hover" : "tap"} to reveal
+        {trigger === "hover" ? "HOVER" : "TAP"}
       </motion.span>
     </div>
   );

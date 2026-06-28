@@ -142,7 +142,7 @@ export function VoidButton({
       }}
       transition={{ type: "spring", stiffness: 450, damping: 18 }}
       className={cn(
-        "relative w-full h-12 rounded-xl border font-mono text-xs uppercase tracking-widest cursor-pointer select-none overflow-hidden outline-none transition-colors duration-300 flex items-center justify-center",
+        "relative w-full h-12 rounded-xl border font-syncopate text-[9px] uppercase tracking-[0.2em] font-bold cursor-pointer select-none overflow-hidden outline-none transition-colors duration-300 flex items-center justify-center",
         baseStyleClass,
         className
       )}
@@ -368,10 +368,10 @@ export function MechanicalTimer({ className = "" }: { className?: string }) {
       
       {/* Decorative Technical Label Header */}
       <div className="w-full flex items-center justify-between px-1">
-        <span className="font-mono text-[8px] uppercase tracking-widest text-neutral-500 flex items-center gap-1.5 animate-pulse">
+        <span className="font-syncopate text-[7px] uppercase tracking-[0.2em] text-neutral-500 flex items-center gap-1.5 animate-pulse">
           <Compass className="w-3 h-3 text-neutral-400" /> Chronometer Mod 3
         </span>
-        <span className="font-mono text-[8px] uppercase tracking-widest text-neutral-500 font-bold bg-white/5 border border-white/10 px-1.5 py-0.5 rounded">
+        <span className="font-syncopate text-[7px] uppercase tracking-[0.2em] text-neutral-500 font-bold bg-white/5 border border-white/10 px-1.5 py-0.5 rounded">
           VOID ENGINE
         </span>
       </div>
@@ -447,9 +447,9 @@ export function MechanicalTimer({ className = "" }: { className?: string }) {
 
       {/* Floating Display Chassis */}
       <div className="w-full bg-[#050508] border border-neutral-900/50 rounded-2xl p-4 flex flex-col items-center justify-center shadow-[inset_0_4px_16px_rgba(0,0,0,0.9),0_2px_0_rgba(255,255,255,0.02)]">
-        <span className="font-mono text-[8px] uppercase tracking-widest text-neutral-600 mb-1.5">STOPWATCH ACCUMULATOR</span>
+        <span className="font-syncopate text-[7px] uppercase tracking-[0.2em] text-neutral-600 mb-1.5">STOPWATCH</span>
         <div
-          className="font-mono text-3xl font-black tracking-widest text-white select-none transition-all duration-100"
+          className="font-share-mono text-3xl font-black tracking-widest text-white select-none transition-all duration-100"
           style={{
             textShadow: "0 0 10px rgba(255,255,255,0.6)",
           }}
@@ -466,7 +466,7 @@ export function MechanicalTimer({ className = "" }: { className?: string }) {
           onClick={isRunning ? handlePause : handleStart}
           activeGradientClass="bg-gradient-to-r from-neutral-200 via-white to-neutral-200"
           activeTextClass="text-black font-black"
-          className="w-full h-12 border-neutral-800/80 rounded-xl text-xs tracking-widest font-bold"
+          className="w-full h-12 border-neutral-800/80 rounded-xl text-[9px] tracking-[0.2em] font-bold"
         >
           {isRunning ? "Stop Engine" : "Start Accumulator"}
         </VoidButton>
@@ -479,7 +479,7 @@ export function MechanicalTimer({ className = "" }: { className?: string }) {
             disabled={!isRunning}
             activeGradientClass="bg-gradient-to-r from-[#ffd369] via-[#f39c12] to-[#ffffff]"
             activeTextClass="text-black font-black"
-            className="flex-1 h-11 border-neutral-800/80 rounded-xl text-[10px] tracking-wider disabled:opacity-25 disabled:cursor-not-allowed"
+            className="flex-1 h-11 border-neutral-800/80 rounded-xl text-[9px] tracking-[0.2em] font-bold disabled:opacity-25 disabled:cursor-not-allowed"
           >
             Pause
           </VoidButton>
@@ -489,7 +489,7 @@ export function MechanicalTimer({ className = "" }: { className?: string }) {
             onClick={handleReset}
             activeGradientClass="bg-gradient-to-r from-[#ff2e63] via-[#ff2e63] to-[#ffd2d2]"
             activeTextClass="text-white font-black"
-            className="flex-1 h-11 border-neutral-800/80 rounded-xl text-[10px] tracking-wider flex items-center justify-center gap-1.5"
+            className="flex-1 h-11 border-neutral-800/80 rounded-xl text-[9px] tracking-[0.2em] font-bold flex items-center justify-center gap-1.5"
           >
             <RotateCcw className="w-3.5 h-3.5" /> Reset
           </VoidButton>

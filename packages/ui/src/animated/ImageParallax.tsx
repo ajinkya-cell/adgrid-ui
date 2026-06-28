@@ -192,12 +192,12 @@ export function ImageParallax({
             }}
           >
             {caption && (
-              <h4 className="text-white font-mono text-[9px] uppercase tracking-widest font-bold opacity-60 mb-1.5">
+              <h4 className="text-white font-syncopate text-[8px] uppercase tracking-[0.2em] font-bold opacity-60 mb-1.5">
                 {caption}
               </h4>
             )}
             {subcaption && (
-              <p className="text-neutral-100 font-sans text-xs font-medium leading-relaxed">
+              <p className="text-neutral-100 font-plus-jakarta text-xs font-semibold leading-relaxed">
                 {subcaption}
               </p>
             )}

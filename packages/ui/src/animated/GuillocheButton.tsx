@@ -47,7 +47,7 @@ export function GuillocheButton({ className, children, ...props }: GuillocheButt
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        "relative w-48 h-12 rounded font-mono text-xs uppercase tracking-widest cursor-pointer select-none overflow-hidden outline-none border border-white/10 bg-slate-950 transition-all duration-300",
+        "relative w-48 h-12 rounded font-syncopate text-[9px] uppercase tracking-[0.25em] font-bold cursor-pointer select-none overflow-hidden outline-none border border-white/10 bg-slate-950 transition-all duration-300",
         className
       )}
       style={{
