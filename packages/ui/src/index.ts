@@ -25,6 +25,17 @@ export { MechanicalTimer } from "./animated/MechanicalTimer";
 export { LiquidMercuryPad } from "./animated/LiquidMercuryPad";
 export { SlingshotChassis } from "./animated/SlingshotChassis";
 export { LaserVaultPassword } from "./animated/LaserVaultPassword";
+export { AnimatedBeam } from "./animated/AnimatedBeam";
+export type { AnimatedBeamProps } from "./animated/AnimatedBeam";
+export { CoverflowCarousel } from "./animated/coverflow/CoverflowCarousel";
+export type { CoverflowCarouselProps } from "./animated/coverflow/types";
+export { PremiumHero } from "./animated/PremiumHero";
+export type { PremiumHeroProps, CardData, CardType } from "./animated/PremiumHero";
+
+// Dot Matrix LED programmable grid
+export { DotMatrix } from "./matrix/DotMatrix";
+export type { DotMatrixProps } from "./matrix/types";
+
 
 // backgrounds
 export { PixelMeltBackground } from "./backgrounds/PixelMelt";

@@ -211,3 +211,8 @@ code::-webkit-scrollbar-thumb:hover,
     transition-duration: 0.01ms !important;
   }
 }
+
+.font-handwritten {
+  font-family: var(--font-caveat), cursive;
+}
+

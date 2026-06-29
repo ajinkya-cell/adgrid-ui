@@ -9,4 +9,7 @@ export default defineConfig({
   clean: true,
   external: ["react", "react-dom", "framer-motion", "gsap", "next", "next/image"],
   treeshake: true,
+  loader: {
+    ".png": "dataurl"
+  }
 });
