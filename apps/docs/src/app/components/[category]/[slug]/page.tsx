@@ -146,6 +146,19 @@ const PROP_SCHEMAS: Record<string, PropDefinition[]> = {
     { name: "glow", type: "boolean", label: "LED Ambient Glow", defaultValue: true },
     { name: "blur", type: "number", label: "Glow Blur (px)", defaultValue: 12, min: 0, max: 30, step: 1 },
   ],
+  "scroll-progress": [
+    { name: "ticks", type: "number", label: "Ticks", defaultValue: 42, min: 10, max: 100, step: 1 },
+    { name: "color", type: "color", label: "Color", defaultValue: "#a855f7" },
+    { name: "glow", type: "boolean", label: "Neon Glow", defaultValue: true },
+    { name: "height", type: "number", label: "Thickness (px)", defaultValue: 44, min: 20, max: 100, step: 2 },
+    { name: "width", type: "number", label: "Height (px)", defaultValue: 320, min: 100, max: 600, step: 10 },
+    { name: "variant", type: "select", label: "Variant", defaultValue: "default", options: [
+      { label: "Default", value: "default" },
+      { label: "Inverted", value: "inverted" },
+      { label: "Prominent", value: "prominent" },
+    ] },
+  ],
+  "now-playing-card": [],
 };
 
 // extract props from TSDoc comments in source
@@ -226,7 +239,18 @@ export default async function ComponentPage({
         additionalFiles[`/${file}`] = fs.readFileSync(filePath, "utf-8");
       }
     });
+  }
 
+  // Load nested component dependencies for ScrollProgress
+  if (entry.slug === "scroll-progress") {
+    const scrollProgressDir = path.join(srcDir, "animated/scrollprogress");
+    const files = ["types.ts", "utils.ts", "useScrollProgress.ts", "Tick.tsx"];
+    files.forEach((file) => {
+      const filePath = path.join(scrollProgressDir, file);
+      if (fs.existsSync(filePath)) {
+        additionalFiles[`/${file}`] = fs.readFileSync(filePath, "utf-8");
+      }
+    });
   }
 
   const editableProps = PROP_SCHEMAS[entry.slug];
@@ -1044,6 +1068,69 @@ export default function App() {
           Undulating aurora waves
         </span>
       </div>
+    </div>
+  );
+}
+`.trim();
+  } else if (entry.slug === "scroll-progress") {
+    appCode = `
+import ScrollProgress from "./ScrollProgress";
+
+export default function App() {
+  return (
+    <div style={{
+      background: "#050505",
+      color: "#fff",
+      fontFamily: "sans-serif",
+      padding: "2rem",
+      minHeight: "200vh",
+      width: "100%",
+    }}>
+      <div style={{ maxWidth: "600px", margin: "0 auto", padding: "4rem 0" }}>
+        <h1 style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "1rem" }}>Scroll Progress Demo</h1>
+        <p style={{ color: "#a0a0a0", lineHeight: "1.6", marginBottom: "2rem" }}>
+          Scroll down the page to see the custom scrollbar overlay on the right respond in real-time.
+        </p>
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div key={i} style={{ marginBottom: "4rem" }}>
+            <h2 style={{ fontSize: "1.25rem", color: "#a855f7", marginBottom: "0.5rem" }}>Section {i + 1}</h2>
+            <p style={{ color: "#707070", lineHeight: "1.6" }}>
+              This section exists to generate height and demonstrate scroll speed velocity scaling and the ambient neon glow effect. Dragging the progress bar will also scrub the viewport.
+            </p>
+          </div>
+        ))}
+      </div>
+      <ScrollProgress color="#a855f7" glow={true} ticks={42} />
+    </div>
+  );
+}
+`.trim();
+  } else if (entry.slug === "now-playing-card") {
+    appCode = `
+import { NowPlayingCard } from "./NowPlayingCard";
+
+export default function App() {
+  const mockSong = {
+    isPlaying: true,
+    title: "Main Chala Jaunga",
+    artist: "Fiddlecraft",
+    album: "Hawai Jahaaz",
+    image: "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/41/c7/65/41c765a0-5a1e-3e35-9c22-5d664da2b95e/cover.jpg/600x600bb.jpg",
+    songUrl: "https://open.spotify.com/album/4vjV643d5Xg8eT1pI4R8Hw",
+    playedAt: null
+  };
+
+  return (
+    <div style={{
+      background: "#050505",
+      minHeight: "100vh",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "2rem",
+      width: "100%",
+    }}>
+      <NowPlayingCard song={mockSong} />
     </div>
   );
 }

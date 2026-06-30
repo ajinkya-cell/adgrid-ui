@@ -42,6 +42,55 @@ function generateAppCode(
   let extraProps = "";
   let extraVariables = "";
 
+  if (componentName === "ScrollProgress") {
+    const propsStr = propDefs
+      .filter((def) => {
+        const val = values[def.name] ?? def.defaultValue;
+        return val !== undefined;
+      })
+      .map((def) => {
+        const val = values[def.name] ?? def.defaultValue;
+        if (def.type === "number" || def.type === "boolean") {
+          return `\n      ${def.name}={${val}}`;
+        }
+        return `\n      ${def.name}="${String(val).replace(/"/g, '&quot;')}"`;
+      })
+      .join("");
+
+    return `import React from "react";
+import ScrollProgress from "./ScrollProgress";
+
+export default function App() {
+  return (
+    <div style={{
+      background: "#050505",
+      color: "#fff",
+      fontFamily: "sans-serif",
+      padding: "2rem",
+      minHeight: "250vh",
+      width: "100%",
+    }}>
+      <div style={{ maxWidth: "600px", margin: "0 auto", padding: "4rem 0" }}>
+        <h1 style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "1rem" }}>Scroll Progress Demo</h1>
+        <p style={{ color: "#a0a0a0", lineHeight: "1.6", marginBottom: "2rem" }}>
+          Scroll down the page to see the custom scrollbar overlay on the right respond in real-time. Use the controls below to customize it.
+        </p>
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div key={i} style={{ marginBottom: "4rem" }}>
+            <h2 style={{ fontSize: "1.25rem", color: "#a855f7", marginBottom: "0.5rem" }}>Section {i + 1}</h2>
+            <p style={{ color: "#707070", lineHeight: "1.6" }}>
+              This section exists to generate height and demonstrate scroll speed velocity scaling and the ambient neon glow effect. Dragging the progress bar will also scrub the viewport.
+            </p>
+          </div>
+        ))}
+      </div>
+      <ScrollProgress${propsStr}
+      />
+    </div>
+  );
+}`;
+  }
+
   if (componentName === "DesignVariantFeed") {
     const defaultPrompt = values.defaultPrompt ?? "Glassmorphic dashboard";
     return `import React from "react";
@@ -367,7 +416,7 @@ export function LivePreview({
   );
 
   const defaultAppCode = `
-import { ${componentName} } from "./${componentName}";
+import ${componentName === "ScrollProgress" ? componentName : `{ ${componentName} }`} from "./${componentName}";
 
 export default function App() {
   return (
@@ -476,6 +525,14 @@ export default function MockImage({ src, alt, fill, width, height, className, st
     />
   );
 }
+        `.trim(),
+        "node_modules/next/font/google.js": `
+export function Geist_Mono() { return { className: "font-mono" }; }
+export function Outfit() { return { className: "font-sans" }; }
+        `.trim(),
+        "node_modules/next/font/google/index.js": `
+export function Geist_Mono() { return { className: "font-mono" }; }
+export function Outfit() { return { className: "font-sans" }; }
         `.trim(),
         ...additionalFiles,
       }}

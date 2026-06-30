@@ -263,4 +263,20 @@ export const registry: RegistryEntry[] = [
     dependencies: ["framer-motion"],
     packagePath: "animated/DotMatrix.tsx",
   },
+  {
+    name: "Scroll Progress",
+    slug: "scroll-progress",
+    category: "animated",
+    description: "A vertical dynamic scrollbar overlay with interactive tick mark animations, dragging controls, and velocity-based stretching/glow.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/scrollprogress/ScrollProgress.tsx",
+  },
+  {
+    name: "Now Playing Card",
+    slug: "now-playing-card",
+    category: "animated",
+    description: "A Spotify-style vinyl player card powered by Last.fm API that dynamically retrieves real-time listening history with vinyl spin animations.",
+    dependencies: ["react-icons"],
+    packagePath: "animated/NowPlayingCard.tsx",
+  },
 ];

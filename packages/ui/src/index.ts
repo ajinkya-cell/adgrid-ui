@@ -31,6 +31,10 @@ export { CoverflowCarousel } from "./animated/coverflow/CoverflowCarousel";
 export type { CoverflowCarouselProps } from "./animated/coverflow/types";
 export { PremiumHero } from "./animated/PremiumHero";
 export type { PremiumHeroProps, CardData, CardType } from "./animated/PremiumHero";
+export { default as ScrollProgress } from "./animated/scrollprogress/ScrollProgress";
+export type { ScrollProgressProps } from "./animated/scrollprogress/types";
+export { NowPlayingCard } from "./animated/NowPlayingCard";
+export type { Song } from "./animated/NowPlayingCard";
 
 // Dot Matrix LED programmable grid
 export { DotMatrix } from "./matrix/DotMatrix";
