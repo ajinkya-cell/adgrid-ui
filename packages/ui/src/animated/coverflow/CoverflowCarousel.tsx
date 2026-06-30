@@ -8,33 +8,33 @@ import { cn } from "../../lib/utils";
 const items = [
   {
     id: "1",
-    image: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=600&auto=format&fit=crop",
-    title: "SNOW PAGODA"
+    image: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=600&auto=format&fit=crop",
+    title: "Desert dunes"
   },
   {
     id: "2",
-    image: "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?q=80&w=600&auto=format&fit=crop",
-    title: "SUMI-E LANDSCAPE"
+    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=600&auto=format&fit=crop",
+    title: "Urban geometry"
   },
   {
     id: "3",
-    image: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=600&auto=format&fit=crop",
-    title: "MINIMAL BRUSH"
+    image: "https://images.unsplash.com/photo-1518005020951-eccb494ad742?q=80&w=600&auto=format&fit=crop",
+    title: "Minimalist steps"
   },
   {
     id: "4",
-    image: "https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=600&auto=format&fit=crop",
-    title: "MISTY BAMBOO"
+    image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=600&auto=format&fit=crop",
+    title: "Mountain peaks"
   },
   {
     id: "5",
-    image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=600&auto=format&fit=crop",
-    title: "ZEN BRUSHSTROKE"
+    image: "https://images.unsplash.com/photo-1502224562085-639556652f33?q=80&w=600&auto=format&fit=crop",
+    title: "Architectural curve"
   },
   {
     id: "6",
-    image: "https://images.unsplash.com/photo-1604871000636-074fa5117945?q=80&w=600&auto=format&fit=crop",
-    title: "INK REFLECTIONS"
+    image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=600&auto=format&fit=crop",
+    title: "Misty forest"
   }
 ];
 

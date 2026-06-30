@@ -47,11 +47,16 @@ export function BrushedTitaniumButton({ className, children, ...props }: Brushed
   const spotlightBg = useMotionTemplate`radial-gradient(circle 80px at ${springX}px ${springY}px, rgba(255, 255, 255, 0.08), transparent)`;
 
   return (
-    <button
+    <motion.button
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={handleMouseLeave}
+      whileTap={{
+        scale: 0.96,
+        y: 1.5,
+      }}
+      transition={{ type: "spring", stiffness: 450, damping: 18 }}
       className={cn(
         "relative w-48 h-12 rounded font-syncopate text-[9px] uppercase tracking-[0.25em] font-bold cursor-pointer select-none overflow-hidden outline-none border border-neutral-700/60 bg-neutral-900 transition-shadow duration-300",
         className
@@ -62,7 +67,7 @@ export function BrushedTitaniumButton({ className, children, ...props }: Brushed
           ? "0 6px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.25)"
           : "0 3px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15)",
       }}
-      {...props}
+      {...(props as any)}
     >
       {/* Brushed Micro-lines Texture Overlay */}
       <div 
@@ -97,6 +102,6 @@ export function BrushedTitaniumButton({ className, children, ...props }: Brushed
       <span className="relative z-10 flex items-center justify-center h-full text-neutral-300 font-bold tracking-widest text-shadow-sm">
         {children || "TITANIUM"}
       </span>
-    </button>
+    </motion.button>
   );
 }

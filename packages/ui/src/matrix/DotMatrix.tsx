@@ -159,7 +159,7 @@ export const DotMatrix: React.FC<DotMatrixProps> = ({
       pluginStateRef.current.loop = loop;
 
       const ctx: AnimationContext = {
-        elements,
+        elements: elements.slice(0, totalDots),
         rows: displayRows,
         columns: displayCols,
         time,

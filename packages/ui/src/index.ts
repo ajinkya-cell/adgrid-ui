@@ -1,14 +1,13 @@
 export { ImageReveal } from "./animated/ImageReveal";
 export type { ImageRevealProps } from "./animated/ImageReveal";
-export { ImageStack } from "./animated/ImageStack";
-export type { ImageStackProps } from "./animated/ImageStack";
+
 export { ImageParallax } from "./animated/ImageParallax";
 export type { ImageParallaxProps } from "./animated/ImageParallax";
 export { LivingText } from "./animated/LivingText";
 export type { LivingTextProps } from "./animated/LivingText";
 export { GravityCardStack } from "./animated/GravityCardStack";
 export { MorphingNav } from "./animated/MorphingNav";
-export { StoryTimeline } from "./animated/StoryTimeline";
+
 export { VoidButton } from "./animated/VoidButton";
 export { BrushedTitaniumButton } from "./animated/BrushedTitaniumButton";
 export { LiquidGoldButton } from "./animated/LiquidGoldButton";
@@ -22,11 +21,10 @@ export type { MetallicFormProps, FormField } from "./animated/MetallicForm";
 export { AnisotropicKnob } from "./animated/AnisotropicKnob";
 export type { AnisotropicKnobProps } from "./animated/AnisotropicKnob";
 export { MechanicalTimer } from "./animated/MechanicalTimer";
-export { LiquidMercuryPad } from "./animated/LiquidMercuryPad";
+
 export { SlingshotChassis } from "./animated/SlingshotChassis";
 export { LaserVaultPassword } from "./animated/LaserVaultPassword";
-export { AnimatedBeam } from "./animated/AnimatedBeam";
-export type { AnimatedBeamProps } from "./animated/AnimatedBeam";
+
 export { CoverflowCarousel } from "./animated/coverflow/CoverflowCarousel";
 export type { CoverflowCarouselProps } from "./animated/coverflow/types";
 export { PremiumHero } from "./animated/PremiumHero";
@@ -35,6 +33,10 @@ export { default as ScrollProgress } from "./animated/scrollprogress/ScrollProgr
 export type { ScrollProgressProps } from "./animated/scrollprogress/types";
 export { NowPlayingCard } from "./animated/NowPlayingCard";
 export type { Song } from "./animated/NowPlayingCard";
+export { WheelPicker } from "./animated/WheelPicker";
+export type { WheelPickerProps, WheelPickerRef } from "./animated/WheelPicker";
+export { ExpandOnHover } from "./animated/expand-on-hover";
+export type { ExpandItem, ExpandVariant, ExpandAnimationType, ExpandOnHoverProps, ExpandOnHoverRef } from "./animated/expand-on-hover";
 
 // Dot Matrix LED programmable grid
 export { DotMatrix } from "./matrix/DotMatrix";

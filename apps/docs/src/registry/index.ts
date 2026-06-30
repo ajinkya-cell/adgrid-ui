@@ -38,14 +38,7 @@ export const registry: RegistryEntry[] = [
     dependencies: ["framer-motion"],
     packagePath: "animated/ImageReveal.tsx",
   },
-  {
-    name: "Image Stack",
-    slug: "image-stack",
-    category: "animated",
-    description: "A swipeable stack of cards with spring physics and dismiss handlers.",
-    dependencies: ["framer-motion"],
-    packagePath: "animated/ImageStack.tsx",
-  },
+
   {
     name: "Image Parallax",
     slug: "image-parallax",
@@ -78,30 +71,7 @@ export const registry: RegistryEntry[] = [
     dependencies: ["framer-motion", "lucide-react"],
     packagePath: "animated/MorphingNav.tsx",
   },
-  {
-    name: "Story Timeline",
-    slug: "story-timeline",
-    category: "animated",
-    description: "A scroll-animated vertical narrative timeline with counting stats and slide-in nodes.",
-    dependencies: ["gsap", "lucide-react"],
-    packagePath: "animated/StoryTimeline.tsx",
-  },
-  {
-    name: "Animated Beam",
-    slug: "animated-beam",
-    category: "animated",
-    description: "An animated connection beam that traces SVG paths between elements, with dynamic ResizeObserver tracking and custom styles.",
-    dependencies: ["framer-motion", "lucide-react"],
-    packagePath: "animated/AnimatedBeam.tsx",
-  },
-  {
-    name: "Design Variant Feed",
-    slug: "design-variant-feed",
-    category: "animated",
-    description: "An infinite scroll gallery simulating Variant.link design variant generation, complete with scroll-linked Framer Motion clip-path masking.",
-    dependencies: ["framer-motion"],
-    packagePath: "animated/DesignVariantFeed.tsx",
-  },
+
   {
     name: "Coverflow Carousel",
     slug: "coverflow-carousel",
@@ -223,14 +193,7 @@ export const registry: RegistryEntry[] = [
     dependencies: ["framer-motion", "lucide-react"],
     packagePath: "animated/MechanicalTimer.tsx",
   },
-  {
-    name: "Liquid Mercury Pad",
-    slug: "liquid-mercury-pad",
-    category: "animated",
-    description: "GPU-accelerated liquid mercury pad using SVG Specular Lighting + Color Matrix filters, dynamic stroke velocity thickness, and geometric snap engine.",
-    dependencies: ["framer-motion", "lucide-react"],
-    packagePath: "animated/LiquidMercuryPad.tsx",
-  },
+
   {
     name: "Slingshot Chassis",
     slug: "slingshot-chassis",
@@ -278,5 +241,21 @@ export const registry: RegistryEntry[] = [
     description: "A Spotify-style vinyl player card powered by Last.fm API that dynamically retrieves real-time listening history with vinyl spin animations.",
     dependencies: ["react-icons"],
     packagePath: "animated/NowPlayingCard.tsx",
+  },
+  {
+    name: "Wheel Picker",
+    slug: "wheel-picker",
+    category: "animated",
+    description: "Premium physical-feeling 3D wheel picker with momentum dragging, spring snapping, and mechanical Web Audio crown clicks.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/WheelPicker.tsx",
+  },
+  {
+    name: "Expand On Hover",
+    slug: "expand-on-hover",
+    category: "animated",
+    description: "A stack of compact preview cards that smoothly expand into immersive content panels on hover, featuring physical parting animations and 3D pointer tracking.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/expand-on-hover/components/expand-on-hover/ExpandOnHover.tsx",
   },
 ];

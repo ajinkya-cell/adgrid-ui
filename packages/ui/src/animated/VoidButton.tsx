@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { motion, useMotionValue, useSpring, useMotionTemplate } from "framer-motion";
 import { cn } from "../lib/utils";
 
@@ -21,19 +21,34 @@ export function VoidButton({
   const containerRef = useRef<HTMLButtonElement>(null);
   const [isHovered, setIsHovered] = useState(false);
 
-  // Pointer position tracker
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+  // Pointer position tracker (initialized to standard w-48 h-12 button center)
+  const mouseX = useMotionValue(96);
+  const mouseY = useMotionValue(24);
 
   // Smooth springs to eliminate lag
   const springX = useSpring(mouseX, { stiffness: 120, damping: 22 });
   const springY = useSpring(mouseY, { stiffness: 120, damping: 22 });
+
+  useEffect(() => {
+    if (containerRef.current) {
+      mouseX.set(containerRef.current.offsetWidth / 2);
+      mouseY.set(containerRef.current.offsetHeight / 2);
+    }
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     mouseX.set(e.clientX - rect.left);
     mouseY.set(e.clientY - rect.top);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    if (containerRef.current) {
+      mouseX.set(containerRef.current.offsetWidth / 2);
+      mouseY.set(containerRef.current.offsetHeight / 2);
+    }
   };
 
   // Radial mask template for lighting reveal sweeps
@@ -77,7 +92,7 @@ export function VoidButton({
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseLeave={handleMouseLeave}
       // 3D dynamic click spring animations
       whileTap={{
         scale: 0.95,

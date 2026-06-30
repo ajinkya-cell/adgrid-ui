@@ -10,7 +10,7 @@ import {
   LiquidGoldButton,
   GuillocheButton,
   MorphingNav,
-  ImageStack,
+  ImageReveal,
 } from "@adgrid-ui/ui";
 
 export default function HomePage() {
@@ -205,7 +205,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Card 2: ImageStack */}
+          {/* Card 2: ImageReveal */}
           <div 
             onMouseMove={handleMouseMove}
             className="md:col-span-6 h-[380px] border border-border-hairline bg-surface-charcoal p-8 flex flex-col justify-between relative overflow-hidden group hover:border-white transition-colors duration-300 spotlight-card border-glow-card"
@@ -215,29 +215,26 @@ export default function HomePage() {
 
             <div className="flex justify-between items-start z-10 select-none">
               <span className="font-mono text-[10px] text-white bg-surface-variant px-2 py-1 tracking-widest font-bold">VOID_02</span>
-              <span className="font-mono text-[10px] text-text-muted tracking-widest">SWIPE_DISMISS_PHYSICS</span>
+              <span className="font-mono text-[10px] text-text-muted tracking-widest">STRIPES_MASKING_CLIP</span>
             </div>
             
-            <div className="relative z-10 flex items-center justify-center scale-75 -my-10">
-              <ImageStack 
-                cards={[
-                  { src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80", alt: "Mountain", label: "SUMMIT_ARRAY" },
-                  { src: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&q=80", alt: "Stars", label: "VOID_OBSERVATION" },
-                  { src: "https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=600&q=80", alt: "Forest", label: "TERRESTRIAL_MATRIX" }
-                ]}
-                width={200}
-                height={260}
+            <div className="relative z-10 flex items-center justify-center scale-90 -my-10 h-[180px]">
+              <ImageReveal 
+                src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80"
+                alt="Mountain"
+                width={280}
+                height={160}
               />
             </div>
             
             <div className="flex flex-col gap-2 z-10 select-none">
-              <h3 className="font-display text-xl uppercase font-bold text-white tracking-tight">ImageStack</h3>
-              <p className="font-body text-text-muted text-xs">Swipeable card stacks with spring physics and inertia dismiss handlers.</p>
+              <h3 className="font-display text-xl uppercase font-bold text-white tracking-tight">ImageReveal</h3>
+              <p className="font-body text-text-muted text-xs">An image reveal effect using diagonal stripes masking and sliding clip-paths.</p>
             </div>
             
             <div className="mt-4 border-t border-border-hairline pt-4 flex gap-8 select-none z-10">
-              <span className="font-mono text-[10px] text-text-muted uppercase">Spring: Elastic</span>
-              <span className="font-mono text-[10px] text-text-muted uppercase">Dismiss: 100px</span>
+              <span className="font-mono text-[10px] text-text-muted uppercase">Angle: -55°</span>
+              <span className="font-mono text-[10px] text-text-muted uppercase">Trigger: Hover</span>
             </div>
           </div>
         </div>

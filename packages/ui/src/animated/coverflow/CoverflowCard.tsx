@@ -72,16 +72,12 @@ export function CoverflowCard({
         <img
           src={getImageUrl(item.image)}
           alt={item.title || ""}
-          className="w-full h-full object-cover select-none pointer-events-none"
+          className="w-full h-full object-cover select-none pointer-events-none grayscale"
           draggable={false}
         />
 
-        {/* Text details overlay: single text at the bottom (no wrapper div) */}
-        {item.title && (
-          <span className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-[10px] font-bold uppercase tracking-widest font-mono select-none px-3.5 py-1.5 bg-black/60 backdrop-blur-md rounded-full border border-white/5 max-w-[85%] truncate shadow-[0_4px_12px_rgba(0,0,0,0.5)] z-20">
-            {item.title}
-          </span>
-        )}
+        {/* Text details overlay: centered flex badge with zero fractional transforms */}
+       
       </div>
 
       {/* Cinematic Mirror Reflection - using mask-image with linear gradients */}
@@ -95,7 +91,7 @@ export function CoverflowCard({
         <img
           src={getImageUrl(item.image)}
           alt=""
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover grayscale"
           draggable={false}
         />
       </div>
