@@ -120,7 +120,7 @@ const PROP_SCHEMAS: Record<string, PropDefinition[]> = {
     { name: "columns", type: "number", label: "Grid Columns", defaultValue: 40, min: 12, max: 60, step: 1 },
     { name: "dotSize", type: "number", label: "Dot Size (px)", defaultValue: 16, min: 6, max: 30, step: 1 },
     { name: "gap", type: "number", label: "Dot Gap (px)", defaultValue: 6, min: 2, max: 15, step: 1 },
-    { name: "color", type: "color", label: "LED Active Color", defaultValue: "#38bdf8" },
+    { name: "color", type: "color", label: "LED Active Color", defaultValue: "#e2f5fd" },
     { name: "inactiveColor", type: "color", label: "LED Inactive Color", defaultValue: "#1e1e24" },
     { name: "text", type: "string", label: "Display Text", defaultValue: "KINETIC" },
     { name: "speed", type: "number", label: "Animation Speed", defaultValue: 1.0, min: 0.1, max: 5.0, step: 0.1 },
@@ -1175,7 +1175,7 @@ export default function App() {
                       <pre className="p-4 bg-surface-charcoal border border-border-hairline rounded font-mono text-xs text-neutral-100 overflow-x-auto">
 {`<DotMatrix
   animation="equalizer"
-  color="#38bdf8"
+  color="#e2f5fd"
   columns={36}
   rows={10}
   speed={1.5}
