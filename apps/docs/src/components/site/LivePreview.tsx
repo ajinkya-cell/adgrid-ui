@@ -9,6 +9,31 @@ import {
 } from "@codesandbox/sandpack-react";
 import { PropsEditor, type PropDefinition } from "./PropsEditor";
 
+const COMPONENT_HEIGHTS: Record<string, number> = {
+  MetallicForm: 780,
+  MechanicalTimer: 640,
+  LaserVaultPassword: 640,
+  SlingshotChassis: 640,
+  ImageReveal: 600,
+  ExpandOnHover: 580,
+  GravityCardStack: 640,
+  CoverflowCarousel: 680,
+  PremiumHero: 680,
+  ScrollProgress: 520,
+  NowPlayingCard: 500,
+  WheelPicker: 520,
+  AnisotropicKnob: 500,
+  LivingText: 500,
+  SpotlightGrid: 500,
+  LuminaWave: 500,
+  BreathingGrid: 500,
+  FloatingEmbers: 500,
+  PixelMelt: 500,
+  ImageParallax: 500,
+  TextShuffle: 520,
+  DotMatrix: 480,
+};
+
 interface LivePreviewProps {
   code: string;
   componentName: string;
@@ -338,6 +363,44 @@ export default function App() {
 }`;
   }
 
+  if (componentName === "TextShuffle") {
+    const propsStr = propDefs
+      .filter((def) => {
+        const val = values[def.name] ?? def.defaultValue;
+        return val !== undefined;
+      })
+      .map((def) => {
+        const val = values[def.name] ?? def.defaultValue;
+        if (def.type === "number" || def.type === "boolean") {
+          return `\n        ${def.name}={${val}}`;
+        }
+        return `\n        ${def.name}="${String(val).replace(/"/g, '&quot;')}"`;
+      })
+      .join("");
+
+    return `import React from "react";
+import { TextShuffle } from "./TextShuffle";
+
+export default function App() {
+  return (
+    <div style={{
+      background: "#050505",
+      minHeight: "100vh",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "3rem",
+      width: "100%",
+      boxSizing: "border-box",
+    }}>
+      <TextShuffle
+        words={["Like THIS?", "Connect", "with Me"]}${propsStr}
+      />
+    </div>
+  );
+}`;
+  }
+
 
 
 
@@ -537,16 +600,16 @@ export function Outfit() { return { className: "font-sans" }; }
       options={{ externalResources: ["https://cdn.tailwindcss.com"] }}
     >
       {hasEditableProps && <SandpackFileSyncer appCode={finalAppCode} />}
-      <SandpackLayout>
+      <SandpackLayout style={{ height: COMPONENT_HEIGHTS[componentName] ?? (isWide ? 600 : 480) }}>
         {showCode && (
           <SandpackCodeEditor 
             showTabs 
             showLineNumbers 
-            style={{ height: componentName === "MetallicForm" ? 780 : (componentName === "MechanicalTimer" || componentName === "LaserVaultPassword" || componentName === "WritingPad" || componentName === "SlingshotChassis") ? 640 : isWide ? 600 : 480 }} 
+            style={{ height: "100%" }} 
           />
         )}
         <SandpackPreview 
-          style={{ height: componentName === "MetallicForm" ? 780 : (componentName === "MechanicalTimer" || componentName === "LaserVaultPassword" || componentName === "WritingPad" || componentName === "SlingshotChassis") ? 640 : isWide ? 600 : 480 }} 
+          style={{ height: "100%" }} 
           showOpenInCodeSandbox={false} 
         />
       </SandpackLayout>

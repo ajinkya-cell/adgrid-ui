@@ -11,7 +11,6 @@ interface UseExpandProps {
 }
 
 export function useExpand({
-  items,
   expandedId: controlledId,
   onExpandedChange,
   defaultExpanded = null,

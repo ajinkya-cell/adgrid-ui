@@ -18,7 +18,6 @@ export const ExpandOnHover = forwardRef<ExpandOnHoverRef, ExpandOnHoverProps>(
       defaultExpanded = null,
       gap = 12,
       borderRadius = 24,
-      allowMultiple = false,
       hoverDelay = 50,
       clickToExpand = false,
       autoCollapseOnLeave = true,

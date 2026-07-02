@@ -76,23 +76,39 @@ export default function HomePage() {
               </Link>
             </div>
 
-            {/* Copyable npm install block inline */}
-            <div className="flex border border-border-hairline p-1 bg-surface-charcoal w-full max-w-md">
-              <input
-                className="bg-transparent border-none outline-none focus:ring-0 font-mono text-[11px] px-4 py-2.5 flex-1 text-white select-all text-left"
-                id="hero-npm-install"
-                value="npm install @void/ui"
-                readOnly
-              />
-              <button
-                onClick={copyToClipboard}
-                className="bg-white text-black font-mono font-bold text-[10px] px-6 py-2.5 hover:bg-white/90 transition-colors flex items-center justify-center gap-2 cursor-pointer uppercase tracking-widest"
-              >
-                <span className="material-symbols-outlined text-[14px]">
-                  {copied ? "check" : "content_copy"}
-                </span>
-                {copied ? "COPIED" : "COPY"}
-              </button>
+            {/* Copyable shadcn registry install block */}
+            <div className="flex flex-col gap-2 w-full max-w-md">
+              <div className="flex border border-border-hairline p-1 bg-surface-charcoal w-full">
+                <input
+                  className="bg-transparent border-none outline-none focus:ring-0 font-mono text-[10px] px-4 py-2.5 flex-1 text-white/50 select-all text-left truncate"
+                  value="pnpm dlx shadcn@latest registry add @voidui=https://void-ui.vercel.app/r/{name}.json"
+                  readOnly
+                />
+                <button
+                  onClick={() => { navigator.clipboard.writeText("pnpm dlx shadcn@latest registry add @voidui=https://void-ui.vercel.app/r/{name}.json"); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
+                  className="bg-surface-variant text-text-muted font-mono font-bold text-[9px] px-3 py-2.5 hover:bg-white/10 transition-colors flex items-center justify-center gap-1 cursor-pointer uppercase tracking-widest shrink-0"
+                >
+                  <span className="material-symbols-outlined text-[12px]">content_copy</span>
+                  SETUP
+                </button>
+              </div>
+              <div className="flex border border-border-hairline p-1 bg-surface-charcoal w-full">
+                <input
+                  className="bg-transparent border-none outline-none focus:ring-0 font-mono text-[11px] px-4 py-2.5 flex-1 text-white select-all text-left"
+                  id="hero-npm-install"
+                  value="pnpm dlx shadcn@latest add @voidui/void-button"
+                  readOnly
+                />
+                <button
+                  onClick={copyToClipboard}
+                  className="bg-white text-black font-mono font-bold text-[10px] px-6 py-2.5 hover:bg-white/90 transition-colors flex items-center justify-center gap-2 cursor-pointer uppercase tracking-widest"
+                >
+                  <span className="material-symbols-outlined text-[14px]">
+                    {copied ? "check" : "content_copy"}
+                  </span>
+                  {copied ? "COPIED" : "COPY"}
+                </button>
+              </div>
             </div>
           </div>
 
@@ -289,23 +305,41 @@ export default function HomePage() {
 
       {/* ─── 4. Final CTA Section ─── */}
       <section className="py-32 px-6 max-w-[1440px] mx-auto text-center border-t border-border-hairline">
-        <h2 className="font-display text-4xl md:text-6xl uppercase mb-12 font-bold tracking-tighter text-white">Enter the Void</h2>
-        <div className="inline-flex flex-col sm:flex-row border border-border-hairline p-1 bg-surface-charcoal w-full max-w-lg">
-          <input
-            className="bg-transparent border-none outline-none focus:ring-0 font-mono text-xs px-6 py-4 flex-1 text-white select-all text-center sm:text-left"
-            id="npm-install"
-            value="npm install @void/ui"
-            readOnly
-          />
-          <button
-            onClick={copyToClipboard}
-            className="bg-white text-black font-mono font-bold text-xs px-8 py-4 hover:bg-white/90 transition-colors flex items-center justify-center gap-2 cursor-pointer uppercase tracking-widest"
-          >
-            <span className="material-symbols-outlined text-[16px]">
-              {copied ? "check" : "content_copy"}
-            </span>
-            {copied ? "COPIED" : "COPY"}
-          </button>
+        <h2 className="font-display text-4xl md:text-6xl uppercase mb-6 font-bold tracking-tighter text-white">Enter the Void</h2>
+        <p className="font-body text-text-muted text-sm mb-12 max-w-md mx-auto">
+          Add the registry once, install any component forever.
+        </p>
+        <div className="flex flex-col gap-3 w-full max-w-xl mx-auto">
+          <div className="inline-flex border border-border-hairline p-1 bg-surface-charcoal w-full">
+            <input
+              className="bg-transparent border-none outline-none focus:ring-0 font-mono text-[10px] px-6 py-4 flex-1 text-white/50 select-all text-left truncate"
+              value="pnpm dlx shadcn@latest registry add @voidui=https://void-ui.vercel.app/r/{name}.json"
+              readOnly
+            />
+            <button
+              onClick={() => { navigator.clipboard.writeText("pnpm dlx shadcn@latest registry add @voidui=https://void-ui.vercel.app/r/{name}.json"); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
+              className="bg-surface-variant text-text-muted font-mono font-bold text-xs px-6 py-4 hover:bg-white/10 transition-colors flex items-center justify-center gap-2 cursor-pointer uppercase tracking-widest shrink-0"
+            >
+              <span className="material-symbols-outlined text-[14px]">content_copy</span>
+              SETUP
+            </button>
+          </div>
+          <div className="inline-flex border border-border-hairline p-1 bg-surface-charcoal w-full">
+            <input
+              className="bg-transparent border-none outline-none focus:ring-0 font-mono text-xs px-6 py-4 flex-1 text-white select-all text-center sm:text-left"
+              value="pnpm dlx shadcn@latest add @voidui/dot-matrix"
+              readOnly
+            />
+            <button
+              onClick={copyToClipboard}
+              className="bg-white text-black font-mono font-bold text-xs px-8 py-4 hover:bg-white/90 transition-colors flex items-center justify-center gap-2 cursor-pointer uppercase tracking-widest"
+            >
+              <span className="material-symbols-outlined text-[16px]">
+                {copied ? "check" : "content_copy"}
+              </span>
+              {copied ? "COPIED" : "COPY"}
+            </button>
+          </div>
         </div>
       </section>
 

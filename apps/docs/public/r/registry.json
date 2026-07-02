@@ -1,0 +1,613 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "voidui",
+  "homepage": "https://void-ui.vercel.app",
+  "items": [
+    {
+      "name": "image-reveal",
+      "type": "registry:ui",
+      "title": "Image Reveal",
+      "description": "An image reveal effect using diagonal stripes masking and sliding clip-paths.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/ImageReveal.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "image-parallax",
+      "type": "registry:ui",
+      "title": "Image Parallax",
+      "description": "A smooth mouse-move and scroll-driven parallax image perspective effect.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/ImageParallax.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "living-text",
+      "type": "registry:ui",
+      "title": "Living Text",
+      "description": "Stretches, rotates, and pushes characters dynamically based on real-time cursor proximity.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/LivingText.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "gravity-card-stack",
+      "type": "registry:ui",
+      "title": "Gravity Card Stack",
+      "description": "Falling rigid body physics cards container that reacts to scroll triggers.",
+      "dependencies": [
+        "matter-js",
+        "gsap"
+      ],
+      "files": [
+        {
+          "path": "components/ui/GravityCardStack.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "morphing-nav",
+      "type": "registry:ui",
+      "title": "Morphing Nav",
+      "description": "An interactive navigation bar with liquid morphing SVG background shapes.",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/MorphingNav.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "coverflow-carousel",
+      "type": "registry:ui",
+      "title": "Coverflow Carousel",
+      "description": "A hardware-accelerated 3D coverflow carousel with continuous modular perspective transforms and comprehensive gesture tracking.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/coverflow-carousel/CoverflowCarousel.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/coverflow-carousel/CoverflowCard.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/coverflow-carousel/types.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/coverflow-carousel/utils.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/coverflow-carousel/useCoverflow.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "void-button",
+      "type": "registry:ui",
+      "title": "Void Button",
+      "description": "Pure black button that reveals a luxury gold gradient under the cursor via a smooth radial mask.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/VoidButton.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "brushed-titanium-button",
+      "type": "registry:ui",
+      "title": "Brushed Titanium Button",
+      "description": "Machined titanium texture with anisotropic highlight sweeps and reactive spotlight illumination.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/BrushedTitaniumButton.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "liquid-gold-button",
+      "type": "registry:ui",
+      "title": "Liquid Gold Button",
+      "description": "Conic gradient rotating behind a frosted glass blur layer, with a 1px border that catches light only at the top.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/LiquidGoldButton.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "guilloche-button",
+      "type": "registry:ui",
+      "title": "Guilloche Button",
+      "description": "Watch dial Guilloché patterns generating Moire wave shapes under the cursor spotlight.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/GuillocheButton.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "pixel-melt",
+      "type": "registry:ui",
+      "title": "Pixel Melt",
+      "description": "A full-viewport pixel grid that glows and cools under cursor heat, leaving behind a slow melt trail.",
+      "files": [
+        {
+          "path": "components/ui/PixelMelt.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "breathing-grid",
+      "type": "registry:ui",
+      "title": "Breathing Grid",
+      "description": "An orthogonal grid with a slow left-to-right traveling wave, with local brightness boost near the cursor.",
+      "files": [
+        {
+          "path": "components/ui/BreathingGrid.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "floating-embers",
+      "type": "registry:ui",
+      "title": "Floating Embers",
+      "description": "Glowing ember particles that float upward with a gentle sway, reacting subtly to cursor and scroll.",
+      "files": [
+        {
+          "path": "components/ui/FloatingEmbers.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "spotlight-grid",
+      "type": "registry:ui",
+      "title": "Spotlight Grid",
+      "description": "A dark grid with decorative tech icons and a dual-layer mouse-following spotlight effect using screen and color-dodge blend modes.",
+      "files": [
+        {
+          "path": "components/ui/SpotlightGrid.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "lumina-wave",
+      "type": "registry:ui",
+      "title": "Lumina Wave",
+      "description": "An atmospheric WebGL background rendering undulating wave patterns resembling an aurora, featuring interactive mouse-bending and color personalization.",
+      "files": [
+        {
+          "path": "components/ui/LuminaWave.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "chrome-input",
+      "type": "registry:ui",
+      "title": "Chrome Input",
+      "description": "Deep obsidian input with dynamic border glowing highlights and cursor-responsive spotlight tracking.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/ChromeInput.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "chrome-select",
+      "type": "registry:ui",
+      "title": "Chrome Select",
+      "description": "Deep obsidian dropdown selector with custom arrow overlays and focus glow animations.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/ChromeSelect.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "metallic-form",
+      "type": "registry:ui",
+      "title": "Metallic Form",
+      "description": "A machined-metal obsidian form container with sequential entry animations, validation overlays, and typing state signals.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/MetallicForm.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "anisotropic-knob",
+      "type": "registry:ui",
+      "title": "Anisotropic Knob",
+      "description": "Machined metal rotary dial knob component with dynamic rotating anisotropic highlights, snapper increments, and accessibility controls.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/AnisotropicKnob.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "mechanical-timer",
+      "type": "registry:ui",
+      "title": "Mechanical Timer",
+      "description": "Machined metal tactile timer/stopwatch component with dragging physical dials, mechanical cogwheel meshes, Web Audio click synthesis ticks, and glowing segment MM:SS.CC timer displays.",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/MechanicalTimer.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "slingshot-chassis",
+      "type": "registry:ui",
+      "title": "Slingshot Chassis",
+      "description": "Elastic-drag container with real-time SVG edge deformation, spring release oscillation solvers, Web Audio snap synthesis, and reveal drawers.",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/SlingshotChassis.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "laser-vault-password",
+      "type": "registry:ui",
+      "title": "Laser Vault Password",
+      "description": "Passcode vault keypad with laser-etch cooling characters, dynamic cursor sweeps, tactile clicks, container rattles, and friction-metal creak alarms.",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/LaserVaultPassword.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "premium-hero",
+      "type": "registry:ui",
+      "title": "Premium Hero",
+      "description": "Interactive Hero Section featuring floating 3D cards, typewriter search, spring CTA, and paper-notebook grid aesthetics.",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/PremiumHero.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "dot-matrix",
+      "type": "registry:ui",
+      "title": "Dot Matrix",
+      "description": "Highly optimized, programmable LED dot matrix display supporting Perlin noise, typewriter bitmaps, Web Audio integration, interactive cursor repelling, and custom plugin architectures.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/dot-matrix/DotMatrix.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/dot-matrix/Dot.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/dot-matrix/types.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/dot-matrix/animations/plugins.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/dot-matrix/animations/index.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/dot-matrix/hooks/useMouseInfluence.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "components/ui/dot-matrix/hooks/useRAF.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "components/ui/dot-matrix/utils/distance.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/dot-matrix/utils/noise.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/dot-matrix/utils/bitmap.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "scroll-progress",
+      "type": "registry:ui",
+      "title": "Scroll Progress",
+      "description": "A vertical dynamic scrollbar overlay with interactive tick mark animations, dragging controls, and velocity-based stretching/glow.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/scroll-progress/ScrollProgress.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/scroll-progress/Tick.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/scroll-progress/useScrollProgress.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "components/ui/scroll-progress/types.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/scroll-progress/utils.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "now-playing-card",
+      "type": "registry:ui",
+      "title": "Now Playing Card",
+      "description": "A Spotify-style vinyl player card powered by Last.fm API that dynamically retrieves real-time listening history with vinyl spin animations.",
+      "dependencies": [
+        "react-icons"
+      ],
+      "files": [
+        {
+          "path": "components/ui/NowPlayingCard.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "wheel-picker",
+      "type": "registry:ui",
+      "title": "Wheel Picker",
+      "description": "Premium physical-feeling 3D wheel picker with momentum dragging, spring snapping, and mechanical Web Audio crown clicks.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/wheel-picker/WheelPicker.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/wheel-picker/react-wheel-picker/index.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/wheel-picker/react-wheel-picker/types.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/wheel-picker/react-wheel-picker/components/WheelPicker.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/wheel-picker/react-wheel-picker/components/Cylinder.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/wheel-picker/react-wheel-picker/components/WheelItem.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/wheel-picker/react-wheel-picker/components/SelectionOverlay.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/wheel-picker/react-wheel-picker/hooks/useCylinderTransform.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "components/ui/wheel-picker/react-wheel-picker/hooks/useInfiniteLoop.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "components/ui/wheel-picker/react-wheel-picker/hooks/useAudio.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "components/ui/wheel-picker/react-wheel-picker/hooks/useWheel.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "components/ui/wheel-picker/react-wheel-picker/hooks/useMomentum.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "components/ui/wheel-picker/react-wheel-picker/hooks/useSnap.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "components/ui/wheel-picker/react-wheel-picker/utils/physics.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/wheel-picker/react-wheel-picker/utils/audio.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/wheel-picker/react-wheel-picker/utils/math.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "expand-on-hover",
+      "type": "registry:ui",
+      "title": "Expand On Hover",
+      "description": "A stack of compact preview cards that smoothly expand into immersive content panels on hover, featuring physical parting animations and 3D pointer tracking.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/expand-on-hover/index.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/expand-on-hover/types.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/expand-on-hover/hooks/useExpand.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "components/ui/expand-on-hover/components/expand-on-hover/ExpandOnHover.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/expand-on-hover/components/expand-on-hover/Preview.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/expand-on-hover/components/expand-on-hover/CardContent.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/expand-on-hover/components/expand-on-hover/ExpandCard.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "text-shuffle",
+      "type": "registry:ui",
+      "title": "Text Shuffle",
+      "description": "A text animation component that shuffles characters with multiple variants including cipher, scramble, and typewriter effects.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/text-shuffle/index.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/text-shuffle/TextShuffle.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/text-shuffle/AnimatedWord.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/text-shuffle/types.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/text-shuffle/hooks/useShuffleVariants.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "components/ui/text-shuffle/hooks/useShuffleCycle.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "components/ui/text-shuffle/utils/splitCharacters.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/text-shuffle/utils/timing.ts",
+          "type": "registry:lib"
+        }
+      ]
+    }
+  ]
+}

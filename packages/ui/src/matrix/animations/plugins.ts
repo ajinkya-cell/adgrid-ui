@@ -270,7 +270,9 @@ export const textPlugin: AnimationPlugin = {
     for (let i = 0; i < ctx.elements.length; i++) {
       const r = Math.floor(i / ctx.columns);
       const c = i % ctx.columns;
-      const b = grid[r][c] ? 1.0 : 0.0;
+      const row = grid[r];
+      if (!row) continue;
+      const b = row[c] ? 1.0 : 0.0;
       const prevB = cache[i];
       if (Math.abs(b - prevB) > 0.015) {
         cache[i] = b;
@@ -312,7 +314,9 @@ export const scrollTextPlugin: AnimationPlugin = {
     for (let i = 0; i < ctx.elements.length; i++) {
       const r = Math.floor(i / ctx.columns);
       const c = i % ctx.columns;
-      const b = grid[r][c] ? 1.0 : 0.0;
+      const row = grid[r];
+      if (!row) continue;
+      const b = row[c] ? 1.0 : 0.0;
       const prevB = cache[i];
       if (Math.abs(b - prevB) > 0.015) {
         cache[i] = b;
@@ -339,7 +343,9 @@ export const clockPlugin: AnimationPlugin = {
     for (let i = 0; i < ctx.elements.length; i++) {
       const r = Math.floor(i / ctx.columns);
       const c = i % ctx.columns;
-      const b = grid[r][c] ? 1.0 : 0.0;
+      const row = grid[r];
+      if (!row) continue;
+      const b = row[c] ? 1.0 : 0.0;
       const prevB = cache[i];
       if (Math.abs(b - prevB) > 0.015) {
         cache[i] = b;

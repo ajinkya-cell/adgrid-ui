@@ -17,6 +17,8 @@ interface Props {
   appCode?: string;
   tsxHtml?: string;
   bashHtml?: string;
+  setupHtml?: string;
+  setupCommand?: string;
   editableProps?: PropDefinition[];
 }
 
@@ -34,7 +36,19 @@ function HtmlBlock({ html, code }: { html: string; code: string }) {
   );
 }
 
-export function ComponentTabs({ rawCode, npmInstall, importCode, entry, additionalFiles, appCode, tsxHtml, bashHtml, editableProps }: Props) {
+export function ComponentTabs({
+  rawCode,
+  npmInstall,
+  importCode,
+  entry,
+  additionalFiles,
+  appCode,
+  tsxHtml,
+  bashHtml,
+  setupHtml,
+  setupCommand,
+  editableProps,
+}: Props) {
   const [tab, setTab] = useState<Tab>("preview");
   const { isWide } = useComponentPage();
 
@@ -84,18 +98,59 @@ export function ComponentTabs({ rawCode, npmInstall, importCode, entry, addition
 
       {tab === "install" && bashHtml && tsxHtml && (
         <div className="p-6 space-y-6 bg-surface-charcoal">
+
+          {/* Step 1: One-time registry setup */}
+          {setupHtml && setupCommand && (
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="font-mono text-[9px] text-white/40 bg-white/10 px-2 py-0.5 tracking-widest uppercase">
+                  STEP 01
+                </span>
+                <p className="text-[10px] font-mono text-text-muted uppercase tracking-widest">
+                  add void ui registry (one-time per project)
+                </p>
+              </div>
+              <HtmlBlock html={setupHtml} code={setupCommand} />
+            </div>
+          )}
+
+          {/* Step 2: Add the component */}
           <div>
-            <p className="text-[10px] font-mono text-text-muted uppercase tracking-widest mb-3">npm package</p>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="font-mono text-[9px] text-white/40 bg-white/10 px-2 py-0.5 tracking-widest uppercase">
+                STEP 02
+              </span>
+              <p className="text-[10px] font-mono text-text-muted uppercase tracking-widest">
+                add this component
+              </p>
+            </div>
             <HtmlBlock html={bashHtml} code={npmInstall} />
           </div>
+
+          {/* Step 3: Import */}
           <div>
-            <p className="text-[10px] font-mono text-text-muted uppercase tracking-widest mb-3">then import</p>
-            <HtmlBlock html={tsxHtml} code={importCode} />
+            <div className="flex items-center gap-2 mb-3">
+              <span className="font-mono text-[9px] text-white/40 bg-white/10 px-2 py-0.5 tracking-widest uppercase">
+                STEP 03
+              </span>
+              <p className="text-[10px] font-mono text-text-muted uppercase tracking-widest">
+                import and use
+              </p>
+            </div>
+            <HtmlBlock
+              html={tsxHtml}
+              code={importCode}
+            />
           </div>
-          <div>
-            <p className="text-[10px] font-mono text-text-muted uppercase tracking-widest mb-3">or copy-paste</p>
+
+          {/* Divider */}
+          <div className="border-t border-border-hairline pt-6">
+            <p className="text-[10px] font-mono text-text-muted uppercase tracking-widest mb-3">
+              or copy the source directly
+            </p>
             <HtmlBlock html={tsxHtml} code={rawCode} />
           </div>
+
         </div>
       )}
     </div>

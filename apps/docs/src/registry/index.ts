@@ -25,7 +25,8 @@ export interface RegistryEntry {
   category: ComponentCategory;
   description: string;
   dependencies: string[];
-  packagePath: string;       // path inside packages/ui/src
+  packagePath: string;       // path inside packages/ui/src (kept for backward compat)
+  files: string[];           // all source files relative to packages/ui/src/ (shadcn registry)
   variants?: ComponentVariant[];
 }
 
@@ -37,8 +38,8 @@ export const registry: RegistryEntry[] = [
     description: "An image reveal effect using diagonal stripes masking and sliding clip-paths.",
     dependencies: ["framer-motion"],
     packagePath: "animated/ImageReveal.tsx",
+    files: ["animated/ImageReveal.tsx"],
   },
-
   {
     name: "Image Parallax",
     slug: "image-parallax",
@@ -46,6 +47,7 @@ export const registry: RegistryEntry[] = [
     description: "A smooth mouse-move and scroll-driven parallax image perspective effect.",
     dependencies: ["framer-motion"],
     packagePath: "animated/ImageParallax.tsx",
+    files: ["animated/ImageParallax.tsx"],
   },
   {
     name: "Living Text",
@@ -54,6 +56,7 @@ export const registry: RegistryEntry[] = [
     description: "Stretches, rotates, and pushes characters dynamically based on real-time cursor proximity.",
     dependencies: ["framer-motion"],
     packagePath: "animated/LivingText.tsx",
+    files: ["animated/LivingText.tsx"],
   },
   {
     name: "Gravity Card Stack",
@@ -62,6 +65,7 @@ export const registry: RegistryEntry[] = [
     description: "Falling rigid body physics cards container that reacts to scroll triggers.",
     dependencies: ["matter-js", "gsap"],
     packagePath: "animated/GravityCardStack.tsx",
+    files: ["animated/GravityCardStack.tsx"],
   },
   {
     name: "Morphing Nav",
@@ -70,8 +74,8 @@ export const registry: RegistryEntry[] = [
     description: "An interactive navigation bar with liquid morphing SVG background shapes.",
     dependencies: ["framer-motion", "lucide-react"],
     packagePath: "animated/MorphingNav.tsx",
+    files: ["animated/MorphingNav.tsx"],
   },
-
   {
     name: "Coverflow Carousel",
     slug: "coverflow-carousel",
@@ -79,6 +83,13 @@ export const registry: RegistryEntry[] = [
     description: "A hardware-accelerated 3D coverflow carousel with continuous modular perspective transforms and comprehensive gesture tracking.",
     dependencies: ["framer-motion"],
     packagePath: "animated/coverflow/CoverflowCarousel.tsx",
+    files: [
+      "animated/coverflow/CoverflowCarousel.tsx",
+      "animated/coverflow/CoverflowCard.tsx",
+      "animated/coverflow/types.ts",
+      "animated/coverflow/utils.ts",
+      "animated/coverflow/useCoverflow.ts",
+    ],
   },
   {
     name: "Void Button",
@@ -87,6 +98,7 @@ export const registry: RegistryEntry[] = [
     description: "Pure black button that reveals a luxury gold gradient under the cursor via a smooth radial mask.",
     dependencies: ["framer-motion"],
     packagePath: "animated/VoidButton.tsx",
+    files: ["animated/VoidButton.tsx"],
   },
   {
     name: "Brushed Titanium Button",
@@ -95,6 +107,7 @@ export const registry: RegistryEntry[] = [
     description: "Machined titanium texture with anisotropic highlight sweeps and reactive spotlight illumination.",
     dependencies: ["framer-motion"],
     packagePath: "animated/BrushedTitaniumButton.tsx",
+    files: ["animated/BrushedTitaniumButton.tsx"],
   },
   {
     name: "Liquid Gold Button",
@@ -103,6 +116,7 @@ export const registry: RegistryEntry[] = [
     description: "Conic gradient rotating behind a frosted glass blur layer, with a 1px border that catches light only at the top.",
     dependencies: ["framer-motion"],
     packagePath: "animated/LiquidGoldButton.tsx",
+    files: ["animated/LiquidGoldButton.tsx"],
   },
   {
     name: "Guilloche Button",
@@ -111,6 +125,7 @@ export const registry: RegistryEntry[] = [
     description: "Watch dial Guilloché patterns generating Moire wave shapes under the cursor spotlight.",
     dependencies: ["framer-motion"],
     packagePath: "animated/GuillocheButton.tsx",
+    files: ["animated/GuillocheButton.tsx"],
   },
   {
     name: "Pixel Melt",
@@ -119,6 +134,7 @@ export const registry: RegistryEntry[] = [
     description: "A full-viewport pixel grid that glows and cools under cursor heat, leaving behind a slow melt trail.",
     dependencies: [],
     packagePath: "backgrounds/PixelMelt.tsx",
+    files: ["backgrounds/PixelMelt.tsx"],
   },
   {
     name: "Breathing Grid",
@@ -127,6 +143,7 @@ export const registry: RegistryEntry[] = [
     description: "An orthogonal grid with a slow left-to-right traveling wave, with local brightness boost near the cursor.",
     dependencies: [],
     packagePath: "backgrounds/BreathingGrid.tsx",
+    files: ["backgrounds/BreathingGrid.tsx"],
   },
   {
     name: "Floating Embers",
@@ -135,8 +152,8 @@ export const registry: RegistryEntry[] = [
     description: "Glowing ember particles that float upward with a gentle sway, reacting subtly to cursor and scroll.",
     dependencies: [],
     packagePath: "backgrounds/FloatingEmbers.tsx",
+    files: ["backgrounds/FloatingEmbers.tsx"],
   },
-
   {
     name: "Spotlight Grid",
     slug: "spotlight-grid",
@@ -144,6 +161,7 @@ export const registry: RegistryEntry[] = [
     description: "A dark grid with decorative tech icons and a dual-layer mouse-following spotlight effect using screen and color-dodge blend modes.",
     dependencies: [],
     packagePath: "backgrounds/SpotlightGrid.tsx",
+    files: ["backgrounds/SpotlightGrid.tsx"],
   },
   {
     name: "Lumina Wave",
@@ -152,6 +170,7 @@ export const registry: RegistryEntry[] = [
     description: "An atmospheric WebGL background rendering undulating wave patterns resembling an aurora, featuring interactive mouse-bending and color personalization.",
     dependencies: [],
     packagePath: "backgrounds/LuminaWave.tsx",
+    files: ["backgrounds/LuminaWave.tsx"],
   },
   {
     name: "Chrome Input",
@@ -160,6 +179,7 @@ export const registry: RegistryEntry[] = [
     description: "Deep obsidian input with dynamic border glowing highlights and cursor-responsive spotlight tracking.",
     dependencies: ["framer-motion"],
     packagePath: "animated/ChromeInput.tsx",
+    files: ["animated/ChromeInput.tsx"],
   },
   {
     name: "Chrome Select",
@@ -168,6 +188,7 @@ export const registry: RegistryEntry[] = [
     description: "Deep obsidian dropdown selector with custom arrow overlays and focus glow animations.",
     dependencies: ["framer-motion"],
     packagePath: "animated/ChromeSelect.tsx",
+    files: ["animated/ChromeSelect.tsx"],
   },
   {
     name: "Metallic Form",
@@ -176,6 +197,7 @@ export const registry: RegistryEntry[] = [
     description: "A machined-metal obsidian form container with sequential entry animations, validation overlays, and typing state signals.",
     dependencies: ["framer-motion"],
     packagePath: "animated/MetallicForm.tsx",
+    files: ["animated/MetallicForm.tsx"],
   },
   {
     name: "Anisotropic Knob",
@@ -184,6 +206,7 @@ export const registry: RegistryEntry[] = [
     description: "Machined metal rotary dial knob component with dynamic rotating anisotropic highlights, snapper increments, and accessibility controls.",
     dependencies: ["framer-motion"],
     packagePath: "animated/AnisotropicKnob.tsx",
+    files: ["animated/AnisotropicKnob.tsx"],
   },
   {
     name: "Mechanical Timer",
@@ -192,8 +215,8 @@ export const registry: RegistryEntry[] = [
     description: "Machined metal tactile timer/stopwatch component with dragging physical dials, mechanical cogwheel meshes, Web Audio click synthesis ticks, and glowing segment MM:SS.CC timer displays.",
     dependencies: ["framer-motion", "lucide-react"],
     packagePath: "animated/MechanicalTimer.tsx",
+    files: ["animated/MechanicalTimer.tsx"],
   },
-
   {
     name: "Slingshot Chassis",
     slug: "slingshot-chassis",
@@ -201,6 +224,7 @@ export const registry: RegistryEntry[] = [
     description: "Elastic-drag container with real-time SVG edge deformation, spring release oscillation solvers, Web Audio snap synthesis, and reveal drawers.",
     dependencies: ["framer-motion", "lucide-react"],
     packagePath: "animated/SlingshotChassis.tsx",
+    files: ["animated/SlingshotChassis.tsx"],
   },
   {
     name: "Laser Vault Password",
@@ -209,6 +233,7 @@ export const registry: RegistryEntry[] = [
     description: "Passcode vault keypad with laser-etch cooling characters, dynamic cursor sweeps, tactile clicks, container rattles, and friction-metal creak alarms.",
     dependencies: ["framer-motion", "lucide-react"],
     packagePath: "animated/LaserVaultPassword.tsx",
+    files: ["animated/LaserVaultPassword.tsx"],
   },
   {
     name: "Premium Hero",
@@ -217,6 +242,7 @@ export const registry: RegistryEntry[] = [
     description: "Interactive Hero Section featuring floating 3D cards, typewriter search, spring CTA, and paper-notebook grid aesthetics.",
     dependencies: ["framer-motion", "lucide-react"],
     packagePath: "animated/PremiumHero.tsx",
+    files: ["animated/PremiumHero.tsx"],
   },
   {
     name: "Dot Matrix",
@@ -225,6 +251,18 @@ export const registry: RegistryEntry[] = [
     description: "Highly optimized, programmable LED dot matrix display supporting Perlin noise, typewriter bitmaps, Web Audio integration, interactive cursor repelling, and custom plugin architectures.",
     dependencies: ["framer-motion"],
     packagePath: "animated/DotMatrix.tsx",
+    files: [
+      "matrix/DotMatrix.tsx",
+      "matrix/Dot.tsx",
+      "matrix/types.ts",
+      "matrix/animations/plugins.ts",
+      "matrix/animations/index.ts",
+      "matrix/hooks/useMouseInfluence.ts",
+      "matrix/hooks/useRAF.ts",
+      "matrix/utils/distance.ts",
+      "matrix/utils/noise.ts",
+      "matrix/utils/bitmap.ts",
+    ],
   },
   {
     name: "Scroll Progress",
@@ -233,6 +271,13 @@ export const registry: RegistryEntry[] = [
     description: "A vertical dynamic scrollbar overlay with interactive tick mark animations, dragging controls, and velocity-based stretching/glow.",
     dependencies: ["framer-motion"],
     packagePath: "animated/scrollprogress/ScrollProgress.tsx",
+    files: [
+      "animated/scrollprogress/ScrollProgress.tsx",
+      "animated/scrollprogress/Tick.tsx",
+      "animated/scrollprogress/useScrollProgress.ts",
+      "animated/scrollprogress/types.ts",
+      "animated/scrollprogress/utils.ts",
+    ],
   },
   {
     name: "Now Playing Card",
@@ -241,6 +286,7 @@ export const registry: RegistryEntry[] = [
     description: "A Spotify-style vinyl player card powered by Last.fm API that dynamically retrieves real-time listening history with vinyl spin animations.",
     dependencies: ["react-icons"],
     packagePath: "animated/NowPlayingCard.tsx",
+    files: ["animated/NowPlayingCard.tsx"],
   },
   {
     name: "Wheel Picker",
@@ -249,6 +295,24 @@ export const registry: RegistryEntry[] = [
     description: "Premium physical-feeling 3D wheel picker with momentum dragging, spring snapping, and mechanical Web Audio crown clicks.",
     dependencies: ["framer-motion"],
     packagePath: "animated/WheelPicker.tsx",
+    files: [
+      "animated/WheelPicker.tsx",
+      "animated/react-wheel-picker/index.ts",
+      "animated/react-wheel-picker/types.ts",
+      "animated/react-wheel-picker/components/WheelPicker.tsx",
+      "animated/react-wheel-picker/components/Cylinder.tsx",
+      "animated/react-wheel-picker/components/WheelItem.tsx",
+      "animated/react-wheel-picker/components/SelectionOverlay.tsx",
+      "animated/react-wheel-picker/hooks/useCylinderTransform.ts",
+      "animated/react-wheel-picker/hooks/useInfiniteLoop.ts",
+      "animated/react-wheel-picker/hooks/useAudio.ts",
+      "animated/react-wheel-picker/hooks/useWheel.ts",
+      "animated/react-wheel-picker/hooks/useMomentum.ts",
+      "animated/react-wheel-picker/hooks/useSnap.ts",
+      "animated/react-wheel-picker/utils/physics.ts",
+      "animated/react-wheel-picker/utils/audio.ts",
+      "animated/react-wheel-picker/utils/math.ts",
+    ],
   },
   {
     name: "Expand On Hover",
@@ -257,5 +321,32 @@ export const registry: RegistryEntry[] = [
     description: "A stack of compact preview cards that smoothly expand into immersive content panels on hover, featuring physical parting animations and 3D pointer tracking.",
     dependencies: ["framer-motion"],
     packagePath: "animated/expand-on-hover/components/expand-on-hover/ExpandOnHover.tsx",
+    files: [
+      "animated/expand-on-hover/index.ts",
+      "animated/expand-on-hover/types.ts",
+      "animated/expand-on-hover/hooks/useExpand.ts",
+      "animated/expand-on-hover/components/expand-on-hover/ExpandOnHover.tsx",
+      "animated/expand-on-hover/components/expand-on-hover/Preview.tsx",
+      "animated/expand-on-hover/components/expand-on-hover/CardContent.tsx",
+      "animated/expand-on-hover/components/expand-on-hover/ExpandCard.tsx",
+    ],
+  },
+  {
+    name: "Text Shuffle",
+    slug: "text-shuffle",
+    category: "animated",
+    description: "A text animation component that shuffles characters with multiple variants including cipher, scramble, and typewriter effects.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/text-shuffle/TextShuffle.tsx",
+    files: [
+      "animated/text-shuffle/index.ts",
+      "animated/text-shuffle/TextShuffle.tsx",
+      "animated/text-shuffle/AnimatedWord.tsx",
+      "animated/text-shuffle/types.ts",
+      "animated/text-shuffle/hooks/useShuffleVariants.ts",
+      "animated/text-shuffle/hooks/useShuffleCycle.ts",
+      "animated/text-shuffle/utils/splitCharacters.ts",
+      "animated/text-shuffle/utils/timing.ts",
+    ],
   },
 ];

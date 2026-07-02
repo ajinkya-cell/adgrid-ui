@@ -52,5 +52,14 @@ export { SpotlightGrid } from "./backgrounds/SpotlightGrid";
 export { LuminaWave } from "./backgrounds/LuminaWave";
 export type { LuminaWaveProps } from "./backgrounds/LuminaWave";
 
+// text-shuffle
+export { TextShuffle } from "./animated/text-shuffle";
+export type {
+  TextShuffleProps,
+  TextShuffleRef,
+  TextShuffleVariant,
+  TextAlign,
+} from "./animated/text-shuffle/types";
+
 // utils
 export { cn } from "./lib/utils";

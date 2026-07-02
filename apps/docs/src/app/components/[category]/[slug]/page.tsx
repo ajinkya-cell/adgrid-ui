@@ -140,6 +140,21 @@ const PROP_SCHEMAS: Record<string, PropDefinition[]> = {
     ] },
   ],
   "now-playing-card": [],
+  "text-shuffle": [
+    { name: "variant", type: "select", label: "Animation Variant", defaultValue: "wave", options: [
+      { label: "Wave", value: "wave" },
+      { label: "Glitch", value: "glitch" },
+      { label: "Elastic", value: "elastic" },
+      { label: "Flip In", value: "flipIn" },
+      { label: "Blur Reveal", value: "blurReveal" },
+    ]},
+    { name: "duration", type: "number", label: "Cycle Duration (ms)", defaultValue: 2200, min: 1000, max: 5000, step: 100 },
+    { name: "transition", type: "number", label: "Transition Speed (ms)", defaultValue: 700, min: 200, max: 2000, step: 100 },
+    { name: "fontSize", type: "string", label: "Font Size", defaultValue: "2.5rem" },
+    { name: "fontWeight", type: "number", label: "Font Weight", defaultValue: 700, min: 100, max: 900, step: 100 },
+    { name: "loop", type: "boolean", label: "Loop Animation", defaultValue: true },
+    { name: "pauseOnHover", type: "boolean", label: "Pause On Hover", defaultValue: false },
+  ],
   "wheel-picker": [
     { name: "variant", type: "select", label: "Variant", defaultValue: "glass", options: [
       { label: "Glassmorphism", value: "glass" },
@@ -275,6 +290,76 @@ export default async function ComponentPage({
     ];
     files.forEach(({ localPath, sandboxPath }) => {
       const filePath = path.join(expandDir, localPath);
+      if (fs.existsSync(filePath)) {
+        additionalFiles[sandboxPath] = fs.readFileSync(filePath, "utf-8");
+      }
+    });
+  }
+
+  // Load nested component dependencies for TextShuffle
+  if (entry.slug === "text-shuffle") {
+    const shuffleDir = path.join(srcDir, "animated/text-shuffle");
+    const files = [
+      { localPath: "types.ts",                          sandboxPath: "/types.ts" },
+      { localPath: "AnimatedWord.tsx",                  sandboxPath: "/AnimatedWord.tsx" },
+      { localPath: "hooks/useShuffleVariants.ts",       sandboxPath: "/hooks/useShuffleVariants.ts" },
+      { localPath: "hooks/useShuffleCycle.ts",          sandboxPath: "/hooks/useShuffleCycle.ts" },
+      { localPath: "utils/splitCharacters.ts",          sandboxPath: "/utils/splitCharacters.ts" },
+      { localPath: "utils/timing.ts",                   sandboxPath: "/utils/timing.ts" },
+    ];
+    files.forEach(({ localPath, sandboxPath }) => {
+      const filePath = path.join(shuffleDir, localPath);
+      if (fs.existsSync(filePath)) {
+        additionalFiles[sandboxPath] = fs.readFileSync(filePath, "utf-8");
+      }
+    });
+  }
+
+  // Load nested component dependencies for WheelPicker
+  if (entry.slug === "wheel-picker") {
+    const rwpDir = path.join(srcDir, "animated/react-wheel-picker");
+    const files = [
+      { localPath: "index.ts",                                sandboxPath: "/react-wheel-picker/index.ts" },
+      { localPath: "types.ts",                                sandboxPath: "/react-wheel-picker/types.ts" },
+      { localPath: "components/WheelPicker.tsx",              sandboxPath: "/react-wheel-picker/components/WheelPicker.tsx" },
+      { localPath: "components/Cylinder.tsx",                 sandboxPath: "/react-wheel-picker/components/Cylinder.tsx" },
+      { localPath: "components/WheelItem.tsx",                sandboxPath: "/react-wheel-picker/components/WheelItem.tsx" },
+      { localPath: "components/SelectionOverlay.tsx",         sandboxPath: "/react-wheel-picker/components/SelectionOverlay.tsx" },
+      { localPath: "hooks/useCylinderTransform.ts",           sandboxPath: "/react-wheel-picker/hooks/useCylinderTransform.ts" },
+      { localPath: "hooks/useInfiniteLoop.ts",                sandboxPath: "/react-wheel-picker/hooks/useInfiniteLoop.ts" },
+      { localPath: "hooks/useAudio.ts",                       sandboxPath: "/react-wheel-picker/hooks/useAudio.ts" },
+      { localPath: "hooks/useWheel.ts",                       sandboxPath: "/react-wheel-picker/hooks/useWheel.ts" },
+      { localPath: "hooks/useMomentum.ts",                    sandboxPath: "/react-wheel-picker/hooks/useMomentum.ts" },
+      { localPath: "hooks/useSnap.ts",                        sandboxPath: "/react-wheel-picker/hooks/useSnap.ts" },
+      { localPath: "utils/physics.ts",                        sandboxPath: "/react-wheel-picker/utils/physics.ts" },
+      { localPath: "utils/audio.ts",                          sandboxPath: "/react-wheel-picker/utils/audio.ts" },
+      { localPath: "utils/math.ts",                           sandboxPath: "/react-wheel-picker/utils/math.ts" },
+    ];
+    files.forEach(({ localPath, sandboxPath }) => {
+      const filePath = path.join(rwpDir, localPath);
+      if (fs.existsSync(filePath)) {
+        additionalFiles[sandboxPath] = fs.readFileSync(filePath, "utf-8");
+      }
+    });
+  }
+
+  // Load nested component dependencies for DotMatrix
+  if (entry.slug === "dot-matrix") {
+    const matrixDir = path.join(srcDir, "matrix");
+    const files = [
+      { localPath: "Dot.tsx",                        sandboxPath: "/matrix/Dot.tsx" },
+      { localPath: "types.ts",                       sandboxPath: "/matrix/types.ts" },
+      { localPath: "animations/plugins.ts",          sandboxPath: "/matrix/animations/plugins.ts" },
+      { localPath: "animations/index.ts",            sandboxPath: "/matrix/animations/index.ts" },
+      { localPath: "hooks/useMouseInfluence.ts",     sandboxPath: "/matrix/hooks/useMouseInfluence.ts" },
+      { localPath: "hooks/useRAF.ts",                sandboxPath: "/matrix/hooks/useRAF.ts" },
+      { localPath: "utils/distance.ts",              sandboxPath: "/matrix/utils/distance.ts" },
+      { localPath: "utils/noise.ts",                 sandboxPath: "/matrix/utils/noise.ts" },
+      { localPath: "utils/bitmap.ts",                sandboxPath: "/matrix/utils/bitmap.ts" },
+      { localPath: "DotMatrix.tsx",                  sandboxPath: "/matrix/DotMatrix.tsx" },
+    ];
+    files.forEach(({ localPath, sandboxPath }) => {
+      const filePath = path.join(matrixDir, localPath);
       if (fs.existsSync(filePath)) {
         additionalFiles[sandboxPath] = fs.readFileSync(filePath, "utf-8");
       }
@@ -928,16 +1013,50 @@ export default function App() {
   );
 }
 `.trim();
+  } else if (entry.slug === "text-shuffle") {
+    appCode = `
+import React from "react";
+import { TextShuffle } from "./TextShuffle";
+
+export default function App() {
+  return (
+    <div style={{
+      background: "#050505",
+      minHeight: "100vh",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "3rem",
+      width: "100%",
+      boxSizing: "border-box",
+    }}>
+      <TextShuffle
+        words={["Like", "This?", "Connect", "For", "More", "Such", "Projects"]}
+        variant="wave"
+        duration={2200}
+        transition={700}
+        fontSize="2.5rem"
+        fontWeight={700}
+        loop={true}
+        pauseOnHover={false}
+      />
+    </div>
+  );
+}
+`.trim();
   }
 
   const props = extractProps(rawCode);
 
-  const npmInstall = `npx void-ui add ${entry.slug}`;
-  const importCode = `import { ${componentName} } from "@adgrid-ui/ui";`;
+  const npmInstall = `pnpm dlx shadcn@latest add @voidui/${entry.slug}`;
+  const importCode = `import { ${componentName} } from "@/components/ui/${entry.slug}";`;
 
-  const [tsxHtml, bashHtml] = await Promise.all([
+  const setupCommand = `pnpm dlx shadcn@latest registry add @voidui=https://void-ui.vercel.app/r/{name}.json`;
+
+  const [tsxHtml, bashHtml, setupHtml] = await Promise.all([
     codeToHtml(rawCode, { lang: "tsx", theme: "github-dark-dimmed" }),
     codeToHtml(npmInstall, { lang: "bash", theme: "github-dark-dimmed" }),
+    codeToHtml(setupCommand, { lang: "bash", theme: "github-dark-dimmed" }),
   ]);
 
   const isDefaultWide = entry.slug === "pixel-melt" || entry.slug === "breathing-grid" || entry.slug === "floating-embers" || entry.slug === "spotlight-grid" || entry.slug === "lumina-wave" || entry.slug === "coverflow-carousel";
@@ -989,6 +1108,8 @@ export default function App() {
                   appCode={appCode}
                   tsxHtml={tsxHtml}
                   bashHtml={bashHtml}
+                  setupHtml={setupHtml}
+                  setupCommand={setupCommand}
                   editableProps={editableProps}
                 />
               </section>
