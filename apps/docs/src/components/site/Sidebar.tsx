@@ -36,6 +36,7 @@ export function Sidebar() {
               { label: "Getting Started", icon: "rocket_launch", href: "#" },
               { label: "Installation", icon: "download", href: "#" },
               { label: "Theming", icon: "palette", href: "#" },
+              { label: "Gallery", icon: "grid_view", href: "/gallery" },
             ].map((item) => (
               <Link
                 key={item.label}

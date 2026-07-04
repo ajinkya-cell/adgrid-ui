@@ -1,5 +1,6 @@
 import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
+import path from "path";
 
 const withMDX = createMDX({
   options: {
@@ -11,6 +12,9 @@ const withMDX = createMDX({
 const config: NextConfig = {
   pageExtensions: ["ts", "tsx", "md", "mdx"],
   transpilePackages: ["@adgrid-ui/ui"],
+  turbopack: {
+    root: path.join(__dirname, "../.."),
+  },
   experimental: {
     mdxRs: true,
   },

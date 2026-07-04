@@ -1,6 +1,9 @@
 export { ImageReveal } from "./animated/ImageReveal";
 export type { ImageRevealProps } from "./animated/ImageReveal";
 
+export { InfiniteScroll } from "./animated/InfiniteScroll";
+export type { InfiniteScrollProps, SlideData } from "./animated/InfiniteScroll";
+
 export { ImageParallax } from "./animated/ImageParallax";
 export type { ImageParallaxProps } from "./animated/ImageParallax";
 export { LivingText } from "./animated/LivingText";
@@ -63,3 +66,8 @@ export type {
 
 // utils
 export { cn } from "./lib/utils";
+
+// Cards
+export { Cards } from "./animated/Cards";
+export { SimpleCard } from "./animated/SimpleCard";
+export type { SimpleCardProps } from "./animated/SimpleCard";

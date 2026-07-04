@@ -1044,6 +1044,73 @@ export default function App() {
   );
 }
 `.trim();
+  } else if (entry.slug === "infinite-scroll") {
+    appCode = `
+import { InfiniteScroll } from "./InfiniteScroll";
+
+export default function App() {
+  const slides = [
+    { src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80", label: "Alpine", caption: "Where silence speaks" },
+    { src: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80", label: "Forest", caption: "Light through the canopy" },
+    { src: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1200&q=80", label: "Mist", caption: "Drifting into calm" },
+  ];
+
+  return (
+    <div style={{
+      background: "#000",
+      height: "100vh",
+      width: "100vw",
+      overflow: "hidden",
+    }}>
+      <InfiniteScroll slides={slides} showLabels showProgress showScrollCue />
+    </div>
+  );
+}
+`.trim();
+  } else if (entry.slug === "cards") {
+    appCode = `
+import { Cards } from "./Cards";
+
+export default function App() {
+  return (
+    <div style={{
+      background: "#0a0a0a",
+      minHeight: "100vh",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "2rem",
+    }}>
+      <Cards />
+    </div>
+  );
+}
+`.trim();
+  } else if (entry.slug === "simple-card") {
+    appCode = `
+import { SimpleCard } from "./SimpleCard";
+
+export default function App() {
+  return (
+    <div style={{
+      background: "#0a0a0a",
+      minHeight: "100vh",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "2rem",
+    }}>
+      <SimpleCard
+        title="Working Knowledge"
+        description="Practical skills and insights gained through hands-on experience that drive real-world problem solving."
+        imageUrl="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=520&h=380&fit=crop&auto=format"
+        accent="from-amber-950/80 to-stone-950/95"
+        topBorderColor="rgba(251,191,36,0.28)"
+      />
+    </div>
+  );
+}
+`.trim();
   }
 
   const props = extractProps(rawCode);
@@ -1059,7 +1126,7 @@ export default function App() {
     codeToHtml(setupCommand, { lang: "bash", theme: "github-dark-dimmed" }),
   ]);
 
-  const isDefaultWide = entry.slug === "pixel-melt" || entry.slug === "breathing-grid" || entry.slug === "floating-embers" || entry.slug === "spotlight-grid" || entry.slug === "lumina-wave" || entry.slug === "coverflow-carousel";
+  const isDefaultWide = entry.slug === "pixel-melt" || entry.slug === "breathing-grid" || entry.slug === "floating-embers" || entry.slug === "spotlight-grid" || entry.slug === "lumina-wave" || entry.slug === "coverflow-carousel" || entry.slug === "infinite-scroll";
 
   return (
     <div className="flex w-full">

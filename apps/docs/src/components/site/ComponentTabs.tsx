@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
 import { LivePreview } from "./LivePreview";
 import { CopyButton } from "./CopyButton";
 import type { RegistryEntry } from "@/registry";
@@ -53,7 +55,7 @@ export function ComponentTabs({
   const { isWide } = useComponentPage();
 
   return (
-    <div id="preview" className="border border-border-hairline overflow-hidden">
+    <motion.div id="preview" layoutId="presentation-preview" className="border border-border-hairline overflow-hidden">
       <div className="flex items-center border-b border-border-hairline bg-surface-charcoal px-4">
         {(["preview", "code", "install"] as Tab[]).map((t) => (
           <button
@@ -68,6 +70,13 @@ export function ComponentTabs({
             {t}
           </button>
         ))}
+        <Link
+          href={`/present/${entry.category}/${entry.slug}`}
+          scroll={false}
+          className="ml-auto rounded-lg border border-white/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-white/55 transition-colors hover:border-white/30 hover:text-white"
+        >
+          Present
+        </Link>
       </div>
 
       {tab === "preview" && (
@@ -153,6 +162,6 @@ export function ComponentTabs({
 
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }

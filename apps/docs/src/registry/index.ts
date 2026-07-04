@@ -6,12 +6,18 @@ export type ComponentCategory =
   | "buttons"
   | "backgrounds";
 
+export type DisplayStrategy = "center" | "fullscreen" | "cover" | "fit" | "auto";
+
 export interface PropDefinition {
   name: string;
-  type: string;
-  default?: string;
+  type: "string" | "number" | "boolean" | "select" | "color";
+  default?: string | number | boolean;
   description: string;
   required: boolean;
+  options?: string[];       // for "select" type
+  min?: number;            // for "number" type
+  max?: number;            // for "number" type
+  step?: number;           // for "number" type
 }
 
 export interface ComponentVariant {
@@ -27,10 +33,30 @@ export interface RegistryEntry {
   dependencies: string[];
   packagePath: string;       // path inside packages/ui/src (kept for backward compat)
   files: string[];           // all source files relative to packages/ui/src/ (shadcn registry)
+  propDefs?: PropDefinition[]; // tweakable props for the Props Tweaker panel
   variants?: ComponentVariant[];
+  presentationStrategy?: DisplayStrategy;
 }
 
 export const registry: RegistryEntry[] = [
+  {
+    name: "Infinite Scroll",
+    slug: "infinite-scroll",
+    category: "animated",
+    description: "Seamless infinite fullscreen scroll with parallax image effects, powered by Lenis smooth scrolling and GSAP scrub animations.",
+    dependencies: ["gsap", "lenis"],
+    packagePath: "animated/InfiniteScroll.tsx",
+    files: ["animated/InfiniteScroll.tsx"],
+    presentationStrategy: "fullscreen",
+    propDefs: [
+      { name: "parallaxPercent", type: "number", default: 50, description: "Parallax vertical offset percentage", required: false, min: 0, max: 100, step: 5 },
+      { name: "snapDuration", type: "number", default: 0.9, description: "Snap animation duration in seconds", required: false, min: 0.3, max: 2, step: 0.1 },
+      { name: "showProgress", type: "boolean", default: true, description: "Show a minimal dot progress indicator at the bottom", required: false },
+      { name: "showLabels", type: "boolean", default: true, description: "Show slide label and caption overlays", required: false },
+      { name: "showScrollCue", type: "boolean", default: true, description: "Show a 'Scroll' hint on the first slide", required: false },
+      { name: "overlayOpacity", type: "number", default: 0.55, description: "Dark overlay gradient opacity (0 to 1)", required: false, min: 0, max: 1, step: 0.05 },
+    ],
+  },
   {
     name: "Image Reveal",
     slug: "image-reveal",
@@ -57,6 +83,13 @@ export const registry: RegistryEntry[] = [
     dependencies: ["framer-motion"],
     packagePath: "animated/LivingText.tsx",
     files: ["animated/LivingText.tsx"],
+    propDefs: [
+      { name: "text", type: "string", default: "LIVING TEXT", description: "Text content to animate", required: true },
+      { name: "radius", type: "number", default: 170, description: "Cursor influence radius in px", required: false, min: 50, max: 400, step: 10 },
+      { name: "strength", type: "number", default: 46, description: "Movement offset strength in px", required: false, min: 5, max: 120, step: 1 },
+      { name: "mode", type: "select", default: "all", description: "Proximity interaction mode", required: false, options: ["repel", "magnetize", "stretch", "rotate", "ripple", "all"] },
+      { name: "liquify", type: "boolean", default: true, description: "Apply SVG turbulence liquification filter", required: false },
+    ],
   },
   {
     name: "Gravity Card Stack",
@@ -135,6 +168,7 @@ export const registry: RegistryEntry[] = [
     dependencies: [],
     packagePath: "backgrounds/PixelMelt.tsx",
     files: ["backgrounds/PixelMelt.tsx"],
+    presentationStrategy: "fullscreen",
   },
   {
     name: "Breathing Grid",
@@ -144,6 +178,7 @@ export const registry: RegistryEntry[] = [
     dependencies: [],
     packagePath: "backgrounds/BreathingGrid.tsx",
     files: ["backgrounds/BreathingGrid.tsx"],
+    presentationStrategy: "fullscreen",
   },
   {
     name: "Floating Embers",
@@ -153,6 +188,7 @@ export const registry: RegistryEntry[] = [
     dependencies: [],
     packagePath: "backgrounds/FloatingEmbers.tsx",
     files: ["backgrounds/FloatingEmbers.tsx"],
+    presentationStrategy: "fullscreen",
   },
   {
     name: "Spotlight Grid",
@@ -162,6 +198,7 @@ export const registry: RegistryEntry[] = [
     dependencies: [],
     packagePath: "backgrounds/SpotlightGrid.tsx",
     files: ["backgrounds/SpotlightGrid.tsx"],
+    presentationStrategy: "fullscreen",
   },
   {
     name: "Lumina Wave",
@@ -171,6 +208,7 @@ export const registry: RegistryEntry[] = [
     dependencies: [],
     packagePath: "backgrounds/LuminaWave.tsx",
     files: ["backgrounds/LuminaWave.tsx"],
+    presentationStrategy: "fullscreen",
   },
   {
     name: "Chrome Input",
@@ -243,6 +281,7 @@ export const registry: RegistryEntry[] = [
     dependencies: ["framer-motion", "lucide-react"],
     packagePath: "animated/PremiumHero.tsx",
     files: ["animated/PremiumHero.tsx"],
+    presentationStrategy: "cover",
   },
   {
     name: "Dot Matrix",
@@ -262,6 +301,15 @@ export const registry: RegistryEntry[] = [
       "matrix/utils/distance.ts",
       "matrix/utils/noise.ts",
       "matrix/utils/bitmap.ts",
+    ],
+    propDefs: [
+      { name: "animation", type: "select", default: "scroll-text", description: "Animation mode", required: false, options: ["wave", "text", "scroll-text", "clock", "equalizer", "noise", "sparkle", "ripple", "snake", "rain"] },
+      { name: "text", type: "string", default: "VOID UI", description: "Text content (for text/scroll-text modes)", required: false },
+      { name: "columns", type: "number", default: 44, description: "Number of dot columns", required: false, min: 10, max: 80, step: 1 },
+      { name: "rows", type: "number", default: 12, description: "Number of dot rows", required: false, min: 4, max: 24, step: 1 },
+      { name: "color", type: "color", default: "#e7e5df", description: "Active dot color", required: false },
+      { name: "speed", type: "number", default: 1, description: "Animation speed multiplier", required: false, min: 0.1, max: 5, step: 0.1 },
+      { name: "glow", type: "boolean", default: true, description: "Enable glow effect on dots", required: false },
     ],
   },
   {
@@ -348,5 +396,36 @@ export const registry: RegistryEntry[] = [
       "animated/text-shuffle/utils/splitCharacters.ts",
       "animated/text-shuffle/utils/timing.ts",
     ],
+    propDefs: [
+      { name: "variant", type: "select", default: "blurReveal", description: "Visual morph variant", required: false, options: ["scramble", "wave", "glitch", "elastic", "flipIn", "blurReveal"] },
+      { name: "duration", type: "number", default: 2200, description: "Display duration per word (ms)", required: false, min: 500, max: 8000, step: 100 },
+      { name: "transition", type: "number", default: 700, description: "Transition duration between words (ms)", required: false, min: 100, max: 2000, step: 50 },
+      { name: "loop", type: "boolean", default: true, description: "Loop cycling infinitely", required: false },
+      { name: "pauseOnHover", type: "boolean", default: false, description: "Pause on hover", required: false },
+      { name: "cursorBlink", type: "boolean", default: false, description: "Show blinking cursor", required: false },
+      { name: "uppercase", type: "boolean", default: false, description: "Force uppercase", required: false },
+      { name: "outline", type: "boolean", default: false, description: "Render text as outline stroke", required: false },
+      { name: "fontSize", type: "string", default: "clamp(2.5rem,8vw,6rem)", description: "Font size CSS value", required: false },
+    ],
+  },
+  {
+    name: "Cards",
+    slug: "cards",
+    category: "animated",
+    description: "A fanned deck of dark editorial cards with B&W images, prismatic top-border highlights, spring-physics animations, and an expand-on-click description reveal.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/Cards.tsx",
+    files: ["animated/Cards.tsx"],
+    presentationStrategy: "center",
+  },
+  {
+    name: "Simple Card",
+    slug: "simple-card",
+    category: "animated",
+    description: "A single dark editorial card with a padded B&W image, prismatic top-border highlight, Instrument Serif title pinned to the bottom, and an expand-on-click description reveal.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/SimpleCard.tsx",
+    files: ["animated/SimpleCard.tsx"],
+    presentationStrategy: "center",
   },
 ];

@@ -8,6 +8,7 @@ export function Navbar() {
 
   const links = [
     { label: "Components", href: "/components" },
+    { label: "Gallery", href: "/gallery" },
     { label: "Hooks", href: "#" },
     { label: "Showcase", href: "#" },
     { label: "Templates", href: "#" },

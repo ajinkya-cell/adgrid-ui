@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Inter, JetBrains_Mono, Caveat } from "next/font/google";
-import { Navbar } from "@/components/site/Navbar";
-import { PageTransition } from "@/components/site/PageTransition";
+import { SiteChrome } from "@/components/site/SiteChrome";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -38,10 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
       </head>
       <body className="bg-background text-on-surface font-body antialiased selection:bg-white selection:text-black">
-        <Navbar />
-        <div className="pt-16 min-h-screen flex flex-col">
-          <PageTransition>{children}</PageTransition>
-        </div>
+        <SiteChrome>{children}</SiteChrome>
       </body>
     </html>
   );
