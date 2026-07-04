@@ -17,6 +17,8 @@ function readSourceFiles(entry: (typeof registry)[number]) {
   }, []);
 }
 
+import { codeToHtml } from "shiki";
+
 export default async function PresentPage({
   params,
 }: {
@@ -27,9 +29,24 @@ export default async function PresentPage({
   if (!entry) notFound();
 
   const sourceFiles = readSourceFiles(entry);
-  const rawCode = sourceFiles.find((file) => file.path === entry.packagePath)?.code ?? "";
+  
+  // Highlight all source files on the server using Shiki
+  const highlightedFiles = await Promise.all(
+    sourceFiles.map(async (file) => {
+      const html = await codeToHtml(file.code, {
+        lang: "tsx",
+        theme: "github-dark-dimmed",
+      });
+      return {
+        ...file,
+        html,
+      };
+    })
+  );
 
-  return <PresentationLayout payload={{ entry, rawCode, sourceFiles }} />;
+  const rawCode = highlightedFiles.find((file) => file.path === entry.packagePath)?.code ?? "";
+
+  return <PresentationLayout payload={{ entry, rawCode, sourceFiles: highlightedFiles }} />;
 }
 
 export function generateStaticParams() {

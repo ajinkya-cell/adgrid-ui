@@ -503,7 +503,7 @@ export default function App() {
             }
           : { [`/${componentName}.tsx`]: code }),
         "/styles.css": `
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@200..700&family=Outfit:wght@200..700&family=Inter:wght@400;500;600;700&display=swap');
 body {
   margin: 0;
   padding: 0;
@@ -582,10 +582,12 @@ export default function MockImage({ src, alt, fill, width, height, className, st
         "node_modules/next/font/google.js": `
 export function Geist_Mono() { return { className: "font-mono" }; }
 export function Outfit() { return { className: "font-sans" }; }
+export function Instrument_Serif() { return { className: "font-serif" }; }
         `.trim(),
         "node_modules/next/font/google/index.js": `
 export function Geist_Mono() { return { className: "font-mono" }; }
 export function Outfit() { return { className: "font-sans" }; }
+export function Instrument_Serif() { return { className: "font-serif" }; }
         `.trim(),
         ...additionalFiles,
       }}

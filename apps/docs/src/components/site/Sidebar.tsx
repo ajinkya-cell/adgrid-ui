@@ -70,7 +70,7 @@ export function Sidebar() {
                   </div>
                   <ul className="space-y-0.5 pl-6 border-l border-border-hairline ml-4">
                     {items.map((item) => {
-                      const href = `/components/${item.category}/${item.slug}`;
+                      const href = `/present/${item.category}/${item.slug}`;
                       const active = pathname === href;
 
                       return (

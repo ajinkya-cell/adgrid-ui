@@ -4,10 +4,11 @@ import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { RegistryEntry } from "@/registry";
 import { usePresentationStore } from "@/lib/presentation/store";
-import { groupEntriesByCategory, presentationEntries } from "./presentation-registry";
+import { groupEntriesByCategory, presentationEntries, getImportStatement } from "./presentation-registry";
 import { SidebarCategory } from "./SidebarCategory";
 import { SidebarSearch } from "./SidebarSearch";
 import { usePresentation } from "./hooks/usePresentation";
+import type { PresentationSourceFile } from "./types";
 
 function matches(entry: RegistryEntry, query: string, favorite: boolean, recent: boolean) {
   const q = query.trim().toLowerCase();
@@ -17,10 +18,48 @@ function matches(entry: RegistryEntry, query: string, favorite: boolean, recent:
   return [entry.name, entry.slug, entry.category, entry.description].some((value) => value.toLowerCase().includes(q));
 }
 
-export function PresentationSidebar({ entry }: { entry: RegistryEntry }) {
+function CopyWidget({ value, label }: { value: string; label: string }) {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = () => {
+    navigator.clipboard.writeText(value);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+  return (
+    <div className="space-y-1.5">
+      <div className="font-sans text-[10.5px] font-medium text-white/40">{label}</div>
+      <div className="flex items-center gap-1.5 p-1 bg-white/[0.03] border border-white/10 rounded-xl relative group">
+        <input
+          readOnly
+          value={value}
+          className="flex-1 bg-transparent border-none outline-none font-mono text-[10px] text-white/70 pl-2 pr-12 select-all h-8 truncate"
+        />
+        <button
+          onClick={handleCopy}
+          className="px-2.5 h-8 bg-white/5 border border-white/10 text-white/50 hover:text-white rounded-lg font-mono text-[9px] uppercase tracking-wider hover:bg-white/10 transition-all shrink-0 active:scale-95 cursor-pointer"
+        >
+          {copied ? "Copied" : "Copy"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export function PresentationSidebar({
+  entry,
+  sourceFiles = [],
+}: {
+  entry: RegistryEntry;
+  sourceFiles?: PresentationSourceFile[];
+}) {
   const [query, setQuery] = useState("");
+  const [activeFileIndex, setActiveFileIndex] = useState(0);
+
   const open = usePresentationStore((state) => state.sidebarOpen);
   const toggleSidebar = usePresentationStore((state) => state.toggleSidebar);
+  const activeTab = usePresentationStore((state) => state.sidebarTab);
+  const setSidebarTab = usePresentationStore((state) => state.setSidebarTab);
+  
   const favorites = usePresentationStore((state) => state.favorites);
   const recent = usePresentationStore((state) => state.recent);
   const toggleFavorite = usePresentationStore((state) => state.toggleFavorite);
@@ -36,6 +75,21 @@ export function PresentationSidebar({ entry }: { entry: RegistryEntry }) {
 
   const flatResults = useMemo(() => Object.values(grouped).flat(), [grouped]);
 
+  const currentFile = sourceFiles[activeFileIndex] || sourceFiles[0];
+
+  const shadcnCommand = `pnpm dlx shadcn@latest add https://void-ui.vercel.app/r/${entry.slug}.json`;
+  const depInstallCommand = `pnpm add ${Array.from(new Set(["framer-motion", "clsx", "tailwind-merge", ...(entry.dependencies || [])])).join(" ")}`;
+  const importStatement = getImportStatement(entry);
+
+  const [codeCopied, setCodeCopied] = useState(false);
+  const handleCopyCode = () => {
+    if (currentFile) {
+      navigator.clipboard.writeText(currentFile.code);
+      setCodeCopied(true);
+      setTimeout(() => setCodeCopied(false), 2000);
+    }
+  };
+
   return (
     <AnimatePresence>
       {open && (
@@ -50,47 +104,153 @@ export function PresentationSidebar({ entry }: { entry: RegistryEntry }) {
             onClick={toggleSidebar}
           />
           <motion.aside
-            className="fixed bottom-0 right-0 z-40 flex max-h-[86dvh] w-full flex-col rounded-t-3xl border border-white/10 bg-neutral-950/94 p-4 shadow-2xl backdrop-blur-2xl md:top-0 md:h-dvh md:max-h-none md:w-[360px] md:rounded-l-3xl md:rounded-tr-none md:border-y-0 md:border-r-0"
-            initial={{ opacity: 0, x: 24, y: 12, filter: "blur(6px)" }}
+            className="fixed bottom-0 left-0 z-40 flex h-[86dvh] w-full flex-col rounded-t-3xl border border-white/10 bg-neutral-950/94 p-4 shadow-2xl backdrop-blur-2xl md:top-0 md:h-dvh md:max-h-none md:w-[480px] md:rounded-r-3xl md:rounded-tl-none md:border-y-0 md:border-l-0 md:border-r"
+            initial={{ opacity: 0, x: -24, y: 12, filter: "blur(6px)" }}
             animate={{ opacity: 1, x: 0, y: 0, filter: "blur(0px)" }}
-            exit={{ opacity: 0, x: 24, y: 12, filter: "blur(6px)" }}
+            exit={{ opacity: 0, x: -24, y: 12, filter: "blur(6px)" }}
             transition={{ type: "spring", duration: 0.32, bounce: 0 }}
           >
-            <div className="mb-4">
-              <div className="mb-3 flex items-center justify-between">
-                <div>
-                  <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-white/34">Navigator</div>
-                  <div className="mt-1 text-sm text-white/70">{flatResults.length} components</div>
-                </div>
-                <button type="button" onClick={toggleSidebar} className="rounded-lg px-2 py-1 font-mono text-[10px] uppercase tracking-widest text-white/45 hover:bg-white/10 hover:text-white">
-                  Close
-                </button>
+            {/* Header Tabs */}
+            <div className="mb-4 flex items-center justify-between shrink-0">
+              <div className="flex gap-1 p-1 bg-white/5 border border-white/10 rounded-xl flex-1 max-w-[320px]">
+                {(["navigator", "code", "install"] as const).map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setSidebarTab(tab)}
+                    className={`flex-1 py-1.5 font-mono text-[10px] capitalize tracking-wide rounded-lg transition-all cursor-pointer ${
+                      activeTab === tab
+                        ? "bg-white text-black font-bold"
+                        : "text-white/40 hover:text-white"
+                    }`}
+                  >
+                    {tab}
+                  </button>
+                ))}
               </div>
-              <SidebarSearch
-                value={query}
-                onChange={setQuery}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" && flatResults[0]) presentation.navigateTo(flatResults[0]);
-                }}
-              />
+              <button
+                type="button"
+                onClick={toggleSidebar}
+                className="rounded-xl border border-white/10 px-3 py-1.5 font-mono text-[10px] capitalize text-white/50 hover:bg-white/5 hover:text-white transition-all ml-4 cursor-pointer"
+              >
+                Close
+              </button>
             </div>
-            <div className="min-h-0 flex-1 space-y-5 overflow-y-auto pr-1">
-              {Object.entries(grouped).map(([category, entries]) => (
-                <SidebarCategory
-                  key={category}
-                  name={category}
-                  entries={entries}
-                  activeSlug={entry.slug}
-                  favorites={favorites}
-                  recentSlugs={recentSlugs}
-                  onOpen={presentation.navigateTo}
-                  onFavorite={toggleFavorite}
-                />
-              ))}
-              {flatResults.length === 0 && (
-                <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-sm text-white/40">No matching components.</div>
-              )}
-            </div>
+
+            {/* Content area based on selected tab */}
+            {activeTab === "navigator" && (
+              <div className="flex-1 min-h-0 flex flex-col">
+                <div className="mb-4">
+                  <div className="mb-3">
+                    <div className="font-mono text-[10.5px] text-white/40">Navigator</div>
+                    <div className="mt-1 text-xs text-white/70">{flatResults.length} components</div>
+                  </div>
+                  <SidebarSearch
+                    value={query}
+                    onChange={setQuery}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" && flatResults[0]) presentation.navigateTo(flatResults[0]);
+                    }}
+                  />
+                </div>
+                <div className="min-h-0 flex-1 space-y-5 overflow-y-auto pr-1">
+                  {Object.entries(grouped).map(([category, entries]) => (
+                    <SidebarCategory
+                      key={category}
+                      name={category}
+                      entries={entries}
+                      activeSlug={entry.slug}
+                      favorites={favorites}
+                      recentSlugs={recentSlugs}
+                      onOpen={presentation.navigateTo}
+                      onFavorite={toggleFavorite}
+                    />
+                  ))}
+                  {flatResults.length === 0 && (
+                    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-sm text-white/40">No matching components.</div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {activeTab === "code" && (
+              <div className="flex-1 min-h-0 flex flex-col">
+                <div className="mb-3">
+                  <div className="font-mono text-[10.5px] text-white/40">Source Code</div>
+                  <div className="mt-1 text-xs text-white/70">{entry.name} source files</div>
+                </div>
+
+                {/* File picker */}
+                {sourceFiles.length > 1 && (
+                  <div className="flex flex-wrap gap-1.5 mb-3 shrink-0">
+                    {sourceFiles.map((file, i) => (
+                      <button
+                        key={file.path}
+                        onClick={() => setActiveFileIndex(i)}
+                        className={`px-2.5 py-1 text-[9px] font-mono border rounded-lg transition-all cursor-pointer ${
+                          activeFileIndex === i
+                            ? "bg-white/10 border-white/30 text-white"
+                            : "border-transparent text-white/40 hover:text-white/70"
+                        }`}
+                      >
+                        {file.path.split("/").pop()}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Highlighted code viewport */}
+                <div className="relative group/code flex-1 min-h-0 overflow-hidden border border-white/10 rounded-2xl flex flex-col bg-[#0d1117]">
+                  {/* Copy button */}
+                  <div className="absolute top-3 right-3 z-10 opacity-60 group-hover/code:opacity-100 transition-opacity">
+                    <button
+                      onClick={handleCopyCode}
+                      className="px-2.5 py-1 bg-neutral-950/80 hover:bg-neutral-900 border border-white/10 text-white/70 hover:text-white rounded-lg text-[10px] font-mono capitalize transition-all active:scale-95 cursor-pointer"
+                    >
+                      {codeCopied ? "Copied" : "Copy"}
+                    </button>
+                  </div>
+                  {/* Code frame */}
+                  <div
+                    className="flex-1 overflow-auto p-4 text-[10.5px] font-mono leading-relaxed [&>pre]:bg-transparent! [&>pre]:p-0! [&>pre]:m-0!"
+                    dangerouslySetInnerHTML={{ __html: currentFile?.html ?? "" }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {activeTab === "install" && (
+              <div className="flex-1 min-h-0 overflow-y-auto pr-1 space-y-6">
+                <div>
+                  <div className="font-mono text-[10.5px] text-white/40">Installation</div>
+                  <div className="mt-1 text-xs text-white/70">Integration instructions for {entry.name}</div>
+                </div>
+
+                <div className="space-y-5">
+                  <CopyWidget
+                    value={shadcnCommand}
+                    label="1. CLI Installation (Recommended)"
+                  />
+                  <CopyWidget
+                    value={depInstallCommand}
+                    label="2. Peer Dependencies"
+                  />
+                  <CopyWidget
+                    value={importStatement}
+                    label="3. Import Statement"
+                  />
+                </div>
+
+                <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-4 text-[10px] font-mono leading-relaxed text-white/50 space-y-2">
+                  <div className="text-white/70 font-semibold text-[10.5px]">Manual Installation:</div>
+                  <p>
+                    If you don't use shadcn CLI, you can switch to the <span className="text-white">Code</span> tab, copy the TSX code directly, and save it under your components directory.
+                  </p>
+                  <p>
+                    Make sure you configure your tailwind settings to scan the components path.
+                  </p>
+                </div>
+              </div>
+            )}
           </motion.aside>
         </>
       )}

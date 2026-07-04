@@ -63,13 +63,13 @@ export default function HomePage() {
             
             <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto mb-8">
               <Link
-                href="/components"
+                href="/gallery"
                 className="w-full sm:w-auto px-10 py-4 bg-white text-black font-mono font-bold text-xs tracking-widest border border-white hover:bg-transparent hover:text-white transition-all duration-200 text-center uppercase"
               >
                 GET STARTED
               </Link>
               <Link
-                href="/components"
+                href="/gallery"
                 className="w-full sm:w-auto px-10 py-4 bg-transparent text-white font-mono font-bold text-xs tracking-widest border border-border-hairline hover:border-white transition-all duration-200 text-center uppercase"
               >
                 EXPLORE REGISTRY

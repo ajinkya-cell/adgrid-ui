@@ -430,7 +430,7 @@ export default function GalleryPage() {
         <div className="max-w-[1600px] mx-auto px-6 pt-12 pb-8">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 mb-6 font-mono text-[10px] text-white/25 uppercase tracking-widest select-none">
-            <Link href="/components" className="hover:text-white/60 transition-colors">docs</Link>
+            <Link href="/" className="hover:text-white/60 transition-colors">home</Link>
             <span>/</span>
             <span className="text-white/50">gallery</span>
           </div>
@@ -463,11 +463,11 @@ export default function GalleryPage() {
                 {" "}components
               </div>
               <Link
-                href="/components"
+                href="/"
                 className="font-mono text-[10px] uppercase tracking-widest text-white/30 hover:text-white border border-[#1f1f1f] hover:border-white/30 px-3 py-1.5 transition-colors flex items-center gap-1.5"
               >
                 <span className="material-symbols-outlined text-[12px]">description</span>
-                docs
+                home
               </Link>
             </div>
           </div>

@@ -21,6 +21,7 @@ export interface PresentationState {
   
   // UI state
   sidebarOpen: boolean;
+  sidebarTab: "navigator" | "code" | "install";
   dockVisible: boolean;
   commandPaletteOpen: boolean;
   settingsOpen: boolean;
@@ -41,6 +42,8 @@ export interface PresentationState {
   enterPresentation: (slug: string, category: string) => void;
   exitPresentation: () => void;
   toggleSidebar: () => void;
+  setSidebarTab: (tab: "navigator" | "code" | "install") => void;
+  openSidebarTab: (tab: "navigator" | "code" | "install") => void;
   setDockVisible: (visible: boolean) => void;
   toggleCommandPalette: () => void;
   toggleSettings: () => void;
@@ -74,6 +77,7 @@ export const usePresentationStore = create<PresentationState>()(
       componentCategory: null,
       
       sidebarOpen: false,
+      sidebarTab: "navigator",
       dockVisible: true,
       commandPaletteOpen: false,
       settingsOpen: false,
@@ -113,6 +117,14 @@ export const usePresentationStore = create<PresentationState>()(
       
       toggleSidebar: () => {
         set({ sidebarOpen: !get().sidebarOpen });
+      },
+      
+      setSidebarTab: (tab) => {
+        set({ sidebarTab: tab });
+      },
+      
+      openSidebarTab: (tab) => {
+        set({ sidebarOpen: true, sidebarTab: tab });
       },
       
       setDockVisible: (visible) => {
@@ -240,6 +252,7 @@ export const usePresentationStore = create<PresentationState>()(
         componentProps: state.componentProps,
         settings: state.settings,
         sidebarOpen: state.sidebarOpen,
+        sidebarTab: state.sidebarTab,
         propsTweakerOpen: state.propsTweakerOpen,
       }),
     }

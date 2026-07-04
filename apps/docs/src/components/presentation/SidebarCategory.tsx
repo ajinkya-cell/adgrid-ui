@@ -29,7 +29,7 @@ export function SidebarCategory({
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
-        className="mb-2 flex w-full items-center justify-between px-1 font-mono text-[10px] uppercase tracking-[0.22em] text-white/42"
+        className="mb-2 flex w-full items-center justify-between px-1 font-mono text-[10px] capitalize text-white/50 font-medium cursor-pointer"
       >
         <span>{name}</span>
         <span>{entries.length}</span>

@@ -1,10 +1,9 @@
 "use client";
 
-import { Copy, ExternalLink, FileCode2, Maximize2, PanelRightOpen, Settings, SlidersHorizontal, X } from "lucide-react";
+import { Download, FileCode2, Maximize2, PanelRightOpen, Settings, SlidersHorizontal, X } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import type { RegistryEntry } from "@/registry";
 import { usePresentationStore } from "@/lib/presentation/store";
-import { getImportStatement, getSourceUrl } from "./presentation-registry";
 import { useDockVisibility } from "./hooks/useDockVisibility";
 import { usePresentation } from "./hooks/usePresentation";
 import { DockButton } from "./DockButton";
@@ -13,7 +12,7 @@ export function FloatingDock({ entry }: { entry: RegistryEntry }) {
   const { dockVisible } = useDockVisibility();
   const reducedMotion = useReducedMotion();
   const presentation = usePresentation(entry);
-  const toggleSidebar = usePresentationStore((state) => state.toggleSidebar);
+  const openSidebarTab = usePresentationStore((state) => state.openSidebarTab);
   const toggleSettings = usePresentationStore((state) => state.toggleSettings);
   const togglePropsTweaker = usePresentationStore((state) => state.togglePropsTweaker);
 
@@ -38,12 +37,10 @@ export function FloatingDock({ entry }: { entry: RegistryEntry }) {
           else document.exitFullscreen().catch(() => {});
         }}
       />
-      <DockButton icon={<ExternalLink className={iconClass} />} label="Open" onClick={() => window.open(window.location.href, "_blank", "noopener,noreferrer")} />
-      <DockButton icon={<FileCode2 className={iconClass} />} label="Source" onClick={() => window.open(getSourceUrl(entry), "_blank", "noopener,noreferrer")} />
-      <DockButton icon={<Copy className={iconClass} />} label="Copy Name" shortcut="C" onClick={() => navigator.clipboard?.writeText(entry.name)} />
-      <DockButton icon={<Copy className={iconClass} />} label="Copy Import" shortcut="I" onClick={() => navigator.clipboard?.writeText(getImportStatement(entry))} />
+      <DockButton icon={<PanelRightOpen className={iconClass} />} label="Navigator" shortcut="N" onClick={() => openSidebarTab("navigator")} />
+      <DockButton icon={<FileCode2 className={iconClass} />} label="Code" shortcut="C" onClick={() => openSidebarTab("code")} />
+      <DockButton icon={<Download className={iconClass} />} label="Install" shortcut="I" onClick={() => openSidebarTab("install")} />
       <DockButton icon={<Settings className={iconClass} />} label="Settings" shortcut="S" onClick={toggleSettings} />
-      <DockButton icon={<PanelRightOpen className={iconClass} />} label="Navigator" shortcut="Cmd B" onClick={toggleSidebar} />
       {entry.propDefs && entry.propDefs.length > 0 && (
         <DockButton icon={<SlidersHorizontal className={iconClass} />} label="Props" shortcut="P" onClick={togglePropsTweaker} />
       )}

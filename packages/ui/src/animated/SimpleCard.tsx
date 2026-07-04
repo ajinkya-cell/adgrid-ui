@@ -2,14 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Instrument_Serif } from "next/font/google";
 import { cn } from "../lib/utils";
-
-const instrumentSerif = Instrument_Serif({
-  weight: "400",
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-});
 
 export type SimpleCardProps = {
   title: string;
@@ -109,12 +102,11 @@ export function SimpleCard({
             )}
           </AnimatePresence>
 
-          <h2
+<h2
             className={cn(
-              "text-[35px] leading-tight tracking-tight pb-2",
-              instrumentSerif.className
+              "text-[35px] leading-tight tracking-tight pb-2"
             )}
-            style={{ color: "rgba(255,255,255,0.92)" }}
+style={{ fontFamily: '"Instrument Serif", serif', color: "rgba(255,255,255,0.92)" }}
           >
             {title}
           </h2>

@@ -1,6 +1,5 @@
 "use client";
 
-import { Geist_Mono, Outfit } from "next/font/google";
 import { useState } from "react";
 import { FaSpotify } from "react-icons/fa6";
 
@@ -13,16 +12,6 @@ export type Song = {
   songUrl: string;
   playedAt: string | null;
 };
-
-const geist_mono = Geist_Mono({
-  weight: ["200", "300", "400", "500", "600", "700"],
-  subsets: ["cyrillic"],
-});
-
-const outfit = Outfit({
-  weight: ["200", "300", "400", "500", "600", "700"],
-  subsets: ["latin"],
-});
 
 export function NowPlayingCard({ song }: { song: Song }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -59,21 +48,21 @@ export function NowPlayingCard({ song }: { song: Song }) {
         {/* Top */}
         <div className="flex items-center gap-2 text-xs font-semibold tracking-wider">
           <FaSpotify className={`h-8 w-8 ${song.isPlaying ? "text-green-400" : "text-white/60"}`} />
-          <span className={`${song.isPlaying ? "text-green-400" : "text-white/60"} ${outfit.className} text-2xl`}>
+          <span className={`${song.isPlaying ? "text-green-400" : "text-white/60"} text-2xl`} style={{ fontFamily: '"Outfit", sans-serif' }}>
             {song.isPlaying ? "Now Playing" : "Last Played"}
           </span>
         </div>
 
         {/* Info */}
         <div className="mt-3 flex-1">
-          <h3 className={`text-xl ${outfit.className} leading-tight line-clamp-2`}>
+          <h3 className="text-xl leading-tight line-clamp-2" style={{ fontFamily: '"Outfit", sans-serif' }}>
             I am listening to{" "}
             <span className="font-semibold">{song.title}</span>
           </h3>
-          <p className={`mt-2 ${geist_mono.className} uppercase text-base text-white/70`}>
+          <p className="mt-2 uppercase text-base text-white/70" style={{ fontFamily: '"Geist Mono", monospace' }}>
             {song.artist}
           </p>
-          <p className={`mt-1 text-sm ${geist_mono.className} text-white/50`}>
+          <p className="mt-1 text-sm text-white/50" style={{ fontFamily: '"Geist Mono", monospace' }}>
             {song.album}
           </p>
         </div>

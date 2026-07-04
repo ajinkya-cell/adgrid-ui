@@ -2,14 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Instrument_Serif } from "next/font/google";
 import { cn } from "../lib/utils";
-
-const instrumentSerif = Instrument_Serif({
-  weight: "400",
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-});
 
 type CardItem = {
   title: string;
@@ -229,9 +222,9 @@ export const Cards = () => {
                   <motion.h2
                     layout="position"
                     className={cn(
-                      "leading-none tracking-tight pb-6",
-                      instrumentSerif.className
+                      "leading-none tracking-tight pb-6"
                     )}
+                    style={{ fontFamily: '"Instrument Serif", serif', color: "rgba(255,255,255,0.95)" }}
                     animate={{
                       fontSize: isActive ? "23px" : "40px",
                     }}
@@ -241,7 +234,6 @@ export const Cards = () => {
                       damping: 26,
                       mass: 0.9,
                     }}
-                    style={{ color: "rgba(255,255,255,0.95)" }}
                   >
                     {card.title}
                   </motion.h2>
