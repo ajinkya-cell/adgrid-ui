@@ -4,6 +4,22 @@
   "homepage": "https://void-ui.vercel.app",
   "items": [
     {
+      "name": "infinite-scroll",
+      "type": "registry:ui",
+      "title": "Infinite Scroll",
+      "description": "Seamless infinite fullscreen scroll with parallax image effects, powered by Lenis smooth scrolling and GSAP scrub animations.",
+      "dependencies": [
+        "gsap",
+        "lenis"
+      ],
+      "files": [
+        {
+          "path": "components/ui/InfiniteScroll.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "image-reveal",
       "type": "registry:ui",
       "title": "Image Reveal",
@@ -606,6 +622,36 @@
         {
           "path": "components/ui/text-shuffle/utils/timing.ts",
           "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "cards",
+      "type": "registry:ui",
+      "title": "Cards",
+      "description": "A fanned deck of dark editorial cards with B&W images, prismatic top-border highlights, spring-physics animations, and an expand-on-click description reveal.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/Cards.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "simple-card",
+      "type": "registry:ui",
+      "title": "Simple Card",
+      "description": "A single dark editorial card with a padded B&W image, prismatic top-border highlight, Instrument Serif title pinned to the bottom, and an expand-on-click description reveal.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/SimpleCard.tsx",
+          "type": "registry:ui"
         }
       ]
     }

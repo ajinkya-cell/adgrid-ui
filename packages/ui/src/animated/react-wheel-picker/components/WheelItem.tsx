@@ -65,7 +65,7 @@ export function WheelItem({
     : (
         <span
           className={cn(
-            "truncate max-w-[85%] px-4 font-sans",
+            "truncate max-w-[85%] px-4 font-body",
             isActive ? "text-white text-sm font-medium" : "text-neutral-400 text-xs font-normal"
           )}
         >

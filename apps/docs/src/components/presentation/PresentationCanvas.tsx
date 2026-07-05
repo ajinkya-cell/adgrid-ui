@@ -10,6 +10,8 @@ const classes: Record<Exclude<DisplayStrategy, "auto">, string> = {
   fit: "flex min-h-dvh items-center justify-center p-4 md:p-8",
 };
 
+
+
 export function PresentationCanvas({
   strategy,
   children,
@@ -22,13 +24,14 @@ export function PresentationCanvas({
   return (
     <motion.main
       layoutId="presentation-preview"
-      className={`relative z-10 w-full ${classes[strategy]}`}
+      className="relative z-10 w-full min-h-screen"
       initial={reducedMotion ? false : { opacity: 0, scale: 0.985, filter: "blur(6px)" }}
       animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
       transition={{ type: "spring", duration: 0.28, bounce: 0 }}
     >
-      {children}
+      <div className={`w-full ${classes[strategy]}`}>
+        {children}
+      </div>
     </motion.main>
   );
 }
-

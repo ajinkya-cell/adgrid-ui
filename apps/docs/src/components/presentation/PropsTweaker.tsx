@@ -294,7 +294,7 @@ export function PropsTweaker({ entry }: { entry: RegistryEntry }) {
             transition={{ type: "spring", duration: 0.28, bounce: 0 }}
             className="overflow-hidden"
           >
-            <div className="max-h-[60vh] space-y-3.5 overflow-y-auto px-3.5 pb-3.5 pt-3.5 scrollbar-thin">
+            <div className="max-h-[60vh] space-y-3.5 overflow-y-auto px-3.5 pb-3.5 pt-3.5 present-scroll">
               {propDefs.map((def) => (
                 <PropRow
                   key={def.name}

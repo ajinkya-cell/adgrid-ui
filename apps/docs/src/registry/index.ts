@@ -132,6 +132,11 @@ export const registry: RegistryEntry[] = [
     dependencies: ["framer-motion"],
     packagePath: "animated/VoidButton.tsx",
     files: ["animated/VoidButton.tsx"],
+    propDefs: [
+      { name: "variant", type: "select", default: "ambient", description: "Button style variant", required: false, options: ["ambient", "neon-edge", "metallic-sheen", "glassmorphic", "cyber-laser", "classic-gold"] },
+      { name: "children", type: "string", default: "Void Button", description: "Button text label", required: false },
+      { name: "disabled", type: "boolean", default: false, description: "Disable button state", required: false }
+    ],
   },
   {
     name: "Brushed Titanium Button",
@@ -141,6 +146,10 @@ export const registry: RegistryEntry[] = [
     dependencies: ["framer-motion"],
     packagePath: "animated/BrushedTitaniumButton.tsx",
     files: ["animated/BrushedTitaniumButton.tsx"],
+    propDefs: [
+      { name: "children", type: "string", default: "Titanium Button", description: "Button text label", required: false },
+      { name: "disabled", type: "boolean", default: false, description: "Disable button state", required: false }
+    ],
   },
   {
     name: "Liquid Gold Button",
@@ -150,6 +159,9 @@ export const registry: RegistryEntry[] = [
     dependencies: ["framer-motion"],
     packagePath: "animated/LiquidGoldButton.tsx",
     files: ["animated/LiquidGoldButton.tsx"],
+    propDefs: [
+      { name: "children", type: "string", default: "Liquid Gold", description: "Button text label", required: false }
+    ],
   },
   {
     name: "Guilloche Button",
@@ -159,6 +171,9 @@ export const registry: RegistryEntry[] = [
     dependencies: ["framer-motion"],
     packagePath: "animated/GuillocheButton.tsx",
     files: ["animated/GuillocheButton.tsx"],
+    propDefs: [
+      { name: "children", type: "string", default: "Guilloché", description: "Button text label", required: false }
+    ],
   },
   {
     name: "Pixel Melt",
@@ -326,6 +341,13 @@ export const registry: RegistryEntry[] = [
       "animated/scrollprogress/types.ts",
       "animated/scrollprogress/utils.ts",
     ],
+    propDefs: [
+      { name: "ticks", type: "number", default: 42, description: "Number of vertical tick marks", required: false, min: 10, max: 100, step: 1 },
+      { name: "color", type: "color", default: "#a855f7", description: "Color of the active scroll indicator", required: false },
+      { name: "glow", type: "boolean", default: true, description: "Enable glow halo around the active indicator", required: false },
+      { name: "height", type: "number", default: 44, description: "Thickness (width) of the scrollbar in pixels", required: false, min: 20, max: 100, step: 2 },
+      { name: "width", type: "number", default: 320, description: "Length (height) of the scrollbar in pixels", required: false, min: 150, max: 600, step: 10 },
+    ],
   },
   {
     name: "Now Playing Card",
@@ -360,6 +382,15 @@ export const registry: RegistryEntry[] = [
       "animated/react-wheel-picker/utils/physics.ts",
       "animated/react-wheel-picker/utils/audio.ts",
       "animated/react-wheel-picker/utils/math.ts",
+    ],
+    propDefs: [
+      { name: "variant", type: "select", default: "glass", description: "Visual style of the picker", required: false, options: ["glass", "minimal"] },
+      { name: "loop", type: "boolean", default: false, description: "Allow infinite looping through items", required: false },
+      { name: "sound", type: "boolean", default: true, description: "Play mechanical click sound on selection change", required: false },
+      { name: "disabled", type: "boolean", default: false, description: "Disable interaction and pointer events", required: false },
+      { name: "itemHeight", type: "number", default: 50, description: "Height of each item in pixels", required: false, min: 20, max: 100, step: 1 },
+      { name: "visibleItems", type: "number", default: 5, description: "Number of visible items in the viewport", required: false, min: 3, max: 11, step: 1 },
+      { name: "perspective", type: "number", default: 1000, description: "3D perspective depth in pixels", required: false, min: 200, max: 2000, step: 50 },
     ],
   },
   {

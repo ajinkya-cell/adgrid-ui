@@ -28,6 +28,8 @@ export interface PresentationState {
   shortcutsOpen: boolean;
   propsTweakerOpen: boolean;
   
+  scrollContainer: HTMLElement | null;
+  
   // Navigation
   history: Array<{ slug: string; category: string }>;
   historyIndex: number;
@@ -57,6 +59,7 @@ export interface PresentationState {
   resetPresentation: () => void;
   goBack: () => void;
   goForward: () => void;
+  setScrollContainer: (el: HTMLElement | null) => void;
 }
 
 const defaultSettings: PresentationSettings = {
@@ -83,6 +86,8 @@ export const usePresentationStore = create<PresentationState>()(
       settingsOpen: false,
       shortcutsOpen: false,
       propsTweakerOpen: true,
+      
+      scrollContainer: null,
       
       history: [],
       historyIndex: -1,
@@ -205,6 +210,10 @@ export const usePresentationStore = create<PresentationState>()(
         set({
           settings: { ...get().settings, ...newSettings },
         });
+      },
+
+      setScrollContainer: (el) => {
+        set({ scrollContainer: el });
       },
 
       resetPresentation: () => {

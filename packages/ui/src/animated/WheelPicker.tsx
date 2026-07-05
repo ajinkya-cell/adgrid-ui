@@ -428,7 +428,7 @@ function WheelItem({
       role="option"
       aria-selected={isActive}
       className={cn(
-        "absolute inset-x-0 flex items-center justify-center font-sans select-none text-center cursor-grab active:cursor-grabbing transform-gpu will-change-transform font-medium transition-colors duration-300",
+        "absolute inset-x-0 flex items-center justify-center font-body select-none text-center cursor-grab active:cursor-grabbing transform-gpu will-change-transform font-medium transition-colors duration-300",
         isActive ? "text-white text-sm" : "text-neutral-400 text-xs"
       )}
       style={{

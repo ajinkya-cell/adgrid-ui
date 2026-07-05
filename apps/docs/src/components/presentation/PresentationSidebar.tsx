@@ -28,7 +28,7 @@ function CopyWidget({ value, label }: { value: string; label: string }) {
   return (
     <div className="space-y-1.5">
       <div className="font-sans text-[10.5px] font-medium text-white/40">{label}</div>
-      <div className="flex items-center gap-1.5 p-1 bg-white/[0.03] border border-white/10 rounded-xl relative group">
+      <div className="flex items-center gap-1.5 p-1 bg-[#050505] border border-white/5 rounded-xl relative group shadow-[inset_0_1.5px_3px_rgba(0,0,0,0.6)]">
         <input
           readOnly
           value={value}
@@ -36,7 +36,7 @@ function CopyWidget({ value, label }: { value: string; label: string }) {
         />
         <button
           onClick={handleCopy}
-          className="px-2.5 h-8 bg-white/5 border border-white/10 text-white/50 hover:text-white rounded-lg font-mono text-[9px] uppercase tracking-wider hover:bg-white/10 transition-all shrink-0 active:scale-95 cursor-pointer"
+          className="px-2.5 h-8 bg-[#090909] border border-white/5 text-white/50 hover:text-white rounded-lg font-mono text-[9px] uppercase tracking-wider hover:bg-white/5 transition-all shrink-0 active:scale-95 cursor-pointer shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)] hover:border-white/15"
         >
           {copied ? "Copied" : "Copy"}
         </button>
@@ -104,22 +104,26 @@ export function PresentationSidebar({
             onClick={toggleSidebar}
           />
           <motion.aside
-            className="fixed bottom-0 left-0 z-40 flex h-[86dvh] w-full flex-col rounded-t-3xl border border-white/10 bg-neutral-950/94 p-4 shadow-2xl backdrop-blur-2xl md:top-0 md:h-dvh md:max-h-none md:w-[480px] md:rounded-r-3xl md:rounded-tl-none md:border-y-0 md:border-l-0 md:border-r"
+            className="fixed bottom-0 left-0 z-40 flex h-[86dvh] w-full flex-col rounded-t-3xl border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 p-4 shadow-2xl backdrop-blur-2xl md:top-0 md:h-dvh md:max-h-none md:w-[480px] md:rounded-r-3xl md:rounded-tl-none md:border-y-0 md:border-l-0 md:border-r border-r-white/10"
+            style={{
+              backgroundColor: "#171717",
+              boxShadow: "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.4), 0 30px 80px rgba(0,0,0,0.6)"
+            }}
             initial={{ opacity: 0, x: -24, y: 12, filter: "blur(6px)" }}
             animate={{ opacity: 1, x: 0, y: 0, filter: "blur(0px)" }}
             exit={{ opacity: 0, x: -24, y: 12, filter: "blur(6px)" }}
             transition={{ type: "spring", duration: 0.32, bounce: 0 }}
           >
             {/* Header Tabs */}
-            <div className="mb-4 flex items-center justify-between shrink-0">
-              <div className="flex gap-1 p-1 bg-white/5 border border-white/10 rounded-xl flex-1 max-w-[320px]">
+            <div className="mb-4 flex items-center shrink-0 pl-14 md:pl-16">
+              <div className="flex gap-1 p-1 bg-[#090909] border border-white/5 rounded-xl flex-1 max-w-[320px] shadow-[inset_0_1.5px_3px_rgba(0,0,0,0.7)]">
                 {(["navigator", "code", "install"] as const).map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setSidebarTab(tab)}
                     className={`flex-1 py-1.5 font-mono text-[10px] capitalize tracking-wide rounded-lg transition-all cursor-pointer ${
                       activeTab === tab
-                        ? "bg-white text-black font-bold"
+                        ? "bg-white text-black font-bold shadow-[0_2px_4px_rgba(0,0,0,0.2)]"
                         : "text-white/40 hover:text-white"
                     }`}
                   >
@@ -127,13 +131,6 @@ export function PresentationSidebar({
                   </button>
                 ))}
               </div>
-              <button
-                type="button"
-                onClick={toggleSidebar}
-                className="rounded-xl border border-white/10 px-3 py-1.5 font-mono text-[10px] capitalize text-white/50 hover:bg-white/5 hover:text-white transition-all ml-4 cursor-pointer"
-              >
-                Close
-              </button>
             </div>
 
             {/* Content area based on selected tab */}
@@ -152,7 +149,7 @@ export function PresentationSidebar({
                     }}
                   />
                 </div>
-                <div className="min-h-0 flex-1 space-y-5 overflow-y-auto pr-1">
+                <div className="min-h-0 flex-1 space-y-5 overflow-y-auto pr-1 present-scroll">
                   {Object.entries(grouped).map(([category, entries]) => (
                     <SidebarCategory
                       key={category}
@@ -199,19 +196,19 @@ export function PresentationSidebar({
                 )}
 
                 {/* Highlighted code viewport */}
-                <div className="relative group/code flex-1 min-h-0 overflow-hidden border border-white/10 rounded-2xl flex flex-col bg-[#0d1117]">
+                <div className="relative group/code flex-1 min-h-0 overflow-hidden border border-white/5 rounded-2xl flex flex-col bg-[#090909] shadow-[inset_0_2px_5px_rgba(0,0,0,0.8),_0_1px_0_rgba(255,255,255,0.05)]">
                   {/* Copy button */}
                   <div className="absolute top-3 right-3 z-10 opacity-60 group-hover/code:opacity-100 transition-opacity">
                     <button
                       onClick={handleCopyCode}
-                      className="px-2.5 py-1 bg-neutral-950/80 hover:bg-neutral-900 border border-white/10 text-white/70 hover:text-white rounded-lg text-[10px] font-mono capitalize transition-all active:scale-95 cursor-pointer"
+                      className="px-2.5 py-1 bg-[#050505] hover:bg-[#0c0c0c] border border-white/5 text-white/70 hover:text-white rounded-lg text-[10px] font-mono capitalize transition-all active:scale-95 cursor-pointer shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)] hover:border-white/15"
                     >
                       {codeCopied ? "Copied" : "Copy"}
                     </button>
                   </div>
                   {/* Code frame */}
                   <div
-                    className="flex-1 overflow-auto p-4 text-[10.5px] font-mono leading-relaxed [&>pre]:bg-transparent! [&>pre]:p-0! [&>pre]:m-0!"
+                    className="flex-1 overflow-auto p-4 text-[10.5px] font-mono leading-relaxed [&>pre]:bg-transparent! [&>pre]:p-0! [&>pre]:m-0! present-scroll"
                     dangerouslySetInnerHTML={{ __html: currentFile?.html ?? "" }}
                   />
                 </div>
@@ -219,7 +216,7 @@ export function PresentationSidebar({
             )}
 
             {activeTab === "install" && (
-              <div className="flex-1 min-h-0 overflow-y-auto pr-1 space-y-6">
+              <div className="flex-1 min-h-0 overflow-y-auto pr-1 space-y-6 present-scroll">
                 <div>
                   <div className="font-mono text-[10.5px] text-white/40">Installation</div>
                   <div className="mt-1 text-xs text-white/70">Integration instructions for {entry.name}</div>
@@ -240,7 +237,7 @@ export function PresentationSidebar({
                   />
                 </div>
 
-                <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-4 text-[10px] font-mono leading-relaxed text-white/50 space-y-2">
+                <div className="rounded-2xl bg-[#090909] border border-white/[0.04] p-4 text-[10px] font-mono leading-relaxed text-white/50 space-y-2 shadow-[inset_0_2px_4px_rgba(0,0,0,0.7),_0_1px_0_rgba(255,255,255,0.05)]">
                   <div className="text-white/70 font-semibold text-[10.5px]">Manual Installation:</div>
                   <p>
                     If you don't use shadcn CLI, you can switch to the <span className="text-white">Code</span> tab, copy the TSX code directly, and save it under your components directory.

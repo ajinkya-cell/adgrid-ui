@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+
 import {
   AnisotropicKnob,
   BreathingGrid,
@@ -26,13 +27,13 @@ import {
   NowPlayingCard,
   PixelMeltBackground,
   PremiumHero,
-  ScrollProgress,
   SimpleCard,
   SlingshotChassis,
   SpotlightGrid,
   TextShuffle,
   VoidButton,
   WheelPicker,
+  ScrollProgress,
 } from "@adgrid-ui/ui";
 import { Cards } from "../../../../../packages/ui/src/animated/Cards";
 import type { RegistryEntry } from "@/registry";
@@ -81,78 +82,37 @@ function FullscreenLabel({ title, subtitle }: { title: string; subtitle: string 
   );
 }
 
-// ── Buttons Bento Grid ───────────────────────────────────────────────────────
-const VOID_VARIANTS = ["ambient", "neon-edge", "metallic-sheen", "glassmorphic", "cyber-laser", "classic-gold"] as const;
-const VOID_LABELS: Record<string, string> = {
-  ambient: "AMBIENT",
-  "neon-edge": "NEON EDGE",
-  "metallic-sheen": "METALLIC",
-  glassmorphic: "GLASS",
-  "cyber-laser": "CYBER",
-  "classic-gold": "GOLD",
-};
 
-function ButtonBentoCell({
-  label,
-  span,
-  children,
-}: {
-  label: string;
-  span?: "wide" | "normal";
-  children: React.ReactNode;
-}) {
+function ScrollProgressDemo(props: any) {
   return (
-    <div
-      className={`flex flex-col items-center justify-center gap-4 rounded-2xl border border-white/[0.07] bg-white/[0.025] p-6 ${span === "wide" ? "col-span-2" : ""}`}
-    >
-      {children}
-      <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-white/25">{label}</span>
-    </div>
-  );
-}
-
-function ButtonsBentoGrid() {
-  return (
-    <div className="grid w-full max-w-4xl grid-cols-2 gap-3 p-4 md:grid-cols-3 lg:grid-cols-3">
-      {/* Void Button — all 6 variants */}
-      {VOID_VARIANTS.map((variant) => (
-        <ButtonBentoCell key={variant} label={`Void · ${variant}`}>
-          <VoidButton variant={variant}>{VOID_LABELS[variant]}</VoidButton>
-        </ButtonBentoCell>
-      ))}
-
-      {/* Brushed Titanium */}
-      <ButtonBentoCell label="Brushed Titanium" span="wide">
-        <div className="flex items-center gap-4 flex-wrap justify-center">
-          <BrushedTitaniumButton>TITANIUM</BrushedTitaniumButton>
-          <BrushedTitaniumButton disabled style={{ opacity: 0.4 }}>
-            DISABLED
-          </BrushedTitaniumButton>
-        </div>
-      </ButtonBentoCell>
-
-      {/* Liquid Gold */}
-      <ButtonBentoCell label="Liquid Gold">
-        <LiquidGoldButton>LIQUID GOLD</LiquidGoldButton>
-      </ButtonBentoCell>
-
-      {/* Guilloche */}
-      <ButtonBentoCell label="Guilloché" span="wide">
-        <div className="flex items-center gap-4 flex-wrap justify-center">
-          <GuillocheButton>GUILLOCHÉ</GuillocheButton>
-          <GuillocheButton style={{ width: "14rem" }}>EXTENDED VARIANT</GuillocheButton>
-        </div>
-      </ButtonBentoCell>
-
-      {/* Side-by-side comparison */}
-      <ButtonBentoCell label="Collection" span="wide">
-        <div className="flex flex-wrap items-center justify-center gap-3">
-          <VoidButton variant="ambient">VOID</VoidButton>
-          <BrushedTitaniumButton>TITANIUM</BrushedTitaniumButton>
-          <LiquidGoldButton>GOLD</LiquidGoldButton>
-          <GuillocheButton>GUILLOCHÉ</GuillocheButton>
-        </div>
-      </ButtonBentoCell>
+    <div className="w-full text-white bg-[#111111] p-12">
+      <style dangerouslySetInnerHTML={{ __html: `
+        /* Hide browser scrollbar only when scroll-progress demo is active */
+        html, body {
+          scrollbar-width: none !important;
+        }
+        ::-webkit-scrollbar {
+          display: none !important;
+          width: 0 !important;
+          height: 0 !important;
+        }
+      `}} />
+      <ScrollProgress
+        color="#e7e5df"
+        glow
+        ticks={42}
+        {...props}
+      />
+      <div className="mx-auto max-w-2xl space-y-12 py-24">
+        <h1 className="text-5xl font-bold uppercase tracking-tight text-white mb-8">
+          Scroll Field Demo
+        </h1>
+        {[...Array(12)].map((_, i) => (
+          <p key={i} className="text-lg leading-8 text-neutral-300 my-6">
+            This is paragraph {i + 1} of a long scrollable document. We are rendering this text to create an overflow container so that the custom scroll progress indicator can be fully demonstrated. Scroll down with your mouse wheel or trackpad to see the tick marks illuminate as you move through the document. The faster you scroll, the more the indicator stretches and glows. Drag the scrollbar directly to scrub the scroll position in real-time.
+          </p>
+        ))}
+      </div>
     </div>
   );
 }
@@ -188,12 +148,58 @@ export function PresentationRenderer({
       return <MorphingNav />;
     case "coverflow-carousel":
       return <CoverflowCarousel />;
-    // ── Buttons category: Bento grid ────────────────────────────────────────
-    case "void-button":
-    case "brushed-titanium-button":
-    case "liquid-gold-button":
-    case "guilloche-button":
-      return <ButtonsBentoGrid />;
+    // ── Buttons category ───────────────────────────────────────────────────
+    case "void-button": {
+      const voidProps = {
+        variant: "ambient" as const,
+        disabled: false,
+        children: "Void Button",
+        ...liveProps,
+      };
+      return (
+        <div className="flex items-center justify-center w-full min-h-[300px]">
+          <VoidButton variant={voidProps.variant} disabled={voidProps.disabled}>
+            {voidProps.children}
+          </VoidButton>
+        </div>
+      );
+    }
+    case "brushed-titanium-button": {
+      const titaniumProps = {
+        disabled: false,
+        children: "Titanium Button",
+        ...liveProps,
+      };
+      return (
+        <div className="flex items-center justify-center w-full min-h-[300px]">
+          <BrushedTitaniumButton disabled={titaniumProps.disabled}>
+            {titaniumProps.children}
+          </BrushedTitaniumButton>
+        </div>
+      );
+    }
+    case "liquid-gold-button": {
+      const goldProps = {
+        children: "Liquid Gold",
+        ...liveProps,
+      };
+      return (
+        <div className="flex items-center justify-center w-full min-h-[300px]">
+          <LiquidGoldButton>{goldProps.children}</LiquidGoldButton>
+        </div>
+      );
+    }
+    case "guilloche-button": {
+      const guillocheProps = {
+        children: "Guilloché",
+        ...liveProps,
+      };
+      return (
+        <div className="flex items-center justify-center w-full min-h-[300px]">
+          <GuillocheButton>{guillocheProps.children}</GuillocheButton>
+        </div>
+      );
+    }
     case "pixel-melt":
       return <><PixelMeltBackground /><FullscreenLabel title="Pixel Melt" subtitle="Move your cursor" /></>;
     case "breathing-grid":
@@ -256,22 +262,19 @@ export function PresentationRenderer({
       return <DotMatrix {...(dotMatrixProps as Parameters<typeof DotMatrix>[0])} />;
     }
     case "scroll-progress":
-      return (
-        <div className="min-h-[220vh] w-full px-8 py-24 text-white">
-          <div className="mx-auto max-w-xl space-y-8">
-            <h1 className="font-display text-4xl font-bold uppercase tracking-tight">Scroll Field</h1>
-            {Array.from({ length: 7 }).map((_, index) => (
-              <p key={index} className="text-sm leading-7 text-white/45">
-                Presentation mode keeps the component as the application. Scroll to test velocity, drag response, and viewport tracking without documentation chrome.
-              </p>
-            ))}
-          </div>
-          <ScrollProgress color="#e7e5df" glow ticks={42} />
-        </div>
-      );
+      return <ScrollProgressDemo {...liveProps} />;
     case "now-playing-card":
       return <NowPlayingCard song={{ isPlaying: true, title: "Main Chala Jaunga", artist: "Fiddlecraft", album: "Hawai Jahaaz", image: "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/41/c7/65/41c765a0-5a1e-3e35-9c22-5d664da2b95e/cover.jpg/600x600bb.jpg", songUrl: "https://open.spotify.com", playedAt: null }} />;
-    case "wheel-picker":
+    case "wheel-picker": {
+      const wheelPickerProps = {
+        items: ["React", "Vue", "Angular", "Next.js", "Svelte", "Solid", "Qwik"],
+        value: framework,
+        onChange: setFramework,
+        variant: "glass" as const,
+        loop: false,
+        sound: false,
+        ...liveProps,
+      };
       return (
         <div className="flex flex-col items-center gap-7">
           <div className="text-center">
@@ -279,10 +282,11 @@ export function PresentationRenderer({
             <div className="mt-2 font-display text-3xl font-bold text-white">{framework}</div>
           </div>
           <div className="w-[240px]">
-            <WheelPicker items={["React", "Vue", "Angular", "Next.js", "Svelte", "Solid", "Qwik"]} value={framework} onChange={setFramework} variant="glass" loop sound={false} />
+            <WheelPicker {...(wheelPickerProps as Parameters<typeof WheelPicker>[0])} />
           </div>
         </div>
       );
+    }
     case "expand-on-hover":
       return <div className="w-full max-w-xl"><ExpandOnHover items={expandItems} variant="modern" animation="spring" /></div>;
     case "text-shuffle": {
