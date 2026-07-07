@@ -1,0 +1,266 @@
+"use client";
+
+import React, { useEffect, useState, Suspense } from "react";
+import { createPortal } from "react-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import type { RegistryEntry } from "@/registry";
+
+// Lazy-load UI components from package
+const UI = {
+  VoidButton: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.VoidButton }))),
+  BrushedTitaniumButton: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.BrushedTitaniumButton }))),
+  LiquidGoldButton: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.LiquidGoldButton }))),
+  GuillocheButton: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.GuillocheButton }))),
+  ChromeInput: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.ChromeInput }))),
+  ChromeSelect: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.ChromeSelect }))),
+  AnisotropicKnob: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.AnisotropicKnob }))),
+  MechanicalTimer: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.MechanicalTimer }))),
+  LaserVaultPassword: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.LaserVaultPassword }))),
+  LivingText: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.LivingText }))),
+  TextShuffle: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.TextShuffle }))),
+  NowPlayingCard: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.NowPlayingCard }))),
+  SimpleCard: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.SimpleCard }))),
+  CoverflowCarousel: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.CoverflowCarousel }))),
+  PixelMeltBackground: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.PixelMeltBackground }))),
+  BreathingGrid: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.BreathingGrid }))),
+  FloatingEmbers: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.FloatingEmbers }))),
+  SpotlightGrid: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.SpotlightGrid }))),
+  LuminaWave: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.LuminaWave }))),
+  ScrollProgress: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.ScrollProgress }))),
+};
+
+const imageOne = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80";
+
+function MiniPreviewRenderer({ slug }: { slug: string }) {
+  switch (slug) {
+    // ── Buttons ──────────────────────────────────────────────────────────
+    case "void-button":
+      return (
+        <div className="flex h-full w-full items-center justify-center p-4">
+          <Suspense fallback={null}>
+            <UI.VoidButton variant="ambient">Void</UI.VoidButton>
+          </Suspense>
+        </div>
+      );
+    case "brushed-titanium-button":
+      return (
+        <div className="flex h-full w-full items-center justify-center p-4">
+          <Suspense fallback={null}>
+            <UI.BrushedTitaniumButton>Titanium</UI.BrushedTitaniumButton>
+          </Suspense>
+        </div>
+      );
+    case "liquid-gold-button":
+      return (
+        <div className="flex h-full w-full items-center justify-center p-4">
+          <Suspense fallback={null}>
+            <UI.LiquidGoldButton>Gold</UI.LiquidGoldButton>
+          </Suspense>
+        </div>
+      );
+    case "guilloche-button":
+      return (
+        <div className="flex h-full w-full items-center justify-center p-4">
+          <Suspense fallback={null}>
+            <UI.GuillocheButton>Dial</UI.GuillocheButton>
+          </Suspense>
+        </div>
+      );
+
+    // ── Primitives & Forms ───────────────────────────────────────────────
+    case "chrome-input":
+      return (
+        <div className="flex h-full w-full flex-col justify-center p-6 gap-2">
+          <span className="text-[10px] font-mono text-white/40 uppercase tracking-wider">Obsidian Field</span>
+          <Suspense fallback={null}>
+            <UI.ChromeInput placeholder="Enter passcode..." />
+          </Suspense>
+        </div>
+      );
+    case "chrome-select":
+      return (
+        <div className="flex h-full w-full flex-col justify-center p-6 gap-2">
+          <span className="text-[10px] font-mono text-white/40 uppercase tracking-wider">Select Mode</span>
+          <Suspense fallback={null}>
+            <UI.ChromeSelect defaultValue="production" options={[{ value: "production", label: "Production" }, { value: "development", label: "Development" }]} />
+          </Suspense>
+        </div>
+      );
+    case "anisotropic-knob":
+      return (
+        <div className="flex h-full w-full items-center justify-center p-4">
+          <Suspense fallback={null}>
+            <UI.AnisotropicKnob size={100} label="Gain" />
+          </Suspense>
+        </div>
+      );
+
+    // ── Widgets ──────────────────────────────────────────────────────────
+    case "mechanical-timer":
+      return (
+        <div className="flex h-full w-full items-center justify-center p-2 scale-80">
+          <Suspense fallback={null}>
+            <UI.MechanicalTimer />
+          </Suspense>
+        </div>
+      );
+    case "laser-vault-password":
+      return (
+        <div className="flex h-full w-full items-center justify-center p-2 scale-70 origin-center">
+          <Suspense fallback={null}>
+            <UI.LaserVaultPassword />
+          </Suspense>
+        </div>
+      );
+    case "now-playing-card":
+      return (
+        <div className="flex h-full w-full items-center justify-center p-2 scale-85">
+          <Suspense fallback={null}>
+            <UI.NowPlayingCard song={{ isPlaying: true, title: "Main Chala Jaunga", artist: "Fiddlecraft", album: "Hawai Jahaaz", image: "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/41/c7/65/41c765a0-5a1e-3e35-9c22-5d664da2b95e/cover.jpg/600x600bb.jpg", songUrl: "https://open.spotify.com", playedAt: null }} />
+          </Suspense>
+        </div>
+      );
+    case "simple-card":
+      return (
+        <div className="flex h-full w-full items-center justify-center p-2 scale-80">
+          <Suspense fallback={null}>
+            <UI.SimpleCard imageUrl={imageOne} title="NIGHTPASS" description="St. Moritz / Alps" />
+          </Suspense>
+        </div>
+      );
+
+    // ── Animated ─────────────────────────────────────────────────────────
+    case "living-text":
+      return (
+        <div className="flex h-full w-full items-center justify-center">
+          <Suspense fallback={null}>
+            <UI.LivingText text="LIVING" radius={100} strength={25} mode="all" liquify={true} />
+          </Suspense>
+        </div>
+      );
+    case "text-shuffle":
+      return (
+        <div className="flex h-full w-full items-center justify-center">
+          <Suspense fallback={null}>
+            <UI.TextShuffle words={["VOID", "UI"]} fontSize="2.5rem" uppercase loop />
+          </Suspense>
+        </div>
+      );
+
+    // ── Backgrounds (render inside the card absolute) ────────────────────
+    case "pixel-melt":
+      return (
+        <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl pointer-events-none">
+          <Suspense fallback={null}>
+            <UI.PixelMeltBackground />
+          </Suspense>
+        </div>
+      );
+    case "breathing-grid":
+      return (
+        <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl pointer-events-none">
+          <Suspense fallback={null}>
+            <UI.BreathingGrid />
+          </Suspense>
+        </div>
+      );
+    case "floating-embers":
+      return (
+        <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl pointer-events-none">
+          <Suspense fallback={null}>
+            <UI.FloatingEmbers />
+          </Suspense>
+        </div>
+      );
+    case "spotlight-grid":
+      return (
+        <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl pointer-events-none">
+          <Suspense fallback={null}>
+            <UI.SpotlightGrid />
+          </Suspense>
+        </div>
+      );
+    case "lumina-wave":
+      return (
+        <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl pointer-events-none">
+          <Suspense fallback={null}>
+            <UI.LuminaWave />
+          </Suspense>
+        </div>
+      );
+
+    // ── Fallback placeholder with nice tech details ──────────────────────
+    default:
+      return (
+        <div className="flex h-full w-full flex-col justify-center p-6 text-left border border-white/5 bg-[#0f0f0f]/40 backdrop-blur-md rounded-2xl">
+          <div className="font-mono text-[9px] uppercase tracking-widest text-cyan-400/70 mb-2">Interactive Preview</div>
+          <div className="font-sans text-sm font-semibold text-white/90 mb-1">{slug.replace(/-/g, " ").toUpperCase()}</div>
+          <p className="font-sans text-xs text-white/40 leading-normal line-clamp-3">
+            Click to enter presentation mode and inspect the full-screen implementation of this custom reactive UI component.
+          </p>
+        </div>
+      );
+  }
+}
+
+interface PreviewOverlayProps {
+  isVisible: boolean;
+  entry: RegistryEntry | null;
+  anchorRect: DOMRect | null;
+}
+
+export function PreviewOverlay({ isVisible, entry, anchorRect }: PreviewOverlayProps) {
+  const [mounted, setMounted] = useState(false);
+  const [coords, setCoords] = useState({ top: 0, left: 0 });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!anchorRect) return;
+
+    const overlayHeight = 220;
+    const topOffset = anchorRect.top + anchorRect.height / 2 - overlayHeight / 2;
+    // Prevent clipping above or below screen boundaries
+    const top = Math.max(16, Math.min(window.innerHeight - overlayHeight - 16, topOffset));
+    const left = anchorRect.right + 16;
+
+    setCoords({ top, left });
+  }, [anchorRect]);
+
+  if (!mounted) return null;
+
+  return createPortal(
+    <AnimatePresence>
+      {isVisible && entry && (
+        <motion.div
+          style={{
+            position: "fixed",
+            top: coords.top,
+            left: coords.left,
+            width: 340,
+            height: 220,
+            zIndex: 99999,
+          }}
+          initial={{ opacity: 0, scale: 0.95, x: 10 }}
+          animate={{ opacity: 1, scale: 1, x: 0 }}
+          exit={{ opacity: 0, scale: 0.95, x: 10 }}
+          transition={{
+            duration: 0.22,
+            ease: [0.4, 0, 0.2, 1],
+          }}
+          className="pointer-events-auto overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0a]/95 p-1 shadow-[0_20px_60px_rgba(0,0,0,0.65),inset_0_1.5px_0_rgba(255,255,255,0.08)] backdrop-blur-xl"
+        >
+          {/* Subtle tech border overlay */}
+          <div className="absolute inset-0 border border-cyan-500/5 rounded-2xl pointer-events-none z-30" />
+          
+          <div className="relative h-full w-full overflow-hidden rounded-xl bg-black/40">
+            <MiniPreviewRenderer slug={entry.slug} />
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>,
+    document.body
+  );
+}

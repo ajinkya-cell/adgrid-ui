@@ -16,7 +16,7 @@ import { KeyboardShortcutsDisplay } from "./KeyboardShortcutsDisplay";
 import { FPSMonitor } from "./FPSMonitor";
 import { PresentationOverlays } from "./PresentationOverlays";
 import { PropsTweaker } from "./PropsTweaker";
-import { Menu, X } from "lucide-react";
+import { SidebarTrigger } from "./SidebarTrigger";
 
 export function PresentationLayout({ payload }: { payload: PresentationPayload }) {
   const { entry } = payload;
@@ -24,8 +24,6 @@ export function PresentationLayout({ payload }: { payload: PresentationPayload }
   const reduceMotion = settings.reduceMotion;
   const systemReducedMotion = useReducedMotion();
   const strategy = resolveDisplayStrategy(entry);
-  const toggleSidebar = usePresentationStore((state) => state.toggleSidebar);
-  const sidebarOpen = usePresentationStore((state) => state.sidebarOpen);
 
   const componentProps = usePresentationStore((state) => state.componentProps);
   const liveProps = componentProps[entry.slug] ?? {};
@@ -71,29 +69,8 @@ export function PresentationLayout({ payload }: { payload: PresentationPayload }
           <PresentationBackground mode={settings.backgroundMode} />
         </AnimatePresence>
         
-        {/* Left Side Navigator Toggle Button */}
-        <motion.button
-          type="button"
-          onClick={toggleSidebar}
-          aria-label="Toggle component navigator"
-          className="fixed left-4 top-4 z-50 flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-neutral-950/72 text-white/50 hover:text-white shadow-[0_20px_70px_rgba(0,0,0,0.45)] backdrop-blur-xl transition-all duration-200 hover:scale-105 active:scale-95 md:left-6 md:top-6 cursor-pointer"
-          initial={{ opacity: 0, x: -12 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.1 }}
-        >
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={sidebarOpen ? "open" : "closed"}
-              initial={{ rotate: sidebarOpen ? -90 : 90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: sidebarOpen ? 90 : -90, opacity: 0 }}
-              transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="flex items-center justify-center"
-            >
-              {sidebarOpen ? <X className="h-4.5 w-4.5" /> : <Menu className="h-4.5 w-4.5" />}
-            </motion.div>
-          </AnimatePresence>
-        </motion.button>
+        {/* Edge-docked Sidebar Trigger Button */}
+        <SidebarTrigger />
 
         <PresentationCanvas strategy={strategy}>
           <PresentationRenderer entry={entry} liveProps={liveProps} />
