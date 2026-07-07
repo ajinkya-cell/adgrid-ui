@@ -71,3 +71,19 @@ export { cn } from "./lib/utils";
 export { Cards } from "./animated/Cards";
 export { SimpleCard } from "./animated/SimpleCard";
 export type { SimpleCardProps } from "./animated/SimpleCard";
+
+// ScrollPath
+export {
+  ScrollPathContext,
+  useScrollPath,
+  ScrollPathContainer,
+  ScrollPathWaves,
+  ScrollPathCircuit,
+  ScrollPathProcess,
+} from "./animated/scrollpath";
+export type {
+  ScrollPathContainerProps,
+  ScrollPathWavesProps,
+  ScrollPathCircuitProps,
+  ScrollPathProcessProps,
+} from "./animated/scrollpath";

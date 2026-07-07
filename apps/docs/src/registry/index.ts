@@ -350,6 +350,26 @@ export const registry: RegistryEntry[] = [
     ],
   },
   {
+    name: "Scroll Path Draw",
+    slug: "scroll-path-draw",
+    category: "animated",
+    description: "An animated scroll-linked SVG path drawer supporting scroll-jacked viewport locks and passive viewport animations with multiple visual variants.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/scrollpath/ScrollPathContainer.tsx",
+    files: [
+      "animated/scrollpath/ScrollPathContext.tsx",
+      "animated/scrollpath/ScrollPathContainer.tsx",
+      "animated/scrollpath/variants/ScrollPathWaves.tsx",
+      "animated/scrollpath/variants/ScrollPathCircuit.tsx",
+      "animated/scrollpath/variants/ScrollPathProcess.tsx",
+      "animated/scrollpath/index.ts",
+    ],
+    propDefs: [
+      { name: "mode", type: "select", default: "scroll-jack", description: "Scroll tracking mode", required: false, options: ["scroll-jack", "passive"] },
+      { name: "sensitivity", type: "number", default: 1, description: "Sensitivity factor for scroll-jacking", required: false, min: 0.1, max: 5, step: 0.1 },
+    ],
+  },
+  {
     name: "Now Playing Card",
     slug: "now-playing-card",
     category: "animated",

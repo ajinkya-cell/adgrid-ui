@@ -10,11 +10,47 @@ import {
   LiquidGoldButton,
   GuillocheButton,
   MorphingNav,
-  ImageReveal,
+  DotMatrix,
+  AnisotropicKnob,
+  ScrollPathContainer,
+  ScrollPathProcess,
+  ExpandOnHover,
+  TextShuffle,
 } from "@adgrid-ui/ui";
+
+const expandItems = [
+  {
+    id: "taj",
+    title: "The Eternal Taj",
+    subtitle: "Agra",
+    image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&q=80",
+    description: "White marble, morning mist.",
+    badge: "Heritage",
+    accent: "#E2E8F0",
+  },
+  {
+    id: "varanasi",
+    title: "Varanasi Riverfront",
+    subtitle: "Kashi",
+    image: "https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=400&q=80",
+    description: "Stone steps, ritual light.",
+    badge: "Spiritual",
+    accent: "#A3A3A3",
+  },
+  {
+    id: "jaipur",
+    title: "Jaipur Palace",
+    subtitle: "Jaipur",
+    image: "https://images.unsplash.com/photo-1599661046289-e31897846e41?w=400&q=80",
+    description: "Wind, privacy, royal theatre.",
+    badge: "Architecture",
+    accent: "#D4D4D4",
+  },
+];
 
 export default function HomePage() {
   const [copied, setCopied] = useState(false);
+  const [matrixText, setMatrixText] = useState("VOID");
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText("npm install @void/ui");
@@ -186,34 +222,106 @@ export default function HomePage() {
             </p>
           </div>
           <div className="font-mono text-xs text-text-muted uppercase tracking-wider">
-            DISPLAYING 02 / 128 ASSETS
+            DISPLAYING 06 / 128 ASSETS
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-          {/* Card 1: MorphingNav */}
+          {/* Card 1: DotMatrix (Span 7) */}
           <div 
             onMouseMove={handleMouseMove}
-            className="md:col-span-6 h-[380px] border border-border-hairline bg-pure-black p-8 flex flex-col justify-between relative overflow-hidden group hover:border-white transition-colors duration-300 spotlight-card border-glow-card"
+            className="md:col-span-7 h-[395px] border border-border-hairline bg-pure-black p-6 flex flex-col justify-between relative overflow-hidden group hover:border-white transition-colors duration-300 spotlight-card border-glow-card"
           >
             <div className="spotlight-overlay" />
             <div className="border-beam" />
 
             <div className="flex justify-between items-start z-10 select-none">
               <span className="font-mono text-[10px] text-white bg-surface-variant px-2 py-1 tracking-widest font-bold">VOID_01</span>
+              <span className="font-mono text-[10px] text-text-muted tracking-widest">DOT_MATRIX_ACTIVE</span>
+            </div>
+            
+            <div className="relative z-10 w-full overflow-hidden flex flex-col items-center justify-center -my-2">
+              <div className="scale-75 -my-4 max-w-full">
+                <DotMatrix animation="text" text={matrixText} columns={32} rows={8} speed={1.5} color="#e7e5df" glow={true} />
+              </div>
+              <div className="mt-3 w-full max-w-xs flex gap-2">
+                <input
+                  type="text"
+                  value={matrixText}
+                  maxLength={10}
+                  onChange={(e) => setMatrixText(e.target.value.toUpperCase())}
+                  placeholder="TYPE TO RENDER..."
+                  className="w-full bg-[#111111] border border-white/5 focus:border-white/20 rounded-md px-3 py-1 font-mono text-[10px] text-white outline-none placeholder-white/20"
+                />
+              </div>
+            </div>
+            
+            <div className="flex flex-col gap-1 z-10 select-none">
+              <h3 className="font-display text-lg uppercase font-bold text-white tracking-tight">DotMatrix</h3>
+              <p className="font-body text-text-muted text-[11px]">LED programmable grid displaying live dynamic text with glowing animations.</p>
+            </div>
+            
+            <div className="mt-2 border-t border-border-hairline pt-3 select-none z-10">
+              <div className="flex justify-between font-mono text-[10px] text-text-muted uppercase">
+                <span>Columns: 32</span>
+                <span>Interactions: Writeable</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 2: AnisotropicKnob (Span 5) */}
+          <div 
+            onMouseMove={handleMouseMove}
+            className="md:col-span-5 h-[395px] border border-border-hairline bg-surface-charcoal p-6 flex flex-col justify-between relative overflow-hidden group hover:border-white transition-colors duration-300 spotlight-card border-glow-card"
+          >
+            <div className="spotlight-overlay" />
+            <div className="border-beam" />
+
+            <div className="flex justify-between items-start z-10 select-none">
+              <span className="font-mono text-[10px] text-white bg-surface-variant px-2 py-1 tracking-widest font-bold">VOID_02</span>
+              <span className="font-mono text-[10px] text-text-muted tracking-widest">SKEUO_ANISOTROPIC</span>
+            </div>
+            
+            <div className="relative z-10 flex items-center justify-center scale-90 -my-4">
+              <AnisotropicKnob size={110} label="VOLUME" />
+            </div>
+            
+            <div className="flex flex-col gap-1 z-10 select-none">
+              <h3 className="font-display text-lg uppercase font-bold text-white tracking-tight">AnisotropicKnob</h3>
+              <p className="font-body text-text-muted text-[11px]">A highly detailed skeuomorphic dial with anisotropic metal textures.</p>
+            </div>
+            
+            <div className="mt-2 border-t border-border-hairline pt-3 select-none z-10">
+              <div className="flex justify-between font-mono text-[10px] text-text-muted uppercase">
+                <span>Decibels: Tweakable</span>
+                <span>Type: Skeuomorphic</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 3: MorphingNav (Span 4) */}
+          <div 
+            onMouseMove={handleMouseMove}
+            className="md:col-span-4 h-[395px] border border-border-hairline bg-pure-black p-6 flex flex-col justify-between relative overflow-hidden group hover:border-white transition-colors duration-300 spotlight-card border-glow-card"
+          >
+            <div className="spotlight-overlay" />
+            <div className="border-beam" />
+
+            <div className="flex justify-between items-start z-10 select-none">
+              <span className="font-mono text-[10px] text-white bg-surface-variant px-2 py-1 tracking-widest font-bold">VOID_03</span>
               <span className="font-mono text-[10px] text-text-muted tracking-widest">SVG_MORPH_FLOW</span>
             </div>
             
-            <div className="relative z-10 w-full overflow-hidden flex items-center justify-center -my-8 scale-90">
+            <div className="relative z-10 w-full overflow-hidden flex items-center justify-center scale-90 -my-2">
               <MorphingNav />
             </div>
             
-            <div className="flex flex-col gap-2 z-10 select-none">
-              <h3 className="font-display text-xl uppercase font-bold text-white tracking-tight">MorphingNav</h3>
-              <p className="font-body text-text-muted text-xs">An interactive navigation bar with liquid morphing SVG shapes.</p>
+            <div className="flex flex-col gap-1 z-10 select-none">
+              <h3 className="font-display text-lg uppercase font-bold text-white tracking-tight">MorphingNav</h3>
+              <p className="font-body text-text-muted text-[11px]">Dynamic menu containing custom items connected by morphing SVG paths.</p>
             </div>
             
-            <div className="mt-4 border-t border-border-hairline pt-4 select-none z-10">
+            <div className="mt-2 border-t border-border-hairline pt-3 select-none z-10">
               <div className="flex justify-between font-mono text-[10px] text-text-muted uppercase">
                 <span>Morph Time: 0.6s</span>
                 <span>Borders: Hairline</span>
@@ -221,36 +329,95 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Card 2: ImageReveal */}
+          {/* Card 4: ScrollPathProcess (Span 8) */}
           <div 
             onMouseMove={handleMouseMove}
-            className="md:col-span-6 h-[380px] border border-border-hairline bg-surface-charcoal p-8 flex flex-col justify-between relative overflow-hidden group hover:border-white transition-colors duration-300 spotlight-card border-glow-card"
+            className="md:col-span-8 h-[395px] border border-border-hairline bg-surface-charcoal p-6 flex flex-col justify-between relative overflow-hidden group hover:border-white transition-colors duration-300 spotlight-card border-glow-card"
           >
             <div className="spotlight-overlay" />
             <div className="border-beam" />
 
             <div className="flex justify-between items-start z-10 select-none">
-              <span className="font-mono text-[10px] text-white bg-surface-variant px-2 py-1 tracking-widest font-bold">VOID_02</span>
-              <span className="font-mono text-[10px] text-text-muted tracking-widest">STRIPES_MASKING_CLIP</span>
+              <span className="font-mono text-[10px] text-white bg-surface-variant px-2 py-1 tracking-widest font-bold">VOID_04</span>
+              <span className="font-mono text-[10px] text-text-muted tracking-widest">SCROLL_TIMELINE</span>
             </div>
             
-            <div className="relative z-10 flex items-center justify-center scale-90 -my-10 h-[180px]">
-              <ImageReveal 
-                src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80"
-                alt="Mountain"
-                width={280}
-                height={160}
-              />
+            <div className="relative z-10 w-full h-[220px] overflow-hidden flex items-center justify-center -my-10 scale-[0.45] origin-center">
+              <ScrollPathContainer mode="passive" className="h-full">
+                <ScrollPathProcess glow={true} strokeWidth={4} />
+              </ScrollPathContainer>
             </div>
             
-            <div className="flex flex-col gap-2 z-10 select-none">
-              <h3 className="font-display text-xl uppercase font-bold text-white tracking-tight">ImageReveal</h3>
-              <p className="font-body text-text-muted text-xs">An image reveal effect using diagonal stripes masking and sliding clip-paths.</p>
+            <div className="flex flex-col gap-1 z-10 select-none">
+              <h3 className="font-display text-lg uppercase font-bold text-white tracking-tight">ScrollPathProcess</h3>
+              <p className="font-body text-text-muted text-[11px]">Timelines and roadmaps drawn on-scroll to guide the user's focus.</p>
             </div>
             
-            <div className="mt-4 border-t border-border-hairline pt-4 flex gap-8 select-none z-10">
-              <span className="font-mono text-[10px] text-text-muted uppercase">Angle: -55°</span>
-              <span className="font-mono text-[10px] text-text-muted uppercase">Trigger: Hover</span>
+            <div className="mt-2 border-t border-border-hairline pt-3 select-none z-10">
+              <div className="flex justify-between font-mono text-[10px] text-text-muted uppercase">
+                <span>Steps: 3 connected</span>
+                <span>Aesthetic: Neon Glow</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 5: ExpandOnHover (Span 6) */}
+          <div 
+            onMouseMove={handleMouseMove}
+            className="md:col-span-6 h-[360px] border border-border-hairline bg-pure-black p-6 flex flex-col justify-between relative overflow-hidden group hover:border-white transition-colors duration-300 spotlight-card border-glow-card"
+          >
+            <div className="spotlight-overlay" />
+            <div className="border-beam" />
+
+            <div className="flex justify-between items-start z-10 select-none">
+              <span className="font-mono text-[10px] text-white bg-surface-variant px-2 py-1 tracking-widest font-bold">VOID_05</span>
+              <span className="font-mono text-[10px] text-text-muted tracking-widest">GALLERY_STRETCH</span>
+            </div>
+            
+            <div className="relative z-10 w-full overflow-hidden flex items-center justify-center scale-90 -my-6">
+              <ExpandOnHover items={expandItems} variant="modern" animation="spring" />
+            </div>
+            
+            <div className="flex flex-col gap-1 z-10 select-none">
+              <h3 className="font-display text-lg uppercase font-bold text-white tracking-tight">ExpandOnHover</h3>
+              <p className="font-body text-text-muted text-[11px]">Interactive slide system displaying high-contrast imagery with spring expansions.</p>
+            </div>
+            
+            <div className="mt-2 border-t border-border-hairline pt-3 select-none z-10">
+              <div className="flex justify-between font-mono text-[10px] text-text-muted uppercase">
+                <span>Stretches: 3 images</span>
+                <span>Easing: Spring</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 6: TextShuffle (Span 6) */}
+          <div 
+            onMouseMove={handleMouseMove}
+            className="md:col-span-6 h-[360px] border border-border-hairline bg-surface-charcoal p-6 flex flex-col justify-between relative overflow-hidden group hover:border-white transition-colors duration-300 spotlight-card border-glow-card"
+          >
+            <div className="spotlight-overlay" />
+            <div className="border-beam" />
+
+            <div className="flex justify-between items-start z-10 select-none">
+              <span className="font-mono text-[10px] text-white bg-surface-variant px-2 py-1 tracking-widest font-bold">VOID_06</span>
+              <span className="font-mono text-[10px] text-text-muted tracking-widest">TYPO_BLUR_SHUFFLE</span>
+            </div>
+            
+            <div className="relative z-10 w-full overflow-hidden flex items-center justify-center py-6 min-h-[140px]">
+              <TextShuffle words={["OBSIDIAN", "TACTILE", "PREMIUM", "ENGINEERED"]} variant="blurReveal" fontSize="clamp(1.5rem, 5vw, 2.5rem)" fontWeight={800} />
+            </div>
+            
+            <div className="flex flex-col gap-1 z-10 select-none">
+              <h3 className="font-display text-lg uppercase font-bold text-white tracking-tight">TextShuffle</h3>
+              <p className="font-body text-text-muted text-[11px]">Decrypting text visualizer revealing characters dynamically on hovering.</p>
+            </div>
+            
+            <div className="mt-2 border-t border-border-hairline pt-3 select-none z-10">
+              <div className="flex justify-between font-mono text-[10px] text-text-muted uppercase">
+                <span>Fonts: Inter / Monospace</span>
+                <span>Effect: Letter Scramble</span>
+              </div>
             </div>
           </div>
         </div>

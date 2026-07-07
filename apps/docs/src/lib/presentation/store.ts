@@ -21,7 +21,7 @@ export interface PresentationState {
   
   // UI state
   sidebarOpen: boolean;
-  sidebarTab: "navigator" | "code" | "install";
+  sidebarTab: "navigator" | "code" | "props" | "install";
   dockVisible: boolean;
   commandPaletteOpen: boolean;
   settingsOpen: boolean;
@@ -44,8 +44,8 @@ export interface PresentationState {
   enterPresentation: (slug: string, category: string) => void;
   exitPresentation: () => void;
   toggleSidebar: () => void;
-  setSidebarTab: (tab: "navigator" | "code" | "install") => void;
-  openSidebarTab: (tab: "navigator" | "code" | "install") => void;
+  setSidebarTab: (tab: "navigator" | "code" | "props" | "install") => void;
+  openSidebarTab: (tab: "navigator" | "code" | "props" | "install") => void;
   setDockVisible: (visible: boolean) => void;
   toggleCommandPalette: () => void;
   toggleSettings: () => void;

@@ -117,7 +117,7 @@ export function PresentationSidebar({
             {/* Header Tabs */}
             <div className="mb-4 flex items-center shrink-0 pl-14 md:pl-16">
               <div className="flex gap-1 p-1 bg-[#090909] border border-white/5 rounded-xl flex-1 max-w-[320px] shadow-[inset_0_1.5px_3px_rgba(0,0,0,0.7)]">
-                {(["navigator", "code", "install"] as const).map((tab) => (
+                {(["navigator", "code", "props", "install"] as const).map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setSidebarTab(tab)}
@@ -211,6 +211,58 @@ export function PresentationSidebar({
                     className="flex-1 overflow-auto p-4 text-[10.5px] font-mono leading-relaxed [&>pre]:bg-transparent! [&>pre]:p-0! [&>pre]:m-0! present-scroll"
                     dangerouslySetInnerHTML={{ __html: currentFile?.html ?? "" }}
                   />
+                </div>
+              </div>
+            )}
+
+            {activeTab === "props" && (
+              <div className="flex-1 min-h-0 flex flex-col">
+                <div className="mb-3 shrink-0">
+                  <div className="font-mono text-[10.5px] text-white/40">Properties Reference</div>
+                  <div className="mt-1 text-xs text-white/70">Tweakable options for {entry.name}</div>
+                </div>
+
+                <div className="flex-1 min-h-0 overflow-y-auto pr-1 present-scroll">
+                  {!entry.propDefs || entry.propDefs.length === 0 ? (
+                    <div className="rounded-2xl bg-[#090909] border border-white/[0.04] p-5 text-[11px] font-mono leading-relaxed text-white/40 shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] text-center">
+                      This component does not define any customizable properties in the registry.
+                    </div>
+                  ) : (
+                    <div className="border border-white/[0.05] rounded-2xl bg-[#090909] overflow-hidden shadow-[inset_0_2px_5px_rgba(0,0,0,0.8)]">
+                      <table className="w-full text-left border-collapse font-sans text-xs">
+                        <thead>
+                          <tr className="border-b border-white/[0.06] bg-white/[0.02]">
+                            <th className="p-3 font-semibold text-white/50 text-[10px] uppercase tracking-wider font-mono">Name</th>
+                            <th className="p-3 font-semibold text-white/50 text-[10px] uppercase tracking-wider font-mono">Type</th>
+                            <th className="p-3 font-semibold text-white/50 text-[10px] uppercase tracking-wider font-mono">Default</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {entry.propDefs.map((prop) => (
+                            <tr key={prop.name} className="border-b border-white/[0.04] hover:bg-white/[0.01] last:border-none">
+                              <td className="p-3 align-top">
+                                <div className="font-mono text-[10px] font-bold text-white flex flex-wrap items-center gap-1.5">
+                                  {prop.name}
+                                  {prop.required && (
+                                    <span className="text-[7.5px] px-1 bg-rose-500/10 border border-rose-500/25 text-rose-400 rounded-sm font-sans uppercase font-bold tracking-wider">Req</span>
+                                  )}
+                                </div>
+                                <div className="text-[10.5px] text-white/40 mt-1 leading-relaxed">{prop.description}</div>
+                              </td>
+                              <td className="p-3 align-top">
+                                <span className="font-mono text-[10px] text-blue-400 bg-blue-500/5 px-1.5 py-0.5 rounded border border-blue-500/10">{prop.type}</span>
+                              </td>
+                              <td className="p-3 align-top">
+                                <span className="font-mono text-[10px] text-amber-500 bg-amber-500/5 px-1.5 py-0.5 rounded border border-amber-500/10">
+                                  {prop.default !== undefined ? String(prop.default) : "—"}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
               </div>
             )}

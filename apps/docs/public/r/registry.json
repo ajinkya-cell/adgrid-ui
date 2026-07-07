@@ -454,6 +454,41 @@
       ]
     },
     {
+      "name": "scroll-path-draw",
+      "type": "registry:ui",
+      "title": "Scroll Path Draw",
+      "description": "An animated scroll-linked SVG path drawer supporting scroll-jacked viewport locks and passive viewport animations with multiple visual variants.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/scroll-path-draw/ScrollPathContext.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/scroll-path-draw/ScrollPathContainer.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/scroll-path-draw/variants/ScrollPathWaves.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/scroll-path-draw/variants/ScrollPathCircuit.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/scroll-path-draw/variants/ScrollPathProcess.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/scroll-path-draw/index.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "now-playing-card",
       "type": "registry:ui",
       "title": "Now Playing Card",
