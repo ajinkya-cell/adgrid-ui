@@ -5,4 +5,5 @@ export interface ScrollProgressProps {
   height?: number;
   width?: number;
   position?: 'top' | 'bottom';
+  variant?: 'default' | 'prominent' | 'inverted';
 }

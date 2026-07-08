@@ -92,6 +92,33 @@ export const registry: RegistryEntry[] = [
     ],
   },
   {
+    name: "Spotlight Text",
+    slug: "spotlight-text",
+    category: "animated",
+    description: "Debossed display text with a cursor-following golden spotlight clipped to glyph shapes. Auto-detects i/j ascender dots as glowing bulbs.",
+    dependencies: [],
+    packagePath: "animated/spotlight-text/SpotlightText.tsx",
+    files: [
+      "animated/spotlight-text/index.ts",
+      "animated/spotlight-text/SpotlightText.tsx",
+      "animated/spotlight-text/types.ts",
+      "animated/spotlight-text/themes.ts",
+      "animated/spotlight-text/hooks/useSpotlightCursor.ts",
+    ],
+    presentationStrategy: "center",
+    variants: [
+      { name: "Light", props: { text: "Antimetal", theme: "light" } },
+      { name: "Dark", props: { text: "Antimetal", theme: "dark" } },
+    ],
+    propDefs: [
+      { name: "text", type: "string", default: "Antimetal", description: "Text content to render", required: true },
+      { name: "theme", type: "select", default: "light", description: "Surface and glow palette", required: false, options: ["light", "dark"] },
+      { name: "spotlightRadius", type: "number", default: 120, description: "Spotlight radius in px", required: false, min: 60, max: 300, step: 10 },
+      { name: "fontWeight", type: "number", default: 800, description: "Font weight", required: false, min: 400, max: 900, step: 100 },
+      { name: "showBulb", type: "boolean", default: true, description: "Show glowing bulbs on i/j dots", required: false },
+    ],
+  },
+  {
     name: "Gravity Card Stack",
     slug: "gravity-card-stack",
     category: "animated",
@@ -260,6 +287,15 @@ export const registry: RegistryEntry[] = [
     dependencies: ["framer-motion"],
     packagePath: "animated/AnisotropicKnob.tsx",
     files: ["animated/AnisotropicKnob.tsx"],
+    propDefs: [
+      { name: "variant", type: "select", default: "slider", description: "Knob behavior mode", required: false, options: ["slider", "infinite"] },
+      { name: "min", type: "number", default: 0, description: "Minimum slider value", required: false, min: -100, max: 100, step: 10 },
+      { name: "max", type: "number", default: 100, description: "Maximum slider value", required: false, min: 10, max: 500, step: 10 },
+      { name: "step", type: "number", default: 1, description: "Snap increments", required: false, min: 1, max: 50, step: 1 },
+      { name: "size", type: "number", default: 112, description: "Diameter of the knob in pixels", required: false, min: 80, max: 200, step: 10 },
+      { name: "label", type: "string", default: "VOLUME", description: "Label text", required: false },
+      { name: "sound", type: "boolean", default: true, description: "Enable click feedback sound", required: false },
+    ],
   },
   {
     name: "Mechanical Timer",
@@ -269,6 +305,10 @@ export const registry: RegistryEntry[] = [
     dependencies: ["framer-motion", "lucide-react"],
     packagePath: "animated/MechanicalTimer.tsx",
     files: ["animated/MechanicalTimer.tsx"],
+    propDefs: [
+      { name: "rimColor", type: "color", default: "#a78bfa", description: "Color of the active LED progress ring", required: false },
+      { name: "defaultDuration", type: "number", default: 30, description: "Default starting duration in seconds", required: false, min: 5, max: 60, step: 5 },
+    ],
   },
   {
     name: "Slingshot Chassis",
@@ -347,6 +387,7 @@ export const registry: RegistryEntry[] = [
       { name: "glow", type: "boolean", default: true, description: "Enable glow halo around the active indicator", required: false },
       { name: "height", type: "number", default: 44, description: "Thickness (width) of the scrollbar in pixels", required: false, min: 20, max: 100, step: 2 },
       { name: "width", type: "number", default: 320, description: "Length (height) of the scrollbar in pixels", required: false, min: 150, max: 600, step: 10 },
+      { name: "variant", type: "select", default: "default", description: "Design variant of the scroll-bar", required: false, options: ["default", "prominent", "inverted"] },
     ],
   },
   {
@@ -404,11 +445,11 @@ export const registry: RegistryEntry[] = [
       "animated/react-wheel-picker/utils/math.ts",
     ],
     propDefs: [
-      { name: "variant", type: "select", default: "glass", description: "Visual style of the picker", required: false, options: ["glass", "minimal"] },
+      { name: "variant", type: "select", default: "glass", description: "Visual style of the picker", required: false, options: ["glass", "minimal", "void"] },
       { name: "loop", type: "boolean", default: false, description: "Allow infinite looping through items", required: false },
       { name: "sound", type: "boolean", default: true, description: "Play mechanical click sound on selection change", required: false },
       { name: "disabled", type: "boolean", default: false, description: "Disable interaction and pointer events", required: false },
-      { name: "itemHeight", type: "number", default: 50, description: "Height of each item in pixels", required: false, min: 20, max: 100, step: 1 },
+      { name: "itemHeight", type: "number", default: 40, description: "Height of each item in pixels", required: false, min: 20, max: 100, step: 1 },
       { name: "visibleItems", type: "number", default: 5, description: "Number of visible items in the viewport", required: false, min: 3, max: 11, step: 1 },
       { name: "perspective", type: "number", default: 1000, description: "3D perspective depth in pixels", required: false, min: 200, max: 2000, step: 50 },
     ],

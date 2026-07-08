@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { motion, AnimatePresence, useMotionValue, useSpring, useMotionTemplate } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useSpring, useMotionTemplate, useTransform } from "framer-motion";
 import { ChromeInput } from "./ChromeInput";
 import { ChromeSelect } from "./ChromeSelect";
 import { BrushedTitaniumButton } from "./BrushedTitaniumButton";
@@ -35,7 +35,7 @@ export function MetallicForm({
   subtitle,
   fields,
   onSubmit,
-  submitLabel = "SUBMIT",
+  submitLabel = "Submit",
   className,
 }: MetallicFormProps) {
   const [formData, setFormData] = useState<Record<string, string>>(
@@ -59,6 +59,19 @@ export function MetallicForm({
   const springX = useSpring(mouseX, { stiffness: 80, damping: 25 });
   const springY = useSpring(mouseY, { stiffness: 80, damping: 25 });
 
+  // 3D rotation tilt values
+  const rotateX = useSpring(useTransform(mouseY, (y) => {
+    if (!containerRef.current) return 0;
+    const height = containerRef.current.offsetHeight || 400;
+    return -((y / height) - 0.5) * 8; // Max 4 degrees tilt
+  }), { stiffness: 120, damping: 20 });
+
+  const rotateY = useSpring(useTransform(mouseX, (x) => {
+    if (!containerRef.current) return 0;
+    const width = containerRef.current.offsetWidth || 600;
+    return ((x / width) - 0.5) * 8; // Max 4 degrees tilt
+  }), { stiffness: 120, damping: 20 });
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
@@ -68,7 +81,7 @@ export function MetallicForm({
 
   const spotlightBg = useMotionTemplate`radial-gradient(circle 400px at ${springX}px ${springY}px, rgba(255, 255, 255, 0.04), transparent)`;
 
-  // Textarea spotlight coordinates (individual field level for high fidelity)
+  // Textarea spotlight coordinates
   const textareaMouseX = useMotionValue(0);
   const textareaMouseY = useMotionValue(0);
   const textareaSpringX = useSpring(textareaMouseX, { stiffness: 90, damping: 20 });
@@ -90,12 +103,10 @@ export function MetallicForm({
       return newSet;
     });
     
-    // Clear existing timeout
     if (typingTimeoutsRef.current[fieldName]) {
       clearTimeout(typingTimeoutsRef.current[fieldName]);
     }
     
-    // Set new timeout to hide typing indicator after user stops
     typingTimeoutsRef.current[fieldName] = setTimeout(() => {
       setTypingFields((prev) => {
         const newSet = new Set(prev);
@@ -104,7 +115,6 @@ export function MetallicForm({
       });
     }, 1500);
     
-    // Clear error when user starts typing
     if (errors[fieldName]) {
       setErrors((prev) => {
         const newErrors = { ...prev };
@@ -145,13 +155,11 @@ export function MetallicForm({
     fields.forEach((field) => {
       const value = formData[field.name] || "";
 
-      // Check required
       if (field.required && !value.trim()) {
         newErrors[field.name] = "This field is required";
         return;
       }
 
-      // Run custom validation
       if (field.validation && value) {
         const result = field.validation(value);
         if (!result.valid) {
@@ -187,37 +195,83 @@ export function MetallicForm({
   const textareaSpotlightBg = useMotionTemplate`radial-gradient(circle 120px at ${textareaSpringX}px ${textareaSpringY}px, rgba(255, 255, 255, 0.05), transparent)`;
 
   return (
-    <div
+    <motion.div
       ref={containerRef}
       className={cn(
-        "relative w-full max-w-2xl mx-auto rounded-xl overflow-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] border border-neutral-800/40",
+        "relative w-full max-w-2xl mx-auto rounded-2xl border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 select-none metallic-form-container",
         className
       )}
       onMouseMove={handleMouseMove}
+      style={{
+        backgroundColor: "#1a1a1e", // Charcoal Space Gray Matte Finish
+        boxShadow: "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.4), 0 30px 80px rgba(0,0,0,0.6)",
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+        perspective: 1000
+      }}
     >
+      {/* Scoped CSS to handle the fonts, text colors & lowercase preferences */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        .metallic-form-container {
+          font-family: 'Inter', sans-serif !important;
+        }
+        
+        .metallic-form-container .form-title {
+          font-family: 'Geist Mono', 'JetBrains Mono', monospace !important;
+          text-transform: uppercase !important;
+          letter-spacing: 0.12em !important;
+          color: #ffffff !important;
+        }
+        
+        .metallic-form-container .form-subtitle {
+          font-family: 'Inter', sans-serif !important;
+          text-transform: none !important;
+          color: rgba(255, 255, 255, 0.45) !important;
+        }
+        
+        .metallic-form-container label {
+          font-family: 'Inter', sans-serif !important;
+          font-weight: 500 !important;
+          text-transform: none !important;
+          letter-spacing: 0.02em !important;
+        }
+        
+        .metallic-form-container input,
+        .metallic-form-container textarea,
+        .metallic-form-container select {
+          font-family: 'Geist Mono', 'JetBrains Mono', monospace !important;
+          text-transform: none !important;
+          color: #ffffff !important;
+        }
+        
+        .metallic-form-container input::placeholder,
+        .metallic-form-container textarea::placeholder {
+          font-family: 'Inter', sans-serif !important;
+          text-transform: none !important;
+          font-size: 10px !important;
+          letter-spacing: 0.02em !important;
+          color: rgba(255, 255, 255, 0.25) !important;
+        }
+        
+        .metallic-form-container button,
+        .metallic-form-container button * {
+          font-family: 'Geist Mono', 'JetBrains Mono', monospace !important;
+          letter-spacing: 0.2em !important;
+          text-transform: uppercase !important;
+        }
+      `}} />
+
       {/* Background spotlight layer */}
       <motion.div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none rounded-2xl"
         style={{ background: spotlightBg }}
       />
 
-      {/* Base background - pitch black with subtle texture */}
-      <div className="absolute inset-0 rounded-xl bg-black" />
-
-      {/* Brushed texture overlay */}
-      <div
-        className="absolute inset-0 opacity-20 pointer-events-none rounded-xl"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 2px)",
-        }}
-      />
-
-      {/* Subtle border */}
-      <div className="absolute inset-0 rounded-xl border border-neutral-800/50 pointer-events-none" />
-
       {/* Content */}
-      <div className="relative z-10 p-8 md:p-12">
+      <div className="relative z-10 p-8 md:p-12" style={{ transform: "translateZ(30px)" }}>
         {/* Header */}
         {(title || subtitle) && (
           <motion.div
@@ -227,14 +281,14 @@ export function MetallicForm({
             className="mb-8"
           >
             {title && (
-              <h2 className="text-2xl font-bold text-white font-syncopate uppercase tracking-[0.2em] mb-2">
+              <h2 className="form-title text-2xl font-bold text-white mb-2">
                 {title}
               </h2>
             )}
             {subtitle && (
-              <p className="text-neutral-500 text-xs font-plus-jakarta">{subtitle}</p>
+              <p className="form-subtitle text-xs">{subtitle}</p>
             )}
-            <div className="h-px bg-neutral-800/50 mt-4" />
+            <div className="h-px bg-white/[0.06] mt-4" />
           </motion.div>
         )}
 
@@ -257,18 +311,17 @@ export function MetallicForm({
                     <div className="flex items-center justify-between gap-2">
                       <motion.label
                         className={cn(
-                          "block text-[10px] uppercase tracking-wider font-jura font-bold transition-colors duration-300",
+                          "block text-[12px] transition-colors duration-300",
                           savedFields.has(field.name)
-                            ? "text-neutral-400"
+                            ? "text-white/80"
                             : focusedField === field.name
-                            ? "text-neutral-200"
+                            ? "text-white"
                             : errors[field.name]
                             ? "text-red-400"
-                            : "text-neutral-600"
+                            : "text-white/55"
                         )}
                       >
                         {field.label}
-                        {field.required && <span className="text-neutral-500 ml-1">*</span>}
                       </motion.label>
                       
                       {/* Typing indicator */}
@@ -306,10 +359,10 @@ export function MetallicForm({
                           errors[field.name]
                             ? "border-red-500/40 shadow-[0_0_12px_rgba(239,68,68,0.1)]"
                             : focusedField === field.name
-                            ? "border-neutral-500 shadow-[0_0_16px_rgba(255,255,255,0.06)]"
+                            ? "border-white/15 shadow-[inset_0_2px_5px_rgba(0,0,0,0.9),0_0_8px_rgba(255,255,255,0.02)]"
                             : hoveredField === field.name
-                            ? "border-neutral-700"
-                            : "border-neutral-800"
+                            ? "border-white/10"
+                            : "border-white/[0.05]"
                         )}
                         onMouseEnter={() => {
                           setFocusedField(field.name);
@@ -321,8 +374,8 @@ export function MetallicForm({
                         }}
                         onMouseMove={handleTextareaMouseMove}
                         style={{
-                          backgroundImage: "linear-gradient(to bottom, #0a0a0c, #151518)",
-                          boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 8px rgba(0, 0, 0, 0.4)",
+                          backgroundColor: "#09090b", // Deep black-zinc background
+                          boxShadow: "inset 0 2px 5px rgba(0, 0, 0, 0.8)",
                         }}
                       >
                         {/* Brushed micro-lines texture inside textarea wrapper */}
@@ -352,8 +405,8 @@ export function MetallicForm({
                           }}
                           placeholder={field.placeholder}
                           className={cn(
-                            "relative z-10 w-full h-32 px-4 py-3 bg-transparent text-neutral-100 font-plus-jakarta text-sm outline-none border-none resize-none",
-                            "placeholder:text-neutral-700 placeholder:font-jura placeholder:text-[10px] placeholder:uppercase placeholder:tracking-wider placeholder:font-semibold"
+                            "relative z-10 w-full h-32 px-4 py-3 bg-transparent text-white text-sm outline-none border-none resize-none",
+                            "placeholder:text-white/25"
                           )}
                         />
 
@@ -417,7 +470,7 @@ export function MetallicForm({
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -10 }}
                           transition={{ duration: 0.2 }}
-                          className="text-[10px] text-red-400 font-jura font-semibold uppercase tracking-wider mt-1"
+                          className="text-[11px] text-red-400 mt-1"
                         >
                           {errors[field.name]}
                         </motion.p>
@@ -434,15 +487,15 @@ export function MetallicForm({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: fields.length * 0.08, duration: 0.4 }}
-            className="pt-6 border-t border-neutral-800/50"
+            className="pt-6 border-t border-white/[0.06]"
           >
             <button
               type="submit"
               disabled={isSubmitting}
               className="w-full relative group cursor-pointer border-none bg-transparent p-0 outline-none"
             >
-              <BrushedTitaniumButton className="w-full h-12 uppercase tracking-[0.25em] font-syncopate text-xs">
-                {isSubmitting ? "PROCESSING..." : submitLabel}
+              <BrushedTitaniumButton className="w-full h-12 text-xs uppercase">
+                {isSubmitting ? "Processing..." : submitLabel}
               </BrushedTitaniumButton>
             </button>
           </motion.div>
@@ -458,13 +511,13 @@ export function MetallicForm({
               transition={{ type: "spring", stiffness: 100, damping: 20 }}
               className="mt-6 p-4 rounded-lg bg-neutral-900/40 border border-neutral-800/80 shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
             >
-              <p className="text-xs font-jura uppercase tracking-wider font-semibold text-neutral-300 text-center flex items-center justify-center gap-2">
+              <p className="text-xs text-neutral-300 text-center flex items-center justify-center gap-2">
                 <span className="text-emerald-500">✓</span> Form submitted successfully
               </p>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
-    </div>
+    </motion.div>
   );
 }

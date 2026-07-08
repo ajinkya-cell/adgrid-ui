@@ -79,6 +79,7 @@ export function PresentationSettings() {
               <Toggle label="Guides" checked={settings.showGuides} onChange={() => updateSettings({ showGuides: !settings.showGuides })} />
               <Toggle label="FPS Monitor" checked={settings.showFPS} onChange={() => updateSettings({ showFPS: !settings.showFPS })} />
               <Toggle label="Reduce Motion" checked={settings.reduceMotion} onChange={() => updateSettings({ reduceMotion: !settings.reduceMotion })} />
+              <Toggle label="Click Sounds" checked={settings.playTactileSounds} onChange={() => updateSettings({ playTactileSounds: !settings.playTactileSounds })} />
             </div>
 
             <button type="button" onClick={resetPresentation} className="w-full rounded-xl border border-white/10 bg-white/[0.035] px-3 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] text-white/58 hover:border-white/25 hover:text-white">

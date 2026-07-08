@@ -6,31 +6,40 @@ import { cn } from "../lib/utils";
 
 // Web Audio API mechanical tick sound synthesizer
 let lastPlayTime = 0;
-function playClickSound(volume = 0.04) {
+let audioCtx: AudioContext | null = null;
+
+function playClickSound(volume = 0.03) {
   if (typeof window === "undefined") return;
   const now = Date.now();
-  if (now - lastPlayTime < 45) return; // Prevent sound overlapping
+  if (now - lastPlayTime < 35) return; // Prevent sound overlapping
   lastPlayTime = now;
 
   try {
     const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
     if (!AudioContextClass) return;
-    const ctx = new AudioContextClass();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
+    
+    if (!audioCtx) {
+      audioCtx = new AudioContextClass();
+    }
+    if (audioCtx.state === "suspended") {
+      audioCtx.resume();
+    }
 
-    // Crown tick pitch sweep
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    // Mechanical crown tick sweep - higher start frequency and shorter decay for clean crisp click
     osc.type = "sine";
-    osc.frequency.setValueAtTime(1400, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.007);
+    osc.frequency.setValueAtTime(2200, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(140, audioCtx.currentTime + 0.006);
 
-    gain.gain.setValueAtTime(volume, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.007);
+    gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.006);
 
     osc.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect(audioCtx.destination);
     osc.start();
-    osc.stop(ctx.currentTime + 0.01);
+    osc.stop(audioCtx.currentTime + 0.007);
   } catch (e) {}
 }
 

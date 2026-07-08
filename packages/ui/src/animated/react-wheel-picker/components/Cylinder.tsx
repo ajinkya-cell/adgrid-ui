@@ -14,6 +14,7 @@ interface CylinderProps {
   activeIndex: number;
   hoveredIndex: number | null;
   disabled?: boolean;
+  variant?: "glass" | "minimal" | "void";
   onItemClick?: (index: number) => void;
   renderItem?: (item: WheelItemType, isActive: boolean, index: number) => React.ReactNode;
 }
@@ -27,6 +28,7 @@ export function Cylinder({
   activeIndex,
   hoveredIndex,
   disabled = false,
+  variant = "glass",
   onItemClick,
   renderItem,
 }: CylinderProps) {
@@ -64,6 +66,7 @@ export function Cylinder({
           isActive={isActive}
           isHovered={isHovered}
           disabled={disabled || item.disabled}
+          variant={variant}
           onClick={() => !disabled && !item.disabled && onItemClick?.(index)}
           renderItem={renderItem}
         />

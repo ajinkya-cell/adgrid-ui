@@ -8,6 +8,12 @@ export { ImageParallax } from "./animated/ImageParallax";
 export type { ImageParallaxProps } from "./animated/ImageParallax";
 export { LivingText } from "./animated/LivingText";
 export type { LivingTextProps } from "./animated/LivingText";
+export { SpotlightText } from "./animated/spotlight-text";
+export type {
+  SpotlightTextProps,
+  SpotlightTextTheme,
+  SpotlightGlowColors,
+} from "./animated/spotlight-text";
 export { GravityCardStack } from "./animated/GravityCardStack";
 export { MorphingNav } from "./animated/MorphingNav";
 

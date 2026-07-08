@@ -11,6 +11,7 @@ export interface PresentationSettings {
   showGuides: boolean;
   showFPS: boolean;
   reduceMotion: boolean;
+  playTactileSounds: boolean;
 }
 
 export interface PresentationState {
@@ -69,6 +70,7 @@ const defaultSettings: PresentationSettings = {
   showGuides: false,
   showFPS: false,
   reduceMotion: false,
+  playTactileSounds: true,
 };
 
 export const usePresentationStore = create<PresentationState>()(
@@ -85,7 +87,7 @@ export const usePresentationStore = create<PresentationState>()(
       commandPaletteOpen: false,
       settingsOpen: false,
       shortcutsOpen: false,
-      propsTweakerOpen: true,
+      propsTweakerOpen: false,
       
       scrollContainer: null,
       
@@ -223,7 +225,7 @@ export const usePresentationStore = create<PresentationState>()(
           commandPaletteOpen: false,
           settingsOpen: false,
           shortcutsOpen: false,
-          propsTweakerOpen: true,
+          propsTweakerOpen: false,
           settings: defaultSettings,
         });
       },

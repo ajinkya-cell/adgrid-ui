@@ -40,6 +40,14 @@ function ComponentThumbnail({ slug }: { slug: string; category: ComponentCategor
         ))}
       </div>
     ),
+    "spotlight-text": (
+      <div
+        className="font-display font-black text-lg tracking-tight select-none transition-colors duration-500"
+        style={{ color: "#b8b8b8", textShadow: "0 1px 0 rgba(255,255,255,0.3), 0 -1px 1px rgba(0,0,0,0.4)" }}
+      >
+        Ant<span className="relative">i<span className="absolute -top-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#e8e85a] opacity-0 group-hover:opacity-100 transition-opacity" /></span>metal
+      </div>
+    ),
     "text-shuffle": (
       <div className="font-display font-black text-lg text-white/30 group-hover:text-white tracking-widest transition-colors duration-500 select-none">
         SHUFFLE

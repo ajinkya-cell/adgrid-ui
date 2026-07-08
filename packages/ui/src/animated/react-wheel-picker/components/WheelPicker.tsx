@@ -9,7 +9,7 @@ import React, {
   forwardRef,
   useMemo,
 } from "react";
-import { useMotionValue, useSpring, animate } from "framer-motion";
+import { motion, useMotionValue, useSpring, animate, useTransform } from "framer-motion";
 
 import { cn } from "../../../lib/utils";
 import { calculateCylinderRadius } from "../utils/math";
@@ -35,8 +35,8 @@ export const WheelPicker = forwardRef<WheelPickerImperativeHandle, WheelPickerPr
       loop = false,
       sound = true,
       disabled = false,
-      itemHeight = 52,
-      visibleItems = 7,
+      itemHeight = 40,
+      visibleItems = 5,
       perspective = 1000,
       spring,
       className,
@@ -49,6 +49,29 @@ export const WheelPicker = forwardRef<WheelPickerImperativeHandle, WheelPickerPr
   ) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const totalItems = items.length;
+
+    // 3D tilt coordinates (only active for void variant)
+    const mouseX = useMotionValue(0);
+    const mouseY = useMotionValue(0);
+
+    const tiltX = useSpring(useTransform(mouseY, (yVal) => {
+      if (variant !== "void" || !containerRef.current) return 0;
+      const height = containerRef.current.offsetHeight || 200;
+      return -((yVal / height) - 0.5) * 15; // Max 7.5 degrees tilt
+    }), { stiffness: 120, damping: 20 });
+
+    const tiltY = useSpring(useTransform(mouseX, (xVal) => {
+      if (variant !== "void" || !containerRef.current) return 0;
+      const width = containerRef.current.offsetWidth || 256;
+      return ((xVal / width) - 0.5) * 15; // Max 7.5 degrees tilt
+    }), { stiffness: 120, damping: 20 });
+
+    const handleContainerMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+      if (variant !== "void" || !containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      mouseX.set(e.clientX - rect.left);
+      mouseY.set(e.clientY - rect.top);
+    };
 
     const isControlled = value !== undefined;
     const [localValue, setLocalValue] = useState(() => {
@@ -326,17 +349,28 @@ export const WheelPicker = forwardRef<WheelPickerImperativeHandle, WheelPickerPr
     }));
 
     return (
-      <div
+      <motion.div
         ref={containerRef}
+        onMouseMove={handleContainerMouseMove}
         className={cn(
           "relative flex flex-col items-center justify-center overflow-hidden outline-none select-none",
           variant === "glass" &&
             "bg-neutral-950/70 border border-neutral-900/60 rounded-3xl backdrop-blur-xl shadow-2xl",
           variant === "minimal" && "bg-transparent",
+          variant === "void" &&
+            "rounded-2xl border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 backdrop-blur-2xl",
           disabled && "opacity-40 cursor-not-allowed pointer-events-none",
           className
         )}
-        style={{ height: `${wheelHeight}px` }}
+        style={{
+          height: `${wheelHeight}px`,
+          backgroundColor: variant === "void" ? "#171717" : undefined,
+          boxShadow: variant === "void" ? "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.4), 0 30px 80px rgba(0,0,0,0.6)" : undefined,
+          rotateX: variant === "void" ? tiltX : undefined,
+          rotateY: variant === "void" ? tiltY : undefined,
+          transformStyle: variant === "void" ? "preserve-3d" : undefined,
+          perspective: variant === "void" ? 1000 : undefined,
+        }}
         tabIndex={disabled ? -1 : 0}
         onKeyDown={handleKeyDown}
         onWheel={handleWheel}
@@ -360,15 +394,18 @@ export const WheelPicker = forwardRef<WheelPickerImperativeHandle, WheelPickerPr
             variant={variant}
             itemHeight={itemHeight}
             visibleItems={visibleItems}
-            smoothIndex={smoothY}
-            totalItems={totalItems}
-            loop={loop}
             className={selectionIndicatorClassName}
             showIndicator={showSelectionIndicator}
           />
 
-          <div className="absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-neutral-950/90 to-transparent pointer-events-none z-10" />
-          <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-neutral-950/90 to-transparent pointer-events-none z-10" />
+          <div className={cn(
+            "absolute inset-x-0 top-0 h-10 pointer-events-none z-10",
+            variant === "void" ? "bg-gradient-to-b from-[#171717]/95 to-transparent" : "bg-gradient-to-b from-neutral-950/90 to-transparent"
+          )} />
+          <div className={cn(
+            "absolute inset-x-0 bottom-0 h-10 pointer-events-none z-10",
+            variant === "void" ? "bg-gradient-to-t from-[#171717]/95 to-transparent" : "bg-gradient-to-t from-neutral-950/90 to-transparent"
+          )} />
 
           <Cylinder
             items={items}
@@ -379,6 +416,7 @@ export const WheelPicker = forwardRef<WheelPickerImperativeHandle, WheelPickerPr
             activeIndex={lastIndexRef.current}
             hoveredIndex={hoveredIndexRef.current}
             disabled={disabled}
+            variant={variant}
             onItemClick={(index) => {
               if (!disabled) {
                 scrollToIndex(index);
@@ -387,7 +425,7 @@ export const WheelPicker = forwardRef<WheelPickerImperativeHandle, WheelPickerPr
             renderItem={renderItem}
           />
         </div>
-      </div>
+      </motion.div>
     );
   }
 );

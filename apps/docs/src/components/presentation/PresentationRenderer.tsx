@@ -20,6 +20,7 @@ import {
   LaserVaultPassword,
   LiquidGoldButton,
   LivingText,
+  SpotlightText,
   LuminaWave,
   MechanicalTimer,
   MetallicForm,
@@ -43,6 +44,7 @@ import {
   ScrollPathProcess,
 } from "../../../../../packages/ui/src/animated/scrollpath";
 import type { RegistryEntry } from "@/registry";
+import { usePresentationStore } from "@/lib/presentation/store";
 
 const imageOne = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900&q=80";
 const imageTwo = "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1000&q=80";
@@ -218,6 +220,7 @@ export function PresentationRenderer({
   entry: RegistryEntry;
   liveProps?: Record<string, unknown>;
 }) {
+  const playTactileSounds = usePresentationStore((state) => state.settings.playTactileSounds !== false);
   const [framework, setFramework] = useState("Next.js");
 
   switch (entry.slug) {
@@ -235,6 +238,22 @@ export function PresentationRenderer({
         ...liveProps,
       };
       return <LivingText {...(livingTextProps as Parameters<typeof LivingText>[0])} />;
+    }
+    case "spotlight-text": {
+      const spotlightTextProps = {
+        text: "Antimetal",
+        theme: "light" as const,
+        spotlightRadius: 120,
+        showBulb: true,
+        ...liveProps,
+      };
+      return (
+        <div className="flex items-center justify-center w-full min-h-[300px] p-6">
+          <div className="relative bg-surface-charcoal border-y border-border-hairline rounded-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95),inset_0_0_0_1px_rgba(255,255,255,0.05),inset_0_1px_0_rgba(255,255,255,0.08)] hover:shadow-[0_35px_70px_-10px_rgba(0,0,0,1),inset_0_0_0_1px_rgba(255,255,255,0.08),inset_0_1px_0_rgba(255,255,255,0.12)] transition-all duration-300 p-6">
+            <SpotlightText {...(spotlightTextProps as Parameters<typeof SpotlightText>[0])} />
+          </div>
+        </div>
+      );
     }
     case "gravity-card-stack":
       return <GravityCardStack />;
@@ -334,9 +353,9 @@ export function PresentationRenderer({
         />
       );
     case "anisotropic-knob":
-      return <AnisotropicKnob label="DECIBELS" size={132} />;
+      return <AnisotropicKnob label="DECIBELS" size={132} sound={playTactileSounds} {...liveProps} />;
     case "mechanical-timer":
-      return <MechanicalTimer />;
+      return <MechanicalTimer {...liveProps} />;
     case "slingshot-chassis":
       return <SlingshotChassis />;
     case "laser-vault-password":
@@ -368,7 +387,7 @@ export function PresentationRenderer({
         onChange: setFramework,
         variant: "glass" as const,
         loop: false,
-        sound: false,
+        sound: playTactileSounds,
         ...liveProps,
       };
       return (

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { motion, useMotionValue, useSpring, useMotionTemplate } from "framer-motion";
+import { motion, useMotionValue, useSpring, useMotionTemplate, useTransform } from "framer-motion";
 import { RotateCcw, Compass } from "lucide-react";
 
 // Simple local class merger utility to keep the component 100% self-contained
@@ -103,30 +103,33 @@ export function VoidButton({
   let activeGrad = activeGradientClass || "bg-gradient-to-r from-neutral-800 via-neutral-700 to-neutral-800";
   let activeText = activeTextClass || "text-white font-bold";
   let defaultShadow = "inset 0 3px 8px rgba(0,0,0,0.9), inset 0 -1px 2px rgba(255,255,255,0.03), 0 2px 4px rgba(0,0,0,0.4)";
-  let tappedShadow = "inset 0 8px 24px rgba(0,0,0,0.95), 0 1px 1px rgba(0,0,0,0.8)";
+  let tappedShadow = "inset 0 4px 8px rgba(0,0,0,0.7), 0 1px 1px rgba(0,0,0,0.2)";
 
   if (variant === "classic-gold") {
     activeGrad = activeGradientClass || "bg-gradient-to-r from-[#ffe066] via-[#f39c12] to-[#ffffff]";
-    activeText = activeTextClass || "text-black font-black";
+    activeText = activeTextClass || "text-black";
   } else if (variant === "ambient") {
     activeGrad = activeGradientClass || "bg-gradient-to-r from-[#161619] via-[#2d2d35] to-[#161619]";
-    activeText = activeTextClass || "text-white/95 font-semibold";
+    activeText = activeTextClass || "text-white/95";
   } else if (variant === "neon-edge") {
     activeGrad = "bg-transparent";
-    activeText = "text-white/95 font-bold";
+    activeText = "text-white/95";
   } else if (variant === "metallic-sheen") {
-    activeGrad = "bg-transparent";
-    activeText = "text-white font-bold";
+    baseStyleClass = "bg-gradient-to-b from-[#27272a] to-[#18181b] border-white/10 text-white/90";
+    activeGrad = "bg-gradient-to-b from-[#3f3f46] to-[#27272a]";
+    activeText = "text-white";
+    defaultShadow = "inset 0 1.5px 0 rgba(255,255,255,0.1), 0 4px 10px rgba(0,0,0,0.4)";
+    tappedShadow = "inset 0 4px 8px rgba(0,0,0,0.7), 0 1px 1px rgba(0,0,0,0.2)";
   } else if (variant === "glassmorphic") {
     baseStyleClass = "bg-white/5 border-white/10 backdrop-blur-md text-white/80";
     activeGrad = "bg-white/15";
-    activeText = "text-white font-black";
+    activeText = "text-white";
     defaultShadow = "inset 0 1px 1px rgba(255,255,255,0.1), 0 4px 20px rgba(0,0,0,0.4)";
     tappedShadow = "inset 0 4px 12px rgba(0,0,0,0.7), 0 1px 2px rgba(0,0,0,0.2)";
   } else if (variant === "cyber-laser") {
     baseStyleClass = "bg-[#060608] border-neutral-900 text-neutral-400";
     activeGrad = "bg-[#0c0c10]";
-    activeText = "text-[#ff5500] font-black";
+    activeText = "text-[#ff5500]";
   }
 
   return (
@@ -142,7 +145,7 @@ export function VoidButton({
       }}
       transition={{ type: "spring", stiffness: 450, damping: 18 }}
       className={cn(
-        "relative w-full h-12 rounded-xl border font-syncopate text-[9px] uppercase tracking-[0.2em] font-bold cursor-pointer select-none overflow-hidden outline-none transition-colors duration-300 flex items-center justify-center",
+        "relative w-full h-12 border font-mono text-xs tracking-wider cursor-pointer select-none overflow-hidden outline-none transition-colors duration-300 flex items-center justify-center rounded-[inherit]",
         baseStyleClass,
         className
       )}
@@ -151,13 +154,10 @@ export function VoidButton({
       }}
       {...(props as any)}
     >
-      <span className="absolute inset-0 flex items-center justify-center font-medium transition-opacity duration-300">
-        {children || "THE VOID"}
-      </span>
-
+      {/* Dynamic Conic Specular Sheen (Anisotropic response) */}
       {variant === "metallic-sheen" && (
         <motion.div
-          className="absolute inset-0 pointer-events-none opacity-40 mix-blend-overlay"
+          className="absolute inset-0 pointer-events-none opacity-40 mix-blend-overlay rounded-[inherit]"
           style={{
             backgroundImage: "conic-gradient(from 0deg at 50% 50%, #000 0%, #52525b 25%, #000 50%, #52525b 75%, #000 100%)",
             WebkitMaskImage: maskTemplate,
@@ -166,9 +166,10 @@ export function VoidButton({
         />
       )}
 
+      {/* Dynamic Neon Edge Border Overlay */}
       {variant === "neon-edge" && (
         <motion.div
-          className="absolute inset-0 border border-white/50 rounded-xl pointer-events-none"
+          className="absolute inset-0 border border-white/50 pointer-events-none rounded-[inherit]"
           style={{
             WebkitMaskImage: maskTemplate,
             maskImage: maskTemplate,
@@ -176,6 +177,7 @@ export function VoidButton({
         />
       )}
 
+      {/* Cyber Sweep Laser Cursor Line */}
       {variant === "cyber-laser" && isHovered && (
         <motion.div
           initial={{ x: "-100%" }}
@@ -185,9 +187,10 @@ export function VoidButton({
         />
       )}
 
+      {/* Active Reveal Background Layer (Radial mask overlay) */}
       <motion.div
         className={cn(
-          "absolute inset-0 pointer-events-none flex items-center justify-center",
+          "absolute inset-0 pointer-events-none rounded-[inherit]",
           activeGrad
         )}
         initial={{ opacity: 0 }}
@@ -197,18 +200,32 @@ export function VoidButton({
           WebkitMaskImage: maskTemplate,
           maskImage: maskTemplate,
         }}
-      >
-        <span className={cn(activeText)}>
-          {children || "THE VOID"}
-        </span>
-      </motion.div>
+      />
+
+      {/* Centered Single Text Label */}
+      <span className={cn(
+        "relative z-10 transition-colors duration-300 font-medium",
+        isHovered ? activeText : "text-white/70"
+      )}>
+        {children}
+      </span>
     </motion.button>
   );
 }
 
-export function MechanicalTimer({ className = "" }: { className?: string }) {
-  const [duration, setDuration] = useState(30); // Default 30s
-  const [timeRemaining, setTimeRemaining] = useState(30000); // in ms
+export interface MechanicalTimerProps {
+  className?: string;
+  rimColor?: string;
+  defaultDuration?: number;
+}
+
+export function MechanicalTimer({
+  className = "",
+  rimColor = "#a78bfa",
+  defaultDuration = 30,
+}: MechanicalTimerProps) {
+  const [duration, setDuration] = useState(defaultDuration); // Default 30s
+  const [timeRemaining, setTimeRemaining] = useState(defaultDuration * 1000); // in ms
   const [isRunning, setIsRunning] = useState(false);
   const dialRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
@@ -216,11 +233,43 @@ export function MechanicalTimer({ className = "" }: { className?: string }) {
   // Precision time monitoring refs
   const lastTime = useRef<number | null>(null);
   const animFrame = useRef<number | null>(null);
-  const lastSecondsInt = useRef(30);
+  const lastSecondsInt = useRef(defaultDuration);
 
   // Rotation angles for mechanical feedback
-  const dialAngle = useMotionValue(180); // 30s = 180deg (6deg per sec)
+  const dialAngle = useMotionValue((defaultDuration / 60) * 360); // 30s = 180deg (6deg per sec)
   const springDialAngle = useSpring(dialAngle, { stiffness: 100, damping: 18 });
+
+  // Sync duration with defaultDuration changes
+  useEffect(() => {
+    setDuration(defaultDuration);
+    if (!isRunning) {
+      setTimeRemaining(defaultDuration * 1000);
+      dialAngle.set((defaultDuration / 60) * 360);
+      lastSecondsInt.current = defaultDuration;
+    }
+  }, [defaultDuration, isRunning, dialAngle]);
+
+  // 3D Tilt Card Coordinates
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const tiltX = useSpring(useTransform(mouseY, (y) => {
+    if (!containerRef.current) return 0;
+    const height = containerRef.current.offsetHeight || 450;
+    return -((y / height) - 0.5) * 12; // 6 degrees max
+  }), { stiffness: 120, damping: 20 });
+  const tiltY = useSpring(useTransform(mouseX, (x) => {
+    if (!containerRef.current) return 0;
+    const width = containerRef.current.offsetWidth || 340;
+    return ((x / width) - 0.5) * 12; // 6 degrees max
+  }), { stiffness: 120, damping: 20 });
+
+  const handleContainerMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    mouseX.set(e.clientX - rect.left);
+    mouseY.set(e.clientY - rect.top);
+  };
 
   // Set stopwatch duration from absolute rotation degree
   const updateDurationFromAngle = (deg: number) => {
@@ -364,137 +413,166 @@ export function MechanicalTimer({ className = "" }: { className?: string }) {
   const strokeOffset = strokeCircumference - (strokeCircumference * percentComplete) / 100;
 
   return (
-    <div className={`w-full max-w-[340px] p-6 rounded-3xl bg-[#0a0a0d] border border-white/5 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.9),0_30px_60px_-30px_rgba(0,0,0,0.95),inset_0_1px_1px_rgba(255,255,255,0.03)] flex flex-col items-center gap-6 ${className}`}>
+    <motion.div
+      ref={containerRef}
+      onMouseMove={handleContainerMouseMove}
+      className={cn(
+        "relative w-full max-w-[340px] p-6 rounded-3xl border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 flex flex-col items-center gap-6",
+        className
+      )}
+      style={{
+        backgroundColor: "#1a1a1e", // Charcoal Space Gray Matte Finish
+        boxShadow: "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.4), 0 30px 80px rgba(0,0,0,0.6)",
+        rotateX: tiltX,
+        rotateY: tiltY,
+        transformStyle: "preserve-3d",
+        perspective: 1000
+      }}
+    >
       
       {/* Decorative Technical Label Header */}
-      <div className="w-full flex items-center justify-between px-1">
-        <span className="font-syncopate text-[7px] uppercase tracking-[0.2em] text-neutral-500 flex items-center gap-1.5 animate-pulse">
-          <Compass className="w-3 h-3 text-neutral-400" /> Chronometer Mod 3
+      <div className="w-full flex items-center justify-between px-1" style={{ transform: "translateZ(15px)" }}>
+        <span className="font-mono text-[9px] uppercase tracking-wider text-white/45 flex items-center gap-1.5">
+          <Compass className="w-3 h-3 text-white/40" /> Winding Timer
         </span>
-        <span className="font-syncopate text-[7px] uppercase tracking-[0.2em] text-neutral-500 font-bold bg-white/5 border border-white/10 px-1.5 py-0.5 rounded">
-          VOID ENGINE
+        <span className="font-mono text-[9px] uppercase tracking-wider text-white/50 bg-white/5 border border-white/10 px-2 py-0.5 rounded-full">
+          Void Engine
         </span>
       </div>
 
       {/* Main Dial Housing Assembly */}
-      <div className="relative w-[280px] h-[280px] flex items-center justify-center">
+      <div className="relative w-[280px] h-[280px] flex items-center justify-center" style={{ transform: "translateZ(35px)" }}>
         
-        {/* Circular Progress LED Ring (Absolute coordinates, zero gaps) */}
+        {/* Deep bezel housing well shadow */}
+        <div className="absolute inset-4 rounded-full shadow-[inset_0_4px_12px_rgba(0,0,0,0.9),_0_2px_4px_rgba(255,255,255,0.03)] bg-[#09090c] pointer-events-none" />
+
+        {/* Circular Progress LED Ring (glowing lavender) */}
         <svg className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none z-10" viewBox="0 0 300 300">
           <circle
             cx="150"
             cy="150"
-            r="130"
+            r="126"
             fill="none"
-            stroke="#141419"
+            stroke="#0a0a0c"
             strokeWidth="3.5"
           />
           {timeRemaining > 0 && (
             <circle
               cx="150"
               cy="150"
-              r="130"
+              r="126"
               fill="none"
-              stroke="rgba(255,255,255,0.85)"
+              stroke={rimColor} // Dynamic color prop
               strokeWidth="3.5"
               strokeDasharray={strokeCircumference}
               strokeDashoffset={strokeOffset}
               strokeLinecap="round"
               style={{
-                filter: "drop-shadow(0 0 6px rgba(255,255,255,0.7))",
+                filter: `drop-shadow(0 0 6px ${rimColor})`,
                 transition: isDragging.current ? "none" : "stroke-dashoffset 0.1s linear",
               }}
             />
           )}
         </svg>
 
-        {/* Internal Procedural Dial Rotator */}
+        {/* Minimal CD-style Rotating Dial */}
         <motion.div
           ref={dialRef}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
-          style={{ rotate: springDialAngle }}
-          className="relative w-[84%] h-[84%] rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.85),inset_0_1px_0_rgba(255,255,255,0.1)] cursor-grab active:cursor-grabbing flex flex-col items-center justify-start p-4 overflow-hidden z-20"
+          style={{ rotate: isRunning || isDragging.current ? dialAngle : springDialAngle }}
+          className="relative w-[78%] h-[78%] rounded-full border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 shadow-[0_15px_35px_rgba(0,0,0,0.85),inset_0_15px_35px_rgba(0,0,0,0.85),inset_0_1.5px_0_rgba(255,255,255,0.2),inset_0_-1.5px_0_rgba(0,0,0,0.5)] cursor-grab active:cursor-grabbing flex items-center justify-center overflow-hidden z-20"
         >
-          {/* Brushed Dial Anisotropic Reflection Background */}
+          {/* Subtle Anisotropic holographic CD Reflection */}
           <div
-            className="absolute inset-0 pointer-events-none"
+            className="absolute inset-0 pointer-events-none rounded-full"
             style={{
               backgroundImage:
-                "conic-gradient(from 0deg, #18181b 0%, #2a2a2e 15%, #18181b 30%, #35353b 45%, #18181b 60%, #2a2a2e 75%, #18181b 90%, #35353b 100%)",
+                "conic-gradient(from 0deg, rgba(200,200,200,0.18) 0%, rgba(167,139,250,0.2) 15%, rgba(200,200,200,0.18) 30%, rgba(139,92,246,0.2) 45%, rgba(200,200,200,0.18) 60%, rgba(167,139,250,0.2) 75%, rgba(200,200,200,0.18) 90%, rgba(139,92,246,0.2) 100%)",
+            }}
+          />
+          
+          {/* Base silver metal backing for CD look */}
+          <div className="absolute inset-0 bg-[#16161a]/70 pointer-events-none rounded-full" />
+
+          {/* CD concentric track groove lines (multiple tracks in between) */}
+          {[5, 10, 15, 20, 25, 30, 35, 40].map((percentage) => (
+            <div
+              key={percentage}
+              className="absolute rounded-full border border-white/[0.035] pointer-events-none"
+              style={{ inset: `${percentage}%` }}
+            />
+          ))}
+
+          {/* Minimal Single Lavender Track Pointer Dot (with 3D shadow) */}
+          <div
+            className="absolute top-4.5 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full pointer-events-none z-35"
+            style={{
+              backgroundColor: rimColor,
+              boxShadow: `0 2px 4px rgba(0,0,0,0.8), 0 0 8px ${rimColor}`
             }}
           />
 
-          {/* Tactile indicator line needle */}
-          <div className="relative w-1 h-8 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)] pointer-events-none z-30" />
-
-          {/* Core center pin */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-4.5 h-4.5 rounded-full bg-[#1b1b20] border border-neutral-700 shadow-md z-30 pointer-events-none" />
-
-          {/* Fine Mechanical Ticks around Dial edge */}
-          <div className="absolute inset-0 pointer-events-none opacity-20 z-10">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <div
-                key={i}
-                className="absolute left-1/2 top-2 -translate-x-1/2 w-0.5 h-2.5 bg-white origin-[center_101px]"
-                style={{ transform: `translateX(-50%) rotate(${i * 30}deg)` }}
-              />
-            ))}
+          {/* Clear CD central spacer ring */}
+          <div className="absolute w-14 h-14 rounded-full bg-white/[0.02] border-t border-white/20 border-b border-black/40 shadow-[inset_0_2px_4px_rgba(0,0,0,0.85),0_4px_8px_rgba(0,0,0,0.4)] flex items-center justify-center pointer-events-none z-30">
+            {/* Inner metal center cap */}
+            <div className="w-5 h-5 rounded-full bg-[#0a0a0c] border border-white/5 shadow-md" />
           </div>
         </motion.div>
       </div>
 
-      {/* Floating Display Chassis */}
-      <div className="w-full bg-[#050508] border border-neutral-900/50 rounded-2xl p-4 flex flex-col items-center justify-center shadow-[inset_0_4px_16px_rgba(0,0,0,0.9),0_2px_0_rgba(255,255,255,0.02)]">
-        <span className="font-syncopate text-[7px] uppercase tracking-[0.2em] text-neutral-600 mb-1.5">STOPWATCH</span>
+      {/* Floating Display Chassis (bezel-inset space-gray) */}
+      <div className="w-full bg-[#09090b] border border-white/[0.05] rounded-2xl p-4 flex flex-col items-center justify-center shadow-[inset_0_2px_5px_rgba(0,0,0,0.85)]" style={{ transform: "translateZ(20px)" }}>
+        <span className="font-mono text-[9px] uppercase tracking-wider text-white/40 mb-1.5">STOPWATCH</span>
         <div
-          className="font-share-mono text-3xl font-black tracking-widest text-white select-none transition-all duration-100"
+          className="font-mono text-3xl font-semibold tracking-wider text-white select-none transition-all duration-100"
           style={{
-            textShadow: "0 0 10px rgba(255,255,255,0.6)",
+            textShadow: "0 0 10px rgba(255,255,255,0.4)",
           }}
         >
           {formatTime(timeRemaining)}
         </div>
       </div>
 
-      {/* Control Buttons Stacked Layout (Using new clicky ambient variants) */}
-      <div className="w-full flex flex-col gap-3">
-        {/* Row 1: Primary Start / Stop Button (Large, full width, ambient silver) */}
-        <VoidButton
-          variant="ambient"
-          onClick={isRunning ? handlePause : handleStart}
-          activeGradientClass="bg-gradient-to-r from-neutral-200 via-white to-neutral-200"
-          activeTextClass="text-black font-black"
-          className="w-full h-12 border-neutral-800/80 rounded-xl text-[9px] tracking-[0.2em] font-bold"
-        >
-          {isRunning ? "Stop Engine" : "Start Accumulator"}
-        </VoidButton>
-
-        {/* Row 2: Secondary Controls (Pause & Reset side-by-side) */}
-        <div className="w-full flex gap-3">
+      {/* Control Buttons Stacked Layout (Metallic Sheen + Full Rounded) */}
+      <div className="w-full flex flex-col gap-3" style={{ transform: "translateZ(10px)" }}>
+        
+        {/* Primary Start / Stop Winding key */}
+        <div className="w-full rounded-full overflow-hidden">
           <VoidButton
-            variant="ambient"
-            onClick={handlePause}
-            disabled={!isRunning}
-            activeGradientClass="bg-gradient-to-r from-[#ffd369] via-[#f39c12] to-[#ffffff]"
-            activeTextClass="text-black font-black"
-            className="flex-1 h-11 border-neutral-800/80 rounded-xl text-[9px] tracking-[0.2em] font-bold disabled:opacity-25 disabled:cursor-not-allowed"
+            variant="metallic-sheen"
+            onClick={isRunning ? handlePause : handleStart}
+            className="w-full h-12 text-xs"
           >
-            Pause
-          </VoidButton>
-
-          <VoidButton
-            variant="ambient"
-            onClick={handleReset}
-            activeGradientClass="bg-gradient-to-r from-[#ff2e63] via-[#ff2e63] to-[#ffd2d2]"
-            activeTextClass="text-white font-black"
-            className="flex-1 h-11 border-neutral-800/80 rounded-xl text-[9px] tracking-[0.2em] font-bold flex items-center justify-center gap-1.5"
-          >
-            <RotateCcw className="w-3.5 h-3.5" /> Reset
+            {isRunning ? "Stop" : "Start"}
           </VoidButton>
         </div>
+
+        {/* Secondary controls side-by-side */}
+        <div className="w-full flex gap-3">
+          <div className="flex-1 rounded-full overflow-hidden">
+            <VoidButton
+              variant="metallic-sheen"
+              onClick={handlePause}
+              disabled={!isRunning}
+              className="w-full h-11 text-xs disabled:opacity-25"
+            >
+              Pause
+            </VoidButton>
+          </div>
+
+          <div className="flex-1 rounded-full overflow-hidden">
+            <VoidButton
+              variant="metallic-sheen"
+              onClick={handleReset}
+              className="w-full h-11 text-xs flex items-center justify-center gap-1.5"
+            >
+              <RotateCcw className="w-3.5 h-3.5" /> Reset
+            </VoidButton>
+          </div>
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

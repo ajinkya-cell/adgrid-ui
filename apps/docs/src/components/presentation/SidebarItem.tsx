@@ -81,11 +81,11 @@ export function SidebarItem({
               targetColor = "rgba(255, 255, 255, 1)";
             }
           } else if (active) {
-            // Selected/Active style: cyan pyramid shape
+            // Selected/Active style: lavender pyramid shape
             if (i === 2 || i === 3) targetWidth = 22;
             else if (i === 1 || i === 4) targetWidth = 14;
             else targetWidth = 8;
-            targetColor = "rgba(56, 189, 248, 1)";
+            targetColor = "rgba(167, 139, 250, 1)";
           }
           
           // Set line coordinate: exactly halfway through the 1px stroke height
@@ -112,14 +112,14 @@ export function SidebarItem({
       <div className="flex items-center gap-3.5 min-w-0">
         {/* Dimmed Number Prefix */}
         <span className={`font-mono text-[11px] tracking-wider transition-colors duration-200 ${
-          active || hovered ? "text-[#38bdf8]/60" : "text-white/20"
+          active || hovered ? "text-[#a78bfa]/60" : "text-white/20"
         }`}>
           {itemNumber}
         </span>
 
         {/* Component Title */}
-        <span className={`font-sans text-[14px] font-medium tracking-wide transition-colors duration-200 truncate ${
-          active || hovered ? "text-[#38bdf8]" : "text-white/45 group-hover:text-white/70"
+        <span className={`font-plus-jakarta text-[14px] font-normal tracking-wide transition-colors duration-200 truncate ${
+          active || hovered ? "text-[#a78bfa]" : "text-white/45 group-hover:text-white/70"
         }`}>
           {entry.name}
         </span>
@@ -129,7 +129,7 @@ export function SidebarItem({
           <motion.span
             animate={{ opacity: [0.4, 1, 0.4] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="px-1.5 py-0.5 rounded-[4px] border border-cyan-500/20 bg-cyan-950/20 font-mono text-[8px] uppercase tracking-wider text-cyan-400 shrink-0 select-none scale-90"
+            className="px-1.5 py-0.5 rounded-[4px] border border-violet-500/20 bg-violet-950/20 font-mono text-[8px] uppercase tracking-wider text-violet-400 shrink-0 select-none scale-90"
           >
             New
           </motion.span>

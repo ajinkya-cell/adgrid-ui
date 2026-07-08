@@ -15,6 +15,7 @@ export interface AnisotropicKnobProps {
   size?: number;
   label?: string;
   className?: string;
+  sound?: boolean;
 }
 
 let audioCtx: AudioContext | null = null;
@@ -37,17 +38,17 @@ function playClickSound() {
     const gain = audioCtx.createGain();
     
     osc.type = "sine";
-    osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.012);
+    osc.frequency.setValueAtTime(2200, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(140, audioCtx.currentTime + 0.006);
     
-    gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.012);
+    gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.006);
     
     osc.connect(gain);
     gain.connect(audioCtx.destination);
     
     osc.start();
-    osc.stop(audioCtx.currentTime + 0.012);
+    osc.stop(audioCtx.currentTime + 0.007);
   } catch (e) {
     // Fail silently if context is blocked
   }
@@ -66,6 +67,7 @@ export const AnisotropicKnob = React.forwardRef<HTMLDivElement, AnisotropicKnobP
       size = 112,
       label,
       className,
+      sound = true,
     },
     ref
   ) => {
@@ -85,10 +87,12 @@ export const AnisotropicKnob = React.forwardRef<HTMLDivElement, AnisotropicKnobP
     // Play click sound on snap changes
     useEffect(() => {
       if (activeValue !== lastValueRef.current) {
-        playClickSound();
+        if (sound) {
+          playClickSound();
+        }
         lastValueRef.current = activeValue;
       }
-    }, [activeValue]);
+    }, [activeValue, sound]);
 
     // Sync angle with activeValue for bounded slider mode on external changes
     useEffect(() => {
@@ -301,7 +305,7 @@ export const AnisotropicKnob = React.forwardRef<HTMLDivElement, AnisotropicKnobP
               height: size,
               cursor: isDragging.current ? "grabbing" : "grab",
             }}
-            className="relative rounded-full border border-neutral-800 flex items-center justify-center outline-none focus-visible:ring-1 focus-visible:ring-neutral-500"
+            className="relative rounded-full border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 flex items-center justify-center outline-none focus-visible:ring-1 focus-visible:ring-neutral-500 shadow-[0_8px_20px_rgba(0,0,0,0.6),inset_0_1.5px_0_rgba(255,255,255,0.1)]"
           >
             {/* Outer Beveled Highlight Ring */}
             <div className="absolute inset-0 rounded-full border border-transparent shadow-[inset_0_1px_1px_rgba(255,255,255,0.06),0_4px_16px_rgba(0,0,0,0.6)] pointer-events-none" />
@@ -338,7 +342,7 @@ export const AnisotropicKnob = React.forwardRef<HTMLDivElement, AnisotropicKnobP
             <div
               className="absolute inset-[18%] rounded-full border border-neutral-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_2px_8px_rgba(0,0,0,0.5)]"
               style={{
-                backgroundImage: "radial-gradient(circle at 35% 35%, #252529 0%, #0e0e11 100%)",
+                backgroundImage: "radial-gradient(circle at center, #252529 0%, #0e0e11 100%)",
               }}
             />
 

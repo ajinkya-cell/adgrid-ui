@@ -8,12 +8,51 @@ import { useScrollProgress } from './useScrollProgress';
 import Tick from './Tick';
 import { range } from './utils';
 
+let audioCtx: AudioContext | null = null;
+let lastPlayTime = 0;
+
+function playClickSound(volume = 0.02) {
+  if (typeof window === "undefined") return;
+  const now = Date.now();
+  if (now - lastPlayTime < 25) return; // Prevent overlapping on rapid scrolling
+  lastPlayTime = now;
+
+  try {
+    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioContextClass) return;
+    
+    if (!audioCtx) {
+      audioCtx = new AudioContextClass();
+    }
+    if (audioCtx.state === "suspended") {
+      audioCtx.resume();
+    }
+    
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(2200, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(140, audioCtx.currentTime + 0.006);
+    
+    gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.006);
+    
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.007);
+  } catch (e) {}
+}
+
 export default function ScrollProgress({
   ticks = 42,
   color = "#a855f7",
   glow = true,
   height = 44,
   width = 320,
+  variant = 'default',
 }: ScrollProgressProps) {
   const [mounted, setMounted] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -21,9 +60,22 @@ export default function ScrollProgress({
   const containerRef = useRef<HTMLDivElement>(null);
   const { smoothProgress, scaleX: scaleY, glowIntensity } = useScrollProgress();
 
+  const lastTickRef = useRef(-1);
+
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = smoothProgress.on("change", (p) => {
+      const currentTick = Math.round(p * (ticks - 1));
+      if (currentTick !== lastTickRef.current) {
+        lastTickRef.current = currentTick;
+        playClickSound(0.015); // Satisfying mechanical tick sound
+      }
+    });
+    return unsubscribe;
+  }, [smoothProgress, ticks]);
 
   // Padding inside the vertical pill is py-5 (1.25rem / 20px) at top and bottom.
   // The first tick sits at 1.25rem and the last tick sits at 100% - 1.25rem.
@@ -41,7 +93,7 @@ export default function ScrollProgress({
   });
 
   const responsiveStyles = {
-    maxHeight: `${width}px`, // 320px vertical length
+    maxHeight: `${width}px`,
   };
 
   // Drag interaction handler
@@ -105,11 +157,15 @@ export default function ScrollProgress({
         zIndex: 9999,
       }}
       className={`
-        rounded-full bg-[#111111]/90 backdrop-blur-md
-        border border-white/10 shadow-[inset_1px_0_1px_rgba(255,255,255,0.05),0_10px_30px_rgba(0,0,0,0.5)]
-        flex flex-col items-center py-5 relative overflow-hidden select-none cursor-pointer
-        transition-colors duration-300
-        ${isHovered || isDragging ? "border-white/20" : "border-white/10"}
+        rounded-full backdrop-blur-md flex flex-col items-center py-5 relative overflow-hidden select-none cursor-pointer transition-colors duration-300
+        ${variant === 'inverted'
+          ? "bg-white/90 border border-black/10 shadow-[inset_1px_0_1px_rgba(255,255,255,0.8),0_10px_30px_rgba(0,0,0,0.12)]"
+          : "bg-[#111111]/90 border border-white/10 shadow-[inset_1px_0_1px_rgba(255,255,255,0.05),0_10px_30px_rgba(0,0,0,0.5)]"
+        }
+        ${variant === 'inverted'
+          ? (isHovered || isDragging ? "border-black/25" : "border-black/10")
+          : (isHovered || isDragging ? "border-white/20" : "border-white/10")
+        }
       `}
     >
       {/* Background Track Ticks Container (Vertical) */}
@@ -120,11 +176,12 @@ export default function ScrollProgress({
             index={i}
             totalTicks={ticks}
             smoothProgress={smoothProgress}
+            variant={variant}
           />
         ))}
       </div>
 
-      {/* Purple Scroll Indicator (Vertical Placement) */}
+      {/* Scroll Indicator (Vertical Placement) */}
       <motion.div
         style={{
           top: indicatorTop,
@@ -136,7 +193,7 @@ export default function ScrollProgress({
         {/* Solid Purple Core Indicator */}
         <div 
           style={{ backgroundColor: color }}
-          className="absolute inset-0 rounded-full" 
+          className="absolute inset-0 rounded-full animate-pulse-glow" 
         />
 
         {/* Ambient Neon Glow Overlay */}

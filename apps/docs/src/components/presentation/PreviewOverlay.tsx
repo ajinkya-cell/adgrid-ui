@@ -17,6 +17,7 @@ const UI = {
   MechanicalTimer: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.MechanicalTimer }))),
   LaserVaultPassword: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.LaserVaultPassword }))),
   LivingText: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.LivingText }))),
+  SpotlightText: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.SpotlightText }))),
   TextShuffle: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.TextShuffle }))),
   NowPlayingCard: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.NowPlayingCard }))),
   SimpleCard: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.SimpleCard }))),
@@ -138,6 +139,16 @@ function MiniPreviewRenderer({ slug }: { slug: string }) {
           </Suspense>
         </div>
       );
+    case "spotlight-text":
+      return (
+        <div className="flex h-full w-full items-center justify-center p-4">
+          <div className="relative w-full max-w-[280px] bg-surface-charcoal border-y border-border-hairline rounded-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95),inset_0_0_0_1px_rgba(255,255,255,0.05),inset_0_1px_0_rgba(255,255,255,0.08)] transition-all duration-300 p-5">
+            <Suspense fallback={null}>
+              <UI.SpotlightText text="Antimetal" theme="light" fontSize="2.5rem" />
+            </Suspense>
+          </div>
+        </div>
+      );
     case "text-shuffle":
       return (
         <div className="flex h-full w-full items-center justify-center">
@@ -193,7 +204,7 @@ function MiniPreviewRenderer({ slug }: { slug: string }) {
     default:
       return (
         <div className="flex h-full w-full flex-col justify-center p-6 text-left border border-white/5 bg-[#0f0f0f]/40 backdrop-blur-md rounded-2xl">
-          <div className="font-mono text-[9px] uppercase tracking-widest text-cyan-400/70 mb-2">Interactive Preview</div>
+          <div className="font-mono text-[9px] uppercase tracking-widest text-[#a78bfa]/70 mb-2">Interactive Preview</div>
           <div className="font-sans text-sm font-semibold text-white/90 mb-1">{slug.replace(/-/g, " ").toUpperCase()}</div>
           <p className="font-sans text-xs text-white/40 leading-normal line-clamp-3">
             Click to enter presentation mode and inspect the full-screen implementation of this custom reactive UI component.
@@ -253,7 +264,7 @@ export function PreviewOverlay({ isVisible, entry, anchorRect }: PreviewOverlayP
           className="pointer-events-auto overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0a]/95 p-1 shadow-[0_20px_60px_rgba(0,0,0,0.65),inset_0_1.5px_0_rgba(255,255,255,0.08)] backdrop-blur-xl"
         >
           {/* Subtle tech border overlay */}
-          <div className="absolute inset-0 border border-cyan-500/5 rounded-2xl pointer-events-none z-30" />
+          <div className="absolute inset-0 border border-violet-500/5 rounded-2xl pointer-events-none z-30" />
           
           <div className="relative h-full w-full overflow-hidden rounded-xl bg-black/40">
             <MiniPreviewRenderer slug={entry.slug} />

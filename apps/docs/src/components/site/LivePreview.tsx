@@ -25,6 +25,7 @@ const COMPONENT_HEIGHTS: Record<string, number> = {
   WheelPicker: 520,
   AnisotropicKnob: 500,
   LivingText: 500,
+  SpotlightText: 520,
   SpotlightGrid: 500,
   LuminaWave: 500,
   BreathingGrid: 500,

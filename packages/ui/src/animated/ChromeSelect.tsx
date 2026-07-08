@@ -66,14 +66,14 @@ export const ChromeSelect = React.forwardRef<HTMLSelectElement, ChromeSelectProp
           error
             ? "border-red-500/40 shadow-[0_0_12px_rgba(239,68,68,0.1)]"
             : isFocused
-            ? "border-neutral-500 shadow-[0_0_16px_rgba(255,255,255,0.04)]"
+            ? "border-white/15 shadow-[inset_0_2px_5px_rgba(0,0,0,0.9),0_0_8px_rgba(255,255,255,0.02)]"
             : isHovered
-            ? "border-neutral-700/80"
-            : "border-neutral-800/80"
+            ? "border-white/10"
+            : "border-white/[0.05]"
         )}
         style={{
-          backgroundImage: "linear-gradient(to bottom, #0a0a0d, #121215)",
-          boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 2px 8px rgba(0, 0, 0, 0.5)",
+          backgroundColor: "#050505",
+          boxShadow: "inset 0 2px 5px rgba(0,0,0,0.8)",
         }}
       >
         {/* Brushed Micro-lines Texture */}

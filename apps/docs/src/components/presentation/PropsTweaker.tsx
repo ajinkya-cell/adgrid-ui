@@ -158,6 +158,44 @@ function PropColor({ value, onChange }: { value: string; onChange: (v: string) =
   );
 }
 
+let audioCtx: AudioContext | null = null;
+let lastPlayTime = 0;
+
+function playClickSound(volume = 0.03) {
+  if (typeof window === "undefined") return;
+  const now = Date.now();
+  if (now - lastPlayTime < 35) return;
+  lastPlayTime = now;
+
+  try {
+    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioContextClass) return;
+    
+    if (!audioCtx) {
+      audioCtx = new AudioContextClass();
+    }
+    if (audioCtx.state === "suspended") {
+      audioCtx.resume();
+    }
+    
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(2200, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(140, audioCtx.currentTime + 0.006);
+    
+    gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.006);
+    
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.007);
+  } catch (e) {}
+}
+
 // ── Single prop row ──────────────────────────────────────────────
 function PropRow({
   def,
@@ -170,6 +208,11 @@ function PropRow({
 }) {
   const resolvedValue = value ?? def.default;
 
+  const handlePropChange = (v: unknown) => {
+    playClickSound(0.025);
+    onChange(v);
+  };
+
   return (
     <div className="bg-[#090909] border border-white/[0.04] rounded-xl p-3.5 space-y-2.5 transition-all hover:border-white/[0.08] shadow-[inset_0_2px_4px_rgba(0,0,0,0.8),_0_1px_0_rgba(255,255,255,0.05)]">
       <div className="flex items-center justify-between gap-2">
@@ -177,7 +220,7 @@ function PropRow({
         {def.type === "boolean" && (
           <PropToggle
             checked={Boolean(resolvedValue)}
-            onChange={onChange}
+            onChange={handlePropChange}
           />
         )}
       </div>
@@ -187,21 +230,21 @@ function PropRow({
           min={def.min ?? 0}
           max={def.max ?? 100}
           step={def.step ?? 1}
-          onChange={onChange}
+          onChange={handlePropChange}
         />
       )}
       {def.type === "string" && (
-        <PropTextInput value={String(resolvedValue ?? "")} onChange={onChange} />
+        <PropTextInput value={String(resolvedValue ?? "")} onChange={handlePropChange} />
       )}
       {def.type === "select" && (
         <PropSelect
           value={String(resolvedValue ?? def.options?.[0] ?? "")}
           options={def.options ?? []}
-          onChange={onChange}
+          onChange={handlePropChange}
         />
       )}
       {def.type === "color" && (
-        <PropColor value={String(resolvedValue ?? "#ffffff")} onChange={onChange} />
+        <PropColor value={String(resolvedValue ?? "#ffffff")} onChange={handlePropChange} />
       )}
     </div>
   );
@@ -216,7 +259,7 @@ export function PropsTweaker({ entry }: { entry: RegistryEntry }) {
   const setComponentProp = usePresentationStore((s) => s.setComponentProp);
   const resetComponentProps = usePresentationStore((s) => s.resetComponentProps);
 
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   // Don't render if no propDefs
   if (!propDefs || propDefs.length === 0) return null;
@@ -241,7 +284,7 @@ export function PropsTweaker({ entry }: { entry: RegistryEntry }) {
       dragElastic={0.05}
       dragControls={dragControls}
       dragListener={false}
-      className="tweaker-font-inter fixed bottom-4 left-4 z-50 w-[min(320px,calc(100vw-2rem))] rounded-2xl border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 backdrop-blur-2xl select-none"
+      className="tweaker-font-inter fixed bottom-4 right-4 z-50 w-[min(320px,calc(100vw-2rem))] rounded-2xl border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 backdrop-blur-2xl select-none"
       style={{
         backgroundColor: "#171717",
         boxShadow: "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.4), 0 30px 80px rgba(0,0,0,0.6)"

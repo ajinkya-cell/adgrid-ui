@@ -190,13 +190,13 @@ export function PresentationSidebar({
                           scale: 1.08, 
                           y: -1,
                           boxShadow: isActive 
-                            ? "0 0 15px rgba(56, 189, 248, 0.35)" 
+                            ? "0 0 15px rgba(167, 139, 250, 0.35)" 
                             : "0 0 10px rgba(255, 255, 255, 0.08)"
                         }}
                         whileTap={{ scale: 0.95 }}
                         className={`relative flex h-8 w-8 items-center justify-center rounded-xl border transition-all duration-200 cursor-pointer ${
                           isActive
-                            ? "border-cyan-500/40 bg-cyan-950/20 text-cyan-400"
+                            ? "border-violet-500/40 bg-violet-950/20 text-violet-400"
                             : "border-white/5 bg-[#050505] text-white/40 hover:text-white/80 hover:border-white/10"
                         }`}
                         type="button"

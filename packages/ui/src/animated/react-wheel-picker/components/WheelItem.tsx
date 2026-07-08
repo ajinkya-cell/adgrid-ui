@@ -17,6 +17,7 @@ interface WheelItemProps {
   isActive: boolean;
   isHovered: boolean;
   disabled?: boolean;
+  variant?: "glass" | "minimal" | "void";
   onClick?: () => void;
   renderItem?: (item: WheelItemType, isActive: boolean, index: number) => React.ReactNode;
 }
@@ -32,6 +33,7 @@ export function WheelItem({
   isActive,
   isHovered,
   disabled = false,
+  variant = "glass",
   onClick,
   renderItem,
 }: WheelItemProps) {
@@ -65,8 +67,10 @@ export function WheelItem({
     : (
         <span
           className={cn(
-            "truncate max-w-[85%] px-4 font-body",
-            isActive ? "text-white text-sm font-medium" : "text-neutral-400 text-xs font-normal"
+            "truncate max-w-[85%] px-4 font-mono uppercase tracking-wider text-center transition-all duration-300",
+            isActive
+              ? "text-white text-xs font-bold"
+              : (variant === "void" ? "text-white/30 text-[10px] font-normal" : "text-neutral-400 text-xs font-normal")
           )}
         >
           {item.label || item.value}

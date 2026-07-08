@@ -65,6 +65,34 @@
       ]
     },
     {
+      "name": "spotlight-text",
+      "type": "registry:ui",
+      "title": "Spotlight Text",
+      "description": "Debossed display text with a cursor-following golden spotlight clipped to glyph shapes. Auto-detects i/j ascender dots as glowing bulbs.",
+      "files": [
+        {
+          "path": "components/ui/spotlight-text/index.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/spotlight-text/SpotlightText.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/spotlight-text/types.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/spotlight-text/themes.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/spotlight-text/hooks/useSpotlightCursor.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
       "name": "gravity-card-stack",
       "type": "registry:ui",
       "title": "Gravity Card Stack",

@@ -13,7 +13,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
     <LayoutGroup id="site-shell">
       {!presenting && <Navbar />}
       <div className={`${presenting ? "" : "pt-16"} min-h-screen flex flex-col`}>
-        <PageTransition>{children}</PageTransition>
+        {presenting ? children : <PageTransition>{children}</PageTransition>}
       </div>
     </LayoutGroup>
   );

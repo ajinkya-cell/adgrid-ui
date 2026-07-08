@@ -185,6 +185,14 @@ export default function HomePage() {
                     <span className="font-mono text-[8px] text-text-muted self-start">04 / GUILLOCHÉ</span>
                     <GuillocheButton className="w-full h-11 text-[10px]" />
                   </div>
+                  <div className="flex flex-col items-center gap-1.5 w-full">
+                    <span className="font-mono text-[8px] text-text-muted self-start">05 / TACTILE_SHEEN (ROUNDED)</span>
+                    <VoidButton variant="metallic-sheen" className="rounded-full w-full h-11 text-[10px]">Tactile Sheen</VoidButton>
+                  </div>
+                  <div className="flex flex-col items-center gap-1.5 w-full">
+                    <span className="font-mono text-[8px] text-text-muted self-start">06 / CLASSIC_GOLD (ROUNDED)</span>
+                    <VoidButton variant="classic-gold" className="rounded-full w-full h-11 text-[10px]">Classic Gold</VoidButton>
+                  </div>
                 </div>
 
                 {/* HUD Footer status stream */}

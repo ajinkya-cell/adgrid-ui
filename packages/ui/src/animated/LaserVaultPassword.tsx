@@ -126,26 +126,26 @@ export function VoidButton({
 
   if (variant === "classic-gold") {
     activeGrad = activeGradientClass || "bg-gradient-to-r from-[#ffe066] via-[#f39c12] to-[#ffffff]";
-    activeText = activeTextClass || "text-black font-black";
+    activeText = activeTextClass || "text-black";
   } else if (variant === "ambient") {
     activeGrad = activeGradientClass || "bg-gradient-to-r from-[#161619] via-[#2d2d35] to-[#161619]";
-    activeText = activeTextClass || "text-white/95 font-semibold";
+    activeText = activeTextClass || "text-white/95";
   } else if (variant === "neon-edge") {
     activeGrad = "bg-transparent";
-    activeText = "text-white/95 font-bold";
+    activeText = "text-white/95";
   } else if (variant === "metallic-sheen") {
     activeGrad = "bg-transparent";
-    activeText = "text-white font-bold";
+    activeText = "text-white";
   } else if (variant === "glassmorphic") {
     baseStyleClass = "bg-white/5 border-white/10 backdrop-blur-md text-white/80";
     activeGrad = "bg-white/15";
-    activeText = "text-white font-black";
+    activeText = "text-white";
     defaultShadow = "inset 0 1px 1px rgba(255,255,255,0.1), 0 4px 20px rgba(0,0,0,0.4)";
     tappedShadow = "inset 0 4px 12px rgba(0,0,0,0.7), 0 1px 2px rgba(0,0,0,0.2)";
   } else if (variant === "cyber-laser") {
     baseStyleClass = "bg-[#060608] border-neutral-900 text-neutral-400";
     activeGrad = "bg-[#0c0c10]";
-    activeText = "text-[#ff5500] font-black";
+    activeText = "text-[#ff5500]";
   }
 
   return (
@@ -170,10 +170,7 @@ export function VoidButton({
       }}
       {...(props as any)}
     >
-      <span className="absolute inset-0 flex items-center justify-center font-medium transition-opacity duration-300">
-        {children || "THE VOID"}
-      </span>
-
+      {/* Dynamic Conic Specular Sheen (Anisotropic response) */}
       {variant === "metallic-sheen" && (
         <motion.div
           className="absolute inset-0 pointer-events-none opacity-40 mix-blend-overlay"
@@ -185,6 +182,7 @@ export function VoidButton({
         />
       )}
 
+      {/* Dynamic Neon Edge Border Overlay */}
       {variant === "neon-edge" && (
         <motion.div
           className="absolute inset-0 border border-white/50 rounded-xl pointer-events-none"
@@ -195,6 +193,7 @@ export function VoidButton({
         />
       )}
 
+      {/* Cyber Sweep Laser Cursor Line */}
       {variant === "cyber-laser" && isHovered && (
         <motion.div
           initial={{ x: "-100%" }}
@@ -204,9 +203,10 @@ export function VoidButton({
         />
       )}
 
+      {/* Active Reveal Background Layer (Radial mask overlay) */}
       <motion.div
         className={cn(
-          "absolute inset-0 pointer-events-none flex items-center justify-center",
+          "absolute inset-0 pointer-events-none",
           activeGrad
         )}
         initial={{ opacity: 0 }}
@@ -216,11 +216,15 @@ export function VoidButton({
           WebkitMaskImage: maskTemplate,
           maskImage: maskTemplate,
         }}
-      >
-        <span className={cn(activeText)}>
-          {children || "THE VOID"}
-        </span>
-      </motion.div>
+      />
+
+      {/* Centered Single Text Label */}
+      <span className={cn(
+        "relative z-10 transition-colors duration-300 font-medium",
+        isHovered ? activeText : "text-white/70"
+      )}>
+        {children || "THE VOID"}
+      </span>
     </motion.button>
   );
 }
@@ -269,9 +273,13 @@ export function LaserVaultPassword({ className = "" }: { className?: string }) {
       animate={lockedState === "error" ? { x: [0, -10, 10, -10, 10, 0] } : {}}
       transition={{ duration: 0.4 }}
       className={cn(
-        "relative w-full max-w-[340px] p-6 rounded-3xl bg-[#0a0a0d] border border-white/5 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.95),inset_0_1px_1px_rgba(255,255,255,0.03)] flex flex-col gap-6",
+        "relative w-full max-w-[340px] p-6 rounded-3xl border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 flex flex-col gap-6",
         className
       )}
+      style={{
+        backgroundColor: "#161619",
+        boxShadow: "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.4), 0 30px 80px rgba(0,0,0,0.6)"
+      }}
     >
       
       {/* Absolute overlay red alert warning lasers */}
@@ -301,10 +309,9 @@ export function LaserVaultPassword({ className = "" }: { className?: string }) {
       </AnimatePresence>
 
       {/* Decorative safe door header */}
-      <div className="w-full flex items-center justify-between border-b border-neutral-900 pb-3">
-        <Key className="w-4 h-4 text-neutral-400" />
+      <div className="w-full flex items-center justify-between border-b border-white/[0.06] pb-3">
+        <Key className="w-4 h-4 text-white/40" />
         <div className="flex items-center gap-2">
-          <span className="font-syncopate text-[7px] uppercase tracking-[0.2em] text-neutral-500">VAULT_SECURE</span>
           <motion.div
             key={lockedState}
             initial={{ scale: 0.8, opacity: 0 }}
@@ -314,7 +321,7 @@ export function LaserVaultPassword({ className = "" }: { className?: string }) {
             {lockedState === "unlocked" ? (
               <Unlock className="w-4 h-4 text-emerald-400" />
             ) : (
-              <Lock className={`w-4 h-4 ${lockedState === "error" ? "text-red-500" : "text-neutral-500"}`} />
+              <Lock className={`w-4 h-4 ${lockedState === "error" ? "text-red-500" : "text-white/40"}`} />
             )}
           </motion.div>
         </div>
@@ -322,7 +329,7 @@ export function LaserVaultPassword({ className = "" }: { className?: string }) {
 
       {/* Passcode Display Box Slot */}
       {lockedState !== "unlocked" && (
-        <div className="w-full bg-[#050508] border border-neutral-900 rounded-2xl p-4 flex flex-col gap-1.5 shadow-[inset_0_4px_16px_rgba(0,0,0,0.95)] relative overflow-hidden">
+        <div className="w-full bg-[#050505] border border-white/[0.05] rounded-2xl p-4 flex flex-col gap-1.5 shadow-[inset_0_2.5px_5px_rgba(0,0,0,0.85)] relative overflow-hidden">
           <span className="font-syncopate text-[7px] uppercase tracking-[0.2em] text-neutral-600">PASSCODE</span>
           
           {/* Laser Etch Letter Display */}
@@ -415,7 +422,7 @@ export function LaserVaultPassword({ className = "" }: { className?: string }) {
               onClick={() => handleKeyPress(num)}
               activeGradientClass="bg-gradient-to-r from-neutral-200 via-white to-neutral-200"
               activeTextClass="text-black font-black"
-              className="h-12 border-neutral-900 rounded-xl font-syncopate text-[10px] tracking-[0.2em] font-bold"
+              className="h-12 border-white/[0.04] bg-[#090909]/40 hover:border-white/[0.08] shadow-[inset_0_1.5px_3px_rgba(0,0,0,0.6)] rounded-xl font-syncopate text-[10px] tracking-[0.2em] font-bold"
             >
               {num}
             </VoidButton>
@@ -427,7 +434,7 @@ export function LaserVaultPassword({ className = "" }: { className?: string }) {
             onClick={handleClear}
             activeGradientClass="bg-gradient-to-r from-[#ffd369] via-[#f39c12] to-[#ffffff]"
             activeTextClass="text-black font-black"
-            className="h-12 border-neutral-900 rounded-xl font-syncopate text-[8px] tracking-[0.2em] font-bold"
+            className="h-12 border-white/[0.04] bg-[#090909]/40 hover:border-white/[0.08] shadow-[inset_0_1.5px_3px_rgba(0,0,0,0.6)] rounded-xl font-syncopate text-[8px] tracking-[0.2em] font-bold"
           >
             Clear
           </VoidButton>
@@ -438,7 +445,7 @@ export function LaserVaultPassword({ className = "" }: { className?: string }) {
             onClick={() => handleKeyPress("0")}
             activeGradientClass="bg-gradient-to-r from-neutral-200 via-white to-neutral-200"
             activeTextClass="text-black font-black"
-            className="h-12 border-neutral-900 rounded-xl font-syncopate text-[10px] tracking-[0.2em] font-bold"
+            className="h-12 border-white/[0.04] bg-[#090909]/40 hover:border-white/[0.08] shadow-[inset_0_1.5px_3px_rgba(0,0,0,0.6)] rounded-xl font-syncopate text-[10px] tracking-[0.2em] font-bold"
           >
             0
           </VoidButton>
@@ -450,7 +457,7 @@ export function LaserVaultPassword({ className = "" }: { className?: string }) {
             disabled={passcode.length === 0}
             activeGradientClass="bg-gradient-to-r from-[#86e3ce] to-[#d6e6f2]"
             activeTextClass="text-black font-black"
-            className="h-12 border-neutral-900 rounded-xl font-syncopate text-[8px] tracking-[0.2em] font-bold disabled:opacity-25"
+            className="h-12 border-white/[0.04] bg-[#090909]/40 hover:border-white/[0.08] shadow-[inset_0_1.5px_3px_rgba(0,0,0,0.6)] rounded-xl font-syncopate text-[8px] tracking-[0.2em] font-bold disabled:opacity-25"
           >
             <div className="flex items-center justify-center gap-1">
               <Lock className="w-3.5 h-3.5" />

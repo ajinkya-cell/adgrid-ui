@@ -6,7 +6,11 @@ import { usePresentationStore } from "@/lib/presentation/store";
 
 export function SidebarTrigger() {
   const sidebarOpen = usePresentationStore((state) => state.sidebarOpen);
+  const sidebarTab = usePresentationStore((state) => state.sidebarTab);
   const toggleSidebar = usePresentationStore((state) => state.toggleSidebar);
+  const setSidebarTab = usePresentationStore((state) => state.setSidebarTab);
+  const openSidebarTab = usePresentationStore((state) => state.openSidebarTab);
+
   const [hovered, setHovered] = useState(false);
   const [angle, setAngle] = useState(0);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -33,10 +37,25 @@ export function SidebarTrigger() {
     };
   }, [hovered, sidebarOpen]);
 
+  const handleClick = () => {
+    if (!sidebarOpen) {
+      // Closed -> Open & show navigator
+      openSidebarTab("navigator");
+    } else {
+      if (sidebarTab !== "navigator") {
+        // Open on other tab -> switch back to component list (navigator)
+        setSidebarTab("navigator");
+      } else {
+        // Open on navigator -> close sidebar
+        toggleSidebar();
+      }
+    }
+  };
+
   return (
     <motion.button
       ref={buttonRef}
-      onClick={toggleSidebar}
+      onClick={handleClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => {
         setHovered(false);
@@ -44,7 +63,7 @@ export function SidebarTrigger() {
       }}
       className={`fixed left-6 top-6 z-50 flex h-11 w-11 items-center justify-center rounded-2xl border transition-all duration-300 cursor-pointer shadow-[0_10px_35px_rgba(0,0,0,0.6)] ${
         sidebarOpen 
-          ? "border-cyan-500/40 bg-cyan-950/20 text-cyan-400 shadow-[0_0_15px_rgba(56,189,248,0.25)]" 
+          ? "border-violet-500/40 bg-violet-950/20 text-violet-400 shadow-[0_0_15px_rgba(167,139,250,0.25)]" 
           : "border-white/10 bg-neutral-950/80 text-white/50 hover:text-white hover:border-white/20 hover:scale-105 active:scale-95"
       }`}
       initial={{ opacity: 0, scale: 0.8 }}
@@ -78,7 +97,7 @@ export function SidebarTrigger() {
           fill="none"
           stroke="currentColor"
           strokeWidth="2.5"
-          className={sidebarOpen ? "text-cyan-400" : "text-white/80"}
+          className={sidebarOpen ? "text-violet-400" : "text-white/80"}
           style={{ transformOrigin: "center" }}
           animate={{ rotate: sidebarOpen ? 45 : angle }}
           transition={{
