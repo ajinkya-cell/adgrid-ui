@@ -16,6 +16,7 @@ const UI = {
   AnisotropicKnob: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.AnisotropicKnob }))),
   MechanicalTimer: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.MechanicalTimer }))),
   LaserVaultPassword: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.LaserVaultPassword }))),
+  PookieForm: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.PookieForm }))),
   LivingText: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.LivingText }))),
   SpotlightText: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.SpotlightText }))),
   TextShuffle: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.TextShuffle }))),
@@ -84,6 +85,22 @@ function MiniPreviewRenderer({ slug }: { slug: string }) {
           <span className="text-[10px] font-mono text-white/40 uppercase tracking-wider">Select Mode</span>
           <Suspense fallback={null}>
             <UI.ChromeSelect defaultValue="production" options={[{ value: "production", label: "Production" }, { value: "development", label: "Development" }]} />
+          </Suspense>
+        </div>
+      );
+    case "pookie-form":
+      return (
+        <div className="flex h-full w-full items-center justify-center p-4 bg-[#E7E4DA] overflow-hidden">
+          <Suspense fallback={null}>
+            <UI.PookieForm
+              className="scale-65 origin-center w-full max-w-[320px] p-6"
+              title="Plate"
+              serialNumber="04-2024"
+              fields={[
+                { name: "name", label: "Identifier", placeholder: "Name..." }
+              ]}
+              showScrews={false}
+            />
           </Suspense>
         </div>
       );

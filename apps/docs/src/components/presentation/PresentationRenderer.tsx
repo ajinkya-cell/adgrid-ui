@@ -24,6 +24,7 @@ import {
   LuminaWave,
   MechanicalTimer,
   MetallicForm,
+  PookieForm,
   MorphingNav,
   NowPlayingCard,
   PixelMeltBackground,
@@ -351,6 +352,12 @@ export function PresentationRenderer({
           ]}
           onSubmit={async () => {}}
         />
+      );
+    case "pookie-form":
+      return (
+        <div className="flex items-center justify-center w-full min-h-[500px] p-6 bg-[#E7E4DA]">
+          <PookieForm {...(liveProps as Parameters<typeof PookieForm>[0])} onSubmit={() => {}} />
+        </div>
       );
     case "anisotropic-knob":
       return <AnisotropicKnob label="DECIBELS" size={132} sound={playTactileSounds} {...liveProps} />;

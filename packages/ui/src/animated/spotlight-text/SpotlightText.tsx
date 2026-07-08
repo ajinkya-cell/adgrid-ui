@@ -29,7 +29,7 @@ function renderCharacters(
     glowOnly?: boolean;
   }
 ): ReactNode[] {
-  const { showBulb, bulbColor, isActive, glowOnly = false } = options;
+  const { showBulb, bulbColor, glowOnly = false } = options;
   const chars: ReactNode[] = [];
 
   for (let index = 0; index < text.length; index++) {
@@ -182,7 +182,7 @@ export function SpotlightText({
               backgroundClip: "text",
               WebkitTextFillColor: "transparent",
               opacity: isActive ? 1 : 0,
-              transition: "opacity 200ms ease",
+              transition: "opacity 800ms cubic-bezier(0.16, 1, 0.3, 1)",
             }}
           >
             {glowCharacters}

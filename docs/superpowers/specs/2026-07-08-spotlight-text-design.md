@@ -19,9 +19,9 @@ Build a **SpotlightText** React component for the adgrid-ui library. Hovering ov
 | Idle text | `#b8b8b8` | `#454545` |
 | Deboss highlight | `0 1px 0 rgba(255,255,255,0.9)` | `0 -1px 0 rgba(255,255,255,0.06)` |
 | Deboss shadow | `0 -1px 2px rgba(0,0,0,0.15)` | `0 2px 4px rgba(0,0,0,0.6)` |
-| Glow core | `#d4c050` | `#e8c848` |
-| Glow mid | `#c0a830` | `#c8a030` |
-| i-dot bulb | `#e8e85a` | `#f0e868` |
+| Glow core | `#ebd5ff` | `#ebd5ff` |
+| Glow mid | `#a78bfa` | `#a78bfa` |
+| i-dot bulb | `#c084fc` | `#c084fc` |
 
 ---
 

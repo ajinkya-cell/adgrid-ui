@@ -13,7 +13,7 @@ Refine the wrapper card of the **SpotlightText** component within the docs pages
 3. **Sophisticated shadow & inner border**: Implement an ambient background drop shadow with an inset top-edge highlight and a full 360-degree subtle inner 1px border (`inset_0_0_0_1px_rgba(255,255,255,0.05)`).
 4. **Remove label and icon**: Completely remove the top-left "Spotlight" label and top-right `✦` icon box.
 5. **Symmetric padding**: Adjust top padding from `pt-10`/`pt-9` to symmetric padding (`p-6`/`p-5`).
-6. **No main code edits**: Ensure that the core implementation under `packages/ui/src/animated/spotlight-text/` is not touched.
+6. **Slow, smooth glow transition**: Transition the radial glow on hover via a smooth opacity fade over 800ms using a `cubic-bezier(0.16, 1, 0.3, 1)` easing curve.
 
 ---
 
@@ -21,6 +21,7 @@ Refine the wrapper card of the **SpotlightText** component within the docs pages
 
 *   `apps/docs/src/components/presentation/PresentationRenderer.tsx`
 *   `apps/docs/src/components/presentation/PreviewOverlay.tsx`
+*   `packages/ui/src/animated/spotlight-text/SpotlightText.tsx`
 
 ---
 
@@ -30,20 +31,6 @@ Refine the wrapper card of the **SpotlightText** component within the docs pages
 
 Modify the container element for `spotlight-text` case.
 
-**Before:**
-```tsx
-<div className="relative bg-surface-charcoal border border-border-hairline rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.85),inset_0_1px_0_rgba(255,255,255,0.06)] hover:shadow-[0_25px_50px_-10px_rgba(0,0,0,0.95),inset_0_1px_0_rgba(255,255,255,0.08)] transition-shadow duration-300 p-6 pt-10">
-  <span className="absolute top-3 left-4 font-mono text-[8px] text-text-muted tracking-[0.2em] font-bold uppercase">
-    Spotlight
-  </span>
-  <div className="absolute top-3 right-4 w-6 h-6 flex items-center justify-center border border-border-hairline bg-pure-black rounded">
-    <span className="text-[8px] text-text-muted">✦</span>
-  </div>
-  <SpotlightText {...spotlightTextProps} />
-</div>
-```
-
-**After:**
 ```tsx
 <div className="relative bg-surface-charcoal border-y border-border-hairline rounded-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95),inset_0_0_0_1px_rgba(255,255,255,0.05),inset_0_1px_0_rgba(255,255,255,0.08)] hover:shadow-[0_35px_70px_-10px_rgba(0,0,0,1),inset_0_0_0_1px_rgba(255,255,255,0.08),inset_0_1px_0_rgba(255,255,255,0.12)] transition-all duration-300 p-6">
   <SpotlightText {...spotlightTextProps} />
@@ -54,22 +41,13 @@ Modify the container element for `spotlight-text` case.
 
 Modify the container element for `spotlight-text` case.
 
-**Before:**
-```tsx
-<div className="relative w-full max-w-[280px] bg-surface-charcoal border border-border-hairline rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.85),inset_0_1px_0_rgba(255,255,255,0.06)] transition-shadow duration-300 p-5 pt-9">
-  <span className="absolute top-3 left-4 font-mono text-[8px] text-text-muted tracking-[0.2em] font-bold uppercase">
-    Spotlight
-  </span>
-  <div className="absolute top-3 right-4 w-6 h-6 flex items-center justify-center border border-border-hairline bg-pure-black rounded">
-    <span className="text-[8px] text-text-muted">✦</span>
-  </div>
-  <UI.SpotlightText text="Antimetal" theme="light" fontSize="2.5rem" />
-</div>
-```
-
-**After:**
 ```tsx
 <div className="relative w-full max-w-[280px] bg-surface-charcoal border-y border-border-hairline rounded-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95),inset_0_0_0_1px_rgba(255,255,255,0.05),inset_0_1px_0_rgba(255,255,255,0.08)] transition-all duration-300 p-5">
   <UI.SpotlightText text="Antimetal" theme="light" fontSize="2.5rem" />
 </div>
+```
+
+```tsx
+opacity: isActive ? 1 : 0,
+transition: "opacity 800ms cubic-bezier(0.16, 1, 0.3, 1)",
 ```

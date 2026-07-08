@@ -27,6 +27,8 @@ export { ChromeSelect } from "./animated/ChromeSelect";
 export type { ChromeSelectProps, ChromeSelectOption } from "./animated/ChromeSelect";
 export { MetallicForm } from "./animated/MetallicForm";
 export type { MetallicFormProps, FormField } from "./animated/MetallicForm";
+export { PookieForm } from "./animated/PookieForm";
+export type { PookieFormProps, PookieFormField } from "./animated/PookieForm";
 export { AnisotropicKnob } from "./animated/AnisotropicKnob";
 export type { AnisotropicKnobProps } from "./animated/AnisotropicKnob";
 export { MechanicalTimer } from "./animated/MechanicalTimer";
