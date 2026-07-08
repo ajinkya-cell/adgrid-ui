@@ -20,7 +20,7 @@ export function SimpleCard({
   description,
   imageUrl,
   className,
-  accent = "from-zinc-800/90 to-zinc-900/95",
+  accent = "from-transparent to-transparent",
   topBorderColor = "rgba(255,255,255,0.18)",
 }: SimpleCardProps) {
   const [expanded, setExpanded] = useState(false);
@@ -29,7 +29,7 @@ export function SimpleCard({
     <motion.button
       onClick={() => setExpanded((v) => !v)}
       className={cn(
-        "relative flex flex-col overflow-hidden rounded-2xl text-left focus:outline-none cursor-pointer",
+        "relative flex flex-col overflow-hidden rounded-2xl text-left focus:outline-none cursor-pointer bg-[#151515]",
         className
       )}
       style={{
@@ -58,12 +58,12 @@ export function SimpleCard({
             draggable={false}
             style={{ filter: "grayscale(1) contrast(1.08) brightness(0.78)" }}
           />
-          {/* Fade into card body */}
+          {/* Fade into solid card body */}
           <div
             className="pointer-events-none absolute inset-x-0 bottom-0 h-16"
             style={{
               background:
-                "linear-gradient(to bottom, transparent 0%, rgba(18,18,20,0.96) 100%)",
+                "linear-gradient(to bottom, transparent 0%, #151515 100%)",
             }}
           />
         </div>
@@ -72,18 +72,10 @@ export function SimpleCard({
       {/* Card body — content pinned to bottom */}
       <div
         className={cn(
-          "relative flex flex-1 flex-col justify-end bg-gradient-to-b px-4 pb-4 pt-2",
+          "relative flex flex-1 flex-col justify-end bg-[#151515] px-4 pb-4 pt-2",
           accent
         )}
       >
-        {/* Inner ambient glow */}
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse at 20% 0%, rgba(255,255,255,0.05) 0%, transparent 55%)",
-          }}
-        />
 
         <div className="relative z-10">
           <AnimatePresence>

@@ -28,7 +28,11 @@ const UI = {
   FloatingEmbers: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.FloatingEmbers }))),
   SpotlightGrid: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.SpotlightGrid }))),
   LuminaWave: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.LuminaWave }))),
+  FlickeringGrid: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.FlickeringGrid }))),
+  FlickeringGridPlayground: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.FlickeringGridPlayground }))),
   ScrollProgress: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.ScrollProgress }))),
+  DotPattern: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.DotPattern }))),
+  DotPatternPlayground: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.DotPatternPlayground }))),
 };
 
 const imageOne = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80";
@@ -90,7 +94,7 @@ function MiniPreviewRenderer({ slug }: { slug: string }) {
       );
     case "pookie-form":
       return (
-        <div className="flex h-full w-full items-center justify-center p-4 bg-[#E7E4DA] overflow-hidden">
+        <div className="flex h-full w-full items-center justify-center p-4 overflow-hidden">
           <Suspense fallback={null}>
             <UI.PookieForm
               className="scale-65 origin-center w-full max-w-[320px] p-6"
@@ -214,6 +218,49 @@ function MiniPreviewRenderer({ slug }: { slug: string }) {
           <Suspense fallback={null}>
             <UI.LuminaWave />
           </Suspense>
+        </div>
+      );
+    case "flickering-grid":
+      return (
+        <div className="relative h-full w-full overflow-hidden flex items-center justify-center p-2">
+          <Suspense fallback={null}>
+            <UI.FlickeringGrid className="absolute inset-0 z-0" squareSize={3} gridGap={4} color="#a78bfa" maxOpacity={0.25} />
+          </Suspense>
+          <span className="relative z-10 font-mono text-[9px] text-[#a78bfa] uppercase tracking-[0.2em] font-bold">GRID</span>
+        </div>
+      );
+    case "flickering-grid-playground":
+      return (
+        <div className="relative h-full w-full overflow-hidden flex flex-col justify-between p-3 bg-[#0a0a0c]">
+          <Suspense fallback={null}>
+            <UI.FlickeringGrid className="absolute inset-0 z-0 opacity-70" squareSize={2} gridGap={3} color="#06b6d4" maxOpacity={0.2} />
+          </Suspense>
+          <div className="relative z-10 w-full p-2 border border-white/5 bg-black/80 rounded-lg flex flex-col gap-1 mt-auto">
+            <div className="w-full h-1 bg-white/20 rounded-full" />
+            <div className="w-2/3 h-1 bg-white/10 rounded-full" />
+            <div className="w-1/2 h-1 bg-white/5 rounded-full" />
+          </div>
+        </div>
+      );
+    case "dot-pattern":
+      return (
+        <div className="relative h-full w-full overflow-hidden flex items-center justify-center p-2 bg-[#050505]">
+          <Suspense fallback={null}>
+            <UI.DotPattern className="absolute inset-0 opacity-25" width={10} height={10} cr={1} color="#a78bfa" />
+          </Suspense>
+          <span className="relative z-10 font-mono text-[9px] text-[#a78bfa] uppercase tracking-[0.2em] font-bold">DOTS</span>
+        </div>
+      );
+    case "dot-pattern-playground":
+      return (
+        <div className="relative h-full w-full overflow-hidden flex flex-col justify-between p-3 bg-[#0a0a0c]">
+          <Suspense fallback={null}>
+            <UI.DotPattern className="absolute inset-0 opacity-20" width={8} height={8} cr={1} color="#06b6d4" />
+          </Suspense>
+          <div className="relative z-10 w-full p-2 border border-white/5 bg-black/80 rounded-lg flex flex-col gap-1 mt-auto">
+            <div className="w-full h-1 bg-white/20 rounded-full" />
+            <div className="w-2/3 h-1 bg-white/10 rounded-full" />
+          </div>
         </div>
       );
 

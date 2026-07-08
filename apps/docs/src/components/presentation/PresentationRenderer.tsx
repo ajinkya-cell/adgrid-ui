@@ -30,8 +30,11 @@ import {
   PixelMeltBackground,
   PremiumHero,
   SimpleCard,
-  SlingshotChassis,
   SpotlightGrid,
+  FlickeringGrid,
+  FlickeringGridPlayground,
+  DotPattern,
+  DotPatternPlayground,
   TextShuffle,
   VoidButton,
   WheelPicker,
@@ -355,7 +358,7 @@ export function PresentationRenderer({
       );
     case "pookie-form":
       return (
-        <div className="flex items-center justify-center w-full min-h-[500px] p-6 bg-[#E7E4DA]">
+        <div className="flex items-center justify-center w-full min-h-[500px] p-6">
           <PookieForm {...(liveProps as Parameters<typeof PookieForm>[0])} onSubmit={() => {}} />
         </div>
       );
@@ -363,8 +366,6 @@ export function PresentationRenderer({
       return <AnisotropicKnob label="DECIBELS" size={132} sound={playTactileSounds} {...liveProps} />;
     case "mechanical-timer":
       return <MechanicalTimer {...liveProps} />;
-    case "slingshot-chassis":
-      return <SlingshotChassis />;
     case "laser-vault-password":
       return <LaserVaultPassword />;
     case "premium-hero":
@@ -444,11 +445,33 @@ export function PresentationRenderer({
             title="Working Knowledge"
             description="Practical skills and insights gained through hands-on experience that drive real-world problem solving."
             imageUrl="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=520&h=380&fit=crop&auto=format"
-            accent="from-amber-950/80 to-stone-950/95"
-            topBorderColor="rgba(251,191,36,0.28)"
           />
         </div>
       );
+    case "flickering-grid":
+      return (
+        <div className="relative flex items-center justify-center w-full min-h-[400px] border border-white/5 bg-[#030303] rounded-2xl overflow-hidden p-6">
+          <FlickeringGrid className="absolute inset-0" color="#a78bfa" squareSize={4} gridGap={6} flickerChance={0.3} maxOpacity={0.3} />
+          <div className="relative z-10 text-center space-y-2">
+            <span className="text-[10px] font-mono tracking-[0.25em] text-[#a78bfa] uppercase font-bold">Ambient Particle Shield</span>
+            <h3 className="text-xl font-bold text-white tracking-tight">Interactive Matrix Layer</h3>
+          </div>
+        </div>
+      );
+    case "flickering-grid-playground":
+      return <FlickeringGridPlayground className="w-full" />;
+    case "dot-pattern":
+      return (
+        <div className="relative flex items-center justify-center w-full min-h-[400px] border border-white/5 bg-[#030303] rounded-2xl overflow-hidden p-6">
+          <DotPattern className="absolute inset-0" color="#a78bfa" width={16} height={16} cr={1.2} />
+          <div className="relative z-10 text-center space-y-2">
+            <span className="text-[10px] font-mono tracking-[0.25em] text-neutral-400 uppercase font-bold">Ambient Dots Shield</span>
+            <h3 className="text-xl font-bold text-white tracking-tight">SVG Pattern Layer</h3>
+          </div>
+        </div>
+      );
+    case "dot-pattern-playground":
+      return <DotPatternPlayground className="w-full" />;
     default:
       return <div className="font-mono text-xs uppercase tracking-[0.24em] text-white/45">Preview unavailable</div>;
   }

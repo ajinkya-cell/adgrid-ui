@@ -33,8 +33,15 @@ export { AnisotropicKnob } from "./animated/AnisotropicKnob";
 export type { AnisotropicKnobProps } from "./animated/AnisotropicKnob";
 export { MechanicalTimer } from "./animated/MechanicalTimer";
 
-export { SlingshotChassis } from "./animated/SlingshotChassis";
 export { LaserVaultPassword } from "./animated/LaserVaultPassword";
+export { FlickeringGrid } from "./animated/FlickeringGrid";
+export type { FlickeringGridProps } from "./animated/FlickeringGrid";
+export { FlickeringGridPlayground } from "./animated/FlickeringGridPlayground";
+export type { FlickeringGridPlaygroundProps } from "./animated/FlickeringGridPlayground";
+export { DotPattern } from "./animated/DotPattern";
+export type { DotPatternProps } from "./animated/DotPattern";
+export { DotPatternPlayground } from "./animated/DotPatternPlayground";
+export type { DotPatternPlaygroundProps } from "./animated/DotPatternPlayground";
 
 export { CoverflowCarousel } from "./animated/coverflow/CoverflowCarousel";
 export type { CoverflowCarouselProps } from "./animated/coverflow/types";

@@ -216,13 +216,6 @@ function ComponentThumbnail({ slug }: { slug: string; category: ComponentCategor
         00:00
       </div>
     ),
-    "slingshot-chassis": (
-      <div className="relative w-20 h-12 border border-white/20 group-hover:border-white/40 transition-colors flex items-center justify-center overflow-hidden">
-        <div className="absolute left-0 inset-y-0 w-3 bg-gradient-to-r from-white/10 to-transparent" />
-        <div className="absolute right-0 inset-y-0 w-3 bg-gradient-to-l from-white/10 to-transparent" />
-        <span className="font-mono text-[8px] text-white/30 uppercase tracking-wider">drag</span>
-      </div>
-    ),
     "laser-vault-password": (
       <div className="grid grid-cols-3 gap-1">
         {Array.from({ length: 9 }).map((_, i) => (

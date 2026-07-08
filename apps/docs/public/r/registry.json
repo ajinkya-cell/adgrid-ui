@@ -321,6 +321,21 @@
       ]
     },
     {
+      "name": "pookie-form",
+      "type": "registry:ui",
+      "title": "Pookie Form",
+      "description": "An industrial-grade registration plate form component inspired by Braun, Muji, and Dieter Rams. Features corner screws, deep inset inputs, and heavy tactile buttons.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/PookieForm.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "anisotropic-knob",
       "type": "registry:ui",
       "title": "Anisotropic Knob",
@@ -347,22 +362,6 @@
       "files": [
         {
           "path": "components/ui/MechanicalTimer.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "slingshot-chassis",
-      "type": "registry:ui",
-      "title": "Slingshot Chassis",
-      "description": "Elastic-drag container with real-time SVG edge deformation, spring release oscillation solvers, Web Audio snap synthesis, and reveal drawers.",
-      "dependencies": [
-        "framer-motion",
-        "lucide-react"
-      ],
-      "files": [
-        {
-          "path": "components/ui/SlingshotChassis.tsx",
           "type": "registry:ui"
         }
       ]
@@ -714,6 +713,54 @@
       "files": [
         {
           "path": "components/ui/SimpleCard.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "flickering-grid",
+      "type": "registry:ui",
+      "title": "Flickering Grid",
+      "description": "A canvas-based flickering contribution-graph grid, highly performant and scalable.",
+      "files": [
+        {
+          "path": "components/ui/FlickeringGrid.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "flickering-grid-playground",
+      "type": "registry:ui",
+      "title": "Flickering Grid Playground",
+      "description": "An interactive cockpit controller playground for experimenting with grid sizing, gaps, flicker chance, and curated presets.",
+      "files": [
+        {
+          "path": "components/ui/FlickeringGridPlayground.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "dot-pattern",
+      "type": "registry:ui",
+      "title": "Dot Pattern",
+      "description": "A highly customizable SVG-based background pattern component.",
+      "files": [
+        {
+          "path": "components/ui/DotPattern.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "dot-pattern-playground",
+      "type": "registry:ui",
+      "title": "Dot Pattern Playground",
+      "description": "An interactive cockpit controller playground for dynamic dot sizes, gaps, custom swatches, and interactive spotlight masking.",
+      "files": [
+        {
+          "path": "components/ui/DotPatternPlayground.tsx",
           "type": "registry:ui"
         }
       ]
