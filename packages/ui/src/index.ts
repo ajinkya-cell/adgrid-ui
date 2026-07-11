@@ -86,6 +86,8 @@ export { cn } from "./lib/utils";
 export { Cards } from "./animated/Cards";
 export { SimpleCard } from "./animated/SimpleCard";
 export type { SimpleCardProps } from "./animated/SimpleCard";
+export { CardsTwo } from "./animated/CardsTwo";
+export type { CardsTwoProps, CardsTwoRef, Card } from "./animated/CardsTwo";
 
 // ScrollPath
 export {
@@ -102,3 +104,7 @@ export type {
   ScrollPathCircuitProps,
   ScrollPathProcessProps,
 } from "./animated/scrollpath";
+
+// Weapon Wheel Select Component
+export { WeaponWheel } from "./animated/WeaponWheel";
+export type { WeaponWheelProps, WeaponWheelItem } from "./animated/WeaponWheel";

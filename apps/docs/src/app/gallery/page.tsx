@@ -96,6 +96,23 @@ function ComponentThumbnail({ slug }: { slug: string; category: ComponentCategor
         ))}
       </div>
     ),
+    "cards-two": (
+      <div className="flex items-center justify-center relative w-20 h-20 select-none">
+        {[-1, 0, 1].map((i) => (
+          <div
+            key={i}
+            className="absolute border border-white/20 bg-white/5 transition-all duration-500 group-hover:border-white/40"
+            style={{
+              width: 24,
+              height: 36,
+              opacity: i === 0 ? 1 : 0.35,
+              transform: `perspective(100px) rotateY(${i * 40}deg) translateZ(${i === 0 ? 12 : -8}px) translateX(${i * 18}px)`,
+              zIndex: i === 0 ? 10 : 1,
+            }}
+          />
+        ))}
+      </div>
+    ),
     "image-reveal": (
       <div className="w-16 h-20 border border-white/20 relative overflow-hidden">
         <div className="absolute inset-0 bg-white/5" />

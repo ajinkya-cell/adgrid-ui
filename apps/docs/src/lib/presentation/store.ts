@@ -6,6 +6,7 @@ export type DisplayStrategy = "center" | "fullscreen" | "cover" | "fit" | "auto"
 
 export interface PresentationSettings {
   backgroundMode: BackgroundMode;
+  canvasColor: string;
   showSafeArea: boolean;
   showRulers: boolean;
   showGuides: boolean;
@@ -65,6 +66,7 @@ export interface PresentationState {
 
 const defaultSettings: PresentationSettings = {
   backgroundMode: "solid",
+  canvasColor: "#111111",
   showSafeArea: false,
   showRulers: false,
   showGuides: false,

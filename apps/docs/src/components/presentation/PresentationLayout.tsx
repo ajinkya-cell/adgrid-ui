@@ -66,7 +66,7 @@ export function PresentationLayout({ payload }: { payload: PresentationPayload }
           }
         `}} />
         <AnimatePresence mode="wait">
-          <PresentationBackground mode={settings.backgroundMode} />
+          <PresentationBackground mode={settings.backgroundMode} canvasColor={settings.canvasColor ?? "#111111"} />
         </AnimatePresence>
         
         {/* Edge-docked Sidebar Trigger Button */}

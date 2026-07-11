@@ -22,7 +22,7 @@ export function resolveDisplayStrategy(entry: RegistryEntry): Exclude<DisplayStr
   if (entry.category === "backgrounds") return "fullscreen";
   if (entry.slug === "premium-hero") return "cover";
   if (entry.slug === "infinite-scroll") return "fullscreen";
-  if (entry.slug === "coverflow-carousel" || entry.slug === "dot-matrix") return "fit";
+  if (entry.slug === "coverflow-carousel" || entry.slug === "dot-matrix" || entry.slug === "weapon-wheel") return "fit";
   return "center";
 }
 

@@ -606,6 +606,22 @@
       ]
     },
     {
+      "name": "weapon-wheel",
+      "type": "registry:ui",
+      "title": "Weapon Wheel",
+      "description": "Premium GTA V-inspired selection wheel designed for development tools, featuring interactive SVG slices, Tabler icons, mechanical clicks, and live stats dashboards.",
+      "dependencies": [
+        "framer-motion",
+        "@tabler/icons-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/WeaponWheel.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "expand-on-hover",
       "type": "registry:ui",
       "title": "Expand On Hover",
@@ -762,6 +778,41 @@
         {
           "path": "components/ui/DotPatternPlayground.tsx",
           "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "cards-two",
+      "type": "registry:ui",
+      "title": "Cards Two (3D Orbit Ring)",
+      "description": "A premium spatial 3D circular card carousel that arranges cards around an invisible 3D ring with momentum dragging, snapping, reflection, lighting depth, and custom transforms.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/cards-two/CardsTwo.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/cards-two/types.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/cards-two/hooks/useCylinder.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "components/ui/cards-two/hooks/useRotation.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "components/ui/cards-two/hooks/useCardTransforms.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "components/ui/cards-two/hooks/useCardsTwo.ts",
+          "type": "registry:hook"
         }
       ]
     }

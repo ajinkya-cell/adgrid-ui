@@ -5,14 +5,15 @@ import type { BackgroundMode } from "@/lib/presentation/store";
 
 const baseTransition = { duration: 0.24, ease: [0.25, 1, 0.5, 1] };
 
-export function PresentationBackground({ mode }: { mode: BackgroundMode }) {
+export function PresentationBackground({ mode, canvasColor }: { mode: BackgroundMode; canvasColor: string }) {
   const reducedMotion = useReducedMotion();
 
   return (
     <motion.div
-      key={mode}
+      key={mode + canvasColor}
       aria-hidden="true"
-      className="fixed inset-0 z-0 overflow-hidden bg-[#111111]"
+      className="fixed inset-0 z-0 overflow-hidden"
+      style={{ backgroundColor: canvasColor }}
       initial={reducedMotion ? false : { opacity: 0, filter: "blur(4px)" }}
       animate={{ opacity: 1, filter: "blur(0px)" }}
       exit={{ opacity: 0, filter: "blur(4px)" }}
