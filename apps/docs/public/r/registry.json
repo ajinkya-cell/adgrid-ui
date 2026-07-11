@@ -276,36 +276,6 @@
       ]
     },
     {
-      "name": "chrome-input",
-      "type": "registry:ui",
-      "title": "Chrome Input",
-      "description": "Deep obsidian input with dynamic border glowing highlights and cursor-responsive spotlight tracking.",
-      "dependencies": [
-        "framer-motion"
-      ],
-      "files": [
-        {
-          "path": "components/ui/ChromeInput.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "chrome-select",
-      "type": "registry:ui",
-      "title": "Chrome Select",
-      "description": "Deep obsidian dropdown selector with custom arrow overlays and focus glow animations.",
-      "dependencies": [
-        "framer-motion"
-      ],
-      "files": [
-        {
-          "path": "components/ui/ChromeSelect.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "metallic-form",
       "type": "registry:ui",
       "title": "Metallic Form",
@@ -622,6 +592,48 @@
       ]
     },
     {
+      "name": "names-landing",
+      "type": "registry:ui",
+      "title": "Names Landing",
+      "description": "Premium interactive names hero canvas with organic constellation, grid, and helical layouts, search filtering, and parallax depth layers.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/names-landing/NamesLanding.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/names-landing/NameItem.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/names-landing/BackgroundLayer.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/names-landing/layoutEngine.ts",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "hero",
+      "type": "registry:ui",
+      "title": "Hero Landing",
+      "description": "Highly configurable, responsive portfolio hero landing page with technical grids and interactive pixel art decorations.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/Hero.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "expand-on-hover",
       "type": "registry:ui",
       "title": "Expand On Hover",
@@ -734,18 +746,6 @@
       ]
     },
     {
-      "name": "flickering-grid",
-      "type": "registry:ui",
-      "title": "Flickering Grid",
-      "description": "A canvas-based flickering contribution-graph grid, highly performant and scalable.",
-      "files": [
-        {
-          "path": "components/ui/FlickeringGrid.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "flickering-grid-playground",
       "type": "registry:ui",
       "title": "Flickering Grid Playground",
@@ -753,18 +753,6 @@
       "files": [
         {
           "path": "components/ui/FlickeringGridPlayground.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "dot-pattern",
-      "type": "registry:ui",
-      "title": "Dot Pattern",
-      "description": "A highly customizable SVG-based background pattern component.",
-      "files": [
-        {
-          "path": "components/ui/DotPattern.tsx",
           "type": "registry:ui"
         }
       ]

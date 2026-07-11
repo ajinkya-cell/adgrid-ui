@@ -61,13 +61,21 @@ export function SidebarTrigger() {
         setHovered(false);
         setAngle(0);
       }}
-      className={`fixed left-6 top-6 z-50 flex h-11 w-11 items-center justify-center rounded-2xl border transition-all duration-300 cursor-pointer shadow-[0_10px_35px_rgba(0,0,0,0.6)] ${
-        sidebarOpen 
-          ? "border-violet-500/40 bg-violet-950/20 text-violet-400 shadow-[0_0_15px_rgba(167,139,250,0.25)]" 
-          : "border-white/10 bg-neutral-950/80 text-white/50 hover:text-white hover:border-white/20 hover:scale-105 active:scale-95"
+      className={`fixed left-6 top-6 z-50 flex h-11 w-11 items-center justify-center rounded-full border transition-colors duration-300 cursor-pointer select-none ${
+        sidebarOpen
+          ? "border-violet-400/40 text-violet-300"
+          : "border-white/25 text-white/55 hover:text-white/90 hover:border-white/35"
       }`}
+      style={{
+        backgroundColor: "#171717",
+        boxShadow: sidebarOpen
+          ? "inset 0 1.5px 0 0 rgba(167,139,250,0.12), inset 0 -1.5px 0 0 rgba(0,0,0,0.45), 0 0 18px rgba(139,92,246,0.2), 0 20px 50px rgba(0,0,0,0.6)"
+          : "inset 0 1.5px 0 0 rgba(255,255,255,0.10), inset 0 -1.5px 0 0 rgba(0,0,0,0.4), 0 20px 50px rgba(0,0,0,0.55)",
+      }}
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
+      whileHover={{ scale: 1.06 }}
+      whileTap={{ scale: 0.94 }}
       aria-label={sidebarOpen ? "Close navigator" : "Open navigator"}
       type="button"
     >
@@ -77,7 +85,7 @@ export function SidebarTrigger() {
           width="32"
           height="32"
           viewBox="0 0 100 100"
-          className="absolute opacity-30"
+          className="absolute opacity-80"
           animate={{ rotate: sidebarOpen ? -360 : 360 }}
           transition={{
             repeat: Infinity,
@@ -86,7 +94,6 @@ export function SidebarTrigger() {
           }}
         >
           <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="2.5" strokeDasharray="3 15" />
-          <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="1 8" />
         </motion.svg>
 
         {/* Cursor-Pointing Inner Needle */}

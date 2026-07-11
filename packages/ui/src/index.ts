@@ -108,3 +108,11 @@ export type {
 // Weapon Wheel Select Component
 export { WeaponWheel } from "./animated/WeaponWheel";
 export type { WeaponWheelProps, WeaponWheelItem } from "./animated/WeaponWheel";
+
+// Names Landing Component
+export { NamesLanding } from "./animated/NamesLanding/NamesLanding";
+export type { NamesLandingProps } from "./animated/NamesLanding/NamesLanding";
+
+// Hero Component
+export { Hero } from "./animated/Hero";
+export type { HeroProps } from "./animated/Hero";

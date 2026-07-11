@@ -41,6 +41,8 @@ import {
   ScrollProgress,
   CardsTwo,
   WeaponWheel,
+  NamesLanding,
+  Hero,
 } from "@adgrid-ui/ui";
 import { Cards } from "../../../../../packages/ui/src/animated/Cards";
 import {
@@ -749,6 +751,72 @@ export function PresentationRenderer({
             {...weaponWheelProps}
             className="w-full"
           />
+        </div>
+      );
+    }
+    case "names-landing": {
+      const namesLandingProps = {
+        names: [
+          "Alexander", "Charlotte", "Daniel", "Emma", "James", "Lucas", "Olivia", "Sophia",
+          "Benjamin", "Mia", "Ethan", "Amelia", "Henry", "Harper", "Sebastian", "Evelyn",
+          "Jack", "Aria", "Owen", "Ella", "Levi", "Avery", "Jackson", "Scarlett", "Mateo",
+          "Grace", "Liam", "Ava", "Noah", "Isabella", "Oliver", "Elijah", "William",
+          "Abigail", "Emily", "Mason", "Elizabeth", "Michael", "Mila", "Jacob", "Sofia",
+          "Logan", "Camila", "Victoria", "Madison", "Luna", "Theodore", "Aiden", "Chloe",
+          "Samuel", "Penelope", "Joseph", "Layla", "John", "Riley", "David", "Zoey",
+          "Wyatt", "Nora", "Carter", "Lily", "Julian", "Eleanor", "Luke", "Hannah",
+          "Grayson", "Lillian", "Jaxon", "Addison", "Asher", "Aubrey", "Gabriel", "Ellie",
+          "Stella", "Leo", "Natalie", "Lincoln", "Zoe", "Hudson", "Leah", "Dylan",
+          "Hazel", "Ezra", "Violet", "Thomas", "Aurora", "Charles", "Savannah", "Christopher",
+          "Audrey", "Miles", "Brooklyn", "Matthew", "Bella", "Josiah", "Claire", "Connor",
+          "Skylar", "Eli", "Lucy", "Maverick", "Paisley", "Ryan", "Everly", "Nathan",
+          "Anna", "Isaac", "Caroline", "Christian", "Nova", "Aaron", "Genesis", "Colton",
+          "Emilia", "Roman", "Kennedy", "Hunter", "Samantha", "Maya", "Landon", "Willow",
+          "Brooks", "Adeline", "Cameron", "Ruby", "Adrian", "Elena", "Jonathan", "Lola",
+          "Gavin", "Pippa", "Nolan", "Stella", "Nicholas", "Clara", "Dominic", "Alice"
+        ],
+        variant: "constellation" as const,
+        background: "solid" as const,
+        fontFamily: "sans" as const,
+        fontScale: 1.0,
+        density: 2,
+        showSearch: true,
+        colorMode: "dark" as const,
+        title: "CATALOGUE",
+        subtitle: "SPATIAL TYPOGRAPHY EXHIBIT / VOID UI",
+        ...liveProps,
+      };
+
+      return (
+        <div className="w-full h-screen relative select-none">
+          <NamesLanding {...(namesLandingProps as any)} />
+        </div>
+      );
+    }
+    case "hero": {
+      const heroProps = {
+        name: "stephanie",
+        bgColor: "#1E3FEB",
+        gridOpacity: 0.06,
+        fontFamily: "instrument" as const,
+        monoFontFamily: "dotgothic" as const,
+        iconVariant: "flower" as const,
+        iconAnimation: "static" as const,
+        iconPosition: "inline" as const,
+        iconSize: 36,
+        iconRotation: 0,
+        pixelDensity: "medium" as const,
+        enableParallax: true,
+        animationSpeed: "normal" as const,
+        backgroundIconVariant: "cross" as const,
+        backgroundIconCount: 8,
+        introduction: "I build high-end interactive visual systems and graphics for digital exhibitions, museums, and products.",
+        ...liveProps,
+      };
+
+      return (
+        <div className="w-full h-screen relative select-none">
+          <Hero {...(heroProps as any)} />
         </div>
       );
     }

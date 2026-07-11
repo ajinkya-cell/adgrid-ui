@@ -186,19 +186,19 @@ export function PresentationSidebar({
                     >
                       <motion.button
                         onClick={() => setSidebarTab(isActive ? "navigator" : tab)}
-                        whileHover={{ 
-                          scale: 1.08, 
-                          y: -1,
-                          boxShadow: isActive 
-                            ? "0 0 15px rgba(167, 139, 250, 0.35)" 
-                            : "0 0 10px rgba(255, 255, 255, 0.08)"
-                        }}
-                        whileTap={{ scale: 0.95 }}
-                        className={`relative flex h-8 w-8 items-center justify-center rounded-xl border transition-all duration-200 cursor-pointer ${
+                        whileHover={{ scale: 1.08, y: -1 }}
+                        whileTap={{ scale: 0.94 }}
+                        className={`relative flex h-8 w-8 items-center justify-center rounded-full border transition-colors duration-200 cursor-pointer ${
                           isActive
-                            ? "border-violet-500/40 bg-violet-950/20 text-violet-400"
-                            : "border-white/5 bg-[#050505] text-white/40 hover:text-white/80 hover:border-white/10"
+                            ? "border-violet-400/40 text-violet-300"
+                            : "border-white/25 text-white/50 hover:text-white/90 hover:border-white/35"
                         }`}
+                        style={{
+                          backgroundColor: "#171717",
+                          boxShadow: isActive
+                            ? "inset 0 1.5px 0 0 rgba(167,139,250,0.12), inset 0 -1.5px 0 0 rgba(0,0,0,0.45), 0 0 14px rgba(139,92,246,0.18), 0 8px 24px rgba(0,0,0,0.5)"
+                            : "inset 0 1.5px 0 0 rgba(255,255,255,0.10), inset 0 -1.5px 0 0 rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.5)",
+                        }}
                         type="button"
                       >
                         {tab === "code" && (
