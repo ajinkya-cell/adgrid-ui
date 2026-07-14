@@ -33,7 +33,7 @@ export function DashedMarquee({
   speed = 25,
   pauseOnHover = true,
   blurCorners = true,
-  fadeColor = "#0d0d0d",
+  fadeColor = "#111111",
   cardProps,
 }: DashedMarqueeProps) {
   const uniqId = useId().replace(/:/g, "");
@@ -41,8 +41,15 @@ export function DashedMarquee({
 
   const isVertical = direction === "up-to-down" || direction === "down-to-up";
 
-  // Double the dataset to avoid seamless looping gaps
-  const doubledItems = [...items, ...items];
+  // Repeat the items array dynamically to ensure track width/height exceeds any screen viewport size
+  const minRequiredCount = variant === "icon" ? 30 : 12;
+  let repeatedItems = [...items];
+  while (repeatedItems.length < minRequiredCount && items.length > 0) {
+    repeatedItems = [...repeatedItems, ...items];
+  }
+
+  // Double the repeated dataset to ensure the seamless translation snapping works mathematically
+  const doubledItems = [...repeatedItems, ...repeatedItems];
 
   // Resolve CSS Transforms for Marquee Tracks
   let keyframes = "";
@@ -59,8 +66,8 @@ export function DashedMarquee({
   return (
     <div
       className={cn(
-        "relative overflow-hidden w-full h-full flex items-center justify-center bg-[#0d0d0d] p-4",
-        isVertical ? "flex-col min-h-[500px]" : "flex-row min-w-[320px]",
+        "relative overflow-hidden w-full h-full flex items-center bg-transparent p-4",
+        isVertical ? "flex-col justify-start min-h-[500px]" : "flex-row justify-start min-w-[320px]",
         className
       )}
     >
@@ -109,24 +116,29 @@ export function DashedMarquee({
       <div
         className={cn(
           "flex shrink-0 gap-4",
-          isVertical ? "flex-col" : "flex-row",
+          isVertical ? "flex-col h-max" : "flex-row w-max",
           pauseOnHover && "hover:[animation-play-state:paused]"
         )}
         style={{
           animation: `${animName} ${speed}s linear infinite`,
+          willChange: "transform",
         }}
       >
-        {doubledItems.map((item, idx) => (
-          <DashedFeatureCard
-            key={`${item.id}-${idx}`}
-            title={item.title}
-            description={item.description}
-            icon={item.icon}
-            iconOnly={variant === "icon"}
-            cardVariant={cardVariant}
-            {...cardProps}
-          />
-        ))}
+        {doubledItems.map((item, idx) => {
+          const isDuplicate = idx >= items.length;
+          return (
+            <DashedFeatureCard
+              key={`${item.id}-${idx}`}
+              title={item.title}
+              description={item.description}
+              icon={item.icon}
+              iconOnly={variant === "icon"}
+              cardVariant={cardVariant}
+              aria-hidden={isDuplicate ? "true" : undefined}
+              {...cardProps}
+            />
+          );
+        })}
       </div>
     </div>
   );

@@ -103,7 +103,8 @@ export function DashedFeatureCard({
   cornerWidth = 2,
   cornerOffset = 3,
   iconOnly = false,
-}: DashedFeatureCardProps) {
+  ...props
+}: DashedFeatureCardProps & React.HTMLAttributes<HTMLDivElement>) {
   const [isHovered, setIsHovered] = useState(false);
 
   // Spring transition presets
@@ -139,8 +140,8 @@ export function DashedFeatureCard({
       whileHover={{ y: hoverY, scale: hoverScale }}
       transition={springTransition}
       className={cn(
-        "relative flex items-center text-left cursor-pointer select-none overflow-visible",
-        iconOnly ? "w-14 h-14 p-0 justify-center shrink-0" : "w-80 min-h-[96px] gap-4 p-5",
+        "relative flex items-center text-left cursor-pointer select-none overflow-visible shrink-0",
+        iconOnly ? "w-14 h-14 p-0 justify-center" : "w-80 min-h-[96px] gap-4 p-5",
         containerRoundedClass,
         isBevel
           ? "border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 backdrop-blur-2xl"
@@ -154,6 +155,7 @@ export function DashedFeatureCard({
           ? "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.4), 0 30px 80px rgba(0,0,0,0.6)"
           : (showShadow ? shadowStyle : "none"),
       }}
+      {...(props as any)}
     >
       {/* Absolute SVG Overlay for Outer Dashed Border */}
       {!isBevel && (

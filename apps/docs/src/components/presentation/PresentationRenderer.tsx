@@ -885,14 +885,17 @@ export function PresentationRenderer({
         { id: 7, title: "Svelte Frontend", description: "Reactive compiler DOM", icon: <IconBrandSvelte size={20} /> },
       ];
 
+      const canvasColor = usePresentationStore((state) => state.settings.canvasColor ?? "#111111");
+
       const marqueeProps = {
         items: dummyMarqueeItems,
+        fadeColor: canvasColor,
         ...liveProps,
       };
 
       return (
-        <div className="w-full flex items-center justify-center p-6 bg-[#0d0d0d] min-h-[500px]">
-          <DashedMarquee {...marqueeProps} />
+        <div className="w-full h-screen flex items-center justify-center">
+          <DashedMarquee {...marqueeProps} className="w-full h-full border-none" />
         </div>
       );
     }

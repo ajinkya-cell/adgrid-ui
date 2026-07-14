@@ -707,6 +707,7 @@ export const registry: RegistryEntry[] = [
     dependencies: ["framer-motion", "@tabler/icons-react"],
     packagePath: "animated/DashedMarquee.tsx",
     files: ["animated/DashedMarquee.tsx", "animated/DashedFeatureCard.tsx"],
+    presentationStrategy: "fullscreen",
     propDefs: [
       { name: "variant", type: "select", default: "default", description: "Display variant style", options: ["default", "icon"], required: false },
       { name: "cardVariant", type: "select", default: "dashed", description: "Design style of marquee cards", options: ["dashed", "bevel"], required: false },
