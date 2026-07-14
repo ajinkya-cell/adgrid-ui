@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 
 import {
   AnisotropicKnob,
@@ -30,6 +30,8 @@ import {
   PixelMeltBackground,
   PremiumHero,
   SimpleCard,
+  DashedFeatureCard,
+  DashedMarquee,
   SpotlightGrid,
   FlickeringGrid,
   FlickeringGridPlayground,
@@ -43,6 +45,7 @@ import {
   WeaponWheel,
   NamesLanding,
   Hero,
+  AnimatedIcons1,
 } from "@adgrid-ui/ui";
 import { Cards } from "../../../../../packages/ui/src/animated/Cards";
 import {
@@ -858,6 +861,41 @@ export function PresentationRenderer({
           />
         </div>
       );
+    case "dashed-feature-card": {
+      const cardProps = {
+        title: "My Issues",
+        description: "Issue tracker",
+        showCorners: true,
+        ...liveProps,
+      };
+      return (
+        <div className="flex items-center justify-center w-full min-h-[400px]">
+          <DashedFeatureCard {...(cardProps as Parameters<typeof DashedFeatureCard>[0])} />
+        </div>
+      );
+    }
+    case "dashed-marquee": {
+      const dummyMarqueeItems = [
+        { id: 1, title: "Next.js Framework", description: "Production build server", icon: <IconBrandNextjs size={20} /> },
+        { id: 2, title: "Rust Compiler", description: "Systems execution speed", icon: <IconBrandRust size={20} /> },
+        { id: 3, title: "Docker Container", description: "Kubernetes orchestration", icon: <IconBrandDocker size={20} /> },
+        { id: 4, title: "Tailwind Styling", description: "Design tokens layout", icon: <IconBrandTailwind size={20} /> },
+        { id: 5, title: "Go Microservice", description: "Concurrent backend router", icon: <IconBrandGolang size={20} /> },
+        { id: 6, title: "Database Layer", description: "Postgres connection pool", icon: <IconDatabase size={20} /> },
+        { id: 7, title: "Svelte Frontend", description: "Reactive compiler DOM", icon: <IconBrandSvelte size={20} /> },
+      ];
+
+      const marqueeProps = {
+        items: dummyMarqueeItems,
+        ...liveProps,
+      };
+
+      return (
+        <div className="w-full flex items-center justify-center p-6 bg-[#0d0d0d] min-h-[500px]">
+          <DashedMarquee {...marqueeProps} />
+        </div>
+      );
+    }
     case "flickering-grid":
       return (
         <div className="relative flex items-center justify-center w-full min-h-[400px] border border-white/5 bg-[#030303] rounded-2xl overflow-hidden p-6">
@@ -882,6 +920,8 @@ export function PresentationRenderer({
       );
     case "dot-pattern-playground":
       return <DotPatternPlayground className="w-full" />;
+    case "animated-icons-1":
+      return <AnimatedIcons1 />;
     default:
       return <div className="font-mono text-xs uppercase tracking-[0.24em] text-white/45">Preview unavailable</div>;
   }

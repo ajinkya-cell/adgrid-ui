@@ -1,5 +1,3 @@
-import React from "react";
-
 interface BackgroundLayerProps {
   type: "solid" | "noise" | "paper" | "grid" | "gradient" | "texture";
   colorMode: "light" | "dark";
@@ -10,7 +8,6 @@ export function BackgroundLayer({ type, colorMode }: BackgroundLayerProps) {
 
   // Base theme variables
   const bgBase = isDark ? "bg-[#0B0B0B]" : "bg-[#F4F1E8]";
-  const textColor = isDark ? "text-white/10" : "text-black/8";
 
   return (
     <div className={`absolute inset-0 z-0 overflow-hidden select-none pointer-events-none ${bgBase}`}>

@@ -22,6 +22,8 @@ const UI = {
   TextShuffle: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.TextShuffle }))),
   NowPlayingCard: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.NowPlayingCard }))),
   SimpleCard: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.SimpleCard }))),
+  DashedFeatureCard: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.DashedFeatureCard }))),
+  DashedMarquee: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.DashedMarquee }))),
   CoverflowCarousel: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.CoverflowCarousel }))),
   PixelMeltBackground: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.PixelMeltBackground }))),
   BreathingGrid: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.BreathingGrid }))),
@@ -150,6 +152,36 @@ function MiniPreviewRenderer({ slug }: { slug: string }) {
           </Suspense>
         </div>
       );
+    case "dashed-feature-card":
+      return (
+        <div className="flex h-full w-full items-center justify-center p-2 scale-90">
+          <Suspense fallback={null}>
+            <UI.DashedFeatureCard
+              title="My Issues"
+              description="Issue tracker"
+              showCorners={true}
+            />
+          </Suspense>
+        </div>
+      );
+    case "dashed-marquee": {
+      const dummyMiniItems = [
+        { id: 1, title: "Database Sync", description: "Cloud sync", icon: null },
+        { id: 2, title: "Auth Gate", description: "OAuth security", icon: null },
+        { id: 3, title: "Payment Loop", description: "Stripe route", icon: null },
+      ];
+      return (
+        <div className="flex h-full w-full items-center justify-center p-2 scale-75 overflow-hidden">
+          <Suspense fallback={null}>
+            <UI.DashedMarquee
+              items={dummyMiniItems}
+              speed={15}
+              blurCorners={false}
+            />
+          </Suspense>
+        </div>
+      );
+    }
 
     // ── Animated ─────────────────────────────────────────────────────────
     case "living-text":

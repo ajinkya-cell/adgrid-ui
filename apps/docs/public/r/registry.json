@@ -803,6 +803,62 @@
           "type": "registry:hook"
         }
       ]
+    },
+    {
+      "name": "animated-icons-1",
+      "type": "registry:ui",
+      "title": "Animated Icons 1",
+      "description": "Nine Tabler icons in small monochrome black cards. Click any card to fire its unique animation — triple spin, nuclear collapse, hex facet snap, supernova burst, lemniscate shudder, glitch disintegrate, lightning strike, helix flip, or vortex implosion. Pure monochrome, no color, no shadows.",
+      "dependencies": [
+        "framer-motion",
+        "@tabler/icons-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/animated-icons-1/Loaders1.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/animated-icons-1/LoaderCard.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "dashed-feature-card",
+      "type": "registry:ui",
+      "title": "Dashed Feature Card",
+      "description": "A dark-themed editorial feature card with interactive L-shaped crop corner overlays, dashed inner icon frames, and spring-physics animations.",
+      "dependencies": [
+        "framer-motion",
+        "@tabler/icons-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/DashedFeatureCard.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "dashed-marquee",
+      "type": "registry:ui",
+      "title": "Dashed Marquee",
+      "description": "An infinite scrolling marquee section utilizing custom edit-dashed cards and compact icon tiles with speed, direction, and corner blur settings.",
+      "dependencies": [
+        "framer-motion",
+        "@tabler/icons-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/dashed-marquee/DashedMarquee.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/dashed-marquee/DashedFeatureCard.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

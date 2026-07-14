@@ -71,9 +71,8 @@ export function NameItem({
     return isDark ? "text-neutral-600" : "text-neutral-400";
   };
 
-  // 3. Cursor dynamic lighting - calculate distance from mouse using motion values
-  // We use 300px radius for cursor highlight
-  const rawDistance = useTransform([mouseX, mouseY], ([mx, my]) => {
+  const rawDistance = useTransform([mouseX, mouseY], (latest: unknown) => {
+    const [mx, my] = latest as [number, number];
     if (searchActive) return 9999; // bypass cursor lighting during active searches
     const dx = mx - item.x;
     const dy = my - item.y;
