@@ -129,3 +129,7 @@ export type { DashedFeatureCardProps } from "./animated/DashedFeatureCard";
 // Dashed Marquee
 export { DashedMarquee } from "./animated/DashedMarquee";
 export type { DashedMarqueeProps, MarqueeItem } from "./animated/DashedMarquee";
+
+// Bevel Accordion
+export { BevelAccordion } from "./animated/BevelAccordion";
+export type { BevelAccordionProps, AccordionItem } from "./animated/BevelAccordion";

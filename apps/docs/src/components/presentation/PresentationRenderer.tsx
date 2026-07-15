@@ -32,6 +32,7 @@ import {
   SimpleCard,
   DashedFeatureCard,
   DashedMarquee,
+  BevelAccordion,
   SpotlightGrid,
   FlickeringGrid,
   FlickeringGridPlayground,
@@ -896,6 +897,42 @@ export function PresentationRenderer({
       return (
         <div className="w-full h-screen flex items-center justify-center">
           <DashedMarquee {...marqueeProps} className="w-full h-full border-none" />
+        </div>
+      );
+    }
+    case "bevel-accordion": {
+      const dummyAccordionItems = [
+        {
+          id: "1",
+          title: "System Engine Settings",
+          description: "Manage execution defaults",
+          content: "Configure global widgets, refresh intervals, security sessions, and administrative account permissions from a single interface.",
+          icon: <IconTerminal2 size={16} />,
+        },
+        {
+          id: "2",
+          title: "Database Sync Layer",
+          description: "Realtime data replications",
+          content: "Monitor read/write operations, backup states, replication lags, and cloud synchronization processes across multi-region databases.",
+          icon: <IconDatabase size={16} />,
+        },
+        {
+          id: "3",
+          title: "API Integrations",
+          description: "Webhooks and key channels",
+          content: "Set up incoming webhook listeners, developer API key authentication headers, logs routing, and developer options for third-party platforms.",
+          icon: <IconBolt size={16} />,
+        },
+      ];
+      const accordionProps = {
+        items: dummyAccordionItems,
+        ...liveProps,
+      };
+      return (
+        <div className="w-full min-h-screen flex items-center justify-center p-6 bg-transparent">
+          <div className="w-full max-w-xl">
+            <BevelAccordion {...(accordionProps as Parameters<typeof BevelAccordion>[0])} />
+          </div>
         </div>
       );
     }

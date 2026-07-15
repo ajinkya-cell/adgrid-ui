@@ -859,6 +859,21 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "bevel-accordion",
+      "type": "registry:ui",
+      "title": "Bevel Accordion",
+      "description": "A tactile 3D beveled accordion stack matching the Props Tweaker styles, featuring rotating chevrons, heights transition, and neon glows shadow overlays.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/BevelAccordion.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

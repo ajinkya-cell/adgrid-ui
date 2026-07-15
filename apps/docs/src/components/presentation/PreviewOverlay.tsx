@@ -24,6 +24,7 @@ const UI = {
   SimpleCard: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.SimpleCard }))),
   DashedFeatureCard: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.DashedFeatureCard }))),
   DashedMarquee: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.DashedMarquee }))),
+  BevelAccordion: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.BevelAccordion }))),
   CoverflowCarousel: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.CoverflowCarousel }))),
   PixelMeltBackground: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.PixelMeltBackground }))),
   BreathingGrid: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.BreathingGrid }))),
@@ -177,6 +178,22 @@ function MiniPreviewRenderer({ slug }: { slug: string }) {
               items={dummyMiniItems}
               speed={15}
               blurCorners={false}
+            />
+          </Suspense>
+        </div>
+      );
+    }
+    case "bevel-accordion": {
+      const dummyMiniAccordionItems = [
+        { id: "1", title: "General", description: "Settings defaults", content: "Short settings configuration content example." },
+        { id: "2", title: "Database", description: "Replication engine", content: "Short database sync content example." }
+      ];
+      return (
+        <div className="flex h-full w-full items-center justify-center p-4 scale-65 overflow-hidden">
+          <Suspense fallback={null}>
+            <UI.BevelAccordion
+              items={dummyMiniAccordionItems}
+              glowColor="blue"
             />
           </Suspense>
         </div>

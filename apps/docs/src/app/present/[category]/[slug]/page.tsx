@@ -24,7 +24,11 @@ export default async function PresentPage({
 }: {
   params: Promise<{ category: string; slug: string }>;
 }) {
-  const { category, slug } = await params;
+  const resolvedParams = await params;
+  if (!resolvedParams || !resolvedParams.category || !resolvedParams.slug) {
+    return null;
+  }
+  const { category, slug } = resolvedParams;
   const entry = registry.find((component) => component.slug === slug && component.category === category);
   if (!entry) notFound();
 

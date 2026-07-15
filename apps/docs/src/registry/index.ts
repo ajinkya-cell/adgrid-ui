@@ -717,4 +717,18 @@ export const registry: RegistryEntry[] = [
       { name: "pauseOnHover", type: "boolean", default: true, description: "Pause marquee sliding on mouse hover", required: false },
     ],
   },
+  {
+    name: "Bevel Accordion",
+    slug: "bevel-accordion",
+    category: "animated",
+    description: "A tactile 3D beveled accordion stack matching the Props Tweaker styles, featuring rotating chevrons, heights transition, and neon glows shadow overlays.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/BevelAccordion.tsx",
+    files: ["animated/BevelAccordion.tsx"],
+    presentationStrategy: "fullscreen",
+    propDefs: [
+      { name: "allowMultiple", type: "boolean", default: false, description: "Allow multiple panels open at once", required: false },
+      { name: "glowColor", type: "select", default: "blue", description: "Neon glow colors", options: ["blue", "white", "none"], required: false },
+    ],
+  },
 ];
