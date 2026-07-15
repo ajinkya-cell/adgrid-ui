@@ -33,6 +33,7 @@ import {
   DashedFeatureCard,
   DashedMarquee,
   BevelAccordion,
+  StickerCard,
   SpotlightGrid,
   FlickeringGrid,
   FlickeringGridPlayground,
@@ -933,6 +934,16 @@ export function PresentationRenderer({
           <div className="w-full max-w-xl">
             <BevelAccordion {...(accordionProps as Parameters<typeof BevelAccordion>[0])} />
           </div>
+        </div>
+      );
+    }
+    case "sticker-card": {
+      const stickerCardProps = {
+        ...liveProps,
+      };
+      return (
+        <div className="pt-16">
+          <StickerCard {...(stickerCardProps as Parameters<typeof StickerCard>[0])} />
         </div>
       );
     }

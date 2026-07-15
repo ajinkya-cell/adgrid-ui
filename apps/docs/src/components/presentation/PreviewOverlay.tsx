@@ -25,6 +25,7 @@ const UI = {
   DashedFeatureCard: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.DashedFeatureCard }))),
   DashedMarquee: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.DashedMarquee }))),
   BevelAccordion: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.BevelAccordion }))),
+  StickerCard: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.StickerCard }))),
   CoverflowCarousel: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.CoverflowCarousel }))),
   PixelMeltBackground: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.PixelMeltBackground }))),
   BreathingGrid: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.BreathingGrid }))),
@@ -195,6 +196,15 @@ function MiniPreviewRenderer({ slug }: { slug: string }) {
               items={dummyMiniAccordionItems}
               glowColor="blue"
             />
+          </Suspense>
+        </div>
+      );
+    }
+    case "sticker-card": {
+      return (
+        <div className="flex h-full w-full items-center justify-center p-4 scale-40 origin-center overflow-hidden">
+          <Suspense fallback={null}>
+            <UI.StickerCard />
           </Suspense>
         </div>
       );

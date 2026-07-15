@@ -874,6 +874,22 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "sticker-card",
+      "type": "registry:ui",
+      "title": "Sticker Card",
+      "description": "An interactive card that scatters bouncy physics-based stickers all over the viewport on hover.",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/StickerCard.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

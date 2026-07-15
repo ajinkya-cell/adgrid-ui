@@ -731,4 +731,17 @@ export const registry: RegistryEntry[] = [
       { name: "glowColor", type: "select", default: "blue", description: "Neon glow colors", options: ["blue", "white", "none"], required: false },
     ],
   },
+  {
+    name: "Sticker Card",
+    slug: "sticker-card",
+    category: "animated",
+    description: "An interactive card that scatters bouncy physics-based stickers all over the viewport on hover.",
+    dependencies: ["framer-motion", "lucide-react"],
+    packagePath: "animated/StickerCard.tsx",
+    files: ["animated/StickerCard.tsx"],
+    presentationStrategy: "fullscreen",
+    propDefs: [
+      { name: "numStickers", type: "number", default: 7, description: "Number of scattered stickers to render", required: false, min: 5, max: 10, step: 1 },
+    ],
+  },
 ];

@@ -133,3 +133,6 @@ export type { DashedMarqueeProps, MarqueeItem } from "./animated/DashedMarquee";
 // Bevel Accordion
 export { BevelAccordion } from "./animated/BevelAccordion";
 export type { BevelAccordionProps, AccordionItem } from "./animated/BevelAccordion";
+
+// Sticker Card
+export { default as StickerCard } from "./animated/StickerCard";
