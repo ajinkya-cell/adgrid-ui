@@ -102,3 +102,79 @@ Copy and use this prompt to spec out components in code generators or system sty
 > 3. **Input Elements (Sub-Wells)**: Solid `#050505` background. Border is `1px solid rgba(255, 255, 255, 0.05)`. Apply `box-shadow: inset 0 1.5px 3px rgba(0, 0, 0, 0.60)` to depress inputs inward.
 > 
 > 4. **Selected Toggles (Raised Pills)**: Clean solid white `#FFFFFF` button. Apply `border: 1px solid rgba(255, 255, 255, 0.35)` and `box-shadow: 0 2px 4px rgba(0, 0, 0, 0.20)` to elevate it above the recessed wells.
+
+
+
+
+  ================================================================================                                                              
+    PRODUCTION SPECIFICATION: HYPER-TACTILE MACHINED BEVEL CARD (FLAT AESTHETIC)                                                                  
+    ================================================================================                                                              
+                                                                                                                                                  
+    1. MATERIALITY & SURFACE TEXTURE                                                                                                              
+    - Core Material: Solid "machined polymer" matte surface with high light-absorption properties (non-reflective face).                          
+    - Base Color: Solid dark charcoal carbon (#171717).                                                                                           
+    - Corner Geometry: 16px corner radius (equivalent to Tailwind's `rounded-2xl`). Must use squircle (sub-pixel curvature smoothing) to prevent  
+  corner highlight pinching.                                                                                                                      
+                                                                                                                                                  
+    2. LIGHT PHYSICS & MULTI-LAYERED SPECULAR HIGHLIGHTS                                                                                          
+    The card uses a simulated overhead ambient light source. This requires different border treatments for each horizon:                          
+                                                                                                                                                  
+    A. The Horizon Top Edge (Primary Specular Light Catch):                                                                                       
+    - Highlight Overlay: A razor-thin, 1px top border line using a high-contrast white light catch: border-top: 1px solid rgba(255, 255, 255, 0.  
+  22).                                                                                                                                            
+    - Underlay Refraction: Directly below the top border, a soft 1.5px inner white gloss lines the inside edge to simulate light scattering       
+  through the bevel bevel edge: inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08).                                                                      
+                                                                                                                                                  
+    B. The Lateral Side Edges (Soft Ambient Roll-off):                                                                                            
+    - Side Borders: A sub-pixel, low-opacity defining line to separate the card from dark backgrounds without creating high-contrast lines:       
+  border-left/right: 1px solid rgba(255, 255, 255, 0.02).                                                                                         
+                                                                                                                                                  
+    C. The Horizon Bottom Edge (Occlusion Border & Shadow Catch):                                                                                 
+    - Outer Bottom Border: A subtle, darker physical border separating the base from the drop shadow: border-bottom: 1px solid rgba(255, 255, 255,
+  0.1).                                                                                                                                           
+    - Inner Bottom Occlusion: An inner deep shadow representing physical surface occlusion (light blocking at the bottom lip): inset 0 -1.5px 0 0 
+  rgba(0, 0, 0, 0.45).                                                                                                                            
+                                                                                                                                                  
+    3. DUAL-FREQUENCY GLOBAL DROP SHADOWS                                                                                                         
+    To simulate physical suspension above the viewport background, the drop shadow is split into high-frequency and low-frequency components:     
+    - High-Frequency (Ambient Occlusion): A sharp, dark, short-range shadow hugging the bottom edge to anchor the object: 0 4px 6px -1px rgba(0, 0,
+  0, 0.8), 0 2px 4px -1px rgba(0, 0, 0, 0.9).                                                                                                     
+    - Low-Frequency (Soft Ambient Blur): A wide, low-opacity shadow simulating scattered light absorption under the card: 0 30px 80px rgba(0, 0, 0,
+  0.65).                                                                                                                                          
+                                                                                                                                                  
+    4. THE RECESSED CONCENTRIC INNER SOCKET (CONTENT FRAME)                                                                                       
+    Any inner item container (e.g. icon slot, button, or input frame) must follow a "sunken socket" behavior concentrically aligned inside the    
+  card:                                                                                                                                           
+    - Socket Background: Matte obsidian depth (#070707).                                                                                          
+    - Socket Border: A 1px boundary line: border: 1px solid rgba(255, 255, 255, 0.05).                                                            
+    - Socket Cavity Shadow: A deep recessed inset shadow simulating light dropping off inside the socket wall: box-shadow: inset 0 1.5px 3.5px    
+  rgba(0, 0, 0, 0.85).                                                                                                                            
+                                                                                                                                                  
+    ================================================================================                                                              
+    PRODUCTION-READY CSS SPECIFICATION                                                                                                            
+    ================================================================================                                                              
+    [CSS Selector]                                                                                                                                
+    .skeuo-bevel-card {                                                                                                                           
+      background-color: #171717;                                                                                                                  
+      border-radius: 16px;                                                                                                                        
+      border-top: 1px solid rgba(255, 255, 255, 0.22);                                                                                            
+      border-left: 1px solid rgba(255, 255, 255, 0.02);                                                                                           
+      border-right: 1px solid rgba(255, 255, 255, 0.02);                                                                                          
+      border-bottom: 1px solid rgba(255, 255, 255, 0.10);                                                                                         
+      box-shadow:                                                                                                                                 
+        /* 1. Inner Top Specular Light Catch */                                                                                                   
+        inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08),                                                                                              
+        /* 2. Inner Bottom Occlusion Cavity Shadow */                                                                                             
+        inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.45),                                                                                                   
+        /* 3. High-Frequency Ambient Occlusion (Anchor) */                                                                                        
+        0 4px 6px -1px rgba(0, 0, 0, 0.8),                                                                                                        
+        0 2px 4px -1px rgba(0, 0, 0, 0.9),                                                                                                        
+        /* 4. Low-Frequency Scattered Drop Shadow (Depth) */                                                                                      
+        0 30px 80px rgba(0, 0, 0, 0.65);                                                                                                          
+    }                                                                                                                                             
+                                                                                                                                                  
+    .skeuo-inner-socket {                                                                                                                         
+      background-color: #070707;                                                                                                                  
+      border: 1px solid rgba(255, 255, 255, 0.05);                                                                                                
+      box-shadow: inset 0 1.5px 3.5px rgba(0, 0, 0, 0.85);                                                                                        
+    } 

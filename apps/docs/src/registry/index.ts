@@ -203,6 +203,40 @@ export const registry: RegistryEntry[] = [
     ],
   },
   {
+    name: "Button Alpha",
+    slug: "button-alpha",
+    category: "buttons",
+    description: "High-friction matte polymer button with fine light-catching bevel borders and heavy Z-axis mechanical compression.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/ButtonAlpha.tsx",
+    files: ["animated/ButtonAlpha.tsx"],
+    propDefs: [
+      { name: "children", type: "string", default: "ACTIVATE", description: "Button text label", required: false },
+      { name: "shape", type: "select", default: "pill", description: "Button border shape", required: false, options: ["pill", "full", "square"] },
+      { name: "theme", type: "select", default: "charcoal", description: "Color theme variation", required: false, options: ["charcoal", "danger", "tactical"] }
+    ],
+  },
+  {
+    name: "Animated Beam",
+    slug: "animated-beam",
+    category: "animated",
+    description: "An animated, coordinate-tracking connection beam connecting premium recessed beveled nodes in a modular hub-integration grid.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/animated-beam/BeveledBeamShowcase.tsx",
+    files: [
+      "animated/animated-beam/index.ts",
+      "animated/animated-beam/AnimatedBeam.tsx",
+      "animated/animated-beam/BeveledNode.tsx",
+      "animated/animated-beam/BeveledBeamShowcase.tsx",
+    ],
+    propDefs: [
+      { name: "variant", type: "select", default: "default", description: "Color theme variation", required: false, options: ["default", "monochrome", "neon"] },
+      { name: "pathWidth", type: "number", default: 1.5, description: "Stroke width of the path line", required: false, min: 0.5, max: 8, step: 0.5 },
+      { name: "pathOpacity", type: "number", default: 0.5, description: "Stroke opacity of static background line", required: false, min: 0.1, max: 1, step: 0.05 },
+      { name: "duration", type: "number", default: 3.5, description: "Duration in seconds of gradient travel sweep", required: false, min: 1, max: 10, step: 0.5 }
+    ],
+  },
+  {
     name: "Pixel Melt",
     slug: "pixel-melt",
     category: "backgrounds",
@@ -252,6 +286,27 @@ export const registry: RegistryEntry[] = [
     files: ["backgrounds/LuminaWave.tsx"],
     presentationStrategy: "fullscreen",
   },
+  {
+    name: "Matrix Rain",
+    slug: "matrix-rain",
+    category: "backgrounds",
+    description: "A canvas-driven digital rain simulation displaying streaming glowing characters and icons in a premium monochrome aesthetic.",
+    dependencies: [],
+    packagePath: "backgrounds/MatrixRain.tsx",
+    files: ["backgrounds/MatrixRain.tsx"],
+    presentationStrategy: "fullscreen",
+    propDefs: [
+      { name: "speed", type: "number", default: 1.0, description: "Falling speed multiplier", required: false, min: 0.2, max: 4, step: 0.1 },
+      { name: "density", type: "number", default: 1.0, description: "Stream column density factor", required: false, min: 0.2, max: 3, step: 0.1 },
+      { name: "fontSize", type: "number", default: 16, description: "Size of characters in pixels", required: false, min: 10, max: 36, step: 2 },
+      { name: "decayRate", type: "number", default: 0.05, description: "Trail fade overlay speed", required: false, min: 0.01, max: 0.2, step: 0.01 },
+      { name: "glowStrength", type: "number", default: 8, description: "Neon blur glow radius of stream head", required: false, min: 0, max: 20, step: 2 },
+      { name: "opacity", type: "number", default: 0.35, description: "Canvas transparency opacity", required: false, min: 0.1, max: 1.0, step: 0.05 },
+      { name: "color", type: "color", default: "#525252", description: "Color of trailing code segments", required: false },
+      { name: "glowColor", type: "color", default: "#ffffff", description: "Color of leading glowing header symbol", required: false }
+    ],
+  },
+
 
   {
     name: "Metallic Form",
@@ -742,6 +797,49 @@ export const registry: RegistryEntry[] = [
     presentationStrategy: "fullscreen",
     propDefs: [
       { name: "numStickers", type: "number", default: 7, description: "Number of scattered stickers to render", required: false, min: 5, max: 10, step: 1 },
+    ],
+  },
+  {
+    name: "Datepicker",
+    slug: "datepicker",
+    category: "animated",
+    description: "A skeuomorphic 3D beveled calendar date picker with synth mechanical click sound feedback.",
+    dependencies: ["framer-motion", "@tabler/icons-react"],
+    packagePath: "animated/Datepicker.tsx",
+    files: ["animated/Datepicker.tsx"],
+    presentationStrategy: "fullscreen",
+    propDefs: [
+      { name: "glowColor", type: "select", default: "none", description: "Neon glow color behind the datepicker", options: ["none", "blue", "white"], required: false },
+    ],
+  },
+  {
+    name: "NavBar1",
+    slug: "navbar-1",
+    category: "animated",
+    description: "A floating horizontal navigation panel console with sliding tabs, active status glows, and search well.",
+    dependencies: ["framer-motion", "@tabler/icons-react"],
+    packagePath: "animated/NavBar1.tsx",
+    files: ["animated/NavBar1.tsx"],
+    presentationStrategy: "fullscreen",
+    propDefs: [
+      { name: "statusColor", type: "select", default: "emerald", description: "Analog LED status light color indicator", options: ["emerald", "cyan", "rose"], required: false },
+    ],
+  },
+  {
+    name: "Bevel Alert Dialog",
+    slug: "bevel-alert-dialog",
+    category: "animated",
+    description: "A tactile 3D beveled alert dialog panel matching the machined console aesthetic, featuring physical drop shadows, recessed wells, action buttons, and status LED alerts.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/BevelAlertDialog.tsx",
+    files: ["animated/BevelAlertDialog.tsx"],
+    presentationStrategy: "fullscreen",
+    propDefs: [
+      { name: "variant", type: "select", default: "info", description: "Visual and LED alert state theme", options: ["info", "danger"], required: false },
+      { name: "title", type: "string", default: "ALARM CONSOLE INITIALIZED", description: "Main headline text", required: false },
+      { name: "description", type: "string", default: "The security deck has booted successfully. All perimeter sensor scans are active and operating within nominal parameters.", description: "Explanation detail text", required: false },
+      { name: "confirmLabel", type: "string", default: "PROCEED", description: "Primary action button label", required: false },
+      { name: "cancelLabel", type: "string", default: "DISMISS", description: "Secondary action button label", required: false }
     ],
   },
 ];

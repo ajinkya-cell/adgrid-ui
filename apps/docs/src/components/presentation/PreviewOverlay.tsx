@@ -4,6 +4,13 @@ import React, { useEffect, useState, Suspense } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import type { RegistryEntry } from "@/registry";
+import {
+  IconDatabase,
+  IconBrandNodejs,
+  IconBrandNextjs,
+  IconBrandDocker,
+  IconBrandReact,
+} from "@tabler/icons-react";
 
 // Lazy-load UI components from package
 const UI = {
@@ -11,6 +18,8 @@ const UI = {
   BrushedTitaniumButton: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.BrushedTitaniumButton }))),
   LiquidGoldButton: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.LiquidGoldButton }))),
   GuillocheButton: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.GuillocheButton }))),
+  ButtonAlpha: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.ButtonAlpha }))),
+  BeveledBeamShowcase: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.BeveledBeamShowcase }))),
   ChromeInput: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.ChromeInput }))),
   ChromeSelect: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.ChromeSelect }))),
   AnisotropicKnob: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.AnisotropicKnob }))),
@@ -26,12 +35,16 @@ const UI = {
   DashedMarquee: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.DashedMarquee }))),
   BevelAccordion: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.BevelAccordion }))),
   StickerCard: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.StickerCard }))),
+  Datepicker: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.Datepicker }))),
+  NavBar1: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.NavBar1 }))),
+  BevelAlertDialog: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.BevelAlertDialog }))),
   CoverflowCarousel: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.CoverflowCarousel }))),
   PixelMeltBackground: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.PixelMeltBackground }))),
   BreathingGrid: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.BreathingGrid }))),
   FloatingEmbers: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.FloatingEmbers }))),
   SpotlightGrid: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.SpotlightGrid }))),
   LuminaWave: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.LuminaWave }))),
+  MatrixRain: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.MatrixRain }))),
   FlickeringGrid: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.FlickeringGrid }))),
   FlickeringGridPlayground: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.FlickeringGridPlayground }))),
   ScrollProgress: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.ScrollProgress }))),
@@ -76,6 +89,36 @@ function MiniPreviewRenderer({ slug }: { slug: string }) {
           </Suspense>
         </div>
       );
+    case "button-alpha":
+      return (
+        <div className="flex h-full w-full items-center justify-center p-4">
+          <Suspense fallback={null}>
+            <UI.ButtonAlpha>Activate</UI.ButtonAlpha>
+          </Suspense>
+        </div>
+      );
+    case "animated-beam": {
+      const leftItems = [
+        { id: "db", icon: <IconDatabase size={12} className="text-red-500" />, beamStartColor: "#ef4444", beamStopColor: "#ea580c" },
+        { id: "node", icon: <IconBrandNodejs size={12} className="text-emerald-500" />, beamStartColor: "#22c55e", beamStopColor: "#16a34a" },
+      ];
+      const rightItems = [
+        { id: "next", icon: <IconBrandNextjs size={12} className="text-white" />, beamStartColor: "#ffffff", beamStopColor: "#d4d4d8" },
+        { id: "docker", icon: <IconBrandDocker size={12} className="text-cyan-400" />, beamStartColor: "#06b6d4", beamStopColor: "#0284c7" },
+      ];
+      return (
+        <div className="flex h-full w-full items-center justify-center scale-[0.6] origin-center p-2">
+          <Suspense fallback={null}>
+            <UI.BeveledBeamShowcase
+              centerIcon={<IconBrandReact size={18} className="text-cyan-400" />}
+              leftItems={leftItems}
+              rightItems={rightItems}
+              pathWidth={1}
+            />
+          </Suspense>
+        </div>
+      );
+    }
 
     // ── Primitives & Forms ───────────────────────────────────────────────
     case "chrome-input":
@@ -209,6 +252,42 @@ function MiniPreviewRenderer({ slug }: { slug: string }) {
         </div>
       );
     }
+    case "datepicker": {
+      return (
+        <div className="flex h-full w-full items-center justify-center p-4 scale-45 origin-center overflow-hidden">
+          <Suspense fallback={null}>
+            <UI.Datepicker />
+          </Suspense>
+        </div>
+      );
+    }
+    case "navbar-1": {
+      return (
+        <div className="flex h-full w-full items-center justify-center p-4 scale-30 origin-center overflow-hidden">
+          <Suspense fallback={null}>
+            <UI.NavBar1 />
+          </Suspense>
+        </div>
+      );
+    }
+    case "bevel-alert-dialog": {
+      return (
+        <div className="flex h-full w-full items-center justify-center p-4 scale-55 origin-center overflow-hidden">
+          <Suspense fallback={null}>
+            <UI.BevelAlertDialog
+              inline
+              isOpen={true}
+              variant="danger"
+              title="SYSTEM OVERHEAD ALARM"
+              description="Core coolant integrity is decreasing. Deploy liquid hydrogen injectors immediately?"
+              onClose={() => {}}
+              onConfirm={() => {}}
+            />
+          </Suspense>
+        </div>
+      );
+    }
+
 
     // ── Animated ─────────────────────────────────────────────────────────
     case "living-text":
@@ -279,6 +358,15 @@ function MiniPreviewRenderer({ slug }: { slug: string }) {
           </Suspense>
         </div>
       );
+    case "matrix-rain":
+      return (
+        <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl pointer-events-none">
+          <Suspense fallback={null}>
+            <UI.MatrixRain fontSize={10} density={1.2} />
+          </Suspense>
+        </div>
+      );
+
     case "flickering-grid":
       return (
         <div className="relative h-full w-full overflow-hidden flex items-center justify-center p-2">

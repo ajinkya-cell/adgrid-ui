@@ -216,6 +216,21 @@
       ]
     },
     {
+      "name": "button-alpha",
+      "type": "registry:ui",
+      "title": "Button Alpha",
+      "description": "High-friction matte polymer button with fine light-catching bevel borders and heavy Z-axis mechanical compression.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/ButtonAlpha.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "pixel-melt",
       "type": "registry:ui",
       "title": "Pixel Melt",
@@ -887,6 +902,53 @@
       "files": [
         {
           "path": "components/ui/StickerCard.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "datepicker",
+      "type": "registry:ui",
+      "title": "Datepicker",
+      "description": "A skeuomorphic 3D beveled calendar date picker with synth mechanical click sound feedback.",
+      "dependencies": [
+        "framer-motion",
+        "@tabler/icons-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/Datepicker.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "navbar-1",
+      "type": "registry:ui",
+      "title": "NavBar1",
+      "description": "A floating horizontal navigation panel console with sliding tabs, active status glows, and search well.",
+      "dependencies": [
+        "framer-motion",
+        "@tabler/icons-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/NavBar1.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "bevel-alert-dialog",
+      "type": "registry:ui",
+      "title": "Bevel Alert Dialog",
+      "description": "A tactile 3D beveled alert dialog panel matching the machined console aesthetic, featuring physical drop shadows, recessed wells, action buttons, and status LED alerts.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/BevelAlertDialog.tsx",
           "type": "registry:ui"
         }
       ]

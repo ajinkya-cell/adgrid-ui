@@ -21,6 +21,8 @@ export { VoidButton } from "./animated/VoidButton";
 export { BrushedTitaniumButton } from "./animated/BrushedTitaniumButton";
 export { LiquidGoldButton } from "./animated/LiquidGoldButton";
 export { GuillocheButton } from "./animated/GuillocheButton";
+export { ButtonAlpha } from "./animated/ButtonAlpha";
+export type { ButtonAlphaProps } from "./animated/ButtonAlpha";
 export { ChromeInput } from "./animated/ChromeInput";
 export type { ChromeInputProps } from "./animated/ChromeInput";
 export { ChromeSelect } from "./animated/ChromeSelect";
@@ -69,6 +71,8 @@ export { FloatingEmbers } from "./backgrounds/FloatingEmbers";
 export { SpotlightGrid } from "./backgrounds/SpotlightGrid";
 export { LuminaWave } from "./backgrounds/LuminaWave";
 export type { LuminaWaveProps } from "./backgrounds/LuminaWave";
+export { MatrixRain } from "./backgrounds/MatrixRain";
+export type { MatrixRainProps } from "./backgrounds/MatrixRain";
 
 // text-shuffle
 export { TextShuffle } from "./animated/text-shuffle";
@@ -136,3 +140,16 @@ export type { BevelAccordionProps, AccordionItem } from "./animated/BevelAccordi
 
 // Sticker Card
 export { default as StickerCard } from "./animated/StickerCard";
+
+// Datepicker
+export { default as Datepicker } from "./animated/Datepicker";
+
+// NavBar1
+export { default as NavBar1 } from "./animated/NavBar1";
+
+// Bevel Alert Dialog
+export { BevelAlertDialog } from "./animated/BevelAlertDialog";
+export type { BevelAlertDialogProps } from "./animated/BevelAlertDialog";
+
+// Animated Beam & Beveled Node system
+export * from "./animated/animated-beam";

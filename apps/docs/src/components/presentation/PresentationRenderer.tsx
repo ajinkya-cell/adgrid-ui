@@ -6,6 +6,8 @@ import {
   AnisotropicKnob,
   BreathingGrid,
   BrushedTitaniumButton,
+  ButtonAlpha,
+  BeveledBeamShowcase,
   ChromeInput,
   ChromeSelect,
   CoverflowCarousel,
@@ -22,6 +24,7 @@ import {
   LivingText,
   SpotlightText,
   LuminaWave,
+  MatrixRain,
   MechanicalTimer,
   MetallicForm,
   PookieForm,
@@ -34,6 +37,9 @@ import {
   DashedMarquee,
   BevelAccordion,
   StickerCard,
+  Datepicker,
+  NavBar1,
+  BevelAlertDialog,
   SpotlightGrid,
   FlickeringGrid,
   FlickeringGridPlayground,
@@ -644,6 +650,57 @@ export function PresentationRenderer({
         </div>
       );
     }
+    case "button-alpha": {
+      const alphaProps = {
+        children: "ACTIVATE",
+        shape: "pill" as const,
+        theme: "charcoal" as const,
+        ...liveProps,
+      };
+      return (
+        <div className="flex items-center justify-center w-full min-h-[300px]">
+          <ButtonAlpha shape={alphaProps.shape} theme={alphaProps.theme}>
+            {alphaProps.children}
+          </ButtonAlpha>
+        </div>
+      );
+    }
+    case "animated-beam": {
+      const beamProps = {
+        variant: "default" as const,
+        pathWidth: 1.5,
+        pathOpacity: 0.5,
+        duration: 3.5,
+        ...liveProps,
+      };
+
+      const leftItems = [
+        { id: "database", icon: <IconDatabase size={20} className="text-red-500" />, beamStartColor: "#ef4444", beamStopColor: "#ea580c" },
+        { id: "nodejs", icon: <IconBrandNodejs size={20} className="text-emerald-500" />, beamStartColor: "#22c55e", beamStopColor: "#16a34a" },
+        { id: "python", icon: <IconBrandPython size={20} className="text-yellow-500" />, beamStartColor: "#eab308", beamStopColor: "#ca8a04" },
+      ];
+
+      const rightItems = [
+        { id: "nextjs", icon: <IconBrandNextjs size={20} className="text-white" />, beamStartColor: "#ffffff", beamStopColor: "#d4d4d8" },
+        { id: "docker", icon: <IconBrandDocker size={20} className="text-cyan-400" />, beamStartColor: "#06b6d4", beamStopColor: "#0284c7" },
+        { id: "github", icon: <IconBrandGithub size={20} className="text-purple-400" />, beamStartColor: "#a855f7", beamStopColor: "#9333ea" },
+      ];
+
+      return (
+        <div className="flex items-center justify-center w-full min-h-[350px]">
+          <BeveledBeamShowcase
+            variant={beamProps.variant}
+            centerIcon={<IconBrandReact size={32} className="text-cyan-400 animate-[spin_12s_linear_infinite]" />}
+            centerShape="circle"
+            leftItems={leftItems}
+            rightItems={rightItems}
+            pathWidth={beamProps.pathWidth}
+            pathOpacity={beamProps.pathOpacity}
+            duration={beamProps.duration}
+          />
+        </div>
+      );
+    }
     case "pixel-melt":
       return <><PixelMeltBackground /><FullscreenLabel title="Pixel Melt" subtitle="Move your cursor" /></>;
     case "breathing-grid":
@@ -654,6 +711,32 @@ export function PresentationRenderer({
       return <SpotlightGrid><FullscreenLabel title="Spotlight Grid" subtitle="Move through the field" /></SpotlightGrid>;
     case "lumina-wave":
       return <><LuminaWave /><FullscreenLabel title="Lumina Wave" subtitle="Interactive aurora surface" /></>;
+    case "matrix-rain": {
+      const rainProps = {
+        speed: 1.0,
+        density: 1.0,
+        fontSize: 16,
+        decayRate: 0.05,
+        glowStrength: 8,
+        opacity: 0.35,
+        color: "#525252",
+        glowColor: "#ffffff",
+        ...liveProps,
+      };
+      return (
+        <MatrixRain
+          speed={rainProps.speed}
+          density={rainProps.density}
+          fontSize={rainProps.fontSize}
+          decayRate={rainProps.decayRate}
+          glowStrength={rainProps.glowStrength}
+          opacity={rainProps.opacity}
+          color={rainProps.color}
+          glowColor={rainProps.glowColor}
+        />
+      );
+    }
+
     case "chrome-input":
       return <ChromeInput placeholder="Transmission ID" className="w-[320px]" />;
     case "chrome-select":
@@ -947,6 +1030,31 @@ export function PresentationRenderer({
         </div>
       );
     }
+    case "datepicker": {
+      const datepickerProps = {
+        ...liveProps,
+      };
+      return (
+        <div className="w-full min-h-screen flex items-center justify-center pb-32 p-6 bg-transparent">
+          <Datepicker {...(datepickerProps as Parameters<typeof Datepicker>[0])} />
+        </div>
+      );
+    }
+    case "navbar-1": {
+      const navbarProps = {
+        ...liveProps,
+      };
+      return (
+        <div className="w-full min-h-screen flex items-center justify-center p-6 bg-transparent">
+          <NavBar1 {...(navbarProps as Parameters<typeof NavBar1>[0])} />
+        </div>
+      );
+    }
+    case "bevel-alert-dialog": {
+      return (
+        <BevelAlertDialogDemo liveProps={liveProps} />
+      );
+    }
     case "flickering-grid":
       return (
         <div className="relative flex items-center justify-center w-full min-h-[400px] border border-white/5 bg-[#030303] rounded-2xl overflow-hidden p-6">
@@ -977,3 +1085,42 @@ export function PresentationRenderer({
       return <div className="font-mono text-xs uppercase tracking-[0.24em] text-white/45">Preview unavailable</div>;
   }
 }
+
+function BevelAlertDialogDemo({ liveProps }: { liveProps: any }) {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className="w-full min-h-screen flex flex-col items-center justify-center p-6 bg-transparent gap-6">
+      {/* Tactile console trigger button */}
+      <button
+        type="button"
+        onClick={() => setIsOpen(true)}
+        style={{
+          backgroundColor: "#171717",
+          boxShadow:
+            "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.40), 0 4px 12px rgba(0, 0, 0, 0.5)",
+        }}
+        className="px-6 h-12 rounded-xl text-[10px] font-mono tracking-widest uppercase font-bold text-neutral-300 border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 hover:text-white cursor-pointer active:scale-95 transition-transform"
+      >
+        Initialize Alarm Console
+      </button>
+
+      {/* The Alert Dialog */}
+      <BevelAlertDialog
+        title="ALARM CONSOLE INITIALIZED"
+        description="The security deck has booted successfully. All perimeter sensor scans are active and operating within nominal parameters."
+        confirmLabel="PROCEED"
+        cancelLabel="DISMISS"
+        {...liveProps}
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onConfirm={async () => {
+          // Simulate machine override task
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+          setIsOpen(false);
+        }}
+      />
+    </div>
+  );
+}
+
+
