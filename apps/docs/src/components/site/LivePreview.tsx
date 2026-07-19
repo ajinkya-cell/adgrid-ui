@@ -35,6 +35,7 @@ const COMPONENT_HEIGHTS: Record<string, number> = {
   ImageParallax: 500,
   TextShuffle: 520,
   DotMatrix: 480,
+  PixelGrid: 640,
 };
 
 interface LivePreviewProps {

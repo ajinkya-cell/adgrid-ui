@@ -44,6 +44,14 @@ export { DotPattern } from "./animated/DotPattern";
 export type { DotPatternProps } from "./animated/DotPattern";
 export { DotPatternPlayground } from "./animated/DotPatternPlayground";
 export type { DotPatternPlaygroundProps } from "./animated/DotPatternPlayground";
+export { PixelGrid, pixelGridCatArtwork } from "./animated/PixelGrid";
+export type {
+  PixelGridArtwork,
+  PixelGridCell,
+  PixelGridPaletteColor,
+  PixelGridProps,
+  PixelGridTool,
+} from "./animated/PixelGrid";
 
 export { CoverflowCarousel } from "./animated/coverflow/CoverflowCarousel";
 export type { CoverflowCarouselProps } from "./animated/coverflow/types";

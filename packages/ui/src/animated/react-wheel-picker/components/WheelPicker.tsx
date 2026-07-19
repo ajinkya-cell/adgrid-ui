@@ -35,8 +35,8 @@ export const WheelPicker = forwardRef<WheelPickerImperativeHandle, WheelPickerPr
       loop = false,
       sound = true,
       disabled = false,
-      itemHeight = 40,
-      visibleItems = 5,
+      itemHeight = 32,
+      visibleItems = 3,
       perspective = 1000,
       spring,
       className,
@@ -114,15 +114,23 @@ export const WheelPicker = forwardRef<WheelPickerImperativeHandle, WheelPickerPr
         if (disabled) return;
 
         let target = index;
-        if (!loop) {
-          target = Math.max(0, Math.min(totalItems - 1, target));
-        }
-
         const springConfig = options?.spring || {
           stiffness: spring?.stiffness ?? DEFAULT_SPRING_CONFIG.stiffness,
           damping: spring?.damping ?? DEFAULT_SPRING_CONFIG.damping,
           mass: spring?.mass ?? DEFAULT_SPRING_CONFIG.mass,
         };
+
+        if (loop && totalItems > 0) {
+          const currentY = y.get();
+          const baseTarget = ((index % totalItems) + totalItems) % totalItems;
+          const closestCycle = Math.round(currentY / totalItems) * totalItems;
+          const candidateTarget = closestCycle + baseTarget;
+          const candidates = [candidateTarget - totalItems, candidateTarget, candidateTarget + totalItems];
+          candidates.sort((a, b) => Math.abs(a - currentY) - Math.abs(b - currentY));
+          target = candidates[0];
+        } else {
+          target = Math.max(0, Math.min(totalItems - 1, target));
+        }
 
         isAnimatingRef.current = true;
         animate(y, target, {
@@ -130,6 +138,10 @@ export const WheelPicker = forwardRef<WheelPickerImperativeHandle, WheelPickerPr
           ...springConfig,
           onComplete: () => {
             isAnimatingRef.current = false;
+            if (loop && totalItems > 0) {
+              const wrapped = ((Math.round(target) % totalItems) + totalItems) % totalItems;
+              y.set(wrapped);
+            }
           },
         });
       },
@@ -261,6 +273,12 @@ export const WheelPicker = forwardRef<WheelPickerImperativeHandle, WheelPickerPr
         stiffness: spring?.stiffness ?? DEFAULT_SPRING_CONFIG.stiffness,
         damping: spring?.damping ?? DEFAULT_SPRING_CONFIG.damping,
         mass: spring?.mass ?? DEFAULT_SPRING_CONFIG.mass,
+        onComplete: () => {
+          if (loop && totalItems > 0) {
+            const wrapped = ((snapTarget % totalItems) + totalItems) % totalItems;
+            y.set(wrapped);
+          }
+        }
       });
     }, [y, loop, totalItems, spring]);
 

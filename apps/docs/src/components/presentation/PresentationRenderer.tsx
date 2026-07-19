@@ -28,6 +28,8 @@ import {
   MechanicalTimer,
   MetallicForm,
   PookieForm,
+  PixelGrid,
+  pixelGridCatArtwork,
   MorphingNav,
   NowPlayingCard,
   PixelMeltBackground,
@@ -791,6 +793,32 @@ export function PresentationRenderer({
         ...liveProps,
       };
       return <DotMatrix {...(dotMatrixProps as Parameters<typeof DotMatrix>[0])} />;
+    }
+    case "pixel-grid": {
+      const pixelGridProps = {
+        defaultValue: pixelGridCatArtwork,
+        editable: true,
+        showToolbar: true,
+        rows: 24,
+        columns: 24,
+        cellSize: 16,
+        gap: 1,
+        emptyColor: "#f8fafc",
+        gridLineColor: "rgba(17, 24, 39, 0.35)",
+        palette: [
+          { id: "ink", label: "Ink", color: "#222222" },
+          { id: "shadow", label: "Shadow", color: "#4b5563" },
+          { id: "paper", label: "Paper", color: "#f8fafc" },
+          { id: "amber", label: "Amber", color: "#f59e0b" },
+        ],
+        ...liveProps,
+      };
+
+      return (
+        <div className="flex min-h-[620px] w-full items-center justify-center p-6">
+          <PixelGrid {...(pixelGridProps as Parameters<typeof PixelGrid>[0])} />
+        </div>
+      );
     }
     case "scroll-progress":
       return <ScrollProgressDemo {...liveProps} />;

@@ -77,8 +77,8 @@ export const WheelPicker = forwardRef<WheelPickerRef, WheelPickerProps>(
       loop = false,
       sound = true,
       disabled = false,
-      itemHeight = 50,
-      visibleItems = 5,
+      itemHeight = 40,
+      visibleItems = 3,
       perspective = 1000,
       spring,
       className,
@@ -129,12 +129,26 @@ export const WheelPicker = forwardRef<WheelPickerRef, WheelPickerProps>(
 
     const scrollToIndex = (idx: number) => {
       let target = idx;
-      if (!loop) {
+      if (loop && total > 0) {
+        const currentY = y.get();
+        const baseTarget = ((idx % total) + total) % total;
+        const closestCycle = Math.round(currentY / total) * total;
+        const candidateTarget = closestCycle + baseTarget;
+        const candidates = [candidateTarget - total, candidateTarget, candidateTarget + total];
+        candidates.sort((a, b) => Math.abs(a - currentY) - Math.abs(b - currentY));
+        target = candidates[0];
+      } else {
         target = Math.max(0, Math.min(total - 1, target));
       }
       animate(y, target, {
         type: "spring",
         ...springConfig,
+        onComplete: () => {
+          if (loop && total > 0) {
+            const wrapped = ((Math.round(target) % total) + total) % total;
+            y.set(wrapped);
+          }
+        }
       });
     };
 
@@ -237,6 +251,12 @@ export const WheelPicker = forwardRef<WheelPickerRef, WheelPickerProps>(
       animate(y, snapTarget, {
         type: "spring",
         ...springConfig,
+        onComplete: () => {
+          if (loop && total > 0) {
+            const wrapped = ((snapTarget % total) + total) % total;
+            y.set(wrapped);
+          }
+        }
       });
     };
 

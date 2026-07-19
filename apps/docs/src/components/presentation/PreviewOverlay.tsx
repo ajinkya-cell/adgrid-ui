@@ -54,7 +54,7 @@ const UI = {
 
 const imageOne = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80";
 
-function MiniPreviewRenderer({ slug }: { slug: string }) {
+export function MiniPreviewRenderer({ slug }: { slug: string }) {
   switch (slug) {
     // ── Buttons ──────────────────────────────────────────────────────────
     case "void-button":

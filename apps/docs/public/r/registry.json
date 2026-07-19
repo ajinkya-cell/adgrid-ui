@@ -231,6 +231,33 @@
       ]
     },
     {
+      "name": "animated-beam",
+      "type": "registry:ui",
+      "title": "Animated Beam",
+      "description": "An animated, coordinate-tracking connection beam connecting premium recessed beveled nodes in a modular hub-integration grid.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/animated-beam/index.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/animated-beam/AnimatedBeam.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/animated-beam/BeveledNode.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/animated-beam/BeveledBeamShowcase.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "pixel-melt",
       "type": "registry:ui",
       "title": "Pixel Melt",
@@ -286,6 +313,18 @@
       "files": [
         {
           "path": "components/ui/LuminaWave.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "matrix-rain",
+      "type": "registry:ui",
+      "title": "Matrix Rain",
+      "description": "A canvas-driven digital rain simulation displaying streaming glowing characters and icons in a premium monochrome aesthetic.",
+      "files": [
+        {
+          "path": "components/ui/MatrixRain.tsx",
           "type": "registry:ui"
         }
       ]
@@ -431,6 +470,22 @@
         {
           "path": "components/ui/dot-matrix/utils/bitmap.ts",
           "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "pixel-grid",
+      "type": "registry:ui",
+      "title": "Pixel Grid",
+      "description": "An editable pixel-art grid with paint, erase, fill, selection, brush sizing, undo/redo, and palette controls.",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/PixelGrid.tsx",
+          "type": "registry:ui"
         }
       ]
     },
