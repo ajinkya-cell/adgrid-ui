@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { registry, type ComponentCategory } from "@/registry";
+import { GalleryCardPreview } from "@/components/site/GalleryCardPreview";
+import { GalleryIframePreview } from "@/components/site/GalleryIframePreview";
 
 // ── Category config ───────────────────────────────────────────────
 const CATEGORIES: { id: ComponentCategory | "all"; label: string; icon: string }[] = [
@@ -25,7 +27,7 @@ const CATEGORY_ACCENT: Record<ComponentCategory, string> = {
 };
 
 // ── Static thumbnail previews per component ──────────────────────
-function ComponentThumbnail({ slug, category }: { slug: string; category: ComponentCategory }) {
+export function ComponentThumbnail({ slug, category }: { slug: string; category: ComponentCategory }) {
   const thumbnails: Record<string, React.ReactNode> = {
     /* ── Animated ─────────────────────────────────── */
     "living-text": (
@@ -542,8 +544,12 @@ function GalleryCard({
             style={{ background: `linear-gradient(90deg, transparent, ${accent}55, transparent)` }}
           />
 
-          {/* The visual mockup — always shown */}
-          <ComponentThumbnail slug={item.slug} category={item.category} />
+          {/* Live Component Iframe Preview for all buttons and test cards, Graphic Preview for others */}
+          {item.category === "buttons" || item.slug === "infinite-scroll" || item.slug === "image-parallax" || item.slug === "living-text" || item.slug === "animated-beam" || item.slug === "coverflow-carousel" || item.slug === "metallic-form" || item.slug === "pookie-form" || item.slug === "anisotropic-knob" || item.slug === "dot-matrix" || item.slug === "mechanical-timer" || item.slug === "laser-vault-password" || item.slug === "morphing-nav" || item.slug === "text-shuffle" || item.slug === "hero" || item.slug === "premium-hero" || item.slug === "wheel-picker" || item.slug === "weapon-wheel" || item.slug === "now-playing-card" || item.slug === "dashed-feature-card" || item.slug === "dashed-marquee" || item.slug === "datepicker" || item.slug === "animated-icons-1" || item.slug === "cards" || item.slug === "simple-card" || item.slug === "sticker-card" || item.slug === "bevel-alert-dialog" || item.slug === "flickering-grid-playground" || item.slug === "dot-pattern-playground" || item.slug === "matrix-rain" ? (
+            <GalleryIframePreview slug={item.slug} title={item.name} />
+          ) : (
+            <GalleryCardPreview slug={item.slug} category={item.category} accent={accent} />
+          )}
         </div>
 
         {/* Info strip */}

@@ -66,6 +66,7 @@ export interface WeaponWheelProps {
   className?: string;
   inline?: boolean;    // If true, renders inline without absolute overlays and stays open
   variant?: "default" | "wheel-3" | "wheel-4"; // Visual style variant
+  hideText?: boolean;  // If true, hides side/bottom info text and renders centered wheel only
 }
 
 // Convert polar angle to Cartesian coordinates
@@ -113,6 +114,7 @@ export function WeaponWheel({
   className,
   inline = false,
   variant = "default",
+  hideText = false,
 }: WeaponWheelProps) {
   const [localIsOpen, setLocalIsOpen] = useState(false);
   const isControlled = controlledIsOpen !== undefined;
@@ -250,7 +252,7 @@ export function WeaponWheel({
     <div
       className={cn(
         "relative flex flex-col items-center justify-center p-6 z-10 select-none",
-        isWheel3 ? "w-full max-w-5xl min-h-[820px]" : "w-full max-w-4xl min-h-[680px]",
+        hideText ? "w-auto min-h-0 p-2" : isWheel3 ? "w-full max-w-5xl min-h-[820px]" : "w-full max-w-4xl min-h-[680px]",
         inline && !isWheel3 && (
           isWheel4
             ? "border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 rounded-2xl backdrop-blur-2xl overflow-hidden"
@@ -267,7 +269,8 @@ export function WeaponWheel({
       <div className="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-16 w-full">
         
         {/* LEFT PANEL: Selected Primary Tool Info */}
-        <div className="w-full md:w-80 h-96 flex flex-col justify-center select-none text-left">
+        {!hideText && (
+          <div className="w-full md:w-80 h-96 flex flex-col justify-center select-none text-left">
           <AnimatePresence mode="wait">
             {hoveredItem ? (
               <motion.div
@@ -311,6 +314,7 @@ export function WeaponWheel({
             )}
           </AnimatePresence>
         </div>
+        )}
 
         {/* CENTER: The Interactive SVG Wheel */}
         <div 
@@ -802,43 +806,45 @@ export function WeaponWheel({
       </div>
 
       {/* Bottom Section: Sub-Item Details and Selection Confirmation */}
-      <div className="w-full flex flex-col items-center justify-center mt-6 gap-4">
-        
-        {/* SUB-ITEM INFO PANEL - Centered below columns with layout safety */}
-        <div className="w-full max-w-xl h-24 text-center select-none">
-          <AnimatePresence mode="wait">
-            {isWheel3 && hoveredSubItem ? (
-              <motion.div
-                key={hoveredSubItem.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.15 }}
-                className="space-y-1.5"
-              >
-                <div>
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-emerald-400 font-bold">
-                    {hoveredSubItem.category || hoveredItem?.category}
-                  </span>
-                  <h3 className="text-lg font-black tracking-tight text-white">
-                    {hoveredSubItem.name}
-                  </h3>
-                </div>
-                <p className="text-zinc-400 text-xs leading-relaxed max-w-md mx-auto font-body">
-                  {hoveredSubItem.description}
-                </p>
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
-        </div>
-
-        {/* Selected Confirmation status text */}
-        {selectedName && (
-          <div className="font-mono text-[10px] uppercase tracking-wider text-zinc-500 bg-zinc-900/30 px-3.5 py-1.5 border border-zinc-800/40 rounded-full select-none">
-            Active Selection: <span className="text-indigo-400 font-bold">{selectedName}</span>
+      {!hideText && (
+        <div className="w-full flex flex-col items-center justify-center mt-6 gap-4">
+          
+          {/* SUB-ITEM INFO PANEL - Centered below columns with layout safety */}
+          <div className="w-full max-w-xl h-24 text-center select-none">
+            <AnimatePresence mode="wait">
+              {isWheel3 && hoveredSubItem ? (
+                <motion.div
+                  key={hoveredSubItem.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.15 }}
+                  className="space-y-1.5"
+                >
+                  <div>
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-emerald-400 font-bold">
+                      {hoveredSubItem.category || hoveredItem?.category}
+                    </span>
+                    <h3 className="text-lg font-black tracking-tight text-white">
+                      {hoveredSubItem.name}
+                    </h3>
+                  </div>
+                  <p className="text-zinc-400 text-xs leading-relaxed max-w-md mx-auto font-body">
+                    {hoveredSubItem.description}
+                  </p>
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
           </div>
-        )}
-      </div>
+
+          {/* Selected Confirmation status text */}
+          {selectedName && (
+            <div className="font-mono text-[10px] uppercase tracking-wider text-zinc-500 bg-zinc-900/30 px-3.5 py-1.5 border border-zinc-800/40 rounded-full select-none">
+              Active Selection: <span className="text-indigo-400 font-bold">{selectedName}</span>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 

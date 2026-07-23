@@ -36,7 +36,7 @@ export function BeveledBeamShowcase({
   leftItems = [],
   rightItems = [],
   pathColor,
-  pathWidth = 1.5,
+  pathWidth = 3,
   pathOpacity,
   duration = 3.5,
 }: BeveledBeamShowcaseProps) {
@@ -54,16 +54,14 @@ export function BeveledBeamShowcase({
   const resolvedPathColor = pathColor 
     ? pathColor 
     : isMonochrome 
-      ? "rgba(255, 255, 255, 0.04)" 
+      ? "rgba(255, 255, 255, 0.2)" 
       : isNeon 
-        ? "rgba(0, 240, 255, 0.06)" 
-        : "rgba(255, 255, 255, 0.08)";
+        ? "rgba(0, 240, 255, 0.25)" 
+        : "rgba(255, 255, 255, 0.2)";
 
   const resolvedPathOpacity = pathOpacity !== undefined
     ? pathOpacity 
-    : isMonochrome 
-      ? 0.3 
-      : 0.5;
+    : 0.85;
 
   return (
     <div
@@ -140,8 +138,8 @@ export function BeveledBeamShowcase({
         let startColor = item.beamStartColor ?? "#3b82f6";
         let stopColor = item.beamStopColor ?? "#8b5cf6";
         if (isMonochrome) {
-          startColor = "#525252";
-          stopColor = "#18181b";
+          startColor = "#ffffff";
+          stopColor = "#a1a1aa";
         } else if (isNeon) {
           startColor = "#ff007f";
           stopColor = "#00f0ff";
@@ -171,8 +169,8 @@ export function BeveledBeamShowcase({
         let startColor = item.beamStartColor ?? "#8b5cf6";
         let stopColor = item.beamStopColor ?? "#3b82f6";
         if (isMonochrome) {
-          startColor = "#18181b";
-          stopColor = "#525252";
+          startColor = "#a1a1aa";
+          stopColor = "#ffffff";
         } else if (isNeon) {
           startColor = "#ff007f";
           stopColor = "#00f0ff";

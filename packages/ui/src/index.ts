@@ -44,14 +44,7 @@ export { DotPattern } from "./animated/DotPattern";
 export type { DotPatternProps } from "./animated/DotPattern";
 export { DotPatternPlayground } from "./animated/DotPatternPlayground";
 export type { DotPatternPlaygroundProps } from "./animated/DotPatternPlayground";
-export { PixelGrid, pixelGridCatArtwork } from "./animated/PixelGrid";
-export type {
-  PixelGridArtwork,
-  PixelGridCell,
-  PixelGridPaletteColor,
-  PixelGridProps,
-  PixelGridTool,
-} from "./animated/PixelGrid";
+
 
 export { CoverflowCarousel } from "./animated/coverflow/CoverflowCarousel";
 export type { CoverflowCarouselProps } from "./animated/coverflow/types";
@@ -69,7 +62,6 @@ export type { ExpandItem, ExpandVariant, ExpandAnimationType, ExpandOnHoverProps
 // Dot Matrix LED programmable grid
 export { DotMatrix } from "./matrix/DotMatrix";
 export type { DotMatrixProps } from "./matrix/types";
-
 
 // backgrounds
 export { PixelMeltBackground } from "./backgrounds/PixelMelt";
@@ -120,10 +112,6 @@ export type {
 // Weapon Wheel Select Component
 export { WeaponWheel } from "./animated/WeaponWheel";
 export type { WeaponWheelProps, WeaponWheelItem } from "./animated/WeaponWheel";
-
-// Names Landing Component
-export { NamesLanding } from "./animated/NamesLanding/NamesLanding";
-export type { NamesLandingProps } from "./animated/NamesLanding/NamesLanding";
 
 // Hero Component
 export { Hero } from "./animated/Hero";

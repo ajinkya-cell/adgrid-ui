@@ -126,7 +126,7 @@ export function MorphingNav() {
 
       <nav
         ref={navRef}
-        className="w-full max-w-xl z-40 relative mt-4"
+        className="w-full max-w-xl z-40 relative"
       >
         {/* Soft Ambient Glow following the active selection */}
         <AnimatePresence>
@@ -146,47 +146,7 @@ export function MorphingNav() {
           )}
         </AnimatePresence>
 
-        {/* SVG Canvas sits behind the content, OUTSIDE the overflow-hidden container so its drop shadow is not clipped */}
-        <svg
-          className="absolute inset-0 w-full h-full pointer-events-none z-10"
-          viewBox="0 0 430 350"
-          preserveAspectRatio="none"
-        >
-          <defs>
-            {/* Obsidian Linear Base Gradient */}
-            <linearGradient id="chassis-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#121215" stopOpacity="0.95" />
-              <stop offset="100%" stopColor="#08080a" stopOpacity="0.98" />
-            </linearGradient>
-
-            {/* Molten Metal Highlight Bezel Stroke */}
-            <linearGradient id="bezel-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="rgba(255, 255, 255, 0.16)" />
-              <stop offset="40%" stopColor="rgba(255, 255, 255, 0.04)" />
-              <stop offset="100%" stopColor="rgba(255, 255, 255, 0.22)" />
-            </linearGradient>
-          </defs>
-
-          <motion.path
-            d={morphPath || closedPath}
-            fill="url(#chassis-grad)"
-            stroke="url(#bezel-grad)"
-            strokeWidth="1.5"
-            animate={{ d: morphPath || closedPath }}
-            // Jelly/Spring transition makes the SVG look elastic and fluid
-            transition={{
-              type: "spring",
-              stiffness: 90,
-              damping: 10,
-              mass: 0.8,
-            }}
-            style={{
-              filter: "drop-shadow(0 24px 48px rgba(0,0,0,0.6))",
-            }}
-          />
-        </svg>
-
-        {/* Animated Container Height Chassis (Has overflow-hidden to mask the dropdown submenu) */}
+        {/* Outer height-animated wrapper */}
         <motion.div
           animate={{ height: getNavHeight() }}
           transition={{
@@ -195,55 +155,97 @@ export function MorphingNav() {
             damping: 14,
             mass: 0.9,
           }}
-          className="relative w-full rounded-2xl overflow-hidden z-20"
+          className="relative w-full"
         >
-          {/* Navigation Bar Header (Logo & Menu buttons, fixed h-70) */}
-          <div className="relative flex items-center justify-between h-[70px] px-5 z-10">
-            {/* Logo */}
-            <motion.div
-              className="text-sm font-bold tracking-tight text-white font-body pl-2 cursor-pointer select-none"
-              whileHover={{ scale: 1.05 }}
-              onClick={() => {
-                setIsOpen(false);
-                setActiveItem(null);
+          {/* SVG Canvas sits behind content with overflow-visible so drop-shadow is never clipped */}
+          <svg
+            className="absolute inset-0 w-full h-full pointer-events-none z-10 overflow-visible"
+            viewBox="0 0 430 350"
+            preserveAspectRatio="none"
+          >
+            <defs>
+              {/* Obsidian Linear Base Gradient */}
+              <linearGradient id="chassis-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#121215" stopOpacity="0.95" />
+                <stop offset="100%" stopColor="#08080a" stopOpacity="0.98" />
+              </linearGradient>
+
+              {/* Molten Metal Highlight Bezel Stroke */}
+              <linearGradient id="bezel-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="rgba(255, 255, 255, 0.16)" />
+                <stop offset="40%" stopColor="rgba(255, 255, 255, 0.04)" />
+                <stop offset="100%" stopColor="rgba(255, 255, 255, 0.22)" />
+              </linearGradient>
+            </defs>
+
+            <motion.path
+              d={morphPath || closedPath}
+              fill="url(#chassis-grad)"
+              stroke="url(#bezel-grad)"
+              strokeWidth="1.5"
+              animate={{ d: morphPath || closedPath }}
+              // Jelly/Spring transition makes the SVG look elastic and fluid
+              transition={{
+                type: "spring",
+                stiffness: 90,
+                damping: 10,
+                mass: 0.8,
               }}
-            >
-              Void Nav
-            </motion.div>
+              style={{
+                filter: "drop-shadow(0 16px 36px rgba(0,0,0,0.65))",
+              }}
+            />
+          </svg>
 
-            {/* Menu Buttons */}
-            <div className="flex items-center gap-1">
-              {navItems.map((item) => {
-                const active = activeItem === item.label;
-                return (
-                  <button
-                    key={item.label}
-                    onClick={() => handleItemClick(item.label)}
-                    className={`relative px-3 py-1.5 rounded-lg text-xs font-body font-medium transition-all duration-300 outline-none cursor-pointer ${
-                      active ? "text-white" : "text-neutral-400 hover:text-white"
-                    }`}
-                  >
-                    <span className="relative z-10">{item.label}</span>
-                    {active && (
-                      <motion.div
-                        layoutId="activeNavTab"
-                        className="absolute inset-0 bg-white/[0.06] border border-white/10 rounded-lg"
-                        transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
-                      />
-                    )}
-                  </button>
-                );
-              })}
-
-              <motion.button
-                className="ml-2 px-3.5 py-1.5 bg-white text-black font-body text-xs font-semibold rounded-lg hover:bg-neutral-200 transition-colors cursor-pointer"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+          {/* Inner Content Container with rounded-2xl overflow-hidden to cleanly mask header and dropdown */}
+          <div className="relative w-full h-full rounded-2xl overflow-hidden z-20">
+            {/* Navigation Bar Header (Logo & Menu buttons, fixed h-70) */}
+            <div className="relative flex items-center justify-between h-[70px] px-5 z-10">
+              {/* Logo */}
+              <motion.div
+                className="text-sm font-bold tracking-tight text-white font-body pl-2 cursor-pointer select-none"
+                whileHover={{ scale: 1.05 }}
+                onClick={() => {
+                  setIsOpen(false);
+                  setActiveItem(null);
+                }}
               >
-                Access
-              </motion.button>
+                Void Nav
+              </motion.div>
+
+              {/* Menu Buttons */}
+              <div className="flex items-center gap-1">
+                {navItems.map((item) => {
+                  const active = activeItem === item.label;
+                  return (
+                    <button
+                      key={item.label}
+                      onClick={() => handleItemClick(item.label)}
+                      className={`relative px-3 py-1.5 rounded-full text-xs font-body font-medium transition-all duration-300 outline-none cursor-pointer ${
+                        active ? "text-white" : "text-neutral-400 hover:text-white"
+                      }`}
+                    >
+                      <span className="relative z-10">{item.label}</span>
+                      {active && (
+                        <motion.div
+                          layoutId="activeNavTab"
+                          className="absolute inset-0 bg-white/[0.06] border border-white/10 rounded-full"
+                          transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
+                        />
+                      )}
+                    </button>
+                  );
+                })}
+
+                <motion.button
+                  className="ml-2 px-4 py-1.5 bg-white/10 hover:bg-white/20 border border-white/15 text-white font-body text-xs font-semibold rounded-full shadow-sm hover:shadow-[0_0_15px_rgba(255,255,255,0.15)] transition-all duration-300 cursor-pointer"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                >
+                  Access
+                </motion.button>
+              </div>
             </div>
-          </div>
 
           {/* Submenu Dropdown Panel (Absolute positioned at top-70) */}
           <AnimatePresence>
@@ -307,6 +309,7 @@ export function MorphingNav() {
               </motion.div>
             )}
           </AnimatePresence>
+          </div>
         </motion.div>
       </nav>
     </div>

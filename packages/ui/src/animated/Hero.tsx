@@ -208,6 +208,8 @@ export interface HeroProps {
   crossPositions?: { x: number; y: number; size: number }[];
   enableParallax?: boolean;
   animationSpeed?: "slow" | "normal" | "fast";
+  hideFooter?: boolean;
+  hideNav?: boolean;
 }
 
 interface Particle {
@@ -254,7 +256,9 @@ export function Hero({
   pixelDensity = "medium",
   crossPositions,
   enableParallax = true,
-  animationSpeed = "normal"
+  animationSpeed = "normal",
+  hideFooter = false,
+  hideNav = false
 }: HeroProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -598,13 +602,14 @@ export function Hero({
       </div>
 
       {/* 4. Top Navigation Bar Layout */}
-      <motion.nav
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.35 }}
-        className="relative z-40 w-full flex items-center justify-between uppercase tracking-wider text-xs md:text-sm font-mono"
-        style={{ fontFamily: "var(--font-mono)" }}
-      >
+      {!hideNav && (
+        <motion.nav
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.35 }}
+          className="relative z-40 w-full flex items-center justify-between uppercase tracking-wider text-xs md:text-sm font-mono"
+          style={{ fontFamily: "var(--font-mono)" }}
+        >
         <div>
           PORTFOLIO // SELECTIONS
         </div>
@@ -648,6 +653,7 @@ export function Hero({
           <span className={`h-px w-full bg-white transition-transform ${menuOpen ? "-rotate-45 -translate-y-[6px]" : ""}`} />
         </button>
       </motion.nav>
+      )}
 
       {/* Mobile Drawer menu overlay */}
       <AnimatePresence>
@@ -722,28 +728,30 @@ export function Hero({
       </div>
 
       {/* 6. Monospace footer rows */}
-      <motion.footer
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 0.7, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.5 }}
-        className="relative z-40 w-full flex flex-col md:flex-row items-center justify-between text-center md:text-left gap-4 md:gap-0 border-t border-white/10 pt-6 text-[10px] md:text-xs uppercase font-mono tracking-widest opacity-70"
-        style={{ fontFamily: "var(--font-mono)" }}
-      >
-        <div className="flex items-center gap-2">
-          <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--color-green)] animate-pulse" />
-          <span>{availability}</span>
-          <span className="opacity-40">//</span>
-          <span>{availabilityDate}</span>
-        </div>
+      {!hideFooter && (
+        <motion.footer
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 0.7, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="relative z-40 w-full flex flex-col md:flex-row items-center justify-between text-center md:text-left gap-4 md:gap-0 border-t border-white/10 pt-6 text-[10px] md:text-xs uppercase font-mono tracking-widest opacity-70"
+          style={{ fontFamily: "var(--font-mono)" }}
+        >
+          <div className="flex items-center gap-2">
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--color-green)] animate-pulse" />
+            <span>{availability}</span>
+            <span className="opacity-40">//</span>
+            <span>{availabilityDate}</span>
+          </div>
 
-        <div className="animate-bounce">
-          {scrollLabel}
-        </div>
+          <div className="animate-bounce">
+            {scrollLabel}
+          </div>
 
-        <div>
-          © {copyrightName || name} / ALL RIGHTS RESERVED
-        </div>
-      </motion.footer>
+          <div>
+            © {copyrightName || name} / ALL RIGHTS RESERVED
+          </div>
+        </motion.footer>
+      )}
     </div>
   );
 }

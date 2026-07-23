@@ -35,7 +35,6 @@ const COMPONENT_HEIGHTS: Record<string, number> = {
   ImageParallax: 500,
   TextShuffle: 520,
   DotMatrix: 480,
-  PixelGrid: 640,
 };
 
 interface LivePreviewProps {
@@ -310,7 +309,7 @@ const projects = [
     id: "taj",
     title: "The Eternal Taj",
     subtitle: "Mausoleum · Agra",
-    image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1200&q=85&auto=format&fit=crop",
     description: "A breathtaking monument of pure white marble reflecting the morning mist of Agra, built as an eternal testament of love.",
     badge: "Heritage",
     accent: "#E2E8F0"
@@ -319,7 +318,7 @@ const projects = [
     id: "varanasi",
     title: "Varanasi Riverfront",
     subtitle: "Ganga Aarti · Kashi",
-    image: "https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=800&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?w=1200&q=85&auto=format&fit=crop",
     description: "Centuries-old stone steps descend into the sacred Ganges under the serene glow of spiritual oil lamps and ancient chants.",
     badge: "Spiritual",
     accent: "#A3A3A3"
@@ -328,7 +327,7 @@ const projects = [
     id: "jaipur",
     title: "Jaipur Palace",
     subtitle: "Hawa Mahal · Jaipur",
-    image: "https://images.unsplash.com/photo-1599661046289-e31897846e41?w=800&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1603262110263-fb0112e7cc33?w=1200&q=85&auto=format&fit=crop",
     description: "A honeycomb facade of pink-hued windows built to allow royal women to observe local street life without being seen.",
     badge: "Architecture",
     accent: "#E5E5E5"

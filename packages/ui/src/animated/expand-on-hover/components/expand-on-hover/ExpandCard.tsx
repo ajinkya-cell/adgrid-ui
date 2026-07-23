@@ -140,13 +140,14 @@ export function ExpandCard({
       style={{
         height: isExpanded ? expandHeight : collapsedHeight,
         borderRadius: `${borderRadius}px`,
+        clipPath: `inset(0px round ${borderRadius}px)`,
+        WebkitClipPath: `inset(0px round ${borderRadius}px)`,
         rotateX,
         rotateY,
-        transformStyle: "preserve-3d",
         perspective: 1000,
       }}
       className={cn(
-        "relative w-full overflow-hidden cursor-pointer select-none outline-none transition-all duration-300",
+        "relative w-full overflow-hidden cursor-pointer select-none outline-none transition-all duration-300 rounded-[inherit]",
         "focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-4 focus-visible:ring-offset-neutral-950",
         variantClasses,
         cardClassName
@@ -155,7 +156,13 @@ export function ExpandCard({
       {renderItem ? (
         renderItem(item, isExpanded)
       ) : (
-        <div className="relative w-full h-full">
+        <div 
+          className="relative w-full h-full rounded-[inherit] overflow-hidden"
+          style={{
+            clipPath: `inset(0px round ${borderRadius}px)`,
+            WebkitClipPath: `inset(0px round ${borderRadius}px)`,
+          }}
+        >
           {/* Collapsed Preview container */}
           <motion.div
             layout="position"
@@ -164,7 +171,7 @@ export function ExpandCard({
               pointerEvents: isExpanded ? "none" : "auto" 
             }}
             transition={{ duration: 0.2 }}
-            className="absolute inset-0 w-full h-full flex items-center"
+            className="absolute inset-0 w-full h-full flex items-center rounded-[inherit] overflow-hidden"
           >
             <Preview item={item} index={index} />
           </motion.div>
@@ -177,12 +184,13 @@ export function ExpandCard({
               pointerEvents: isExpanded ? "auto" : "none" 
             }}
             transition={{ duration: 0.3 }}
-            className="absolute inset-0 w-full h-full"
+            className="absolute inset-0 w-full h-full rounded-[inherit] overflow-hidden"
           >
             {isExpanded && (
               <CardContent 
                 item={item} 
                 index={index} 
+                borderRadius={borderRadius}
                 imageParallaxStyle={{ x: imageX, y: imageY }} 
               />
             )}

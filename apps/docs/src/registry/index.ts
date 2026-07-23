@@ -415,27 +415,7 @@ export const registry: RegistryEntry[] = [
       { name: "glow", type: "boolean", default: true, description: "Enable glow effect on dots", required: false },
     ],
   },
-  {
-    name: "Pixel Grid",
-    slug: "pixel-grid",
-    category: "animated",
-    description: "An editable pixel-art grid with paint, erase, fill, selection, brush sizing, undo/redo, and palette controls.",
-    dependencies: ["framer-motion", "lucide-react"],
-    packagePath: "animated/PixelGrid.tsx",
-    files: ["animated/PixelGrid.tsx"],
-    presentationStrategy: "fit",
-    propDefs: [
-      { name: "editable", type: "boolean", default: true, description: "Enable editing controls and cell interaction", required: false },
-      { name: "showToolbar", type: "boolean", default: true, description: "Show the editing toolbar", required: false },
-      { name: "showGridLines", type: "boolean", default: true, description: "Show visible grid dividers", required: false },
-      { name: "rows", type: "number", default: 24, description: "Number of grid rows", required: false, min: 8, max: 64, step: 1 },
-      { name: "columns", type: "number", default: 24, description: "Number of grid columns", required: false, min: 8, max: 64, step: 1 },
-      { name: "cellSize", type: "number", default: 16, description: "Cell size in pixels", required: false, min: 8, max: 28, step: 1 },
-      { name: "gap", type: "number", default: 1, description: "Grid line gap in pixels", required: false, min: 0, max: 4, step: 1 },
-      { name: "emptyColor", type: "color", default: "#ffffff", description: "Empty cell color", required: false },
-      { name: "gridLineColor", type: "color", default: "#111827", description: "Grid divider color", required: false },
-    ],
-  },
+
   {
     name: "Scroll Progress",
     slug: "scroll-progress",
@@ -537,33 +517,7 @@ export const registry: RegistryEntry[] = [
       { name: "triggerKey", type: "string", default: "q", description: "Keyboard key to hold to trigger the selection overlay in modal mode", required: false },
     ],
   },
-  {
-    name: "Names Landing",
-    slug: "names-landing",
-    category: "animated",
-    description: "Premium interactive names hero canvas with organic constellation, grid, and helical layouts, search filtering, and parallax depth layers.",
-    dependencies: ["framer-motion"],
-    packagePath: "animated/NamesLanding/NamesLanding.tsx",
-    files: [
-      "animated/NamesLanding/NamesLanding.tsx",
-      "animated/NamesLanding/NameItem.tsx",
-      "animated/NamesLanding/BackgroundLayer.tsx",
-      "animated/NamesLanding/layoutEngine.ts"
-    ],
-    presentationStrategy: "fullscreen",
-    propDefs: [
-      { name: "variant", type: "select", default: "constellation", description: "Procedural layout style", required: false, options: ["constellation", "grid", "helical"] },
-      { name: "background", type: "select", default: "solid", description: "Canvas background theme style", required: false, options: ["solid", "noise", "paper", "grid", "gradient", "texture"] },
-      { name: "fontFamily", type: "select", default: "sans", description: "Primary font family styling", required: false, options: ["sans", "mono", "grotesk", "serif", "suisse"] },
-      { name: "fontScale", type: "number", default: 1.0, description: "Font size scaling factor", required: false, min: 0.5, max: 2.5, step: 0.1 },
-      { name: "spacing", type: "number", default: 1.0, description: "Spacing separation scale", required: false, min: 0.5, max: 2.5, step: 0.1 },
-      { name: "density", type: "number", default: 2, description: "Layout density levels (1: sparse, 2: balanced, 3: dense)", required: false, min: 1, max: 3, step: 1 },
-      { name: "showSearch", type: "boolean", default: true, description: "Render top filter catalogue input overlay", required: false },
-      { name: "colorMode", type: "select", default: "dark", description: "Color theme mode", required: false, options: ["light", "dark"] },
-      { name: "title", type: "string", default: "CATALOGUE", description: "Exhibition large backdrop title text", required: false },
-      { name: "subtitle", type: "string", default: "SPATIAL TYPOGRAPHY EXHIBIT / VOID UI", description: "Sub-label background metadata description", required: false },
-    ]
-  },
+
   {
     name: "Hero Landing",
     slug: "hero",
@@ -797,14 +751,13 @@ export const registry: RegistryEntry[] = [
     name: "Bevel Accordion",
     slug: "bevel-accordion",
     category: "animated",
-    description: "A tactile 3D beveled accordion stack matching the Props Tweaker styles, featuring rotating chevrons, heights transition, and neon glows shadow overlays.",
+    description: "A tactile 3D beveled accordion stack with smooth sequential close-then-open panel transitions and rotating chevrons.",
     dependencies: ["framer-motion"],
     packagePath: "animated/BevelAccordion.tsx",
     files: ["animated/BevelAccordion.tsx"],
     presentationStrategy: "fullscreen",
     propDefs: [
       { name: "allowMultiple", type: "boolean", default: false, description: "Allow multiple panels open at once", required: false },
-      { name: "glowColor", type: "select", default: "blue", description: "Neon glow colors", options: ["blue", "white", "none"], required: false },
     ],
   },
   {

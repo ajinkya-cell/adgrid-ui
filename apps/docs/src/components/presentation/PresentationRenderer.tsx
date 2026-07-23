@@ -28,8 +28,7 @@ import {
   MechanicalTimer,
   MetallicForm,
   PookieForm,
-  PixelGrid,
-  pixelGridCatArtwork,
+
   MorphingNav,
   NowPlayingCard,
   PixelMeltBackground,
@@ -44,16 +43,13 @@ import {
   BevelAlertDialog,
   SpotlightGrid,
   FlickeringGrid,
-  FlickeringGridPlayground,
   DotPattern,
-  DotPatternPlayground,
   TextShuffle,
   VoidButton,
   WheelPicker,
   ScrollProgress,
   CardsTwo,
   WeaponWheel,
-  NamesLanding,
   Hero,
   AnimatedIcons1,
 } from "@adgrid-ui/ui";
@@ -242,7 +238,7 @@ const expandItems = [
     id: "taj",
     title: "The Eternal Taj",
     subtitle: "Mausoleum / Agra",
-    image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=900&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1200&q=85&auto=format&fit=crop",
     description: "White marble, morning mist, and the quiet geometry of permanence.",
     badge: "Heritage",
     accent: "#E2E8F0",
@@ -251,7 +247,7 @@ const expandItems = [
     id: "varanasi",
     title: "Varanasi Riverfront",
     subtitle: "Ganga Aarti / Kashi",
-    image: "https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=900&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?w=1200&q=85&auto=format&fit=crop",
     description: "Stone steps descending into ritual light and ancient chants.",
     badge: "Spiritual",
     accent: "#A3A3A3",
@@ -260,7 +256,7 @@ const expandItems = [
     id: "jaipur",
     title: "Jaipur Palace",
     subtitle: "Hawa Mahal / Jaipur",
-    image: "https://images.unsplash.com/photo-1599661046289-e31897846e41?w=900&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1603262110263-fb0112e7cc33?w=1200&q=85&auto=format&fit=crop",
     description: "A honeycomb facade shaped by wind, privacy, and royal street theatre.",
     badge: "Architecture",
     accent: "#D4D4D4",
@@ -670,8 +666,8 @@ export function PresentationRenderer({
     case "animated-beam": {
       const beamProps = {
         variant: "default" as const,
-        pathWidth: 1.5,
-        pathOpacity: 0.5,
+        pathWidth: 3.5,
+        pathOpacity: 0.9,
         duration: 3.5,
         ...liveProps,
       };
@@ -775,7 +771,7 @@ export function PresentationRenderer({
         </div>
       );
     case "anisotropic-knob":
-      return <AnisotropicKnob label="DECIBELS" size={132} sound={playTactileSounds} {...liveProps} />;
+      return <AnisotropicKnob size={132} sound={playTactileSounds} {...liveProps} />;
     case "mechanical-timer":
       return <MechanicalTimer {...liveProps} />;
     case "laser-vault-password":
@@ -794,32 +790,7 @@ export function PresentationRenderer({
       };
       return <DotMatrix {...(dotMatrixProps as Parameters<typeof DotMatrix>[0])} />;
     }
-    case "pixel-grid": {
-      const pixelGridProps = {
-        defaultValue: pixelGridCatArtwork,
-        editable: true,
-        showToolbar: true,
-        rows: 24,
-        columns: 24,
-        cellSize: 16,
-        gap: 1,
-        emptyColor: "#f8fafc",
-        gridLineColor: "rgba(17, 24, 39, 0.35)",
-        palette: [
-          { id: "ink", label: "Ink", color: "#222222" },
-          { id: "shadow", label: "Shadow", color: "#4b5563" },
-          { id: "paper", label: "Paper", color: "#f8fafc" },
-          { id: "amber", label: "Amber", color: "#f59e0b" },
-        ],
-        ...liveProps,
-      };
 
-      return (
-        <div className="flex min-h-[620px] w-full items-center justify-center p-6">
-          <PixelGrid {...(pixelGridProps as Parameters<typeof PixelGrid>[0])} />
-        </div>
-      );
-    }
     case "scroll-progress":
       return <ScrollProgressDemo {...liveProps} />;
     case "scroll-path-draw":
@@ -870,45 +841,7 @@ export function PresentationRenderer({
         </div>
       );
     }
-    case "names-landing": {
-      const namesLandingProps = {
-        names: [
-          "Alexander", "Charlotte", "Daniel", "Emma", "James", "Lucas", "Olivia", "Sophia",
-          "Benjamin", "Mia", "Ethan", "Amelia", "Henry", "Harper", "Sebastian", "Evelyn",
-          "Jack", "Aria", "Owen", "Ella", "Levi", "Avery", "Jackson", "Scarlett", "Mateo",
-          "Grace", "Liam", "Ava", "Noah", "Isabella", "Oliver", "Elijah", "William",
-          "Abigail", "Emily", "Mason", "Elizabeth", "Michael", "Mila", "Jacob", "Sofia",
-          "Logan", "Camila", "Victoria", "Madison", "Luna", "Theodore", "Aiden", "Chloe",
-          "Samuel", "Penelope", "Joseph", "Layla", "John", "Riley", "David", "Zoey",
-          "Wyatt", "Nora", "Carter", "Lily", "Julian", "Eleanor", "Luke", "Hannah",
-          "Grayson", "Lillian", "Jaxon", "Addison", "Asher", "Aubrey", "Gabriel", "Ellie",
-          "Stella", "Leo", "Natalie", "Lincoln", "Zoe", "Hudson", "Leah", "Dylan",
-          "Hazel", "Ezra", "Violet", "Thomas", "Aurora", "Charles", "Savannah", "Christopher",
-          "Audrey", "Miles", "Brooklyn", "Matthew", "Bella", "Josiah", "Claire", "Connor",
-          "Skylar", "Eli", "Lucy", "Maverick", "Paisley", "Ryan", "Everly", "Nathan",
-          "Anna", "Isaac", "Caroline", "Christian", "Nova", "Aaron", "Genesis", "Colton",
-          "Emilia", "Roman", "Kennedy", "Hunter", "Samantha", "Maya", "Landon", "Willow",
-          "Brooks", "Adeline", "Cameron", "Ruby", "Adrian", "Elena", "Jonathan", "Lola",
-          "Gavin", "Pippa", "Nolan", "Stella", "Nicholas", "Clara", "Dominic", "Alice"
-        ],
-        variant: "constellation" as const,
-        background: "solid" as const,
-        fontFamily: "sans" as const,
-        fontScale: 1.0,
-        density: 2,
-        showSearch: true,
-        colorMode: "dark" as const,
-        title: "CATALOGUE",
-        subtitle: "SPATIAL TYPOGRAPHY EXHIBIT / VOID UI",
-        ...liveProps,
-      };
 
-      return (
-        <div className="w-full h-screen relative select-none">
-          <NamesLanding {...(namesLandingProps as any)} />
-        </div>
-      );
-    }
     case "hero": {
       const heroProps = {
         name: "stephanie",
@@ -1084,29 +1017,19 @@ export function PresentationRenderer({
       );
     }
     case "flickering-grid":
-      return (
-        <div className="relative flex items-center justify-center w-full min-h-[400px] border border-white/5 bg-[#030303] rounded-2xl overflow-hidden p-6">
-          <FlickeringGrid className="absolute inset-0" color="#a78bfa" squareSize={4} gridGap={6} flickerChance={0.3} maxOpacity={0.3} />
-          <div className="relative z-10 text-center space-y-2">
-            <span className="text-[10px] font-mono tracking-[0.25em] text-[#a78bfa] uppercase font-bold">Ambient Particle Shield</span>
-            <h3 className="text-xl font-bold text-white tracking-tight">Interactive Matrix Layer</h3>
-          </div>
-        </div>
-      );
     case "flickering-grid-playground":
-      return <FlickeringGridPlayground className="w-full" />;
-    case "dot-pattern":
       return (
-        <div className="relative flex items-center justify-center w-full min-h-[400px] border border-white/5 bg-[#030303] rounded-2xl overflow-hidden p-6">
-          <DotPattern className="absolute inset-0" color="#a78bfa" width={16} height={16} cr={1.2} />
-          <div className="relative z-10 text-center space-y-2">
-            <span className="text-[10px] font-mono tracking-[0.25em] text-neutral-400 uppercase font-bold">Ambient Dots Shield</span>
-            <h3 className="text-xl font-bold text-white tracking-tight">SVG Pattern Layer</h3>
-          </div>
+        <div className="relative w-full h-full min-h-[450px] border border-white/5 bg-[#030303] rounded-2xl overflow-hidden">
+          <FlickeringGrid className="absolute inset-0 w-full h-full" color="#a78bfa" squareSize={4} gridGap={6} flickerChance={0.3} maxOpacity={0.3} />
         </div>
       );
+    case "dot-pattern":
     case "dot-pattern-playground":
-      return <DotPatternPlayground className="w-full" />;
+      return (
+        <div className="relative w-full h-full min-h-[450px] border border-white/5 bg-[#030303] rounded-2xl overflow-hidden">
+          <DotPattern className="absolute inset-0 w-full h-full" color="#a78bfa" width={16} height={16} cr={1.2} />
+        </div>
+      );
     case "animated-icons-1":
       return <AnimatedIcons1 />;
     default:

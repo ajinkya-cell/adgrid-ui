@@ -33,20 +33,27 @@ export function Sidebar() {
           </div>
           <div className="space-y-0.5">
             {[
-              { label: "Getting Started", icon: "rocket_launch", href: "#" },
-              { label: "Installation", icon: "download", href: "#" },
-              { label: "Theming", icon: "palette", href: "#" },
+              { label: "Getting Started", icon: "rocket_launch", href: "/docs/getting-started" },
+              { label: "Installation", icon: "download", href: "/docs/installation" },
+              { label: "Theming", icon: "palette", href: "/docs/theming" },
               { label: "Gallery", icon: "grid_view", href: "/gallery" },
-            ].map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className="flex items-center gap-3 px-3 py-2 text-text-muted hover:bg-surface-container-high hover:text-white transition-colors duration-150"
-              >
-                <span className="material-symbols-outlined text-[16px]">{item.icon}</span>
-                {item.label}
-              </Link>
-            ))}
+            ].map((item) => {
+              const active = pathname === item.href;
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className={`flex items-center gap-3 px-3 py-2 transition-colors duration-150 ${
+                    active
+                      ? "text-white bg-surface-container font-bold"
+                      : "text-text-muted hover:bg-surface-container-high hover:text-white"
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-[16px]">{item.icon}</span>
+                  {item.label}
+                </Link>
+              );
+            })}
           </div>
         </div>
 

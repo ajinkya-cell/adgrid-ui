@@ -6,9 +6,10 @@ interface CardContentProps {
   item: ExpandItem;
   imageParallaxStyle?: any; // Dynamics for pointer parallax shifts
   index: number;
+  borderRadius?: number;
 }
 
-export function CardContent({ item, imageParallaxStyle, index }: CardContentProps) {
+export function CardContent({ item, imageParallaxStyle, index, borderRadius = 24 }: CardContentProps) {
   // Stagger variants for content reveals
   const revealContainer = {
     hidden: { opacity: 0 },
@@ -35,23 +36,29 @@ export function CardContent({ item, imageParallaxStyle, index }: CardContentProp
     },
   };
 
+  const clipStyle = {
+    borderRadius: `${borderRadius}px`,
+    clipPath: `inset(0px round ${borderRadius}px)`,
+    WebkitClipPath: `inset(0px round ${borderRadius}px)`,
+  };
+
   return (
-    <div className="relative w-full h-full overflow-hidden select-none">
+    <div className="relative w-full h-full overflow-hidden rounded-[inherit] select-none" style={clipStyle}>
       {/* Background Grayscale Image */}
-      <div className="absolute inset-0 w-full h-full bg-neutral-950 overflow-hidden">
+      <div className="absolute inset-0 w-full h-full bg-neutral-950 overflow-hidden rounded-[inherit]" style={clipStyle}>
         <motion.img
           src={item.image}
           alt={item.title}
           loading="lazy"
-          style={imageParallaxStyle}
-          className="absolute inset-0 w-full h-full object-cover grayscale contrast-110 brightness-40"
+          style={{ ...imageParallaxStyle, ...clipStyle }}
+          className="absolute inset-0 w-full h-full object-cover brightness-75 contrast-105 rounded-[inherit]"
           initial={{ opacity: 0, scale: 0.95, filter: "blur(8px)" }}
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           exit={{ opacity: 0, scale: 0.95, filter: "blur(8px)" }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         />
         {/* Soft Linear Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/50 to-transparent rounded-[inherit]" style={clipStyle} />
       </div>
 
       {/* Dynamic Staggered Panels */}

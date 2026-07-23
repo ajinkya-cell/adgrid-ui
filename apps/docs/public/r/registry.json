@@ -474,22 +474,6 @@
       ]
     },
     {
-      "name": "pixel-grid",
-      "type": "registry:ui",
-      "title": "Pixel Grid",
-      "description": "An editable pixel-art grid with paint, erase, fill, selection, brush sizing, undo/redo, and palette controls.",
-      "dependencies": [
-        "framer-motion",
-        "lucide-react"
-      ],
-      "files": [
-        {
-          "path": "components/ui/PixelGrid.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "scroll-progress",
       "type": "registry:ui",
       "title": "Scroll Progress",
@@ -657,33 +641,6 @@
       "files": [
         {
           "path": "components/ui/WeaponWheel.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "names-landing",
-      "type": "registry:ui",
-      "title": "Names Landing",
-      "description": "Premium interactive names hero canvas with organic constellation, grid, and helical layouts, search filtering, and parallax depth layers.",
-      "dependencies": [
-        "framer-motion"
-      ],
-      "files": [
-        {
-          "path": "components/ui/names-landing/NamesLanding.tsx",
-          "type": "registry:ui"
-        },
-        {
-          "path": "components/ui/names-landing/NameItem.tsx",
-          "type": "registry:ui"
-        },
-        {
-          "path": "components/ui/names-landing/BackgroundLayer.tsx",
-          "type": "registry:ui"
-        },
-        {
-          "path": "components/ui/names-landing/layoutEngine.ts",
           "type": "registry:ui"
         }
       ]

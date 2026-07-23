@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { registry } from "@/registry";
 import { PresentationLayout } from "@/components/presentation/PresentationLayout";
 import type { PresentationSourceFile } from "@/components/presentation/types";
+import { codeToHtml } from "shiki";
 
 function readSourceFiles(entry: (typeof registry)[number]) {
   const srcDir = path.join(process.cwd(), "../../packages/ui/src");
@@ -17,24 +18,34 @@ function readSourceFiles(entry: (typeof registry)[number]) {
   }, []);
 }
 
-import { codeToHtml } from "shiki";
-
-export default async function PresentPage({
+export default async function PresentCatchAllPage({
   params,
 }: {
-  params: Promise<{ category: string; slug: string }>;
+  params: Promise<{ slug: string[] }>;
 }) {
   const resolvedParams = await params;
-  if (!resolvedParams || !resolvedParams.category || !resolvedParams.slug) {
-    return null;
+  if (!resolvedParams || !resolvedParams.slug || resolvedParams.slug.length === 0) {
+    notFound();
   }
-  const { category, slug } = resolvedParams;
-  const entry = registry.find((component) => component.slug === slug && component.category === category);
+
+  const slugParts = resolvedParams.slug;
+  let entry;
+
+  if (slugParts.length >= 2) {
+    const category = slugParts[0];
+    const itemSlug = slugParts[slugParts.length - 1];
+    entry =
+      registry.find((c) => c.slug === itemSlug && c.category === category) ||
+      registry.find((c) => c.slug === itemSlug);
+  } else {
+    const itemSlug = slugParts[0];
+    entry = registry.find((c) => c.slug === itemSlug);
+  }
+
   if (!entry) notFound();
 
   const sourceFiles = readSourceFiles(entry);
-  
-  // Highlight all source files on the server using Shiki
+
   const highlightedFiles = await Promise.all(
     sourceFiles.map(async (file) => {
       const html = await codeToHtml(file.code, {
@@ -54,9 +65,12 @@ export default async function PresentPage({
 }
 
 export function generateStaticParams() {
-  return registry.map((component) => ({
-    category: component.category,
-    slug: component.slug,
-  }));
+  const params: { slug: string[] }[] = [];
+  for (const component of registry) {
+    // 2-segment path: /present/category/slug
+    params.push({ slug: [component.category, component.slug] });
+    // 1-segment path: /present/slug
+    params.push({ slug: [component.slug] });
+  }
+  return params;
 }
-

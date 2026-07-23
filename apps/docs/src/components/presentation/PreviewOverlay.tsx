@@ -237,7 +237,6 @@ export function MiniPreviewRenderer({ slug }: { slug: string }) {
           <Suspense fallback={null}>
             <UI.BevelAccordion
               items={dummyMiniAccordionItems}
-              glowColor="blue"
             />
           </Suspense>
         </div>

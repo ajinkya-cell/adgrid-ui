@@ -35,9 +35,9 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
   reverse = false,
   duration = 3.5,
   delay = 0,
-  pathColor = "rgba(255, 255, 255, 0.08)",
-  pathWidth = 1.5,
-  pathOpacity = 0.5,
+  pathColor = "rgba(255, 255, 255, 0.2)",
+  pathWidth = 3,
+  pathOpacity = 0.85,
   gradientStartColor = "#3b82f6",
   gradientStopColor = "#8b5cf6",
   repeat = Infinity,
@@ -68,22 +68,22 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
   useEffect(() => {
     const updatePath = () => {
       if (containerRef.current && fromRef.current && toRef.current) {
-        const containerRect = containerRef.current.getBoundingClientRect();
+        const container = containerRef.current;
+        const containerRect = container.getBoundingClientRect();
         const rectA = fromRef.current.getBoundingClientRect();
         const rectB = toRef.current.getBoundingClientRect();
 
-        const svgWidth = containerRect.width;
-        const svgHeight = containerRect.height;
+        const scaleX = container.offsetWidth > 0 ? containerRect.width / container.offsetWidth : 1;
+        const scaleY = container.offsetHeight > 0 ? containerRect.height / container.offsetHeight : 1;
+
+        const svgWidth = container.offsetWidth || containerRect.width;
+        const svgHeight = container.offsetHeight || containerRect.height;
         setSvgDimensions({ width: svgWidth, height: svgHeight });
 
-        const startX =
-          rectA.left - containerRect.left + rectA.width / 2 + startXOffset;
-        const startY =
-          rectA.top - containerRect.top + rectA.height / 2 + startYOffset;
-        const endX =
-          rectB.left - containerRect.left + rectB.width / 2 + endXOffset;
-        const endY =
-          rectB.top - containerRect.top + rectB.height / 2 + endYOffset;
+        const startX = (rectA.left - containerRect.left) / scaleX + (rectA.width / scaleX) / 2 + startXOffset;
+        const startY = (rectA.top - containerRect.top) / scaleY + (rectA.height / scaleY) / 2 + startYOffset;
+        const endX = (rectB.left - containerRect.left) / scaleX + (rectB.width / scaleX) / 2 + endXOffset;
+        const endY = (rectB.top - containerRect.top) / scaleY + (rectB.height / scaleY) / 2 + endYOffset;
 
         const controlY = startY - curvature;
         const d = `M ${startX},${startY} Q ${(startX + endX) / 2},${controlY} ${endX},${endY}`;

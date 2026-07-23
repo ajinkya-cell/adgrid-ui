@@ -7,13 +7,13 @@ import { PageTransition } from "@/components/site/PageTransition";
 
 export function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const presenting = pathname.startsWith("/present");
+  const isIsolated = pathname.startsWith("/present") || pathname.startsWith("/embed");
 
   return (
     <LayoutGroup id="site-shell">
-      {!presenting && <Navbar />}
-      <div className={`${presenting ? "" : "pt-16"} min-h-screen flex flex-col`}>
-        {presenting ? children : <PageTransition>{children}</PageTransition>}
+      {!isIsolated && <Navbar />}
+      <div className={`${isIsolated ? "" : "pt-16"} min-h-screen flex flex-col`}>
+        {isIsolated ? children : <PageTransition>{children}</PageTransition>}
       </div>
     </LayoutGroup>
   );
