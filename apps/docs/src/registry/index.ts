@@ -816,4 +816,14 @@ export const registry: RegistryEntry[] = [
       { name: "cancelLabel", type: "string", default: "DISMISS", description: "Secondary action button label", required: false }
     ],
   },
+  {
+    name: "ForgeUI Landing",
+    slug: "forgeui-landing",
+    category: "animated",
+    description: "Sleek dark landing page hero section with radial spotlights, customizable calls to action, and interactive social/tech stack footer.",
+    dependencies: ["lucide-react"],
+    packagePath: "animated/ForgeUILanding.tsx",
+    files: ["animated/ForgeUILanding.tsx"],
+    presentationStrategy: "fullscreen",
+  },
 ];

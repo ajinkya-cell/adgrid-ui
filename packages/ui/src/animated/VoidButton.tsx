@@ -161,7 +161,7 @@ export function VoidButton({
 
       {/* Centered Single Text Label */}
       <span className={cn(
-        "relative z-10 transition-colors duration-300 font-medium",
+        "relative z-10 transition-colors duration-300 font-medium inline-flex items-center justify-center gap-2",
         isHovered ? activeText : "text-white/70"
       )}>
         {children || "VOID"}

@@ -149,3 +149,8 @@ export type { BevelAlertDialogProps } from "./animated/BevelAlertDialog";
 
 // Animated Beam & Beveled Node system
 export * from "./animated/animated-beam";
+
+// ForgeUI Landing
+export { ForgeUILanding } from "./animated/ForgeUILanding";
+export type { ForgeUILandingProps } from "./animated/ForgeUILanding";
+

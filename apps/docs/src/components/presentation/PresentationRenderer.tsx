@@ -52,6 +52,7 @@ import {
   WeaponWheel,
   Hero,
   AnimatedIcons1,
+  ForgeUILanding,
 } from "@adgrid-ui/ui";
 import { Cards } from "../../../../../packages/ui/src/animated/Cards";
 import {
@@ -866,6 +867,15 @@ export function PresentationRenderer({
       return (
         <div className="w-full h-screen relative select-none">
           <Hero {...(heroProps as any)} />
+        </div>
+      );
+    }
+    case "forgeui-landing": {
+      return (
+        <div className="w-full min-h-screen relative">
+          <ForgeUILanding 
+            onDocumentation={() => console.log("Documentation clicked")}
+          />
         </div>
       );
     }
