@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback, useEffect } from "react";
+import { useRef, useCallback, useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import Image from "next/image";
 
@@ -15,14 +15,14 @@ export interface ImageParallaxProps {
   height?: string | number;
   /** How many px the image travels on full mouse sweep */
   depth?: number;
+  /** Yaw/Pitch 3D tilt factor in degrees */
+  tiltAmount?: number;
   /** Diagonal grid stripe color */
   overlayColor?: string;
   /** Caption shown bottom-left */
   caption?: string;
   /** Sub-caption */
   subcaption?: string;
-  /** Drive parallax from scroll instead of mouse (uses IntersectionObserver + scroll) */
-  mode?: "mouse" | "scroll";
   /** Container class name */
   className?: string;
 }
@@ -33,13 +33,14 @@ export function ImageParallax({
   width = "100%",
   height = 420,
   depth = 40,
+  tiltAmount = 5,
   overlayColor = "rgba(255,255,255,0.04)",
   caption,
   subcaption,
-  mode = "mouse",
   className = "",
 }: ImageParallaxProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
+  const [aspectRatio, setAspectRatio] = useState<number | null>(null);
 
   // Raw motion values 0→1 representing cursor/scroll position
   const rawX = useMotionValue(0.5);
@@ -50,8 +51,8 @@ export function ImageParallax({
   const springY = useSpring(rawY, { stiffness: 60, damping: 20, mass: 0.5 });
 
   // 3D Tilting transforms for container card (Yaw and Pitch rotation)
-  const rotateX = useTransform(springY, [0, 1], [5, -5]);
-  const rotateY = useTransform(springX, [0, 1], [-5, 5]);
+  const rotateX = useTransform(springY, [0, 1], [tiltAmount, -tiltAmount]);
+  const rotateY = useTransform(springX, [0, 1], [-tiltAmount, tiltAmount]);
 
   // Image translates in one direction
   const imgX = useTransform(springX, [0, 1], [depth / 2, -depth / 2]);
@@ -85,27 +86,12 @@ export function ImageParallax({
     scale.set(1);
   }, [rawX, rawY, scale]);
 
-  // Scroll mode
-  useEffect(() => {
-    if (mode !== "scroll" || !wrapRef.current) return;
-    const el = wrapRef.current;
-
-    const onScroll = () => {
-      const rect = el.getBoundingClientRect();
-      const viewH = window.innerHeight;
-      // progress: 0 when bottom enters view, 1 when top exits
-      const progress =
-        1 - Math.min(1, Math.max(0, rect.bottom / (viewH + rect.height)));
-      rawY.set(progress);
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [mode, rawY]);
+  // Scroll mode removed
 
   const containerStyle: React.CSSProperties = {
     width,
-    height,
+    height: aspectRatio ? undefined : height,
+    aspectRatio: aspectRatio ? `${aspectRatio}` : undefined,
     position: "relative",
     overflow: "hidden",
     borderRadius: "1.25rem",
@@ -119,14 +105,14 @@ export function ImageParallax({
         className={`group relative overflow-hidden ${className}`}
         style={{
           ...containerStyle,
-          rotateX: mode === "mouse" ? rotateX : 0,
-          rotateY: mode === "mouse" ? rotateY : 0,
+          rotateX,
+          rotateY,
           transformStyle: "preserve-3d",
           willChange: "transform",
         }}
-        onMouseMove={mode === "mouse" ? handleMouseMove : undefined}
-        onMouseEnter={mode === "mouse" ? handleMouseEnter : undefined}
-        onMouseLeave={mode === "mouse" ? handleMouseLeave : undefined}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         {/* Specular Inner Highlight Overlay Bevel */}
         <div className="absolute inset-0 rounded-[1.25rem] border border-transparent shadow-[inset_0_1px_1px_rgba(255,255,255,0.06),0_8px_32px_rgba(0,0,0,0.6)] pointer-events-none z-20" />
@@ -144,12 +130,19 @@ export function ImageParallax({
           }}
         >
           <Image
+            key={src}
             src={src}
             alt={alt}
             fill
             className="object-cover pointer-events-none"
             sizes="100vw"
             priority
+            onLoad={(e) => {
+              const img = e.currentTarget;
+              if (img.naturalWidth && img.naturalHeight) {
+                setAspectRatio(img.naturalWidth / img.naturalHeight);
+              }
+            }}
           />
         </motion.div>
 
@@ -185,8 +178,8 @@ export function ImageParallax({
           <motion.div
             className="absolute bottom-6 left-6 right-6 p-4 rounded-xl border border-white/10 bg-black/25 backdrop-blur-md shadow-[0_4px_24px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.05)] z-25 pointer-events-none"
             style={{
-              x: mode === "mouse" ? captionX : 0,
-              y: mode === "mouse" ? captionY : 0,
+              x: captionX,
+              y: captionY,
               transformStyle: "preserve-3d",
               willChange: "transform",
             }}

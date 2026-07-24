@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export type BackgroundMode = "solid" | "noise" | "grid" | "dotGrid" | "gradient" | "aurora";
+export type BackgroundMode = "solid" | "noise" | "grid" | "dotGrid" | "gradient" | "aurora" | "moonArc";
 export type DisplayStrategy = "center" | "fullscreen" | "cover" | "fit" | "auto";
 
 export interface PresentationSettings {

@@ -1,135 +1,175 @@
 "use client";
 
-import { useEffect } from "react";
-import { Caveat } from "next/font/google";
-import { PremiumHero } from "@adgrid-ui/ui";
-import { FeatureCard, StatItem, FooterLight } from "./LandingComponents";
-
-const caveat = Caveat({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-caveat",
-  display: "swap",
-});
-
-const features = [
-  {
-    id: "ai-editing",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
-        <path d="M12 20h9" />
-        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-      </svg>
-    ),
-    title: "AI-Powered Editing",
-    description: "Retention-first algorithms that analyze viral patterns and auto-generate hooks, cuts, and captions tailored to each platform."
-  },
-  {
-    id: "multi-platform",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
-        <rect x="2" y="2" width="8" height="8" rx="2" />
-        <rect x="14" y="2" width="8" height="8" rx="2" />
-        <rect x="2" y="14" width="8" height="8" rx="2" />
-        <rect x="14" y="14" width="8" height="8" rx="2" />
-      </svg>
-    ),
-    title: "One-Click Distribution",
-    description: "Publish to TikTok, Reels, Shorts, and Twitter simultaneously. Platform-specific aspect ratios, hashtags, and timing handled automatically."
-  },
-  {
-    id: "analytics",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
-        <line x1="18" y1="20" x2="18" y2="10" />
-        <line x1="12" y1="20" x2="12" y2="4" />
-        <line x1="6" y1="20" x2="6" y2="14" />
-      </svg>
-    ),
-    title: "Growth Analytics",
-    description: "Daily audience insights, retention curves, and revenue attribution. Know exactly which content drives followers and revenue."
-  }
-];
-
-const stats = [
-  { id: "creators", number: "12.5K", label: "Active Creators" },
-  { id: "videos", number: "2.3M", label: "Videos Generated" },
-  { id: "views", number: "847M", label: "Total Views" }
-];
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { ArrowRight, Copy, Check } from "lucide-react";
 
 export default function LandingPage() {
-  useEffect(() => {
-    if (typeof document === "undefined") return;
-    const html = document.documentElement;
-    const hasDark = html.classList.contains("dark");
-    
-    html.classList.remove("dark");
-    
-    return () => {
-      if (hasDark) {
-        html.classList.add("dark");
-      }
-    };
-  }, []);
+  const [copied, setCopied] = useState(false);
+  const email = "hello@aayushbharti.in";
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(email);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
-    <main className={`${caveat.variable} w-full min-h-screen relative font-body`}>
+    <main className="relative min-h-screen w-full bg-[#050508] text-white flex flex-col justify-between items-center overflow-hidden font-sans">
+      {/* Force dark overrides for this page */}
       <style dangerouslySetInnerHTML={{ __html: `
         header { display: none !important; }
         body > div.pt-16 { padding-top: 0px !important; }
-        html, body { background-color: #ffffff !important; color: #171717 !important; }
+        html, body { background-color: #030303 !important; }
       `}} />
 
-      {/* ─── 1. Premium Hero ─── */}
-      <PremiumHero 
-        title="What's your growth goal?"
-        subtitle="Turn views into velocity"
-        ctaText="Start Your Engine"
-      />
+      {/* ================= BACKGROUND AURORA & ARC ================= */}
+      <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-end overflow-hidden">
+        
+        {/* Northern Lights / Aurora Glow Layer */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          {/* Animated Purple/Indigo Glow */}
+          <motion.div
+            animate={{
+              scale: [1, 1.2, 0.9, 1],
+              x: [-40, 30, -20, -40],
+              y: [20, -30, 10, 20],
+              opacity: [0.4, 0.7, 0.5, 0.4],
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="absolute w-[500px] h-[350px] sm:w-[800px] sm:h-[500px] bg-gradient-to-r from-purple-900/60 via-indigo-800/50 to-blue-900/40 rounded-full blur-[100px] -bottom-10 -left-20"
+          />
 
-      {/* ─── 2. Feature Grid ─── */}
-      <section className="py-24 px-6 max-w-[1400px] mx-auto bg-white border-t border-neutral-200">
-        <div className="grid md:grid-cols-3 gap-8">
-          {features.map((feature) => (
-            <FeatureCard key={feature.id} {...feature} />
-          ))}
+          {/* Animated Cyan/Teal Glow */}
+          <motion.div
+            animate={{
+              scale: [1.1, 0.9, 1.25, 1.1],
+              x: [30, -40, 20, 30],
+              y: [-20, 30, -10, -20],
+              opacity: [0.3, 0.6, 0.4, 0.3],
+            }}
+            transition={{
+              duration: 12,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="absolute w-[450px] h-[300px] sm:w-[700px] sm:h-[450px] bg-gradient-to-r from-cyan-600/40 via-sky-800/50 to-indigo-900/50 rounded-full blur-[90px] -bottom-10 -right-20"
+          />
+
+          {/* Center Subtle Magenta Shimmer */}
+          <motion.div
+            animate={{
+              opacity: [0.2, 0.5, 0.2],
+              scale: [0.95, 1.1, 0.95],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="absolute w-[600px] h-[300px] bg-violet-600/30 rounded-full blur-[120px] bottom-10"
+          />
         </div>
-      </section>
 
-      {/* ─── 3. Social Proof / Stats Bar ─── */}
-      <section className="py-24 px-6 max-w-[1400px] mx-auto bg-neutral-50 border-t border-neutral-200 border-b border-neutral-200">
-        <div className="grid grid-cols-3 gap-8 text-center">
-          {stats.map((stat) => (
-            <StatItem key={stat.id} {...stat} />
-          ))}
+        {/* Planet Arc Outer Shadow Mask */}
+        <div className="absolute bottom-0 w-[160%] sm:w-[140%] md:w-[120%] h-[300px] sm:h-[400px] rounded-t-[100%] bg-gradient-to-b from-transparent via-[#050508]/80 to-[#050508] pointer-events-none" />
+
+        {/* Glowing Horizon Arc Line */}
+        <div className="relative w-[180%] sm:w-[150%] md:w-[130%] h-[200px] sm:h-[300px] rounded-t-[100%] bg-[#08090E] border-t border-white/40 shadow-[0_-15px_60px_rgba(255,255,255,0.25)] flex justify-center">
+          {/* Inner Light Arc Gradient Accent */}
+          <div className="absolute top-0 w-3/4 h-[2px] bg-gradient-to-r from-transparent via-cyan-200 to-transparent blur-[1px]" />
+          <div className="absolute -top-1 w-1/2 h-[3px] bg-gradient-to-r from-transparent via-white to-transparent blur-[2px]" />
         </div>
-      </section>
+      </div>
 
-      {/* ─── 4. Bottom CTA ─── */}
-      <section className="py-24 px-6 max-w-[1400px] mx-auto bg-white border-t border-neutral-200 text-center">
-        <div className="max-w-2xl mx-auto">
-          <h2 className="font-handwritten text-3xl md:text-4xl font-normal text-neutral-900 mb-6 tracking-wide">
-            Ready to grow on autopilot?
-          </h2>
-          <p className="font-body text-neutral-600 mb-8 text-lg leading-relaxed">
-            Join 12,000+ creators who've automated their content engine. 
-            First month free — no credit card required.
-          </p>
-          <div className="flex justify-center">
-            <button className="flex items-center gap-4 bg-neutral-900 text-white hover:bg-black px-8 py-4 rounded-full font-body text-sm font-semibold tracking-tight shadow-[0_12px_28px_rgba(0,0,0,0.12)] hover:shadow-[0_18px_36px_rgba(0,0,0,0.22)] transition-all duration-300 cursor-pointer select-none group outline-none focus-visible:ring-4 focus-visible:ring-neutral-400">
-              <span>Start Your Engine</span>
-              <div className="relative w-6 h-6 rounded-full bg-white/10 flex items-center justify-center overflow-hidden transition-colors duration-300 group-hover:bg-white/20">
-                <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                </svg>
-              </div>
-            </button>
+      {/* ================= CONTENT HERO ================= */}
+      <div className="relative z-10 max-w-5xl mx-auto px-6 pt-24 pb-32 text-center flex flex-col items-center justify-center my-auto">
+        
+        {/* Top Announcement Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: -15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 backdrop-blur-md text-xs sm:text-sm text-gray-300 hover:border-white/20 transition-all cursor-pointer mb-8"
+        >
+          <span className="bg-blue-600 text-white font-semibold text-[10px] sm:text-xs px-2 py-0.5 rounded-full shadow-sm">
+            Upcoming
+          </span>
+          <span className="flex items-center gap-1 font-medium text-gray-200">
+            Nextnode is launching soon!
+            <span className="text-gray-400">&gt;</span>
+          </span>
+        </motion.div>
+
+        {/* Main Headlines */}
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className="text-4xl sm:text-6xl md:text-7xl tracking-tight font-serif text-gray-100 max-w-4xl leading-[1.15]"
+        >
+          Code that feels designed. <br />
+          <span className="italic font-normal text-gray-200">
+            Engineering that actually ships.
+          </span>
+        </motion.h1>
+
+        {/* Profile / Intro Line */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="mt-8 flex items-center justify-center gap-2.5 text-lg sm:text-2xl text-gray-300 font-light"
+        >
+          <span>Hello, I&apos;m Aayush Bharti</span>
+          {/* Avatar Thumbnail */}
+          <div className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-lg overflow-hidden border border-white/20 shadow-inner bg-gray-800">
+            <img
+              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
+              alt="Aayush Bharti"
+              className="w-full h-full object-cover"
+            />
           </div>
-        </div>
-      </section>
+          <span>a Full Stack Developer</span>
+        </motion.div>
 
-      {/* ─── 5. Footer ─── */}
-      <FooterLight />
+        {/* Call To Actions */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto"
+        >
+          {/* Primary Action Button */}
+          <a
+            href="#connect"
+            className="group relative inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-slate-800/80 to-slate-900/80 border border-white/15 text-sm font-medium text-white shadow-lg backdrop-blur-xl hover:border-white/30 hover:bg-slate-800 transition-all duration-200"
+          >
+            <span>Let&apos;s Connect</span>
+            <span className="p-1 rounded-full bg-white text-black transition-transform duration-200 group-hover:translate-x-0.5">
+              <ArrowRight className="w-3.5 h-3.5" />
+            </span>
+          </a>
+
+          {/* Copy Email Button */}
+          <button
+            onClick={handleCopy}
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-transparent text-sm text-gray-300 hover:text-white transition-colors cursor-pointer"
+          >
+            {copied ? (
+              <Check className="w-4 h-4 text-emerald-400" />
+            ) : (
+              <Copy className="w-4 h-4 text-gray-400" />
+            )}
+            <span className="font-mono text-xs sm:text-sm">{email}</span>
+          </button>
+        </motion.div>
+
+      </div>
     </main>
   );
 }

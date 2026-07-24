@@ -47,6 +47,48 @@ export function PresentationBackground({ mode, canvasColor }: { mode: Background
           />
         </>
       )}
+      {mode === "moonArc" && (
+        <>
+          {/* Aurora Glow Blobs */}
+          <motion.div
+            className="absolute w-[500px] h-[350px] sm:w-[800px] sm:h-[500px] rounded-full blur-[100px] -bottom-10 -left-20"
+            style={{ background: "linear-gradient(to right, rgba(76,29,149,0.6), rgba(30,27,75,0.5), rgba(30,64,175,0.4))" }}
+            animate={reducedMotion ? undefined : {
+              scale: [1, 1.2, 0.9, 1],
+              x: [-40, 30, -20, -40],
+              y: [20, -30, 10, 20],
+              opacity: [0.4, 0.7, 0.5, 0.4],
+            }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute w-[450px] h-[300px] sm:w-[700px] sm:h-[450px] rounded-full blur-[90px] -bottom-10 -right-20"
+            style={{ background: "linear-gradient(to right, rgba(2,132,199,0.4), rgba(12,74,110,0.5), rgba(30,27,75,0.5))" }}
+            animate={reducedMotion ? undefined : {
+              scale: [1.1, 0.9, 1.25, 1.1],
+              x: [30, -40, 20, 30],
+              y: [-20, 30, -10, -20],
+              opacity: [0.3, 0.6, 0.4, 0.3],
+            }}
+            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute w-[600px] h-[300px] rounded-full blur-[120px] bottom-10 left-1/2 -translate-x-1/2"
+            style={{ background: "rgba(124,58,237,0.3)" }}
+            animate={reducedMotion ? undefined : {
+              opacity: [0.2, 0.5, 0.2],
+              scale: [0.95, 1.1, 0.95],
+            }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          />
+          {/* Planetary Horizon Arc */}
+          <div className="absolute bottom-0 w-[140%] h-[300px] rounded-t-[100%] bg-gradient-to-b from-transparent via-[#050508]/80 to-[#050508]" />
+          <div className="absolute bottom-0 w-[130%] left-1/2 -translate-x-1/2 h-[200px] rounded-t-[100%] bg-[#08090E] border-t border-white/30 shadow-[0_-15px_60px_rgba(255,255,255,0.15)]">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[2px] bg-gradient-to-r from-transparent via-cyan-200 to-transparent blur-[1px]" />
+            <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-1/2 h-[3px] bg-gradient-to-r from-transparent via-white to-transparent blur-[2px]" />
+          </div>
+        </>
+      )}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,transparent_0,rgba(0,0,0,0.28)_52%,rgba(0,0,0,0.58)_100%)]" />
     </motion.div>
   );

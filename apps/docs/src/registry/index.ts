@@ -74,6 +74,59 @@ export const registry: RegistryEntry[] = [
     dependencies: ["framer-motion"],
     packagePath: "animated/ImageParallax.tsx",
     files: ["animated/ImageParallax.tsx"],
+    presentationStrategy: "center",
+    propDefs: [
+      {
+        name: "src",
+        type: "select",
+        default: "/utils/image-parallax.png",
+        description: "Image source URL asset",
+        required: false,
+        options: [
+          "/utils/image-parallax.png",
+          "/utils/image-parallax-2.png",
+          "/utils/image-parallax-3.jpg",
+        ]
+      },
+      {
+        name: "depth",
+        type: "number",
+        default: 10,
+        description: "Parallax travel depth in pixels",
+        required: false,
+        min: 0,
+        max: 100,
+        step: 5,
+      },
+      {
+        name: "tiltAmount",
+        type: "number",
+        default: 5,
+        description: "3D Yaw/Pitch card tilt amount in degrees",
+        required: false,
+        min: 0,
+        max: 20,
+        step: 1,
+      },
+      {
+        name: "width",
+        type: "select",
+        default: "100%",
+        description: "Container width layout",
+        required: false,
+        options: ["100%", "300px", "400px", "500px", "600px"]
+      },
+      {
+        name: "height",
+        type: "number",
+        default: 420,
+        description: "Container height in pixels",
+        required: false,
+        min: 200,
+        max: 600,
+        step: 10,
+      }
+    ]
   },
   {
     name: "Living Text",
@@ -826,4 +879,33 @@ export const registry: RegistryEntry[] = [
     files: ["animated/ForgeUILanding.tsx"],
     presentationStrategy: "fullscreen",
   },
+  {
+    name: "Moon Landing",
+    slug: "moon-landing",
+    category: "animated",
+    description: "A gorgeous, interactive Moon Landing hero section featuring volumetric background glows and a curved planet-horizon casting up a bright glowing shadow.",
+    dependencies: ["framer-motion", "lucide-react"],
+    packagePath: "animated/MoonLanding.tsx",
+    files: ["animated/MoonLanding.tsx"],
+    presentationStrategy: "fullscreen",
+  },
+  {
+    name: "Rays Landing",
+    slug: "rays-landing",
+    category: "animated",
+    description: "Interactive portfolio landing page showcasing an overhead WebGL light-ray beam background, floating liquid-glass navigation, and role cycler.",
+    dependencies: ["lucide-react"],
+    packagePath: "animated/RaysLanding.tsx",
+    files: ["animated/RaysLanding.tsx"],
+    presentationStrategy: "fullscreen",
+    propDefs: [
+      { name: "name", type: "string", default: "Ajinkya", description: "Name displayed in headline", required: false },
+      { name: "raysColor", type: "color", default: "#ffffff", description: "Hex color for WebGL light rays", required: false },
+      { name: "raysSpeed", type: "number", default: 1.0, description: "Speed multiplier for ray animation", required: false, min: 0.1, max: 5.0, step: 0.1 },
+      { name: "lightSpread", type: "number", default: 1.0, description: "Angular spread of rays", required: false, min: 0.1, max: 3.0, step: 0.1 },
+      { name: "rayLength", type: "number", default: 2.0, description: "Reach distance of rays", required: false, min: 0.5, max: 4.0, step: 0.1 },
+      { name: "followMouse", type: "boolean", default: true, description: "Enable mouse tracking for rays", required: false },
+    ],
+  },
 ];
+

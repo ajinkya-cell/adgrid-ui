@@ -53,6 +53,8 @@ import {
   Hero,
   AnimatedIcons1,
   ForgeUILanding,
+  MoonLanding,
+  RaysLanding,
 } from "@adgrid-ui/ui";
 import { Cards } from "../../../../../packages/ui/src/animated/Cards";
 import {
@@ -93,7 +95,7 @@ import {
 } from "@tabler/icons-react";
 
 const imageOne = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900&q=80";
-const imageTwo = "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1000&q=80";
+const imageTwo = "/utils/image-parallax.png";
 
 const weaponWheelDevItems = [
   {
@@ -411,8 +413,17 @@ export function PresentationRenderer({
   switch (entry.slug) {
     case "image-reveal":
       return <ImageReveal src={imageOne} alt="Mountain landscape" width={420} height={540} />;
-    case "image-parallax":
-      return <ImageParallax src={imageTwo} alt="Aerial mountain landscape" height={420} caption="Above the Clouds" subcaption="Swiss Alps / morning pass" />;
+    case "image-parallax": {
+      const imageParallaxProps = {
+        src: imageTwo,
+        alt: "Aerial mountain landscape",
+        height: 420,
+        depth: 10,
+        tiltAmount: 5,
+        ...liveProps,
+      };
+      return <ImageParallax {...(imageParallaxProps as any)} />;
+    }
     case "living-text": {
       const livingTextProps = {
         text: "LIVING TEXT",
@@ -876,6 +887,20 @@ export function PresentationRenderer({
           <ForgeUILanding 
             onDocumentation={() => console.log("Documentation clicked")}
           />
+        </div>
+      );
+    }
+    case "moon-landing": {
+      return (
+        <div className="w-full min-h-screen relative">
+          <MoonLanding />
+        </div>
+      );
+    }
+    case "rays-landing": {
+      return (
+        <div className="w-full min-h-screen relative">
+          <RaysLanding {...liveProps} />
         </div>
       );
     }
