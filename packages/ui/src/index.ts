@@ -66,6 +66,12 @@ export type { DotMatrixProps } from "./matrix/types";
 // backgrounds
 export { PixelMeltBackground } from "./backgrounds/PixelMelt";
 export { BreathingGrid } from "./backgrounds/BreathingGrid";
+export { BreathingBackground } from "./backgrounds/BreathingBackground";
+export type {
+  BreathingBackgroundProps,
+  BreathingBackgroundPreset,
+  BreathingBackgroundPatternVariant,
+} from "./backgrounds/BreathingBackground";
 export { FloatingEmbers } from "./backgrounds/FloatingEmbers";
 
 export { SpotlightGrid } from "./backgrounds/SpotlightGrid";
@@ -162,5 +168,10 @@ export type { MoonLandingProps } from "./animated/MoonLanding";
 export { RaysLanding } from "./animated/RaysLanding";
 export type { RaysLandingProps } from "./animated/RaysLanding";
 
-
-
+// Breathing Scale Card
+export { BreathingScaleCard } from "./animated/BreathingScaleCard";
+export type {
+  BreathingScaleCardProps,
+  BreathingScaleCardPreset,
+  BreathingScalePatternVariant,
+} from "./animated/BreathingScaleCard";

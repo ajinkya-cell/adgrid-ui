@@ -5,6 +5,7 @@ import { useState } from "react";
 import {
   AnisotropicKnob,
   BreathingGrid,
+  BreathingBackground,
   BrushedTitaniumButton,
   ButtonAlpha,
   BeveledBeamShowcase,
@@ -55,6 +56,7 @@ import {
   ForgeUILanding,
   MoonLanding,
   RaysLanding,
+  BreathingScaleCard,
 } from "@adgrid-ui/ui";
 import { Cards } from "../../../../../packages/ui/src/animated/Cards";
 import {
@@ -715,6 +717,13 @@ export function PresentationRenderer({
       return <><PixelMeltBackground /><FullscreenLabel title="Pixel Melt" subtitle="Move your cursor" /></>;
     case "breathing-grid":
       return <><BreathingGrid /><FullscreenLabel title="Breathing Grid" subtitle="Cursor-responsive field" /></>;
+    case "breathing-background":
+      return (
+        <>
+          <BreathingBackground {...(liveProps as any)} />
+          <FullscreenLabel title="Breathing Background" subtitle="Ambient Pattern Field" />
+        </>
+      );
     case "floating-embers":
       return <><FloatingEmbers /><FullscreenLabel title="Floating Embers" subtitle="Scroll and cursor drift" /></>;
     case "spotlight-grid":
@@ -901,6 +910,17 @@ export function PresentationRenderer({
       return (
         <div className="w-full min-h-screen relative">
           <RaysLanding {...liveProps} />
+        </div>
+      );
+    }
+    case "breathing-scale-card": {
+      return (
+        <div className="flex items-center justify-center w-full min-h-[450px] p-8">
+          <BreathingScaleCard className="w-full max-w-md" {...(liveProps as any)}>
+            <h3 className="font-['Inter',sans-serif] text-3xl font-extrabold tracking-tight bg-gradient-to-b from-white via-white/85 to-white/35 bg-clip-text text-transparent">
+              Breathing Card
+            </h3>
+          </BreathingScaleCard>
         </div>
       );
     }
