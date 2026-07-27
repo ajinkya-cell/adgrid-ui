@@ -57,6 +57,8 @@ import {
   MoonLanding,
   RaysLanding,
   BreathingScaleCard,
+  GithubHeatmap,
+  DeveloperIdCard,
 } from "@adgrid-ui/ui";
 import { Cards } from "../../../../../packages/ui/src/animated/Cards";
 import {
@@ -921,6 +923,20 @@ export function PresentationRenderer({
               Breathing Card
             </h3>
           </BreathingScaleCard>
+        </div>
+      );
+    }
+    case "github-heatmap": {
+      return (
+        <div className="flex items-center justify-center w-full min-h-[450px] p-4 md:p-8">
+          <GithubHeatmap className="w-full max-w-4xl" username="ajinkya-cell" {...(liveProps as any)} />
+        </div>
+      );
+    }
+    case "developer-id-card": {
+      return (
+        <div className="flex items-center justify-center w-full min-h-[550px] p-4 md:p-8">
+          <DeveloperIdCard {...(liveProps as any)} />
         </div>
       );
     }

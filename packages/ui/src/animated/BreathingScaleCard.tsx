@@ -27,7 +27,6 @@ export interface BreathingScaleCardProps
   duration?: number; // Speed of the loop in seconds (default: 7)
   glowColor?: string; // Custom glow color Tailwind class overlay
   patternSize?: number; // Size of repeating pattern in px (default: 10)
-  angle?: number; // Angle of repeating linear gradient in deg (default: 315)
   overshoot?: boolean | number; // Overshoot line extension in px beyond corner intersections (default: 44)
   lineColor?: string; // Custom gradient/color override for border lines
   vignette?: boolean; // Enable soft edge & corner vignette mask (default: true)
@@ -40,22 +39,22 @@ const PRESET_CONFIGS: Record<
 > = {
   indigo: {
     glowColor: "from-transparent via-indigo-500/25 to-transparent",
-    lineColor: "bg-gradient-to-r from-transparent via-indigo-400/40 to-transparent",
+    lineColor: "bg-gradient-to-r from-transparent via-indigo-400/80 to-transparent",
     patternColor: "rgba(99, 102, 241, 0.25)",
   },
   cyberpunk: {
     glowColor: "from-transparent via-fuchsia-500/30 to-transparent",
-    lineColor: "bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent",
+    lineColor: "bg-gradient-to-r from-transparent via-cyan-400/85 to-transparent",
     patternColor: "rgba(236, 72, 153, 0.3)",
   },
   emerald: {
     glowColor: "from-transparent via-emerald-500/25 to-transparent",
-    lineColor: "bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent",
+    lineColor: "bg-gradient-to-r from-transparent via-emerald-400/80 to-transparent",
     patternColor: "rgba(16, 185, 129, 0.25)",
   },
   amber: {
     glowColor: "from-transparent via-amber-500/25 to-transparent",
-    lineColor: "bg-gradient-to-r from-transparent via-amber-400/40 to-transparent",
+    lineColor: "bg-gradient-to-r from-transparent via-amber-400/80 to-transparent",
     patternColor: "rgba(245, 158, 11, 0.25)",
   },
 };
@@ -64,7 +63,6 @@ function getPatternStyle(
   variant: BreathingScalePatternVariant,
   color: string,
   size: number,
-  angle: number,
   strokeWidth = 1.25
 ): React.CSSProperties {
   switch (variant) {
@@ -87,7 +85,7 @@ function getPatternStyle(
     case "diagonal":
     default:
       return {
-        backgroundImage: `repeating-linear-gradient(${angle}deg, ${color} 0px, ${color} ${strokeWidth}px, transparent ${strokeWidth}px, transparent ${size}px)`,
+        backgroundImage: `repeating-linear-gradient(315deg, ${color} 0px, ${color} ${strokeWidth}px, transparent ${strokeWidth}px, transparent ${size}px)`,
       };
   }
 }
@@ -101,11 +99,10 @@ export const BreathingScaleCard = ({
   duration = 7,
   glowColor: customGlowColor,
   patternSize = 10,
-  angle = 315,
   overshoot = 44,
   lineColor: customLineColor,
   vignette = true,
-  hoverEffect = true,
+  hoverEffect = false,
   ...props
 }: BreathingScaleCardProps) => {
   const presetDefaults =
@@ -116,12 +113,12 @@ export const BreathingScaleCard = ({
   const glowColor =
     customGlowColor ?? presetDefaults?.glowColor ?? "from-transparent via-indigo-500/20 to-transparent";
   const lineColor =
-    customLineColor ?? presetDefaults?.lineColor ?? "bg-gradient-to-r from-transparent via-white/40 to-transparent";
+    customLineColor ?? presetDefaults?.lineColor ?? "bg-gradient-to-r from-transparent via-white/70 to-transparent";
 
   const ext = typeof overshoot === "number" ? `${overshoot}px` : "44px";
 
-  const basePatternStyle = getPatternStyle(patternVariant, patternColor, patternSize, angle, 1.25);
-  const sweepPatternStyle = getPatternStyle(patternVariant, patternColor, patternSize, angle, 1.25);
+  const basePatternStyle = getPatternStyle(patternVariant, patternColor, patternSize, 1.25);
+  const sweepPatternStyle = getPatternStyle(patternVariant, patternColor, patternSize, 1.25);
 
   return (
     <motion.div
@@ -129,50 +126,8 @@ export const BreathingScaleCard = ({
       whileHover={hoverEffect ? { scale: 1.015, transition: { duration: 0.3 } } : undefined}
       {...props}
     >
-      {/* 4 Overshooting Corner Border Lines with Tapered Vignette Ends */}
-      {overshoot && (
-        <>
-          {/* Top Horizontal Line */}
-          <div
-            className={cn(
-              "absolute top-0 h-[1px] pointer-events-none z-20",
-              lineColor
-            )}
-            style={{ left: `-${ext}`, right: `-${ext}` }}
-          />
-          {/* Bottom Horizontal Line */}
-          <div
-            className={cn(
-              "absolute bottom-0 h-[1px] pointer-events-none z-20",
-              lineColor
-            )}
-            style={{ left: `-${ext}`, right: `-${ext}` }}
-          />
-          {/* Left Vertical Line */}
-          <div
-            className={cn(
-              "absolute left-0 w-[1px] pointer-events-none z-20",
-              lineColor.includes("bg-gradient-to-r")
-                ? lineColor.replace("bg-gradient-to-r", "bg-gradient-to-b")
-                : lineColor
-            )}
-            style={{ top: `-${ext}`, bottom: `-${ext}` }}
-          />
-          {/* Right Vertical Line */}
-          <div
-            className={cn(
-              "absolute right-0 w-[1px] pointer-events-none z-20",
-              lineColor.includes("bg-gradient-to-r")
-                ? lineColor.replace("bg-gradient-to-r", "bg-gradient-to-b")
-                : lineColor
-            )}
-            style={{ top: `-${ext}`, bottom: `-${ext}` }}
-          />
-        </>
-      )}
-
-      {/* Inner Masked Animation Container */}
-      <div className="absolute inset-0 overflow-hidden bg-neutral-950/90 shadow-2xl rounded-xl">
+      {/* 1. Inner Masked Animation Container (Background & Pattern Layers) */}
+      <div className="absolute inset-0 overflow-hidden bg-neutral-950 shadow-2xl rounded-none z-0">
         {/* Soft Vignette Mask Layer */}
         <div
           className="absolute inset-0"
@@ -180,20 +135,20 @@ export const BreathingScaleCard = ({
             vignette
               ? {
                   WebkitMaskImage:
-                    "radial-gradient(ellipse 85% 80% at 50% 50%, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%)",
+                    "radial-gradient(ellipse 110% 110% at 50% 50%, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 95%)",
                   maskImage:
-                    "radial-gradient(ellipse 85% 80% at 50% 50%, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%)",
+                    "radial-gradient(ellipse 110% 110% at 50% 50%, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 95%)",
                 }
               : undefined
           }
         >
-          {/* 1. Base Low-Opacity Scale Layer */}
+          {/* Base Low-Opacity Scale Layer */}
           <div
             className="pointer-events-none absolute inset-0 opacity-15"
             style={basePatternStyle}
           />
 
-          {/* 2. Framer Motion Ambient Sweeping Opacity Mask Layer */}
+          {/* Framer Motion Ambient Sweeping Opacity Mask Layer */}
           <motion.div
             className="pointer-events-none absolute inset-0"
             style={{
@@ -218,7 +173,7 @@ export const BreathingScaleCard = ({
             }}
           />
 
-          {/* 3. Framer Motion Breathing Ambient Backlight */}
+          {/* Framer Motion Breathing Ambient Backlight */}
           <motion.div
             className={cn(
               "pointer-events-none absolute -inset-x-20 top-1/2 -translate-y-1/2 h-[300px] bg-gradient-to-r blur-3xl",
@@ -236,12 +191,50 @@ export const BreathingScaleCard = ({
           />
         </div>
 
-        {/* Soft Inner Shadow / Vignette Overlay */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(10,10,10,0.85)_100%)] z-10" />
+        {/* Soft Inner Shadow / Vignette Overlay (active when vignette prop is true) */}
+        {vignette && (
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(10,10,10,0.85)_95%)] z-10" />
+        )}
       </div>
 
-      {/* 4. Card Content Container */}
-      <div className="relative z-20 flex items-center justify-center w-full h-full py-8 px-4">
+      {/* 2. Overshooting Corner Border Lines (Rendered ON TOP of pattern container at z-20) */}
+      {overshoot && (
+        <div className="absolute inset-0 pointer-events-none z-20">
+          {/* Top Horizontal Line */}
+          <div
+            className={cn("absolute top-0 h-[1px]", lineColor)}
+            style={{ left: `-${ext}`, right: `-${ext}` }}
+          />
+          {/* Bottom Horizontal Line */}
+          <div
+            className={cn("absolute bottom-0 h-[1px]", lineColor)}
+            style={{ left: `-${ext}`, right: `-${ext}` }}
+          />
+          {/* Left Vertical Line */}
+          <div
+            className={cn(
+              "absolute left-0 w-[1px]",
+              lineColor.includes("bg-gradient-to-r")
+                ? lineColor.replace("bg-gradient-to-r", "bg-gradient-to-b")
+                : lineColor
+            )}
+            style={{ top: `-${ext}`, bottom: `-${ext}` }}
+          />
+          {/* Right Vertical Line */}
+          <div
+            className={cn(
+              "absolute right-0 w-[1px]",
+              lineColor.includes("bg-gradient-to-r")
+                ? lineColor.replace("bg-gradient-to-r", "bg-gradient-to-b")
+                : lineColor
+            )}
+            style={{ top: `-${ext}`, bottom: `-${ext}` }}
+          />
+        </div>
+      )}
+
+      {/* 3. Card Content Container */}
+      <div className="relative z-30 flex items-center justify-center w-full h-full py-8 px-4">
         {children ?? (
           <h3 className="font-['Inter',sans-serif] text-3xl font-extrabold tracking-tight bg-gradient-to-b from-white via-white/85 to-white/35 bg-clip-text text-transparent">
             Breathing Card

@@ -175,3 +175,22 @@ export type {
   BreathingScaleCardPreset,
   BreathingScalePatternVariant,
 } from "./animated/BreathingScaleCard";
+
+// GitHub Heatmap
+export { GithubHeatmap } from "./animated/GithubHeatmap";
+export type {
+  GithubHeatmapProps,
+  GithubHeatmapPreset,
+  ContributionDay,
+} from "./animated/GithubHeatmap";
+
+// Developer ID Card
+export { DeveloperIdCard } from "./animated/DeveloperIdCard";
+export type {
+  DeveloperIdCardProps,
+  DeveloperIdCardPreset,
+  SocialLink,
+  SocialPlatform,
+} from "./animated/DeveloperIdCard";
+
+
