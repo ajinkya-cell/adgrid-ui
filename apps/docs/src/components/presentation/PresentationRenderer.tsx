@@ -59,6 +59,8 @@ import {
   BreathingScaleCard,
   GithubHeatmap,
   DeveloperIdCard,
+  Sidebar,
+  CommandPalette,
 } from "@adgrid-ui/ui";
 import { Cards } from "../../../../../packages/ui/src/animated/Cards";
 import {
@@ -1103,10 +1105,110 @@ export function PresentationRenderer({
       );
     case "animated-icons-1":
       return <AnimatedIcons1 />;
+    case "sidebar":
+    case "drawer":
+      return <SidebarDemo liveProps={liveProps} />;
+    case "command-palette":
+      return <CommandPaletteDemo />;
     default:
       return <div className="font-mono text-xs uppercase tracking-[0.24em] text-white/45">Preview unavailable</div>;
   }
 }
+
+function SidebarDemo({ liveProps }: { liveProps: any }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeSide, setActiveSide] = useState<"left" | "right">("left");
+
+  const openSidebar = (side: "left" | "right") => {
+    setActiveSide(side);
+    setIsOpen(true);
+  };
+
+  return (
+    <div className="w-full flex flex-wrap items-center justify-center p-12 gap-4 font-['DM_Sans',sans-serif]">
+      {/* DM Sans font loader */}
+      <style dangerouslySetInnerHTML={{ __html: `@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');` }} />
+
+      <button
+        type="button"
+        onClick={() => openSidebar("left")}
+        style={{
+          backgroundColor: "#171717",
+          boxShadow:
+            "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.40), 0 4px 12px rgba(0, 0, 0, 0.5)",
+          fontFamily: "'DM Sans', sans-serif",
+        }}
+        className="px-6 h-12 rounded-xl text-xs font-bold text-neutral-200 border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 hover:text-white cursor-pointer active:scale-95 transition-all font-['DM_Sans',sans-serif]"
+      >
+        Open Sidebar Left
+      </button>
+
+      <button
+        type="button"
+        onClick={() => openSidebar("right")}
+        style={{
+          backgroundColor: "#171717",
+          boxShadow:
+            "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.40), 0 4px 12px rgba(0, 0, 0, 0.5)",
+          fontFamily: "'DM Sans', sans-serif",
+        }}
+        className="px-6 h-12 rounded-xl text-xs font-bold text-neutral-200 border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 hover:text-white cursor-pointer active:scale-95 transition-all font-['DM_Sans',sans-serif]"
+      >
+        Open Sidebar Right
+      </button>
+
+      <Sidebar
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        side={activeSide}
+        {...liveProps}
+      />
+    </div>
+  );
+}
+
+function CommandPaletteDemo() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="w-full flex flex-col items-center justify-center p-8 gap-6 min-h-[500px] font-['DM_Sans',sans-serif] select-none">
+      {/* DM Sans font loader tag */}
+      <style dangerouslySetInnerHTML={{ __html: `@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');` }} />
+
+      <div className="text-center space-y-3 max-w-md">
+        <h3 className="text-xl font-bold tracking-wide text-white font-['DM_Sans',sans-serif]">
+          Tactile Command Palette
+        </h3>
+        <p className="text-xs text-neutral-400 font-['DM_Sans',sans-serif] leading-relaxed">
+          Press <kbd className="px-1.5 py-0.5 rounded bg-white/10 text-white font-mono text-[11px]">⌘ K</kbd> anywhere or click the button below to open the command palette.
+        </p>
+      </div>
+
+      {/* Centered Trigger Button */}
+      <button
+        type="button"
+        onClick={() => setIsOpen(true)}
+        style={{
+          backgroundColor: "#171717",
+          boxShadow:
+            "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.12), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.45), 0 4px 14px rgba(0, 0, 0, 0.6)",
+        }}
+        className="px-6 h-12 rounded-xl text-xs font-bold text-neutral-200 border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 hover:text-white hover:border-white/30 cursor-pointer active:scale-95 transition-all font-['DM_Sans',sans-serif] flex items-center gap-2.5"
+      >
+        <span>Open Command Palette</span>
+        <kbd className="px-2 py-0.5 rounded bg-white/10 text-neutral-300 font-mono text-[10px] uppercase border border-white/10 tracking-wider">⌘ K</kbd>
+      </button>
+
+      {/* Modal Viewport Overlay Mode */}
+      <CommandPalette
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        inline={false}
+      />
+    </div>
+  );
+}
+
 
 function BevelAlertDialogDemo({ liveProps }: { liveProps: any }) {
   const [isOpen, setIsOpen] = useState(false);

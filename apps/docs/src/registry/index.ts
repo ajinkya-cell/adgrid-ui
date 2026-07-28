@@ -981,6 +981,38 @@ export const registry: RegistryEntry[] = [
       { name: "cornerAccent", type: "boolean", default: true, description: "Display AdGrid signature 3D corner overshooting lines", required: false },
     ],
   },
+  {
+    name: "Sidebar",
+    slug: "sidebar",
+    category: "animated",
+    description: "Sleek, modern slide-out website navigation sidebar for web applications and dashboards with expandable dashboard sub-menu options and DM Sans typography.",
+    dependencies: ["framer-motion", "lucide-react"],
+    packagePath: "animated/Sidebar.tsx",
+    files: ["animated/Sidebar.tsx"],
+    presentationStrategy: "center",
+    propDefs: [],
+  },
+  {
+    name: "Drawer",
+    slug: "drawer",
+    category: "animated",
+    description: "Sleek, modern slide-out website navigation sidebar for web applications and dashboards with expandable dashboard sub-menu options and DM Sans typography.",
+    dependencies: ["framer-motion", "lucide-react"],
+    packagePath: "animated/Sidebar.tsx",
+    files: ["animated/Sidebar.tsx"],
+    presentationStrategy: "center",
+    propDefs: [],
+  },
+  {
+    name: "Command Palette",
+    slug: "command-palette",
+    category: "animated",
+    description: "Tactile 3D skeuomorphic command palette modal (Cmd+K) featuring debossed search wells, raised tactile keycaps, clean monochrome styling, and smooth keyboard navigation.",
+    dependencies: ["framer-motion", "lucide-react"],
+    packagePath: "animated/CommandPalette.tsx",
+    files: ["animated/CommandPalette.tsx"],
+    presentationStrategy: "center",
+  },
 ];
 
 

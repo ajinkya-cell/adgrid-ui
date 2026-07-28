@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { registry } from "@/registry";
 import { Sidebar } from "@/components/site/Sidebar";
@@ -11,12 +11,21 @@ export default async function DocsSlugPage({
   const { slug } = await params;
   const pageSlug = slug ? slug[0] : "getting-started";
 
+  if (pageSlug === "gallery") {
+    redirect("/gallery");
+  }
+
   // Check if slug matches a component in registry
   const lastSlug = slug ? slug[slug.length - 1] : "";
   const componentEntry = registry.find((c) => c.slug === lastSlug || c.slug === pageSlug);
 
   if (componentEntry) {
     redirect(`/present/${componentEntry.category}/${componentEntry.slug}`);
+  }
+
+  const validPages = ["getting-started", "installation", "theming"];
+  if (!validPages.includes(pageSlug)) {
+    notFound();
   }
 
   // Render static doc page based on pageSlug
@@ -202,4 +211,18 @@ function ThemingDoc() {
       </section>
     </article>
   );
+}
+
+export function generateStaticParams() {
+  const params: { slug: string[] }[] = [
+    { slug: ["getting-started"] },
+    { slug: ["installation"] },
+    { slug: ["theming"] },
+    { slug: ["gallery"] },
+  ];
+  for (const component of registry) {
+    params.push({ slug: [component.slug] });
+    params.push({ slug: [component.category, component.slug] });
+  }
+  return params;
 }

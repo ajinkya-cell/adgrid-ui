@@ -32,14 +32,16 @@ export function FloatingDock({ entry }: { entry: RegistryEntry }) {
 
   return (
     <motion.div
-      className="fixed right-4 top-4 z-50 flex items-center gap-1 rounded-2xl border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 p-1.5 backdrop-blur-2xl md:right-6 md:top-6 select-none"
+      className="fixed top-4 md:top-6 left-1/2 z-50 flex items-center gap-1 rounded-2xl border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 p-1.5 backdrop-blur-2xl select-none"
       style={{
         backgroundColor: "#171717",
         boxShadow: "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.4), 0 30px 80px rgba(0,0,0,0.6)"
       }}
+      initial={{ opacity: 0, y: -12, x: "-50%" }}
       animate={{
         opacity: dockVisible ? 1 : 0,
-        y: dockVisible ? 0 : -8,
+        y: dockVisible ? 0 : -12,
+        x: "-50%",
         filter: dockVisible ? "blur(0px)" : "blur(4px)",
       }}
       transition={reducedMotion ? { duration: 0 } : { duration: 0.22, ease: [0.25, 1, 0.5, 1] }}
