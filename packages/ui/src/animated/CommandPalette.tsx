@@ -15,10 +15,7 @@ import {
   Zap,
   Sparkles,
   Terminal,
-  FileText,
-  Sliders,
   Maximize2,
-  MousePointer,
   Compass,
 } from "lucide-react";
 import { cn } from "../lib/utils";

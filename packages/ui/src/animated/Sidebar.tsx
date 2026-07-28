@@ -14,7 +14,6 @@ import {
   LogOut,
   ChevronRight,
   ChevronDown,
-  Sparkles,
   Crown,
   Activity,
   Zap,

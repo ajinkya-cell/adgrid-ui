@@ -9,7 +9,6 @@ import {
   CornerDownLeft,
   User,
   Layers,
-  LayoutGrid,
 } from "lucide-react";
 import type { RegistryEntry } from "@/registry";
 import { usePresentationStore } from "@/lib/presentation/store";

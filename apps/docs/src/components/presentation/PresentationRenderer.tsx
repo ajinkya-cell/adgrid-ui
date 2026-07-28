@@ -61,6 +61,11 @@ import {
   DeveloperIdCard,
   Sidebar,
   CommandPalette,
+  Switch,
+  OTPInput,
+  Tooltip,
+  Stepper,
+  Timeline,
 } from "@adgrid-ui/ui";
 import { Cards } from "../../../../../packages/ui/src/animated/Cards";
 import {
@@ -1110,6 +1115,15 @@ export function PresentationRenderer({
       return <SidebarDemo liveProps={liveProps} />;
     case "command-palette":
       return <CommandPaletteDemo />;
+    case "switch":
+      return <Switch {...liveProps} />;
+    case "otp-input":
+      return <OTPInputDemo />;
+    case "tooltip":
+      return <TooltipDemo />;
+    case "stepper":
+    case "timeline":
+      return <StepperDemo />;
     default:
       return <div className="font-mono text-xs uppercase tracking-[0.24em] text-white/45">Preview unavailable</div>;
   }
@@ -1205,6 +1219,71 @@ function CommandPaletteDemo() {
         onClose={() => setIsOpen(false)}
         inline={false}
       />
+    </div>
+  );
+}
+
+function OTPInputDemo() {
+  return (
+    <div className="flex flex-col items-center justify-center p-8 gap-6 min-h-[400px] font-['DM_Sans',sans-serif] select-none">
+      <style dangerouslySetInnerHTML={{ __html: `@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');` }} />
+
+      <OTPInput length={6} correctPin="777777" />
+
+      <div className="text-center text-xs font-mono text-neutral-400">
+        Try entering passcode <code className="text-[#a78bfa] font-bold">777777</code> or <code className="text-[#a78bfa] font-bold">123456</code>
+      </div>
+    </div>
+  );
+}
+
+function TooltipDemo() {
+  return (
+    <div className="flex flex-col items-center justify-center p-12 gap-8 min-h-[400px] font-['DM_Sans',sans-serif] select-none">
+      <style dangerouslySetInnerHTML={{ __html: `@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');` }} />
+
+      <div className="text-center space-y-2 max-w-sm">
+        <h3 className="text-lg font-bold text-white tracking-wide">Magnetic Hologram Tooltip</h3>
+        <p className="text-xs text-neutral-400">Hover over the 3D buttons below to reveal interactive magnetic hologram popovers tracking your cursor position.</p>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-center gap-6">
+        <Tooltip content="3D Vault Shield Activated" side="top">
+          <button
+            type="button"
+            style={{
+              backgroundColor: "#171717",
+              boxShadow: "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.12), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.45), 0 4px 14px rgba(0, 0, 0, 0.6)",
+            }}
+            className="px-5 h-11 rounded-xl text-xs font-bold text-neutral-200 border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 hover:text-white cursor-pointer active:scale-95 transition-all"
+          >
+            Hover Top
+          </button>
+        </Tooltip>
+
+        <Tooltip content="Laser Encrypted Security Protocol" side="bottom">
+          <button
+            type="button"
+            style={{
+              backgroundColor: "#171717",
+              boxShadow: "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.12), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.45), 0 4px 14px rgba(0, 0, 0, 0.6)",
+            }}
+            className="px-5 h-11 rounded-xl text-xs font-bold text-neutral-200 border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 hover:text-white cursor-pointer active:scale-95 transition-all"
+          >
+            Hover Bottom
+          </button>
+        </Tooltip>
+      </div>
+    </div>
+  );
+}
+
+function StepperDemo() {
+  return (
+    <div className="flex flex-col items-center justify-center p-8 gap-8 min-h-[380px] w-full max-w-xl mx-auto font-['DM_Sans',sans-serif] select-none">
+      <style dangerouslySetInnerHTML={{ __html: `@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');` }} />
+
+      <Stepper />
     </div>
   );
 }

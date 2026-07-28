@@ -200,3 +200,19 @@ export type { SidebarProps, DrawerProps, PneumaticDrawerProps } from "./animated
 // Holo Command Palette
 export { CommandPalette, HoloCommandPalette } from "./animated/CommandPalette";
 export type { CommandPaletteProps, CommandItem } from "./animated/CommandPalette";
+
+// Mechanical Rocker Switch Component
+export { Switch } from "./animated/Switch";
+export type { SwitchProps } from "./animated/Switch";
+
+// Laser Vault OTPInput Component
+export { OTPInput, OTP } from "./animated/OTPInput";
+export type { OTPInputProps } from "./animated/OTPInput";
+
+// Magnetic Hologram Tooltip Component
+export { Tooltip } from "./animated/Tooltip";
+export type { TooltipProps } from "./animated/Tooltip";
+
+// Circuit Path Stepper / Timeline Component
+export { Stepper, Timeline } from "./animated/Stepper";
+export type { StepperProps, StepItem } from "./animated/Stepper";
