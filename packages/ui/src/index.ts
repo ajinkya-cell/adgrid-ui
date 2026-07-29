@@ -216,3 +216,7 @@ export type { TooltipProps } from "./animated/Tooltip";
 // Circuit Path Stepper / Timeline Component
 export { Stepper, Timeline } from "./animated/Stepper";
 export type { StepperProps, StepItem } from "./animated/Stepper";
+
+// Minimalist 3D Globe Component
+export { Globe } from "./animated/Globe";
+export type { GlobeProps } from "./animated/Globe";

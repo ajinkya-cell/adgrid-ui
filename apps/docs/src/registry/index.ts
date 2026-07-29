@@ -1070,6 +1070,16 @@ export const registry: RegistryEntry[] = [
     files: ["animated/Stepper.tsx"],
     presentationStrategy: "center",
   },
+  {
+    name: "Globe",
+    slug: "globe",
+    category: "animated",
+    description: "A minimal monochrome 3D WebGL globe powered by cobe. Dark obsidian sphere with high-resolution world map sampling, atmospheric glow, and smooth drag rotation.",
+    dependencies: ["cobe"],
+    packagePath: "animated/Globe.tsx",
+    files: ["animated/Globe.tsx"],
+    presentationStrategy: "center",
+  },
 ];
 
 

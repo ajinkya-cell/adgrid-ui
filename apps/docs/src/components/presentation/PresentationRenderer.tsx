@@ -65,7 +65,7 @@ import {
   OTPInput,
   Tooltip,
   Stepper,
-  Timeline,
+  Globe,
 } from "@adgrid-ui/ui";
 import { Cards } from "../../../../../packages/ui/src/animated/Cards";
 import {
@@ -1124,6 +1124,8 @@ export function PresentationRenderer({
     case "stepper":
     case "timeline":
       return <StepperDemo />;
+    case "globe":
+      return <Globe />;
     default:
       return <div className="font-mono text-xs uppercase tracking-[0.24em] text-white/45">Preview unavailable</div>;
   }

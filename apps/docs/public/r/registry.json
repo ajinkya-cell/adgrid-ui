@@ -282,6 +282,21 @@
       ]
     },
     {
+      "name": "breathing-background",
+      "type": "registry:ui",
+      "title": "Breathing Background",
+      "description": "An atmospheric sweeping pattern background with breathing backlight glow, vignette layer, and dynamic pattern options (diagonal, stripes, dots, grid).",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/BreathingBackground.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "floating-embers",
       "type": "registry:ui",
       "title": "Floating Embers",
@@ -891,7 +906,7 @@
       "name": "bevel-accordion",
       "type": "registry:ui",
       "title": "Bevel Accordion",
-      "description": "A tactile 3D beveled accordion stack matching the Props Tweaker styles, featuring rotating chevrons, heights transition, and neon glows shadow overlays.",
+      "description": "A tactile 3D beveled accordion stack with smooth sequential close-then-open panel transitions and rotating chevrons.",
       "dependencies": [
         "framer-motion"
       ],
@@ -961,6 +976,238 @@
       "files": [
         {
           "path": "components/ui/BevelAlertDialog.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "forgeui-landing",
+      "type": "registry:ui",
+      "title": "ForgeUI Landing",
+      "description": "Sleek dark landing page hero section with radial spotlights, customizable calls to action, and interactive social/tech stack footer.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/ForgeUILanding.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "moon-landing",
+      "type": "registry:ui",
+      "title": "Moon Landing",
+      "description": "A gorgeous, interactive Moon Landing hero section featuring volumetric background glows and a curved planet-horizon casting up a bright glowing shadow.",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/MoonLanding.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "rays-landing",
+      "type": "registry:ui",
+      "title": "Rays Landing",
+      "description": "Interactive portfolio landing page showcasing an overhead WebGL light-ray beam background, floating liquid-glass navigation, and role cycler.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/RaysLanding.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "breathing-scale-card",
+      "type": "registry:ui",
+      "title": "Breathing Scale Card",
+      "description": "An ambient scale card component featuring overshooting corner border lines, a soft vignette mask, breathing backlight glows, and sweeping geometric pattern animations.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/BreathingScaleCard.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "github-heatmap",
+      "type": "registry:ui",
+      "title": "GitHub Heatmap",
+      "description": "An ultra-polished GitHub contribution heatmap featuring live data fetching for @ajinkya-cell, streak stats, theme presets, interactive tooltips, and month focus filtering.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/GithubHeatmap.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "developer-id-card",
+      "type": "registry:ui",
+      "title": "Developer ID Card",
+      "description": "An ultra-polished, feature-packed 3D Developer ID Card featuring GitHub profile image, live local clock, tech stack badges, social links, and 3D metallic presets.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/DeveloperIdCard.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sidebar",
+      "type": "registry:ui",
+      "title": "Sidebar",
+      "description": "Sleek, modern slide-out website navigation sidebar for web applications and dashboards with expandable dashboard sub-menu options and DM Sans typography.",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/Sidebar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "drawer",
+      "type": "registry:ui",
+      "title": "Drawer",
+      "description": "Sleek, modern slide-out website navigation sidebar for web applications and dashboards with expandable dashboard sub-menu options and DM Sans typography.",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/Sidebar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "command-palette",
+      "type": "registry:ui",
+      "title": "Command Palette",
+      "description": "Tactile 3D skeuomorphic command palette modal (Cmd+K) featuring debossed search wells, raised tactile keycaps, clean monochrome styling, and smooth keyboard navigation.",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/CommandPalette.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "switch",
+      "type": "registry:ui",
+      "title": "Switch",
+      "description": "Mechanical 3D rocker switch with realistic light/shadow elevation flips, integrated glowing LED indicator dot, and rebound spring physics.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/Switch.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "otp-input",
+      "type": "registry:ui",
+      "title": "OTP Component",
+      "description": "Laser Vault PIN keypad and cell array featuring debossed input sockets, digit slot entry flash, red laser error shake, and green success unlock reveal.",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/OTPInput.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "title": "Tooltip",
+      "description": "Magnetic Hologram Tooltip featuring 3D parallax tracking with mouse cursor position, glowing neon border, and frosted glass backdrop blur.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/Tooltip.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "stepper",
+      "type": "registry:ui",
+      "title": "Stepper",
+      "description": "Circuit Path Stepper featuring traveling laser light pulses along connecting circuit lines and illuminated 3D debossed milestone node checkpoints.",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/Stepper.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "timeline",
+      "type": "registry:ui",
+      "title": "Timeline",
+      "description": "Circuit Path Timeline featuring traveling laser light pulses along connecting circuit lines and illuminated 3D debossed milestone node checkpoints.",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/Stepper.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "globe",
+      "type": "registry:ui",
+      "title": "Globe",
+      "description": "A minimal monochrome 3D WebGL globe powered by cobe. Dark obsidian sphere with high-resolution world map sampling, atmospheric glow, and smooth drag rotation.",
+      "dependencies": [
+        "cobe"
+      ],
+      "files": [
+        {
+          "path": "components/ui/Globe.tsx",
           "type": "registry:ui"
         }
       ]
