@@ -689,8 +689,8 @@ export const registry: RegistryEntry[] = [
     category: "animated",
     description: "An interactive cockpit controller playground for experimenting with grid sizing, gaps, flicker chance, and curated presets.",
     dependencies: [],
-    packagePath: "animated/FlickeringGridPlayground.tsx",
-    files: ["animated/FlickeringGridPlayground.tsx"],
+    packagePath: "animated/FlickeringGrid.tsx",
+    files: ["animated/FlickeringGrid.tsx"],
     presentationStrategy: "fullscreen",
   },
   {
@@ -699,8 +699,8 @@ export const registry: RegistryEntry[] = [
     category: "animated",
     description: "An interactive cockpit controller playground for dynamic dot sizes, gaps, custom swatches, and interactive spotlight masking.",
     dependencies: [],
-    packagePath: "animated/DotPatternPlayground.tsx",
-    files: ["animated/DotPatternPlayground.tsx"],
+    packagePath: "animated/DotPattern.tsx",
+    files: ["animated/DotPattern.tsx"],
     presentationStrategy: "fullscreen",
   },
   {

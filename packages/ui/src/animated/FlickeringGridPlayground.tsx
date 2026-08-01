@@ -109,18 +109,10 @@ export const FlickeringGridPlayground: React.FC<FlickeringGridPlaygroundProps> =
     setMaxOpacity(config.maxOpacity);
   };
 
-  // Compute stats for playground telemetry
-  const cellWidth = squareSize + gridGap;
-  const sampleWidth = 1000;
-  const sampleHeight = 1000;
-  const cols = Math.ceil(sampleWidth / cellWidth);
-  const rows = Math.ceil(sampleHeight / cellWidth);
-  const totalCells = cols * rows;
-
   return (
     <div
       className={cn(
-        "relative w-full min-h-screen flex flex-col lg:flex-row items-center justify-between bg-[#070708] select-none overflow-hidden p-8 md:p-16",
+        "relative w-full min-h-screen flex flex-col lg:flex-row items-start justify-between bg-[#070708] select-none overflow-hidden p-8 md:p-16",
         className
       )}
       {...props}
@@ -142,49 +134,23 @@ export const FlickeringGridPlayground: React.FC<FlickeringGridPlaygroundProps> =
       <div className="absolute inset-0 pointer-events-none z-[1] bg-gradient-to-t from-black via-black/40 to-black/20" />
       <div className="absolute inset-0 pointer-events-none z-[1]" style={{ background: "radial-gradient(circle at center, transparent 35%, rgba(0,0,0,0.92) 100%)" }} />
 
-      {/* Left Column: Visual description & Telemetry log */}
-      <div className="relative z-10 flex flex-col justify-between w-full lg:max-w-sm space-y-6 mb-8 lg:mb-0">
-        <div className="space-y-2">
-          <div className="text-[10px] font-mono text-emerald-400 tracking-[0.25em] uppercase font-bold">
-            GRID SPECTROMETER
-          </div>
-          <h2 className="text-3xl font-extrabold tracking-tight text-white leading-none">
-            Flickering Grid
-          </h2>
-          <p className="text-sm text-neutral-400 leading-relaxed max-w-xs font-sans">
-            Interactive canvas simulator exploring frame-rate independent particle grids, custom gaps, and randomized opacities.
-          </p>
-        </div>
-
-        {/* Telemetry panel (styled exactly like the PropsTable / PropsTweaker Card with bevel highlights) */}
-        <div
-          className="p-5 rounded-2xl border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 backdrop-blur-2xl font-mono text-[11px] text-[#8e8e93] space-y-2.5"
-          style={{
-            backgroundColor: "#171717",
-            boxShadow: "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.4), 0 30px 80px rgba(0,0,0,0.6)"
-          }}
+      {/* Left Column: Title & Visual Description (Parallel to Controller card top) */}
+      <div
+        className="relative z-10 flex flex-col justify-start w-full lg:max-w-md space-y-3 mb-8 lg:mb-0 pt-2"
+        style={{ fontFamily: '"Inter", var(--font-inter), sans-serif' }}
+      >
+        <h2
+          className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white leading-none font-sans"
+          style={{ fontFamily: '"Inter", var(--font-inter), sans-serif' }}
         >
-          <div className="flex justify-between border-b border-white/[0.06] pb-2">
-            <span className="text-neutral-500">ENGINE:</span>
-            <span className="text-white font-bold">HTML5 CANVAS 2D</span>
-          </div>
-          <div className="flex justify-between border-b border-white/[0.06] pb-2">
-            <span className="text-neutral-500">COLOR SPACE:</span>
-            <span className="text-white uppercase font-bold" style={{ color }}>{color}</span>
-          </div>
-          <div className="flex justify-between border-b border-white/[0.06] pb-2">
-            <span className="text-neutral-500">CELL SCALE:</span>
-            <span className="text-white">{squareSize}px (gap {gridGap}px)</span>
-          </div>
-          <div className="flex justify-between border-b border-white/[0.06] pb-2">
-            <span className="text-neutral-500">EST DENSITY:</span>
-            <span className="text-white tabular-nums">{totalCells.toLocaleString()} NODES</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-neutral-500">STATUS:</span>
-            <span className="text-emerald-400 animate-pulse font-bold">ACTIVE // 60 FPS</span>
-          </div>
-        </div>
+          Flickering Grid
+        </h2>
+        <p
+          className="text-sm sm:text-base text-neutral-300 leading-relaxed font-sans font-normal max-w-sm"
+          style={{ fontFamily: '"Inter", var(--font-inter), sans-serif' }}
+        >
+          Interactive canvas simulator exploring frame-rate independent particle grids, custom gaps, and randomized opacities.
+        </p>
       </div>
 
       {/* Right Column: Dynamic Controller dashboard (styled with PropsTweaker 3D bevel box-shadow & border) */}

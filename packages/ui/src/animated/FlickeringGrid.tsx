@@ -3,7 +3,25 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "../lib/utils";
 
+export type FlickeringGridPreset =
+  | "matrix"
+  | "cyberpunk"
+  | "github"
+  | "stardust"
+  | "onyx"
+  | "alert";
+
+const PRESETS: Record<FlickeringGridPreset, { squareSize: number; gridGap: number; flickerChance: number; color: string; maxOpacity: number }> = {
+  matrix: { squareSize: 2, gridGap: 3, flickerChance: 0.6, color: "#10B981", maxOpacity: 0.45 },
+  cyberpunk: { squareSize: 3, gridGap: 5, flickerChance: 0.45, color: "#d946ef", maxOpacity: 0.5 },
+  github: { squareSize: 10, gridGap: 3, flickerChance: 0.12, color: "#22c55e", maxOpacity: 0.8 },
+  stardust: { squareSize: 2, gridGap: 2, flickerChance: 0.35, color: "#fbbf24", maxOpacity: 0.65 },
+  onyx: { squareSize: 5, gridGap: 8, flickerChance: 0.08, color: "#3f3f46", maxOpacity: 0.18 },
+  alert: { squareSize: 6, gridGap: 6, flickerChance: 0.8, color: "#ef4444", maxOpacity: 0.7 },
+};
+
 export interface FlickeringGridProps extends React.HTMLAttributes<HTMLDivElement> {
+  preset?: FlickeringGridPreset;
   squareSize?: number;
   gridGap?: number;
   flickerChance?: number;
@@ -15,16 +33,24 @@ export interface FlickeringGridProps extends React.HTMLAttributes<HTMLDivElement
 }
 
 export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
-  squareSize = 4,
-  gridGap = 6,
-  flickerChance = 0.3,
-  color = "rgb(0, 0, 0)",
+  preset,
+  squareSize: customSquareSize,
+  gridGap: customGridGap,
+  flickerChance: customFlickerChance,
+  color: customColor,
   width,
   height,
   className,
-  maxOpacity = 0.3,
+  maxOpacity: customMaxOpacity,
   ...props
 }) => {
+  const p = preset ? PRESETS[preset] : null;
+
+  const squareSize = customSquareSize ?? p?.squareSize ?? 4;
+  const gridGap = customGridGap ?? p?.gridGap ?? 6;
+  const flickerChance = customFlickerChance ?? p?.flickerChance ?? 0.3;
+  const color = customColor ?? p?.color ?? "rgb(167, 139, 250)";
+  const maxOpacity = customMaxOpacity ?? p?.maxOpacity ?? 0.3;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);

@@ -42,9 +42,10 @@ import {
   Datepicker,
   NavBar1,
   BevelAlertDialog,
-  SpotlightGrid,
   FlickeringGrid,
+  FlickeringGridPlayground,
   DotPattern,
+  DotPatternPlayground,
   TextShuffle,
   VoidButton,
   WheelPicker,
@@ -1097,19 +1098,21 @@ export function PresentationRenderer({
       );
     }
     case "flickering-grid":
-    case "flickering-grid-playground":
       return (
         <div className="relative w-full h-full min-h-[450px] border border-white/5 bg-[#030303] rounded-2xl overflow-hidden">
           <FlickeringGrid className="absolute inset-0 w-full h-full" color="#a78bfa" squareSize={4} gridGap={6} flickerChance={0.3} maxOpacity={0.3} />
         </div>
       );
+    case "flickering-grid-playground":
+      return <FlickeringGridPlayground />;
     case "dot-pattern":
-    case "dot-pattern-playground":
       return (
         <div className="relative w-full h-full min-h-[450px] border border-white/5 bg-[#030303] rounded-2xl overflow-hidden">
           <DotPattern className="absolute inset-0 w-full h-full" color="#a78bfa" width={16} height={16} cr={1.2} />
         </div>
       );
+    case "dot-pattern-playground":
+      return <DotPatternPlayground />;
     case "animated-icons-1":
       return <AnimatedIcons1 />;
     case "sidebar":
