@@ -66,6 +66,8 @@ import {
   Tooltip,
   Stepper,
   Globe,
+  BentoGrid,
+  BentoGridItem,
 } from "@adgrid-ui/ui";
 import { Cards } from "../../../../../packages/ui/src/animated/Cards";
 import {
@@ -1126,9 +1128,71 @@ export function PresentationRenderer({
       return <StepperDemo />;
     case "globe":
       return <Globe />;
+    case "bento-grid":
+      return <BentoGridDemo liveProps={liveProps} />;
     default:
       return <div className="font-mono text-xs uppercase tracking-[0.24em] text-white/45">Preview unavailable</div>;
   }
+}
+
+function BentoGridDemo({ liveProps }: { liveProps?: Record<string, unknown> }) {
+  const variant = (liveProps?.variant as "beveled" | "radiant") ?? "beveled";
+
+  return (
+    <div className="w-full py-6 px-3 flex flex-col items-center justify-center">
+      <BentoGrid>
+        <BentoGridItem
+          variant={variant}
+          className="col-span-12 md:col-span-8"
+          title="Next.js App Router"
+          description="Server components, streaming SSR, and automated edge route bundling."
+          icon="nextjs"
+        />
+        <BentoGridItem
+          variant={variant}
+          className="col-span-12 md:col-span-4"
+          title="GitHub Integration"
+          description="Automated CI/CD workflows and version control registry sync."
+          icon="github"
+        />
+        <BentoGridItem
+          variant={variant}
+          className="col-span-12 md:col-span-4"
+          title="Express API Gateway"
+          description="Low-latency REST and WebSocket microservice routing."
+          icon="express"
+        />
+        <BentoGridItem
+          variant={variant}
+          className="col-span-12 md:col-span-4"
+          title="PostgreSQL Cluster"
+          description="ACID-compliant relational database engine with automated query optimization."
+          icon="postgres"
+        />
+        <BentoGridItem
+          variant={variant}
+          className="col-span-12 md:col-span-4"
+          title="TypeScript Core"
+          description="Strict end-to-end type safety with automatic prop inference."
+          icon="typescript"
+        />
+        <BentoGridItem
+          variant={variant}
+          className="col-span-12 md:col-span-6"
+          title="Redis In-Memory Cache"
+          description="Sub-millisecond data persistence and pub/sub message brokering."
+          icon="redis"
+        />
+        <BentoGridItem
+          variant={variant}
+          className="col-span-12 md:col-span-6"
+          title="Node.js Runtime"
+          description="Asynchronous event-driven backend performance."
+          icon="nodejs"
+        />
+      </BentoGrid>
+    </div>
+  );
 }
 
 function SidebarDemo({ liveProps }: { liveProps: any }) {

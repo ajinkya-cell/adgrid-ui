@@ -1080,6 +1080,26 @@ export const registry: RegistryEntry[] = [
     files: ["animated/Globe.tsx"],
     presentationStrategy: "center",
   },
+  {
+    name: "Bento Grid",
+    slug: "bento-grid",
+    category: "animated",
+    description: "3D Skeuomorphic Bento Grid featuring precision-machined bevel edges, DM Sans typography, minimal title and description layout, and interactive SVG hover logo animations.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/BentoGrid.tsx",
+    files: ["animated/BentoGrid.tsx"],
+    presentationStrategy: "center",
+    propDefs: [
+      {
+        name: "variant",
+        type: "select",
+        default: "beveled",
+        description: "Bento card visual style variant",
+        required: false,
+        options: ["beveled", "radiant"],
+      },
+    ],
+  },
 ];
 
 

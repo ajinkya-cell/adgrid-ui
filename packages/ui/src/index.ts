@@ -220,3 +220,8 @@ export type { StepperProps, StepItem } from "./animated/Stepper";
 // Minimalist 3D Globe Component
 export { Globe } from "./animated/Globe";
 export type { GlobeProps } from "./animated/Globe";
+
+// 3D Skeuomorphic BentoGrid Component
+export { BentoGrid, BentoGridItem } from "./animated/BentoGrid";
+export type { BentoGridProps, BentoGridItemProps, BentoIconType } from "./animated/BentoGrid";
+

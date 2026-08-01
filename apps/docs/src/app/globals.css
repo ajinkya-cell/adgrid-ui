@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Jura:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Share+Tech+Mono&family=Syncopate:wght@400;700&family=Syne:wght@400;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Jura:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Share+Tech+Mono&family=Syncopate:wght@400;700&family=Syne:wght@400;700;800&display=swap');
 @import "tailwindcss";
 @source "../../../../packages/ui/src/**/*.tsx";
 
@@ -20,6 +20,7 @@
   --font-jura: "Jura", sans-serif;
   --font-share-mono: "Share Tech Mono", monospace;
   --font-plus-jakarta: "Plus Jakarta Sans", sans-serif;
+  --font-dm-sans: "DM Sans", sans-serif;
   --font-syne: "Syne", sans-serif;
   --font-cinzel: "Cinzel", serif;
 }
@@ -277,5 +278,61 @@ code::-webkit-scrollbar-thumb:hover,
   border: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.85);
 }
+
+/* ─── CurtainField Keyframe Animations ─── */
+@keyframes strand-sway {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(8px, -12px, 0) rotate(0.5deg);
+  }
+}
+
+@keyframes strand-breathe {
+  0%, 100% {
+    opacity: var(--strand-o, 0.4);
+  }
+  50% {
+    opacity: calc(var(--strand-o, 0.4) * 0.35);
+  }
+}
+
+@keyframes strand-glint {
+  0% {
+    stroke-dasharray: 20 200;
+    stroke-dashoffset: 200;
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    stroke-dashoffset: -200;
+    opacity: 0;
+  }
+}
+
+.strand-sway {
+  animation: strand-sway infinite ease-in-out;
+  transform-origin: center center;
+}
+
+.strand-breathe {
+  animation: strand-breathe infinite ease-in-out;
+}
+
+.strand-glint {
+  animation: strand-glint infinite linear;
+}
+
+.bg-radial-vignette {
+  background: radial-gradient(circle at 50% 50%, rgba(20, 19, 19, 0) 20%, rgba(10, 10, 10, 0.85) 75%, #0a0a0a 100%);
+}
+
+.bg-grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
 
 
