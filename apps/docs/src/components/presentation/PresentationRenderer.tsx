@@ -42,6 +42,7 @@ import {
   Datepicker,
   NavBar1,
   BevelAlertDialog,
+  SpotlightGrid,
   FlickeringGrid,
   FlickeringGridPlayground,
   DotPattern,
