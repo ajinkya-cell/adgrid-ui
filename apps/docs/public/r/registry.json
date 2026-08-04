@@ -794,7 +794,7 @@
       "description": "An interactive cockpit controller playground for experimenting with grid sizing, gaps, flicker chance, and curated presets.",
       "files": [
         {
-          "path": "components/ui/FlickeringGridPlayground.tsx",
+          "path": "components/ui/FlickeringGrid.tsx",
           "type": "registry:ui"
         }
       ]
@@ -806,7 +806,7 @@
       "description": "An interactive cockpit controller playground for dynamic dot sizes, gaps, custom swatches, and interactive spotlight masking.",
       "files": [
         {
-          "path": "components/ui/DotPatternPlayground.tsx",
+          "path": "components/ui/DotPattern.tsx",
           "type": "registry:ui"
         }
       ]
@@ -1208,6 +1208,21 @@
       "files": [
         {
           "path": "components/ui/Globe.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "bento-grid",
+      "type": "registry:ui",
+      "title": "Bento Grid",
+      "description": "3D Skeuomorphic Bento Grid featuring precision-machined bevel edges, DM Sans typography, minimal title and description layout, and interactive SVG hover logo animations.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/BentoGrid.tsx",
           "type": "registry:ui"
         }
       ]

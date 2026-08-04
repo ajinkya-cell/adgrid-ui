@@ -866,9 +866,6 @@ export const registry: RegistryEntry[] = [
     packagePath: "animated/NavBar1.tsx",
     files: ["animated/NavBar1.tsx"],
     presentationStrategy: "fullscreen",
-    propDefs: [
-      { name: "statusColor", type: "select", default: "emerald", description: "Analog LED status light color indicator", options: ["emerald", "cyan", "rose"], required: false },
-    ],
   },
   {
     name: "Bevel Alert Dialog",

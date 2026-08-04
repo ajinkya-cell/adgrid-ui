@@ -68,16 +68,25 @@ export default function NavBar1({ className, statusColor = "emerald" }: NavBar1P
   return (
     <div
       className={cn(
-        "w-full max-w-4xl h-16 rounded-2xl border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 flex items-center justify-between px-5 select-none relative",
+        "w-full max-w-4xl h-16 rounded-2xl border border-white/10 bg-[#151515] flex items-center justify-between px-6 select-none relative backdrop-blur-md overflow-hidden",
         className
       )}
       style={{
-        backgroundColor: "#171717",
-        boxShadow: "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.4), 0 20px 50px rgba(0,0,0,0.55)"
+        boxShadow:
+          "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.12), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.5), 0 32px 64px -12px rgba(0, 0, 0, 0.7), 0 4px 24px -4px rgba(0, 0, 0, 0.5)"
       }}
     >
+      {/* Prismatic top-border highlight like SimpleCard */}
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-[1.5px] z-20 rounded-t-2xl"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.2) 25%, rgba(255,255,255,0.45) 50%, rgba(255,255,255,0.2) 75%, transparent 100%)"
+        }}
+      />
+
       {/* ── Left Side: Logo (Ajinkya in Geist Pixel) ─────────────────── */}
-      <div className="flex items-center gap-2.5">
+      <div className="flex items-center gap-2.5 z-10">
         <span
           className="text-lg font-bold tracking-tight text-white/95"
           style={{ fontFamily: '"Geist Pixel", monospace' }}
@@ -105,10 +114,8 @@ export default function NavBar1({ className, statusColor = "emerald" }: NavBar1P
         </div>
       </div>
 
-      {/* ── Center: Sliding Nav Tabs (Rounded-Full Pill Track) ─────── */}
-      <div
-        className="bg-[#090909] border border-white/[0.04] rounded-full p-1 flex gap-0.5 shadow-[inset_0_2px_4px_rgba(0,0,0,0.8),_0_1px_0_rgba(255,255,255,0.05)]"
-      >
+      {/* ── Center: Clean Nav Items with Bigger Glowing Underline ── */}
+      <div className="flex items-center gap-6 md:gap-8 h-full z-10">
         {NAV_ITEMS.map((item) => {
           const isActive = activeTab === item;
 
@@ -117,18 +124,26 @@ export default function NavBar1({ className, statusColor = "emerald" }: NavBar1P
               key={item}
               type="button"
               onClick={() => handleTabClick(item)}
-              className="relative px-4 py-2 rounded-full text-xs font-medium cursor-pointer transition-colors text-white/55 hover:text-white/85 focus-visible:outline-none"
-            >
-              {isActive && (
-                <motion.div
-                  layoutId="activeNavTab"
-                  className="absolute inset-0 bg-white rounded-full border border-white/35 shadow-[0_2px_4px_rgba(0,0,0,0.2)] z-0"
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                />
+              className={cn(
+                "relative h-full flex items-center px-1.5 text-xs md:text-sm font-medium cursor-pointer transition-all duration-200 focus-visible:outline-none",
+                isActive ? "text-white font-semibold" : "text-white/50 hover:text-white/80"
               )}
-              <span className={cn("relative z-10", isActive && "text-black font-semibold")}>
-                {item}
-              </span>
+            >
+              <span>{item}</span>
+              {isActive && (
+                <>
+                  <motion.div
+                    layoutId="activeNavLine"
+                    className="absolute bottom-2.5 left-0 right-0 h-[2.5px] bg-white rounded-full z-10 shadow-[0_0_12px_rgba(255,255,255,0.95),_0_0_22px_rgba(255,255,255,0.65),_0_0_34px_rgba(255,255,255,0.35)]"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                  <motion.div
+                    layoutId="activeNavAura"
+                    className="absolute bottom-2.5 left-1/2 -translate-x-1/2 w-16 h-3 bg-white/25 blur-md rounded-full pointer-events-none z-0"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                </>
+              )}
             </button>
           );
         })}
@@ -136,7 +151,7 @@ export default function NavBar1({ className, statusColor = "emerald" }: NavBar1P
 
       {/* ── Right Side: Live Clock (Geist Pixel) ───────────────────── */}
       <div 
-        className="text-[14px] font-medium tracking-wide text-white/70 min-w-[70px] text-right"
+        className="text-[14px] font-medium tracking-wide text-white/70 min-w-[70px] text-right z-10"
         style={{ fontFamily: '"Geist Pixel", monospace' }}
       >
         {time}
