@@ -35,6 +35,7 @@
     "@tabler/icons-react": "^3.44.0",
     "clsx": "^2.0.0",
     "cobe": "^2.0.1",
+    "devicons-react": "^1.5.0",
     "lenis": "^1.3.23",
     "react-icons": "^5.2.0",
     "tailwind-merge": "^2.3.0",

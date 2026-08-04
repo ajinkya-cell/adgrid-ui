@@ -117,7 +117,7 @@ const weaponWheelDevItems = [
     id: "ide",
     name: "Terminal & Editor",
     category: "IDE / Dev Environment",
-    icon: IconTerminal2,
+    icon: "neovim",
     description: "Your mission control center. Custom shell configs, NeoVim, VS Code, keybinds, and macros for blisteringly fast code execution and command management.",
     tips: [
       "Set up tmux to maintain persistent local sessions.",
@@ -125,16 +125,16 @@ const weaponWheelDevItems = [
     ],
     stats: { dx: 95, performance: 75, reliability: 80, versatility: 90 },
     subItems: [
-      { id: "neovim", name: "NeoVim Editor", icon: IconCode, category: "Text Editor", description: "Hyper-extensible Vim-based text editor built for extreme speed and keybinding flow." },
-      { id: "vscode", name: "VS Code Editor", icon: IconBrandVscode, category: "IDE Studio", description: "Modern, feature-rich IDE with full ecosystem extensions and visual debugging." },
-      { id: "tmux", name: "Tmux Terminal", icon: IconTerminal, category: "Multiplexer", description: "Terminal multiplexer to manage multiple CLI panes and persistent sessions." },
+      { id: "neovim", name: "NeoVim Editor", icon: "neovim", category: "Text Editor", description: "Hyper-extensible Vim-based text editor built for extreme speed and keybinding flow." },
+      { id: "vscode", name: "VS Code Editor", icon: "vscode", category: "IDE Studio", description: "Modern, feature-rich IDE with full ecosystem extensions and visual debugging." },
+      { id: "terminal", name: "Tmux Terminal", icon: "terminal", category: "Multiplexer", description: "Terminal multiplexer to manage multiple CLI panes and persistent sessions." },
     ],
   },
   {
     id: "frontend",
     name: "React & Next.js",
     category: "User Interfaces",
-    icon: IconBrandReact,
+    icon: "react",
     description: "Component-driven layout engine. Tailwind styling, server actions, client side rendering, hooks, and responsive UX design to wow your end users.",
     tips: [
       "Use React Server Components to minimize bundle size.",
@@ -142,17 +142,17 @@ const weaponWheelDevItems = [
     ],
     stats: { dx: 90, performance: 70, reliability: 75, versatility: 80 },
     subItems: [
-      { id: "nextjs", name: "Next.js Framework", icon: IconBrandNextjs, category: "React Framework", description: "Production-ready server-side rendering framework with built-in routing and caching." },
-      { id: "react", name: "React Library", icon: IconBrandReact, category: "UI Library", description: "Declarative, component-based library for building interactive frontend applications." },
-      { id: "tailwind", name: "Tailwind CSS", icon: IconBrandTailwind, category: "Styling Engine", description: "Utility-first CSS framework for rapid styling directly within HTML structures." },
-      { id: "svelte", name: "Svelte Compile", icon: IconBrandSvelte, category: "Compiler", description: "Highly efficient compiler-based reactive UI framework with zero virtual DOM overhead." },
+      { id: "nextjs", name: "Next.js Framework", icon: "nextjs", category: "React Framework", description: "Production-ready server-side rendering framework with built-in routing and caching." },
+      { id: "react", name: "React Library", icon: "react", category: "UI Library", description: "Declarative, component-based library for building interactive frontend applications." },
+      { id: "tailwind", name: "Tailwind CSS", icon: "tailwind", category: "Styling Engine", description: "Utility-first CSS framework for rapid styling directly within HTML structures." },
+      { id: "svelte", name: "Svelte Compile", icon: "svelte", category: "Compiler", description: "Highly efficient compiler-based reactive UI framework with zero virtual DOM overhead." },
     ],
   },
   {
     id: "backend",
     name: "Node.js & Go",
     category: "APIs & Services",
-    icon: IconBrandNodejs,
+    icon: "nodejs",
     description: "Asynchronous backend runtimes. REST endpoints, GraphQL servers, WebSockets, rate limiters, middleware pipelines, and cluster scaling.",
     tips: [
       "Use lightweight Go microservices for compute-heavy tasks.",
@@ -160,16 +160,16 @@ const weaponWheelDevItems = [
     ],
     stats: { dx: 80, performance: 90, reliability: 85, versatility: 85 },
     subItems: [
-      { id: "nodejs", name: "Node.js Platform", icon: IconBrandNodejs, category: "JS Runtime", description: "Asynchronous, event-driven JavaScript runtime built on Chrome's V8 engine." },
-      { id: "golang", name: "Go Language", icon: IconBrandGolang, category: "System Language", description: "Statically typed system language with concurrent goroutines and extreme speed." },
-      { id: "rust", name: "Rust Language", icon: IconBrandRust, category: "Safe Compiler", description: "Blazing fast system compiler with memory safety and zero-cost abstractions." },
+      { id: "nodejs", name: "Node.js Platform", icon: "nodejs", category: "JS Runtime", description: "Asynchronous, event-driven JavaScript runtime built on Chrome's V8 engine." },
+      { id: "golang", name: "Go Language", icon: "golang", category: "System Language", description: "Statically typed system language with concurrent goroutines and extreme speed." },
+      { id: "rust", name: "Rust Language", icon: "rust", category: "Safe Compiler", description: "Blazing fast system compiler with memory safety and zero-cost abstractions." },
     ],
   },
   {
     id: "database",
     name: "PostgreSQL & Redis",
     category: "Data Storage",
-    icon: IconDatabase,
+    icon: "postgres",
     description: "Relational persistence and fast in-memory key-value caching. Structured ACID transactions, query optimizations, indexing, and connection pools.",
     tips: [
       "Analyze query plans with EXPLAIN ANALYZE before deploying.",
@@ -177,16 +177,16 @@ const weaponWheelDevItems = [
     ],
     stats: { dx: 75, performance: 95, reliability: 95, versatility: 70 },
     subItems: [
-      { id: "postgres", name: "PostgreSQL DB", icon: IconDatabase, category: "SQL Store", description: "Powerful, open source object-relational SQL database with robust JSON support." },
-      { id: "redis", name: "Redis Cache", icon: IconBolt, category: "KV In-Memory", description: "In-memory key-value store optimized for lightning-fast transient cache queries." },
-      { id: "mongodb", name: "MongoDB DB", icon: IconLeaf, category: "NoSQL Store", description: "Flexible document-oriented database storing JSON-like dynamic schemaless structures." },
+      { id: "postgres", name: "PostgreSQL DB", icon: "postgres", category: "SQL Store", description: "Powerful, open source object-relational SQL database with robust JSON support." },
+      { id: "redis", name: "Redis Cache", icon: "redis", category: "KV In-Memory", description: "In-memory key-value store optimized for lightning-fast transient cache queries." },
+      { id: "mongodb", name: "MongoDB DB", icon: "mongodb", category: "NoSQL Store", description: "Flexible document-oriented database storing JSON-like dynamic schemaless structures." },
     ],
   },
   {
     id: "devops",
     name: "Docker & K8s",
     category: "Infrastructure",
-    icon: IconBrandDocker,
+    icon: "docker",
     description: "Containerized environments and orchestration. CI/CD pipelines, cloud deployment, load balancing, SSL management, and automated rollouts.",
     tips: [
       "Write multi-stage Dockerfiles to build lightweight images.",
@@ -194,16 +194,15 @@ const weaponWheelDevItems = [
     ],
     stats: { dx: 60, performance: 85, reliability: 90, versatility: 95 },
     subItems: [
-      { id: "docker", name: "Docker Platform", icon: IconBrandDocker, category: "Virtual Containers", description: "Packaged, isolated application environments that run identically on any machine." },
-      { id: "kubernetes", name: "Kubernetes Orchestrator", icon: IconServer, category: "Cluster Ops", description: "Production container orchestration system for automated scaling and rolling updates." },
-      { id: "actions", name: "GitHub Actions", icon: IconGitPullRequest, category: "CI/CD Pipeline", description: "Automated workflow runner for build automation, testing, and cloud delivery pipelines." },
+      { id: "docker", name: "Docker Platform", icon: "docker", category: "Virtual Containers", description: "Packaged, isolated application environments that run identically on any machine." },
+      { id: "github", name: "GitHub Actions", icon: "github", category: "CI/CD Pipeline", description: "Automated workflow runner for build automation, testing, and cloud delivery pipelines." },
     ],
   },
   {
     id: "ai",
     name: "Python & LLMs",
     category: "Machine Learning",
-    icon: IconBrandPython,
+    icon: "python",
     description: "Data analysis, ML frameworks, and generative AI models. Local model orchestration, embeddings search, prompt engineering, and agentic workflows.",
     tips: [
       "Use vector databases for RAG semantic memory retrieval.",
@@ -211,9 +210,8 @@ const weaponWheelDevItems = [
     ],
     stats: { dx: 85, performance: 80, reliability: 70, versatility: 90 },
     subItems: [
-      { id: "python", name: "Python Language", icon: IconBrandPython, category: "Data Science", description: "Dynamic language with massive libraries for AI, data analysis, and scripts." },
-      { id: "pytorch", name: "PyTorch Library", icon: IconFlame, category: "Tensor ML", description: "Open source machine learning library for deep neural network execution." },
-      { id: "openai", name: "OpenAI Models", icon: IconCpu, category: "AI LLMs", description: "Generative model APIs for semantic search, prompt analysis, and text creation." },
+      { id: "python", name: "Python Language", icon: "python", category: "Data Science", description: "Dynamic language with massive libraries for AI, data analysis, and scripts." },
+      { id: "graphql", name: "GraphQL API", icon: "graphql", category: "Query API", description: "Declarative API query language providing client-specified data fetching." },
     ],
   },
   {
@@ -627,13 +625,13 @@ export function PresentationRenderer({
     case "void-button": {
       const voidProps = {
         variant: "ambient" as const,
-        disabled: false,
+        style: "default" as const,
         children: "Void Button",
         ...liveProps,
       };
       return (
         <div className="flex items-center justify-center w-full min-h-[300px]">
-          <VoidButton variant={voidProps.variant} disabled={voidProps.disabled}>
+          <VoidButton variant={voidProps.variant} style={voidProps.style}>
             {voidProps.children}
           </VoidButton>
         </div>

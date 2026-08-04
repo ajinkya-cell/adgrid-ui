@@ -213,9 +213,9 @@ export const registry: RegistryEntry[] = [
     packagePath: "animated/VoidButton.tsx",
     files: ["animated/VoidButton.tsx"],
     propDefs: [
-      { name: "variant", type: "select", default: "ambient", description: "Button style variant", required: false, options: ["ambient", "neon-edge", "metallic-sheen", "glassmorphic", "cyber-laser", "classic-gold"] },
-      { name: "children", type: "string", default: "Void Button", description: "Button text label", required: false },
-      { name: "disabled", type: "boolean", default: false, description: "Disable button state", required: false }
+      { name: "variant", type: "select", default: "ambient", description: "Button style variant", required: false, options: ["ambient", "neon-edge", "metallic-sheen", "glassmorphic"] },
+      { name: "style", type: "select", default: "default", description: "Corner radius style of the button (pill renders rounded-full)", required: false, options: ["default", "pill"] },
+      { name: "children", type: "string", default: "Void Button", description: "Button text label", required: false }
     ],
   },
   {
@@ -583,7 +583,7 @@ export const registry: RegistryEntry[] = [
     packagePath: "animated/WeaponWheel.tsx",
     files: ["animated/WeaponWheel.tsx"],
     propDefs: [
-      { name: "variant", type: "select", default: "default", description: "Visual style of the dashboard canvas", required: false, options: ["default", "wheel-3", "wheel-4"] },
+      { name: "variant", type: "select", default: "default", description: "Visual style of the weapon wheel canvas", required: false, options: ["default", "beveled"] },
       { name: "inline", type: "boolean", default: true, description: "Whether to render inline in the page canvas instead of a full-screen popup modal overlay", required: false },
       { name: "triggerKey", type: "string", default: "q", description: "Keyboard key to hold to trigger the selection overlay in modal mode", required: false },
     ],

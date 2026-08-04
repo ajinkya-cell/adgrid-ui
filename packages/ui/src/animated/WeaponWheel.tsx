@@ -4,6 +4,26 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "../lib/utils";
 
+import {
+  ReactOriginal,
+  NextjsOriginal,
+  TypescriptOriginal,
+  TailwindcssOriginal,
+  NodejsOriginal,
+  GoOriginal,
+  DockerOriginal,
+  PythonOriginal,
+  PostgresqlOriginal,
+  RedisOriginal,
+  GraphqlPlain,
+  GithubOriginal,
+  VscodeOriginal,
+  SvelteOriginal,
+  RustOriginal,
+  MongodbOriginal,
+  BashOriginal,
+} from "devicons-react";
+
 // Web Audio API Synthesizer for retro mechanical clicks
 const playTickSound = () => {
   if (typeof window === "undefined") return;
@@ -33,25 +53,25 @@ const playTickSound = () => {
 export interface WeaponWheelSubItem {
   id: string;
   name: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon?: any;
   description: string;
   tips?: string[];
-  category?: string; // Sub-category
+  category?: string;
 }
 
 export interface WeaponWheelItem {
   id: string;
   name: string;
   category: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon?: any;
   description: string;
   tips?: string[];
-  subItems?: WeaponWheelSubItem[]; // Optional secondary slices
+  subItems?: WeaponWheelSubItem[];
   stats?: {
-    dx: number;          // Developer Experience (0-100)
-    performance: number; // Execution Speed / Efficiency (0-100)
-    reliability: number; // Type Safety / Stability (0-100)
-    versatility: number; // Ecosystem / Cross-platform (0-100)
+    dx: number;
+    performance: number;
+    reliability: number;
+    versatility: number;
   };
 }
 
@@ -60,13 +80,13 @@ export interface WeaponWheelProps {
   activeId?: string;
   activeSubId?: string;
   onChange?: (item: WeaponWheelItem | WeaponWheelSubItem) => void;
-  triggerKey?: string; // e.g. "q", "Tab"
+  triggerKey?: string;
   isOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   className?: string;
-  inline?: boolean;    // If true, renders inline without absolute overlays and stays open
-  variant?: "default" | "wheel-3" | "wheel-4"; // Visual style variant
-  hideText?: boolean;  // If true, hides side/bottom info text and renders centered wheel only
+  inline?: boolean;
+  variant?: "default" | "beveled";
+  hideText?: boolean;
 }
 
 // Convert polar angle to Cartesian coordinates
@@ -103,6 +123,74 @@ const getSlicePath = (
   ].join(" ");
 };
 
+// ─── Official devicons-react Renderer ───
+export function RenderWheelIcon({ icon, size = 26 }: { icon: any; size?: number }) {
+  if (typeof icon === "function" || (typeof icon === "object" && icon !== null && "$$typeof" in icon)) {
+    return React.createElement(icon, { size });
+  }
+
+  const key = typeof icon === "string" ? icon.toLowerCase() : "";
+
+  switch (key) {
+    case "react":
+    case "frontend":
+      return <ReactOriginal size={size} />;
+    case "nextjs":
+    case "next":
+      return <NextjsOriginal size={size} />;
+    case "typescript":
+    case "ts":
+      return <TypescriptOriginal size={size} />;
+    case "tailwind":
+    case "tailwindcss":
+      return <TailwindcssOriginal size={size} />;
+    case "nodejs":
+    case "backend":
+    case "node":
+      return <NodejsOriginal size={size} />;
+    case "golang":
+    case "go":
+      return <GoOriginal size={size} />;
+    case "docker":
+    case "devops":
+    case "deploy":
+    case "container":
+      return <DockerOriginal size={size} />;
+    case "python":
+    case "ai":
+      return <PythonOriginal size={size} />;
+    case "postgres":
+    case "postgresql":
+    case "database":
+    case "store":
+    case "data":
+      return <PostgresqlOriginal size={size} />;
+    case "redis":
+    case "cache":
+      return <RedisOriginal size={size} />;
+    case "graphql":
+      return <GraphqlPlain size={size} />;
+    case "github":
+    case "actions":
+      return <GithubOriginal size={size} />;
+    case "vscode":
+      return <VscodeOriginal size={size} />;
+    case "svelte":
+      return <SvelteOriginal size={size} />;
+    case "rust":
+      return <RustOriginal size={size} />;
+    case "mongodb":
+      return <MongodbOriginal size={size} />;
+    case "neovim":
+    case "terminal":
+    case "ide":
+    case "tmux":
+      return <BashOriginal size={size} />;
+    default:
+      return <ReactOriginal size={size} />;
+  }
+}
+
 export function WeaponWheel({
   items,
   activeId,
@@ -122,28 +210,26 @@ export function WeaponWheel({
 
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [hoveredSubIndex, setHoveredSubIndex] = useState<number | null>(null);
-  
+
   const activeIndex = items.findIndex(
     (item) => item.id === activeId || item.subItems?.some((sub) => sub.id === activeId)
   );
   const hoveredItem = hoveredIndex !== null ? items[hoveredIndex] : activeIndex !== -1 ? items[activeIndex] : null;
 
-  // Selected sub item tracking
   const currentSubItems = hoveredItem?.subItems || [];
-  
+
   const resolvedActiveSubId = activeSubId || (
     items.find((item) => item.subItems?.some((sub) => sub.id === activeId))
       ?.subItems?.find((sub) => sub.id === activeId)?.id
   );
-  
+
   const activeSubIndex = currentSubItems.findIndex((sub) => sub.id === resolvedActiveSubId);
   const hoveredSubItem = hoveredSubIndex !== null ? currentSubItems[hoveredSubIndex] : activeSubIndex !== -1 ? currentSubItems[activeSubIndex] : null;
 
-  // Center display node resolves to sub-item if hovered, else primary item
   const displayItem = hoveredSubItem || hoveredItem;
   const displayCategory = hoveredSubItem ? hoveredSubItem.category || hoveredItem?.category : hoveredItem?.category;
 
-  const selectedName = 
+  const selectedName =
     items.flatMap(item => [item, ...(item.subItems || [])]).find(x => x.id === (resolvedActiveSubId || activeId))?.name ||
     "";
 
@@ -157,7 +243,7 @@ export function WeaponWheel({
 
   const hoveredIndexRef = useRef<number | null>(null);
   const hoveredSubIndexRef = useRef<number | null>(null);
-  
+
   useEffect(() => {
     hoveredIndexRef.current = hoveredIndex;
   }, [hoveredIndex]);
@@ -198,13 +284,13 @@ export function WeaponWheel({
         if (isOpen) {
           const sIdx = hoveredSubIndexRef.current;
           const idx = hoveredIndexRef.current;
-          
+
           if (sIdx !== null && hoveredItem?.subItems?.[sIdx]) {
             onChange?.(hoveredItem.subItems[sIdx]);
           } else if (idx !== null && items[idx]) {
             onChange?.(items[idx]);
           }
-          
+
           setOpen(false);
           setHoveredIndex(null);
           setHoveredSubIndex(null);
@@ -220,104 +306,101 @@ export function WeaponWheel({
     };
   }, [triggerKey, isOpen, items, onChange, inline, hoveredItem]);
 
-  // Play click sound on hover index change
+  // Play tick sound on hover index change
   useEffect(() => {
     if ((hoveredIndex !== null || hoveredSubIndex !== null) && isOpen) {
       playTickSound();
     }
   }, [hoveredIndex, hoveredSubIndex, isOpen]);
 
-  // Layout calculations adapt to variant sizes
-  const isWheel3 = variant === "wheel-3" || variant === "wheel-4";
-  const isWheel2 = variant === "wheel-3";
-  const isWheel4 = variant === "wheel-4";
-  
-  const svgSize = isWheel3 ? 760 : 600;
+  // ─── SPACIOUS 560PX UNIFIED CANVAS GEOMETRY ───
+  const isBeveled = variant === "beveled";
+  const svgSize = 560;
   const centerX = svgSize / 2;
   const centerY = svgSize / 2;
 
-  // Inner Wheel metrics
-  const outerR = isWheel3 ? 240 : 270;
-  const innerR = isWheel3 ? 155 : 175;
+  // Primary Wheel metrics
+  const outerR = 190;
+  const innerR = 120;
   const sliceCount = items.length;
-  const sliceAngle = 360 / sliceCount;
+  const sliceAngle = 360 / Math.max(sliceCount, 1);
   const angleOffset = -90 - sliceAngle / 2;
 
-  // Outer Wheel (Nested Sub-Items) - Same thickness as main slices (85px wide)
-  const subOuterR = 333;
-  const subInnerR = 248; // Tiny 8px gap from primary outerR
+  // Secondary Outer Wheel (Nested Sub-Items Arc)
+  const subOuterR = 250;
+  const subInnerR = 198;
   const subCount = currentSubItems.length;
 
   const innerContent = (
     <div
       className={cn(
         "relative flex flex-col items-center justify-center p-6 z-10 select-none",
-        hideText ? "w-auto min-h-0 p-2" : isWheel3 ? "w-full max-w-5xl min-h-[820px]" : "w-full max-w-4xl min-h-[680px]",
-        inline && !isWheel3 && (
-          isWheel4
-            ? "border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 rounded-2xl backdrop-blur-2xl overflow-hidden"
-            : "bg-zinc-950/20 border border-zinc-900/30 rounded-3xl shadow-2xl backdrop-blur-sm overflow-hidden"
+        hideText ? "w-auto min-h-0 p-2" : "w-full max-w-5xl min-h-[620px]",
+        inline && (
+          isBeveled
+            ? "border-t border-white/20 border-x border-white/[0.04] border-b border-white/10 rounded-3xl backdrop-blur-2xl overflow-hidden"
+            : "bg-zinc-950/40 border border-zinc-800/40 rounded-3xl shadow-2xl backdrop-blur-md overflow-hidden"
         )
       )}
-      style={inline && isWheel4 && !isWheel3 ? {
-        backgroundColor: "#171717",
+      style={inline && isBeveled ? {
+        backgroundColor: "#141415",
         boxShadow: "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.4), 0 30px 80px rgba(0,0,0,0.6)"
       } : undefined}
       onClick={(e) => e.stopPropagation()}
     >
       {/* Top Section: Side-by-Side Info Panel and Centered SVG Wheel */}
-      <div className="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-16 w-full">
-        
+      <div className="flex flex-col md:flex-row items-center justify-center gap-10 md:gap-14 w-full">
+
         {/* LEFT PANEL: Selected Primary Tool Info */}
         {!hideText && (
-          <div className="w-full md:w-80 h-96 flex flex-col justify-center select-none text-left">
-          <AnimatePresence mode="wait">
-            {hoveredItem ? (
-              <motion.div
-                key={hoveredItem.id}
-                initial={{ opacity: 0, x: -15 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 15 }}
-                transition={{ duration: 0.15 }}
-                className="space-y-4"
-              >
-                <div>
-                  <span className="font-mono text-xs uppercase tracking-widest text-indigo-400 font-bold">
-                    {hoveredItem.category}
-                  </span>
-                  <h2 className="text-3xl font-black tracking-tight text-white mt-1">
-                    {hoveredItem.name}
-                  </h2>
-                </div>
-                <p className="text-zinc-400 text-sm leading-relaxed font-body">
-                  {hoveredItem.description}
-                </p>
-
-                {hoveredItem.tips && hoveredItem.tips.length > 0 && (
-                  <div className="pt-2">
-                    <span className="font-mono text-xs uppercase text-zinc-500 tracking-wider">PRO TIP</span>
-                    <ul className="mt-2 space-y-1.5">
-                      {hoveredItem.tips.map((tip, i) => (
-                        <li key={i} className="text-xs text-zinc-300 flex items-start font-body">
-                          <span className="text-indigo-400 mr-2">▪</span>
-                          {tip}
-                        </li>
-                      ))}
-                    </ul>
+          <div className="w-full md:w-80 h-80 flex flex-col justify-center select-none text-left">
+            <AnimatePresence mode="wait">
+              {hoveredItem ? (
+                <motion.div
+                  key={hoveredItem.id}
+                  initial={{ opacity: 0, x: -14 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 14 }}
+                  transition={{ duration: 0.15 }}
+                  className="space-y-4"
+                >
+                  <div>
+                    <span className="font-mono text-xs uppercase tracking-widest text-indigo-400 font-bold">
+                      {hoveredItem.category}
+                    </span>
+                    <h2 className="text-3xl font-black tracking-tight text-white mt-1">
+                      {hoveredItem.name}
+                    </h2>
                   </div>
-                )}
-              </motion.div>
-            ) : (
-              <div className="text-zinc-500 font-mono text-sm">
-                HOVER SEGMENT TO SELECT
-              </div>
-            )}
-          </AnimatePresence>
-        </div>
+                  <p className="text-zinc-400 text-sm leading-relaxed font-body">
+                    {hoveredItem.description}
+                  </p>
+
+                  {hoveredItem.tips && hoveredItem.tips.length > 0 && (
+                    <div className="pt-2">
+                      <span className="font-mono text-xs uppercase text-zinc-500 tracking-wider">PRO TIP</span>
+                      <ul className="mt-2 space-y-1.5">
+                        {hoveredItem.tips.map((tip, i) => (
+                          <li key={i} className="text-xs text-zinc-300 flex items-start font-body">
+                            <span className="text-indigo-400 mr-2">▪</span>
+                            {tip}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </motion.div>
+              ) : (
+                <div className="text-zinc-500 font-mono text-sm">
+                  HOVER SEGMENT TO SELECT
+                </div>
+              )}
+            </AnimatePresence>
+          </div>
         )}
 
-        {/* CENTER: The Interactive SVG Wheel */}
-        <div 
+        {/* CENTER: The Interactive SVG Wheel (Spacious 560px Canvas) */}
+        <div
           className="relative flex items-center justify-center shrink-0 aspect-square"
           style={{ width: svgSize, height: svgSize }}
           onMouseLeave={() => {
@@ -325,27 +408,27 @@ export function WeaponWheel({
             setHoveredSubIndex(null);
           }}
         >
-          {/* MAIN WHEEL BACKGROUND DISK (ONLY FOR WHEEL-4) */}
-          {isWheel4 && (
+          {/* BEVELED DISK BACKGROUND (ONLY FOR BEVELED VARIANT) */}
+          {isBeveled && (
             <div
-              className="absolute rounded-full border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 select-none pointer-events-none"
+              className="absolute rounded-full border-t border-white/20 border-x border-white/[0.04] border-b border-white/10 select-none pointer-events-none"
               style={{
                 width: outerR * 2,
                 height: outerR * 2,
                 left: "50%",
                 top: "50%",
                 transform: "translate(-50%, -50%)",
-                backgroundColor: "#171717",
-                boxShadow: "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.4), 0 30px 80px rgba(0,0,0,0.6)"
+                backgroundColor: "#161617",
+                boxShadow: "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.45), 0 25px 60px rgba(0,0,0,0.6)"
               }}
             />
           )}
 
-          <svg 
+          <svg
             key={variant}
-            width={svgSize} 
-            height={svgSize} 
-            className="w-full h-full select-none overflow-visible outline-none focus:outline-none" 
+            width={svgSize}
+            height={svgSize}
+            className="w-full h-full select-none overflow-visible outline-none focus:outline-none"
             style={{ outline: "none" }}
           >
             {/* PRIMARY LEVEL WHEEL */}
@@ -368,7 +451,7 @@ export function WeaponWheel({
                       setHoveredSubIndex(null);
                     }}
                     onClick={() => {
-                      if (!isWheel3 || !item.subItems || item.subItems.length === 0) {
+                      if (!item.subItems || item.subItems.length === 0) {
                         onChange?.(item);
                         if (!inline) setOpen(false);
                         setHoveredIndex(null);
@@ -377,25 +460,25 @@ export function WeaponWheel({
                   >
                     <motion.path
                       d={pathD}
-                      initial={{ 
-                        fill: isWheel4 ? "rgba(0, 0, 0, 0.15)" : "rgba(12, 12, 16, 0.45)", 
-                        stroke: isWheel4 ? "rgba(255, 255, 255, 0.04)" : "rgba(63, 63, 70, 0.3)" 
+                      initial={{
+                        fill: isBeveled ? "rgba(0, 0, 0, 0.15)" : "rgba(14, 14, 18, 0.5)",
+                        stroke: isBeveled ? "rgba(255, 255, 255, 0.04)" : "rgba(63, 63, 70, 0.3)"
                       }}
                       animate={{
                         fill: isHovered
-                          ? isWheel4 ? "rgba(255, 255, 255, 0.06)" : "rgba(255, 255, 255, 0.08)"
+                          ? isBeveled ? "rgba(255, 255, 255, 0.06)" : "rgba(255, 255, 255, 0.09)"
                           : isActive
-                          ? isWheel4 ? "rgba(99, 102, 241, 0.1)" : "rgba(79, 70, 229, 0.12)"
-                          : isWheel4 ? "rgba(0, 0, 0, 0.15)" : "rgba(12, 12, 16, 0.65)",
+                          ? isBeveled ? "rgba(99, 102, 241, 0.12)" : "rgba(79, 70, 229, 0.14)"
+                          : isBeveled ? "rgba(0, 0, 0, 0.15)" : "rgba(14, 14, 18, 0.65)",
                         stroke: isHovered
-                          ? isWheel4 ? "rgba(255, 255, 255, 0.35)" : "rgba(255, 255, 255, 0.4)"
+                          ? isBeveled ? "rgba(255, 255, 255, 0.35)" : "rgba(255, 255, 255, 0.45)"
                           : isActive
-                          ? isWheel4 ? "rgba(99, 102, 241, 0.6)" : "rgba(99, 102, 241, 0.8)"
-                          : isWheel4 ? "rgba(255, 255, 255, 0.04)" : "rgba(63, 63, 70, 0.3)",
+                          ? isBeveled ? "rgba(99, 102, 241, 0.65)" : "rgba(99, 102, 241, 0.8)"
+                          : isBeveled ? "rgba(255, 255, 255, 0.04)" : "rgba(63, 63, 70, 0.3)",
                         strokeWidth: isHovered || isActive ? 2 : 1,
-                        filter: isActive && isWheel4
+                        filter: isActive && isBeveled
                           ? "drop-shadow(0 0 12px rgba(99, 102, 241, 0.65))"
-                          : isHovered && isWheel4
+                          : isHovered && isBeveled
                           ? "drop-shadow(0 0 8px rgba(255, 255, 255, 0.25))"
                           : "none",
                       }}
@@ -408,9 +491,9 @@ export function WeaponWheel({
               })}
             </g>
 
-            {/* SECONDARY LEVEL NESTED ARC WHEEL (ONLY IN WHEEL-3 MODE ON ACTIVE HOVER) */}
+            {/* SECONDARY LEVEL NESTED ARC WHEEL (ON ACTIVE HOVER) */}
             <AnimatePresence>
-              {isWheel3 && hoveredIndex !== null && subCount > 0 && (() => {
+              {hoveredIndex !== null && subCount > 0 && (() => {
                 const midAngle = hoveredIndex * sliceAngle + (sliceAngle / 2) + angleOffset;
                 const subSliceAngle = 18;
                 const totalSubWidth = subCount * subSliceAngle;
@@ -424,21 +507,21 @@ export function WeaponWheel({
                     transition={{ duration: 0.18, ease: "easeOut" }}
                     style={{ transformOrigin: `${centerX}px ${centerY}px` }}
                   >
-                    {/* SUB-WHEEL BACKGROUND ARC (ONLY FOR WHEEL-4) */}
-                    {isWheel4 && (
+                    {/* SUB-WHEEL BACKGROUND ARC FOR BEVELED */}
+                    {isBeveled && (
                       <motion.path
                         d={getSlicePath(centerX, centerY, subInnerR, subOuterR, subStartAngle, subStartAngle + totalSubWidth)}
-                        fill="#171717"
+                        fill="#161617"
                         stroke="rgba(255, 255, 255, 0.08)"
                         strokeWidth={1}
-                        filter="drop-shadow(0 15px 35px rgba(0,0,0,0.65))"
+                        filter="drop-shadow(0 12px 30px rgba(0,0,0,0.65))"
                       />
                     )}
 
                     {currentSubItems.map((subItem, j) => {
                       const startAngle = subStartAngle + j * subSliceAngle;
                       const endAngle = startAngle + subSliceAngle;
-                      
+
                       const isSubHovered = hoveredSubIndex === j;
                       const isSubActive = resolvedActiveSubId === subItem.id;
 
@@ -462,25 +545,25 @@ export function WeaponWheel({
                         >
                           <motion.path
                             d={pathD}
-                            initial={{ 
-                              fill: isWheel4 ? "rgba(0, 0, 0, 0.15)" : "rgba(8, 8, 12, 0.2)", 
-                              stroke: isWheel4 ? "rgba(255, 255, 255, 0.04)" : "rgba(63, 63, 70, 0.15)" 
+                            initial={{
+                              fill: isBeveled ? "rgba(0, 0, 0, 0.15)" : "rgba(8, 8, 12, 0.2)",
+                              stroke: isBeveled ? "rgba(255, 255, 255, 0.04)" : "rgba(63, 63, 70, 0.15)"
                             }}
                             animate={{
                               fill: isSubHovered
-                                ? isWheel4 ? "rgba(255, 255, 255, 0.06)" : "rgba(99, 102, 241, 0.14)"
+                                ? isBeveled ? "rgba(255, 255, 255, 0.06)" : "rgba(99, 102, 241, 0.14)"
                                 : isSubActive
-                                ? isWheel4 ? "rgba(99, 102, 241, 0.1)" : "rgba(16, 185, 129, 0.08)"
-                                : isWheel4 ? "rgba(0, 0, 0, 0.15)" : "rgba(8, 8, 12, 0.45)",
+                                ? isBeveled ? "rgba(99, 102, 241, 0.1)" : "rgba(16, 185, 129, 0.08)"
+                                : isBeveled ? "rgba(0, 0, 0, 0.15)" : "rgba(8, 8, 12, 0.45)",
                               stroke: isSubHovered
-                                ? isWheel4 ? "rgba(255, 255, 255, 0.35)" : "rgba(99, 102, 241, 0.65)"
+                                ? isBeveled ? "rgba(255, 255, 255, 0.35)" : "rgba(99, 102, 241, 0.65)"
                                 : isSubActive
-                                ? isWheel4 ? "rgba(99, 102, 241, 0.6)" : "rgba(16, 185, 129, 0.5)"
-                                : isWheel4 ? "rgba(255, 255, 255, 0.04)" : "rgba(63, 63, 70, 0.2)",
+                                ? isBeveled ? "rgba(99, 102, 241, 0.6)" : "rgba(16, 185, 129, 0.5)"
+                                : isBeveled ? "rgba(255, 255, 255, 0.04)" : "rgba(63, 63, 70, 0.2)",
                               strokeWidth: isSubHovered || isSubActive ? 2 : 1,
-                              filter: isSubActive && isWheel4
+                              filter: isSubActive && isBeveled
                                 ? "drop-shadow(0 0 12px rgba(99, 102, 241, 0.65))"
-                                : isSubHovered && isWheel4
+                                : isSubHovered && isBeveled
                                 ? "drop-shadow(0 0 8px rgba(255, 255, 255, 0.25))"
                                 : "none",
                             }}
@@ -496,29 +579,19 @@ export function WeaponWheel({
               })()}
             </AnimatePresence>
 
-            {/* CENTER AREA DISPLAY (INSIDE SVG FOR PERFECT PIXEL ALIGNMENT) */}
-            {!isWheel4 ? (
+            {/* CENTER DISPLAY FOR DEFAULT VARIANT */}
+            {!isBeveled ? (
               <g className="pointer-events-none">
-                {/* The circular background */}
                 <circle
                   cx={centerX}
                   cy={centerY}
                   r={innerR}
-                  className={cn(
-                    "transition-all duration-300",
-                    isWheel2
-                      ? "stroke-white/20 fill-[#171717]/95"
-                      : "stroke-zinc-800 fill-zinc-950/85"
-                  )}
+                  className="stroke-zinc-800 fill-zinc-950/90 transition-all duration-300"
                   style={{
                     strokeWidth: 1,
-                    filter: isWheel2
-                      ? "drop-shadow(0 10px 30px rgba(0,0,0,0.5))"
-                      : "drop-shadow(0 0 20px rgba(0,0,0,0.8))"
+                    filter: "drop-shadow(0 0 20px rgba(0,0,0,0.8))"
                   }}
                 />
-                
-                {/* The HTML contents centered inside the circle */}
                 <foreignObject
                   x={centerX - innerR}
                   y={centerY - innerR}
@@ -526,7 +599,7 @@ export function WeaponWheel({
                   height={innerR * 2}
                   className="overflow-visible"
                 >
-                  <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center select-none">
+                  <div className="w-full h-full flex flex-col items-center justify-center p-5 text-center select-none">
                     <AnimatePresence mode="wait">
                       {displayItem ? (
                         <motion.div
@@ -538,16 +611,16 @@ export function WeaponWheel({
                           className="flex flex-col items-center justify-center"
                         >
                           <motion.div
-                            className="text-indigo-400 mb-3 flex items-center justify-center filter drop-shadow-[0_0_12px_rgba(99,102,241,0.5)]"
+                            className="mb-2.5 flex items-center justify-center filter drop-shadow-[0_0_12px_rgba(99,102,241,0.5)]"
                             animate={{ y: [0, -4, 0] }}
                             transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
                           >
-                            {React.createElement(displayItem.icon, { className: isWheel3 ? "w-11 h-11" : "w-14 h-14" })}
+                            <RenderWheelIcon icon={displayItem.icon || displayItem.id} size={36} />
                           </motion.div>
-                          <h3 className="font-mono text-[10px] md:text-xs text-zinc-400 uppercase tracking-widest">
+                          <h3 className="font-mono text-[10px] text-zinc-400 uppercase tracking-widest">
                             {displayCategory}
                           </h3>
-                          <h1 className="font-body font-black text-sm md:text-base text-white tracking-wide mt-1">
+                          <h1 className="font-body font-black text-sm text-white tracking-wide mt-1">
                             {displayItem.name}
                           </h1>
                         </motion.div>
@@ -562,96 +635,10 @@ export function WeaponWheel({
                   </div>
                 </foreignObject>
               </g>
-            ) : (
-              <g className="pointer-events-none" />
-            )}
-
-            {/* CENTER AREA PLACEHOLDER FOR PERFECT SVGS */}
-            <g className="pointer-events-none" />
-
-            {/* ACTIVE/HOVERED HIGHLIGHT GLOW OVERLAYS (FOR WHEEL-4 TO AVOID NEIGHBOR CLIPPING) */}
-            {isWheel4 && (
-              <g className="pointer-events-none">
-                {items.map((item, i) => {
-                  const startAngle = i * sliceAngle + angleOffset;
-                  const endAngle = (i + 1) * sliceAngle + angleOffset;
-                  const isHovered = hoveredIndex === i;
-                  const isActive = activeId === item.id || item.subItems?.some((sub) => sub.id === activeId);
-
-                  if (!isHovered && !isActive) return null;
-
-                  const pathD = getSlicePath(centerX, centerY, innerR, outerR, startAngle, endAngle);
-
-                  return (
-                    <motion.path
-                      key={`glow-primary-${item.id}`}
-                      d={pathD}
-                      initial={false}
-                      animate={{
-                        fill: isHovered 
-                          ? "rgba(255, 255, 255, 0.06)" 
-                          : "rgba(99, 102, 241, 0.1)",
-                        stroke: isHovered 
-                          ? "rgba(255, 255, 255, 0.35)" 
-                          : "rgba(99, 102, 241, 0.6)",
-                        strokeWidth: 2,
-                        filter: isActive
-                          ? "drop-shadow(0 0 12px rgba(99, 102, 241, 0.65))"
-                          : "drop-shadow(0 0 8px rgba(255, 255, 255, 0.25))",
-                      }}
-                      style={{ transformOrigin: `${centerX}px ${centerY}px` }}
-                      transition={{ duration: 0.15 }}
-                    />
-                  );
-                })}
-              </g>
-            )}
-
-            {isWheel4 && hoveredIndex !== null && subCount > 0 && (
-              <g className="pointer-events-none">
-                {currentSubItems.map((subItem, j) => {
-                  const midAngle = hoveredIndex * sliceAngle + (sliceAngle / 2) + angleOffset;
-                  const subSliceAngle = 18;
-                  const totalSubWidth = subCount * subSliceAngle;
-                  const subStartAngle = midAngle - (totalSubWidth / 2);
-
-                  const startAngle = subStartAngle + j * subSliceAngle;
-                  const endAngle = startAngle + subSliceAngle;
-                  
-                  const isSubHovered = hoveredSubIndex === j;
-                  const isSubActive = resolvedActiveSubId === subItem.id;
-
-                  if (!isSubHovered && !isSubActive) return null;
-
-                  const pathD = getSlicePath(centerX, centerY, subInnerR, subOuterR, startAngle, endAngle);
-
-                  return (
-                    <motion.path
-                      key={`glow-sub-${subItem.id}`}
-                      d={pathD}
-                      initial={false}
-                      animate={{
-                        fill: isSubHovered 
-                          ? "rgba(255, 255, 255, 0.06)" 
-                          : "rgba(99, 102, 241, 0.1)",
-                        stroke: isSubHovered 
-                          ? "rgba(255, 255, 255, 0.35)" 
-                          : "rgba(99, 102, 241, 0.6)",
-                        strokeWidth: 2,
-                        filter: isSubActive
-                          ? "drop-shadow(0 0 12px rgba(99, 102, 241, 0.65))"
-                          : "drop-shadow(0 0 8px rgba(255, 255, 255, 0.25))",
-                      }}
-                      style={{ transformOrigin: `${centerX}px ${centerY}px` }}
-                      transition={{ duration: 0.15 }}
-                    />
-                  );
-                })}
-              </g>
-            )}
+            ) : null}
           </svg>
 
-          {/* Absolutely Positioned Overlay Icons (Primary) */}
+          {/* OVERLAY ICONS (Primary Level - devicons-react Colored Logos) */}
           <div key={`icons-${variant}`} className="absolute inset-0 pointer-events-none">
             {items.map((item, i) => {
               const iconAngle = i * sliceAngle + (sliceAngle / 2) + angleOffset;
@@ -660,7 +647,6 @@ export function WeaponWheel({
 
               const iconR = (innerR + outerR) / 2;
               const iconPos = polarToCartesian(centerX, centerY, iconR, iconAngle);
-              const Icon = item.icon;
 
               return (
                 <motion.div
@@ -672,32 +658,32 @@ export function WeaponWheel({
                   }}
                   initial={{ scale: 1 }}
                   animate={{
-                    scale: isHovered ? 1.25 : isActive ? 1.1 : 1,
+                    scale: isHovered ? 1.22 : isActive ? 1.1 : 1,
                     transform: `translate(-50%, -50%)`,
                   }}
                   transition={{ type: "spring", stiffness: 350, damping: 18 }}
                 >
                   <div
                     className={cn(
-                      "p-2.5 rounded-full border transition-all duration-300 shadow-lg backdrop-blur-md",
+                      "w-12 h-12 rounded-full border transition-all duration-300 shadow-lg backdrop-blur-md flex items-center justify-center",
                       isHovered
-                        ? "bg-zinc-50 border-white text-zinc-950 shadow-[0_0_20px_rgba(255,255,255,0.45)]"
+                        ? "bg-zinc-900 border-white text-white shadow-[0_0_20px_rgba(255,255,255,0.45)] scale-105"
                         : isActive
-                        ? "bg-indigo-600/20 text-indigo-400 border-indigo-500/40 shadow-[0_0_15px_rgba(99,102,241,0.25)]"
-                        : "bg-zinc-900/60 border-zinc-800/80 text-zinc-400 hover:border-zinc-700"
+                        ? "bg-indigo-950/40 text-indigo-400 border-indigo-500/50 shadow-[0_0_15px_rgba(99,102,241,0.3)]"
+                        : "bg-zinc-900/80 border-zinc-800/80 text-zinc-400 hover:border-zinc-700"
                     )}
                   >
-                    <Icon className="w-5 h-5" />
+                    <RenderWheelIcon icon={item.icon || item.id} size={26} />
                   </div>
                 </motion.div>
               );
             })}
           </div>
 
-          {/* Absolutely Positioned Overlay Icons (Secondary Concentric Arc Level) */}
+          {/* OVERLAY ICONS (Secondary Level) */}
           <div className="absolute inset-0 pointer-events-none">
             <AnimatePresence>
-              {isWheel3 && hoveredIndex !== null && subCount > 0 && (
+              {hoveredIndex !== null && subCount > 0 && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -717,7 +703,6 @@ export function WeaponWheel({
 
                     const iconR = (subInnerR + subOuterR) / 2;
                     const iconPos = polarToCartesian(centerX, centerY, iconR, iconAngle);
-                    const Icon = subItem.icon;
 
                     return (
                       <motion.div
@@ -729,22 +714,22 @@ export function WeaponWheel({
                         }}
                         initial={{ scale: 0.6 }}
                         animate={{
-                          scale: isSubHovered ? 1.2 : isSubActive ? 1.05 : 1,
+                          scale: isSubHovered ? 1.2 : isSubActive ? 1.08 : 1,
                           transform: `translate(-50%, -50%)`,
                         }}
                         transition={{ type: "spring", stiffness: 350, damping: 18 }}
                       >
                         <div
                           className={cn(
-                            "p-2 rounded-full border transition-all duration-300 shadow-md backdrop-blur-md",
+                            "w-9.5 h-9.5 rounded-full border transition-all duration-300 shadow-sm backdrop-blur-md flex items-center justify-center",
                             isSubHovered
                               ? "bg-indigo-600 border-indigo-400 text-white shadow-[0_0_15px_rgba(99,102,241,0.5)]"
                               : isSubActive
                               ? "bg-emerald-600/20 text-emerald-400 border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.2)]"
-                              : "bg-zinc-950/70 border-zinc-900/60 text-zinc-400 hover:border-zinc-800"
+                              : "bg-zinc-950/80 border-zinc-900/80 text-zinc-400 hover:border-zinc-800"
                           )}
                         >
-                          <Icon className="w-4 h-4" />
+                          <RenderWheelIcon icon={subItem.icon || subItem.id} size={20} />
                         </div>
                       </motion.div>
                     );
@@ -754,18 +739,18 @@ export function WeaponWheel({
             </AnimatePresence>
           </div>
 
-          {/* CENTER AREA DISPLAY OVERLAY (ONLY FOR WHEEL-4 - HTML OVERLAY FOR PERFECT CSS BEVELS & SHADOWS) */}
-          {isWheel4 && (
+          {/* CENTER DISPLAY OVERLAY FOR BEVELED VARIANT */}
+          {isBeveled && (
             <div
-              className="absolute rounded-full flex flex-col items-center justify-center p-6 text-center select-none backdrop-blur-2xl transition-all duration-300 pointer-events-none border-t border-white/20 border-x border-white/[0.02] border-b border-white/10"
+              className="absolute rounded-full flex flex-col items-center justify-center p-5 text-center select-none backdrop-blur-2xl transition-all duration-300 pointer-events-none border-t border-white/20 border-x border-white/[0.04] border-b border-white/10"
               style={{
                 width: innerR * 2,
                 height: innerR * 2,
                 left: "50%",
                 top: "50%",
                 transform: "translate(-50%, -50%)",
-                backgroundColor: "#171717",
-                boxShadow: "inset 0 1px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1px 0 0 rgba(0, 0, 0, 0.4), 0 10px 30px rgba(0,0,0,0.5)"
+                backgroundColor: "#161617",
+                boxShadow: "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.45), 0 15px 35px rgba(0,0,0,0.5)"
               }}
             >
               <AnimatePresence mode="wait">
@@ -779,16 +764,16 @@ export function WeaponWheel({
                     className="flex flex-col items-center justify-center"
                   >
                     <motion.div
-                      className="text-indigo-400 mb-3 flex items-center justify-center filter drop-shadow-[0_0_12px_rgba(99,102,241,0.5)]"
+                      className="mb-2.5 flex items-center justify-center filter drop-shadow-[0_0_12px_rgba(99,102,241,0.5)]"
                       animate={{ y: [0, -4, 0] }}
                       transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
                     >
-                      {React.createElement(displayItem.icon, { className: isWheel3 ? "w-11 h-11" : "w-14 h-14" })}
+                      <RenderWheelIcon icon={displayItem.icon || displayItem.id} size={36} />
                     </motion.div>
-                    <h3 className="font-mono text-[10px] md:text-xs text-zinc-400 uppercase tracking-widest">
+                    <h3 className="font-mono text-[10px] text-zinc-400 uppercase tracking-widest">
                       {displayCategory}
                     </h3>
-                    <h1 className="font-body font-black text-sm md:text-base text-white tracking-wide mt-1">
+                    <h1 className="font-body font-black text-sm text-white tracking-wide mt-1">
                       {displayItem.name}
                     </h1>
                   </motion.div>
@@ -808,18 +793,16 @@ export function WeaponWheel({
       {/* Bottom Section: Sub-Item Details and Selection Confirmation */}
       {!hideText && (
         <div className="w-full flex flex-col items-center justify-center mt-6 gap-4">
-          
-          {/* SUB-ITEM INFO PANEL - Centered below columns with layout safety */}
-          <div className="w-full max-w-xl h-24 text-center select-none">
+          <div className="w-full max-w-xl h-20 text-center select-none">
             <AnimatePresence mode="wait">
-              {isWheel3 && hoveredSubItem ? (
+              {hoveredSubItem ? (
                 <motion.div
                   key={hoveredSubItem.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.15 }}
-                  className="space-y-1.5"
+                  className="space-y-1"
                 >
                   <div>
                     <span className="font-mono text-[10px] uppercase tracking-widest text-emerald-400 font-bold">
@@ -837,7 +820,6 @@ export function WeaponWheel({
             </AnimatePresence>
           </div>
 
-          {/* Selected Confirmation status text */}
           {selectedName && (
             <div className="font-mono text-[10px] uppercase tracking-wider text-zinc-500 bg-zinc-900/30 px-3.5 py-1.5 border border-zinc-800/40 rounded-full select-none">
               Active Selection: <span className="text-indigo-400 font-bold">{selectedName}</span>
@@ -884,11 +866,10 @@ export function WeaponWheel({
           -webkit-user-select: none !important;
         }
       `}} />
-      {/* Trigger Button when closed */}
       {!isOpen && (
         <button
           onClick={() => setOpen(true)}
-          className="px-6 py-3 bg-zinc-900 border border-zinc-800 hover:border-zinc-700 rounded-xl font-mono text-sm tracking-wider text-zinc-300 hover:text-white transition shadow-lg cursor-pointer"
+          className="px-6 py-3 bg-zinc-900 border border-zinc-800 hover:border-zinc-700 rounded-xl font-mono text-xs tracking-wider text-zinc-300 hover:text-white transition shadow-lg cursor-pointer"
         >
           OPEN WEAPON WHEEL <kbd className="ml-2 px-2 py-0.5 bg-zinc-800 border border-zinc-700 text-xs rounded text-zinc-400 capitalize">{triggerKey}</kbd>
         </button>
