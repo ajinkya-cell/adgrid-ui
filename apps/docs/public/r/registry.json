@@ -23,7 +23,7 @@
       "name": "image-reveal",
       "type": "registry:ui",
       "title": "Image Reveal",
-      "description": "An image reveal effect using diagonal stripes masking and sliding clip-paths.",
+      "description": "Multi-layered scroll-driven image stack reveal with analog flash exposure & SVG grain texture overlays.",
       "dependencies": [
         "framer-motion"
       ],
@@ -1045,22 +1045,6 @@
       "name": "sidebar",
       "type": "registry:ui",
       "title": "Sidebar",
-      "description": "Sleek, modern slide-out website navigation sidebar for web applications and dashboards with expandable dashboard sub-menu options and DM Sans typography.",
-      "dependencies": [
-        "framer-motion",
-        "lucide-react"
-      ],
-      "files": [
-        {
-          "path": "components/ui/Sidebar.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "drawer",
-      "type": "registry:ui",
-      "title": "Drawer",
       "description": "Sleek, modern slide-out website navigation sidebar for web applications and dashboards with expandable dashboard sub-menu options and DM Sans typography.",
       "dependencies": [
         "framer-motion",

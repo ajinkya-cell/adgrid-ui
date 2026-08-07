@@ -20,15 +20,6 @@ import {
   SpotlightGrid,
 } from "@adgrid-ui/ui";
 
-import {
-  IconTerminal2,
-  IconCode,
-  IconBrandReact,
-  IconDatabase,
-  IconBrandDocker,
-  IconBolt,
-} from "@tabler/icons-react";
-
 // ─── Data ───
 
 const expandItems = [
@@ -58,34 +49,6 @@ const expandItems = [
     description: "Wind, privacy, royal theatre.",
     badge: "Architecture",
     accent: "#D4D4D4",
-  },
-];
-
-const formFields = [
-  {
-    name: "callsign",
-    label: "OPERATOR ID",
-    type: "text" as const,
-    placeholder: "Enter call sign",
-    required: true,
-  },
-  {
-    name: "channel",
-    label: "SECURE CHANNEL",
-    type: "email" as const,
-    placeholder: "freq@channel.net",
-    required: true,
-  },
-  {
-    name: "clearance",
-    label: "CLEARANCE LEVEL",
-    type: "select" as const,
-    options: [
-      { value: "alpha", label: "ALPHA" },
-      { value: "beta", label: "BETA" },
-      { value: "omega", label: "OMEGA" },
-    ],
-    required: true,
   },
 ];
 

@@ -601,9 +601,3 @@ export function Sidebar({
     </AnimatePresence>
   );
 }
-
-// Backward compatibility exports
-export const Drawer = Sidebar;
-export type DrawerProps = SidebarProps;
-export const PneumaticDrawer = Sidebar;
-export type PneumaticDrawerProps = SidebarProps;

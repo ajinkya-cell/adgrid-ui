@@ -192,9 +192,9 @@ export type {
   SocialPlatform,
 } from "./animated/DeveloperIdCard";
 
-// Sidebar / Drawer Navigation
-export { Sidebar, Drawer, PneumaticDrawer } from "./animated/Sidebar";
-export type { SidebarProps, DrawerProps, PneumaticDrawerProps } from "./animated/Sidebar";
+// Sidebar Navigation
+export { Sidebar } from "./animated/Sidebar";
+export type { SidebarProps } from "./animated/Sidebar";
 
 // Holo Command Palette
 export { CommandPalette, HoloCommandPalette } from "./animated/CommandPalette";

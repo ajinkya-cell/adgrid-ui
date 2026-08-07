@@ -61,10 +61,11 @@ export const registry: RegistryEntry[] = [
     name: "Image Reveal",
     slug: "image-reveal",
     category: "animated",
-    description: "An image reveal effect using diagonal stripes masking and sliding clip-paths.",
+    description: "Multi-layered scroll-driven image stack reveal with analog flash exposure & SVG grain texture overlays.",
     dependencies: ["framer-motion"],
     packagePath: "animated/ImageReveal.tsx",
     files: ["animated/ImageReveal.tsx"],
+    presentationStrategy: "fullscreen",
   },
   {
     name: "Image Parallax",
@@ -966,17 +967,7 @@ export const registry: RegistryEntry[] = [
     presentationStrategy: "center",
     propDefs: [],
   },
-  {
-    name: "Drawer",
-    slug: "drawer",
-    category: "animated",
-    description: "Sleek, modern slide-out website navigation sidebar for web applications and dashboards with expandable dashboard sub-menu options and DM Sans typography.",
-    dependencies: ["framer-motion", "lucide-react"],
-    packagePath: "animated/Sidebar.tsx",
-    files: ["animated/Sidebar.tsx"],
-    presentationStrategy: "center",
-    propDefs: [],
-  },
+
   {
     name: "Command Palette",
     slug: "command-palette",

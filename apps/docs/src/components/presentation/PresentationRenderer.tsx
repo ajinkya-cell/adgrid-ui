@@ -93,7 +93,6 @@ import {
   IconBrandGolang,
   IconBrandRust,
   IconBolt,
-  IconLeaf,
   IconServer,
   IconGitPullRequest,
   IconFlame,
@@ -420,7 +419,7 @@ export function PresentationRenderer({
 
   switch (entry.slug) {
     case "image-reveal":
-      return <ImageReveal src={imageOne} alt="Mountain landscape" width={420} height={540} />;
+      return <ImageReveal />;
     case "image-parallax": {
       const imageParallaxProps = {
         src: imageTwo,
@@ -1087,7 +1086,6 @@ export function PresentationRenderer({
     case "animated-icons-1":
       return <AnimatedIcons1 />;
     case "sidebar":
-    case "drawer":
       return <SidebarDemo liveProps={liveProps} />;
     case "command-palette":
       return <CommandPaletteDemo />;
