@@ -27,13 +27,8 @@ export { ChromeInput } from "./animated/ChromeInput";
 export type { ChromeInputProps } from "./animated/ChromeInput";
 export { ChromeSelect } from "./animated/ChromeSelect";
 export type { ChromeSelectProps, ChromeSelectOption } from "./animated/ChromeSelect";
-export { MetallicForm } from "./animated/MetallicForm";
-export type { MetallicFormProps, FormField } from "./animated/MetallicForm";
-export { PookieForm } from "./animated/PookieForm";
-export type { PookieFormProps, PookieFormField } from "./animated/PookieForm";
 export { AnisotropicKnob } from "./animated/AnisotropicKnob";
 export type { AnisotropicKnobProps } from "./animated/AnisotropicKnob";
-export { MechanicalTimer } from "./animated/MechanicalTimer";
 
 export { LaserVaultPassword } from "./animated/LaserVaultPassword";
 export { FlickeringGrid } from "./animated/FlickeringGrid";
@@ -146,6 +141,10 @@ export { default as StickerCard } from "./animated/StickerCard";
 // Datepicker
 export { default as Datepicker } from "./animated/Datepicker";
 
+// Marquee2
+export { default as Marquee2 } from "./animated/Marquee2";
+export type { Marquee2Props } from "./animated/Marquee2";
+
 // NavBar1
 export { default as NavBar1 } from "./animated/NavBar1";
 
@@ -224,4 +223,5 @@ export type { GlobeProps } from "./animated/Globe";
 // 3D Skeuomorphic BentoGrid Component
 export { BentoGrid, BentoGridItem } from "./animated/BentoGrid";
 export type { BentoGridProps, BentoGridItemProps, BentoIconType } from "./animated/BentoGrid";
+
 

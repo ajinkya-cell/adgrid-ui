@@ -11,8 +11,6 @@ import { PropsEditor, type PropDefinition } from "./PropsEditor";
 
 const COMPONENT_HEIGHTS: Record<string, number> = {
   InfiniteScroll: 640,
-  MetallicForm: 780,
-  MechanicalTimer: 640,
   LaserVaultPassword: 640,
   FlickeringGridPlayground: 650,
   DotPatternPlayground: 650,

@@ -6,6 +6,7 @@ export interface ExpandItem {
   subtitle?: string;
   image: string;
   description?: string;
+  year?: string;
   badge?: string;
   accent?: string; // e.g., custom hex, rgb, or styling class
 }

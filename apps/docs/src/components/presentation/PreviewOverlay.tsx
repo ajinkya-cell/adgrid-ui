@@ -23,9 +23,8 @@ const UI = {
   ChromeInput: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.ChromeInput }))),
   ChromeSelect: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.ChromeSelect }))),
   AnisotropicKnob: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.AnisotropicKnob }))),
-  MechanicalTimer: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.MechanicalTimer }))),
   LaserVaultPassword: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.LaserVaultPassword }))),
-  PookieForm: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.PookieForm }))),
+
   LivingText: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.LivingText }))),
   SpotlightText: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.SpotlightText }))),
   TextShuffle: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.TextShuffle }))),
@@ -33,6 +32,7 @@ const UI = {
   SimpleCard: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.SimpleCard }))),
   DashedFeatureCard: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.DashedFeatureCard }))),
   DashedMarquee: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.DashedMarquee }))),
+  Marquee2: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.Marquee2 }))),
   BevelAccordion: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.BevelAccordion }))),
   StickerCard: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.StickerCard }))),
   Datepicker: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.Datepicker }))),
@@ -139,22 +139,7 @@ export function MiniPreviewRenderer({ slug }: { slug: string }) {
           </Suspense>
         </div>
       );
-    case "pookie-form":
-      return (
-        <div className="flex h-full w-full items-center justify-center p-4 overflow-hidden">
-          <Suspense fallback={null}>
-            <UI.PookieForm
-              className="scale-65 origin-center w-full max-w-[320px] p-6"
-              title="Plate"
-              serialNumber="04-2024"
-              fields={[
-                { name: "name", label: "Identifier", placeholder: "Name..." }
-              ]}
-              showScrews={false}
-            />
-          </Suspense>
-        </div>
-      );
+
     case "anisotropic-knob":
       return (
         <div className="flex h-full w-full items-center justify-center p-4">
@@ -165,14 +150,7 @@ export function MiniPreviewRenderer({ slug }: { slug: string }) {
       );
 
     // ── Widgets ──────────────────────────────────────────────────────────
-    case "mechanical-timer":
-      return (
-        <div className="flex h-full w-full items-center justify-center p-2 scale-80">
-          <Suspense fallback={null}>
-            <UI.MechanicalTimer />
-          </Suspense>
-        </div>
-      );
+
     case "laser-vault-password":
       return (
         <div className="flex h-full w-full items-center justify-center p-2 scale-70 origin-center">
@@ -238,6 +216,15 @@ export function MiniPreviewRenderer({ slug }: { slug: string }) {
             <UI.BevelAccordion
               items={dummyMiniAccordionItems}
             />
+          </Suspense>
+        </div>
+      );
+    }
+    case "marquee-2": {
+      return (
+        <div className="flex h-full w-full items-center justify-center p-4 scale-40 origin-center overflow-hidden">
+          <Suspense fallback={null}>
+            <UI.Marquee2 />
           </Suspense>
         </div>
       );

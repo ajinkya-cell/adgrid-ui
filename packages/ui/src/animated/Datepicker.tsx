@@ -178,7 +178,7 @@ export default function Datepicker({ className, glowColor = "none" }: Datepicker
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ type: "spring", duration: 0.25, bounce: 0 }}
             className={cn(
-              "absolute left-0 mt-2.5 w-[340px] rounded-2xl border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 z-50 p-4",
+              "absolute left-1/2 -translate-x-1/2 mt-2.5 w-[340px] rounded-2xl border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 z-50 p-4",
               glowColor === "blue" && "shadow-[0_0_50px_rgba(59,130,246,0.15)]",
               glowColor === "white" && "shadow-[0_0_50px_rgba(255,255,255,0.08)]"
             )}

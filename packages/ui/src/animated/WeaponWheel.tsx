@@ -334,18 +334,9 @@ export function WeaponWheel({
   const innerContent = (
     <div
       className={cn(
-        "relative flex flex-col items-center justify-center p-6 z-10 select-none",
-        hideText ? "w-auto min-h-0 p-2" : "w-full max-w-5xl min-h-[620px]",
-        inline && (
-          isBeveled
-            ? "border-t border-white/20 border-x border-white/[0.04] border-b border-white/10 rounded-3xl backdrop-blur-2xl overflow-hidden"
-            : "bg-zinc-950/40 border border-zinc-800/40 rounded-3xl shadow-2xl backdrop-blur-md overflow-hidden"
-        )
+        "relative flex flex-col items-center justify-center p-4 z-10 select-none",
+        hideText ? "w-auto" : "w-full max-w-5xl"
       )}
-      style={inline && isBeveled ? {
-        backgroundColor: "#141415",
-        boxShadow: "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.4), 0 30px 80px rgba(0,0,0,0.6)"
-      } : undefined}
       onClick={(e) => e.stopPropagation()}
     >
       {/* Top Section: Side-by-Side Info Panel and Centered SVG Wheel */}

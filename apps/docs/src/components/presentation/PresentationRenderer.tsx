@@ -26,9 +26,6 @@ import {
   SpotlightText,
   LuminaWave,
   MatrixRain,
-  MechanicalTimer,
-  MetallicForm,
-  PookieForm,
 
   MorphingNav,
   NowPlayingCard,
@@ -37,6 +34,7 @@ import {
   SimpleCard,
   DashedFeatureCard,
   DashedMarquee,
+  Marquee2,
   BevelAccordion,
   StickerCard,
   Datepicker,
@@ -251,31 +249,28 @@ const weaponWheelDevItems = [
 
 const expandItems = [
   {
-    id: "taj",
-    title: "The Eternal Taj",
-    subtitle: "Mausoleum / Agra",
-    image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1200&q=85&auto=format&fit=crop",
-    description: "White marble, morning mist, and the quiet geometry of permanence.",
-    badge: "Heritage",
-    accent: "#E2E8F0",
+    id: "akira",
+    title: "Akira",
+    year: "1988",
+    image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1200&q=85&auto=format&fit=crop",
   },
   {
-    id: "varanasi",
-    title: "Varanasi Riverfront",
-    subtitle: "Ganga Aarti / Kashi",
-    image: "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?w=1200&q=85&auto=format&fit=crop",
-    description: "Stone steps descending into ritual light and ancient chants.",
-    badge: "Spiritual",
-    accent: "#A3A3A3",
+    id: "spirited-away",
+    title: "Spirited Away",
+    year: "2001",
+    image: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=1200&q=85&auto=format&fit=crop",
   },
   {
-    id: "jaipur",
-    title: "Jaipur Palace",
-    subtitle: "Hawa Mahal / Jaipur",
-    image: "https://images.unsplash.com/photo-1603262110263-fb0112e7cc33?w=1200&q=85&auto=format&fit=crop",
-    description: "A honeycomb facade shaped by wind, privacy, and royal street theatre.",
-    badge: "Architecture",
-    accent: "#D4D4D4",
+    id: "evangelion",
+    title: "Neon Genesis Evangelion",
+    year: "1995",
+    image: "https://images.unsplash.com/photo-1563089145-599997674d42?w=1200&q=85&auto=format&fit=crop",
+  },
+  {
+    id: "your-name",
+    title: "Your Name",
+    year: "2016",
+    image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1200&q=85&auto=format&fit=crop",
   },
 ];
 
@@ -771,41 +766,8 @@ export function PresentationRenderer({
       return <ChromeInput placeholder="Transmission ID" className="w-[320px]" />;
     case "chrome-select":
       return <ChromeSelect className="w-[320px]" options={[{ label: "Obsidian", value: "obsidian" }, { label: "Titanium", value: "titanium" }, { label: "Carbon", value: "carbon" }]} />;
-    case "metallic-form":
-      return (
-        <MetallicForm
-          title="Access Request"
-          subtitle="Machined input system for high-friction workflows."
-          submitLabel="Transmit"
-          fields={[
-            { name: "name", label: "Name", placeholder: "Ada Lovelace", required: true },
-            { name: "email", label: "Email", type: "email", placeholder: "ada@void.dev", required: true },
-            {
-              name: "clearance",
-              label: "Clearance",
-              type: "select",
-              required: true,
-              options: [
-                { value: "operator", label: "Operator" },
-                { value: "architect", label: "Architect" },
-                { value: "observer", label: "Observer" },
-              ],
-            },
-            { name: "message", label: "Message", type: "textarea", placeholder: "State the request vector." },
-          ]}
-          onSubmit={async () => {}}
-        />
-      );
-    case "pookie-form":
-      return (
-        <div className="flex items-center justify-center w-full min-h-[500px] p-6">
-          <PookieForm {...(liveProps as Parameters<typeof PookieForm>[0])} onSubmit={() => {}} />
-        </div>
-      );
     case "anisotropic-knob":
       return <AnisotropicKnob size={132} sound={playTactileSounds} {...liveProps} />;
-    case "mechanical-timer":
-      return <MechanicalTimer {...liveProps} />;
     case "laser-vault-password":
       return <LaserVaultPassword />;
     case "premium-hero":
@@ -1058,6 +1020,16 @@ export function PresentationRenderer({
           <div className="w-full max-w-xl">
             <BevelAccordion {...(accordionProps as Parameters<typeof BevelAccordion>[0])} />
           </div>
+        </div>
+      );
+    }
+    case "marquee-2": {
+      const marquee2Props = {
+        ...liveProps,
+      };
+      return (
+        <div className="w-full min-h-screen flex items-center justify-center p-6 bg-transparent">
+          <Marquee2 {...(marquee2Props as Parameters<typeof Marquee2>[0])} />
         </div>
       );
     }

@@ -12,7 +12,6 @@ import {
   LivingText,
   LaserVaultPassword,
   GravityCardStack,
-  MetallicForm,
   WeaponWheel,
   VoidButton,
   BrushedTitaniumButton,
@@ -464,30 +463,6 @@ export default function LabPage() {
             </div>
           </LabCard>
 
-          {/* 10 — MetallicForm (Span 6) */}
-          <LabCard
-            id="SYS_10"
-            label="METALLIC_FORM"
-            status="INCEPT"
-            colSpan="md:col-span-6"
-            height="h-[500px]"
-            title="MetallicForm"
-            description="Machined-metal obsidian form with sequential entry animations, validation overlays, and typing signals."
-            statLeft="Fields: 3"
-            statRight="Submit: Tactile"
-          >
-            <div className="w-full scale-[0.85] origin-center overflow-hidden">
-              <MetallicForm
-                title="OPERATOR ENTRY"
-                subtitle="Secure channel registration"
-                fields={formFields}
-                onSubmit={async () => {
-                  await new Promise((r) => setTimeout(r, 800));
-                }}
-                submitLabel="AUTHENTICATE"
-              />
-            </div>
-          </LabCard>
 
           {/* 11 — WeaponWheel (Span 4) */}
           <LabCard

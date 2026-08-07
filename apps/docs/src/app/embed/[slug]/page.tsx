@@ -16,10 +16,9 @@ export default async function EmbedComponentPage({
     if (s === "living-text") return "scale-[0.30]";
     if (s === "animated-beam") return "scale-[0.42]";
     if (s === "coverflow-carousel") return "scale-[0.35]";
-    if (s === "metallic-form" || s === "pookie-form") return "scale-[0.25]";
     if (s === "anisotropic-knob") return "scale-[0.65]";
     if (s === "dot-matrix") return "scale-[0.40]";
-    if (s === "mechanical-timer" || s === "laser-vault-password") return "scale-[0.40]";
+    if (s === "laser-vault-password") return "scale-[0.40]";
     if (s === "morphing-nav") return "scale-[0.42]";
     if (s === "text-shuffle") return "scale-[0.55]";
     if (s === "hero") return "scale-[0.35]";

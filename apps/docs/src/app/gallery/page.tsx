@@ -259,17 +259,7 @@ export function ComponentThumbnail({ slug, category }: { slug: string; category:
         <div className="absolute inset-0 rounded-full border border-white/5" style={{ transform: "scale(1.15)" }} />
       </div>
     ),
-    "mechanical-timer": (
-      <div className="flex items-center gap-1.5">
-        {["0", "0", ":", "0", "0"].map((c, i) => (
-          <div key={i} className={c === ":" ? "text-white/20 group-hover:text-white/50 transition-colors font-mono text-base font-bold -mx-0.5" :
-            "w-7 h-9 border border-white/10 group-hover:border-white/25 flex items-center justify-center font-mono text-sm font-bold text-white/25 group-hover:text-white/60 transition-all duration-300 rounded-[2px]"}
-            style={{ background: c !== ":" ? "rgba(255,255,255,0.02)" : undefined, transitionDelay: c !== ":" ? `${i * 30}ms` : undefined, boxShadow: c !== ":" ? "inset 0 1px 2px rgba(0,0,0,0.3)" : undefined }}>
-            {c}
-          </div>
-        ))}
-      </div>
-    ),
+
     "laser-vault-password": (
       <div className="grid grid-cols-3 gap-[5px]">
         {Array.from({ length: 9 }).map((_, i) => (
@@ -355,17 +345,7 @@ export function ComponentThumbnail({ slug, category }: { slug: string; category:
         ))}
       </div>
     ),
-    "metallic-form": (
-      <div className="flex flex-col gap-[5px] w-[88px]">
-        {[{ w: "75%", label: true }, { w: "55%", label: false }, { w: "75%", label: true }].map((row, i) => (
-          <div key={i} className="h-[18px] border border-white/8 group-hover:border-white/20 rounded-[3px] flex items-center px-2 gap-2 transition-all duration-300"
-            style={{ background: "rgba(255,255,255,0.02)", boxShadow: "inset 0 1px 2px rgba(0,0,0,0.3)", transitionDelay: `${i * 50}ms` }}>
-            <div className="h-[2px] rounded-full bg-white/15 group-hover:bg-white/35 transition-colors flex-1" style={{ maxWidth: row.w }} />
-            {row.label && <div className="w-[5px] h-[5px] rounded-full bg-white/8 group-hover:bg-white/20 transition-colors shrink-0" />}
-          </div>
-        ))}
-      </div>
-    ),
+
   };
 
   return (
@@ -545,7 +525,7 @@ function GalleryCard({
           />
 
           {/* Live Component Iframe Preview for all buttons and test cards, Graphic Preview for others */}
-          {item.category === "buttons" || item.slug === "breathing-background" || item.slug === "breathing-scale-card" || item.slug === "github-heatmap" || item.slug === "infinite-scroll" || item.slug === "image-parallax" || item.slug === "living-text" || item.slug === "animated-beam" || item.slug === "coverflow-carousel" || item.slug === "metallic-form" || item.slug === "pookie-form" || item.slug === "anisotropic-knob" || item.slug === "dot-matrix" || item.slug === "mechanical-timer" || item.slug === "laser-vault-password" || item.slug === "morphing-nav" || item.slug === "text-shuffle" || item.slug === "hero" || item.slug === "premium-hero" || item.slug === "wheel-picker" || item.slug === "weapon-wheel" || item.slug === "now-playing-card" || item.slug === "dashed-feature-card" || item.slug === "dashed-marquee" || item.slug === "datepicker" || item.slug === "animated-icons-1" || item.slug === "cards" || item.slug === "simple-card" || item.slug === "sticker-card" || item.slug === "bevel-alert-dialog" || item.slug === "flickering-grid-playground" || item.slug === "dot-pattern-playground" || item.slug === "matrix-rain" ? (
+          {item.category === "buttons" || item.slug === "breathing-background" || item.slug === "breathing-scale-card" || item.slug === "github-heatmap" || item.slug === "infinite-scroll" || item.slug === "image-parallax" || item.slug === "living-text" || item.slug === "animated-beam" || item.slug === "coverflow-carousel" || item.slug === "anisotropic-knob" || item.slug === "dot-matrix" || item.slug === "laser-vault-password" || item.slug === "morphing-nav" || item.slug === "text-shuffle" || item.slug === "hero" || item.slug === "premium-hero" || item.slug === "wheel-picker" || item.slug === "weapon-wheel" || item.slug === "now-playing-card" || item.slug === "dashed-feature-card" || item.slug === "dashed-marquee" || item.slug === "datepicker" || item.slug === "animated-icons-1" || item.slug === "cards" || item.slug === "simple-card" || item.slug === "sticker-card" || item.slug === "bevel-alert-dialog" || item.slug === "flickering-grid-playground" || item.slug === "dot-pattern-playground" || item.slug === "matrix-rain" ? (
             <GalleryIframePreview slug={item.slug} title={item.name} />
           ) : (
             <GalleryCardPreview slug={item.slug} category={item.category} accent={accent} />

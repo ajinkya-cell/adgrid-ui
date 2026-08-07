@@ -345,36 +345,6 @@
       ]
     },
     {
-      "name": "metallic-form",
-      "type": "registry:ui",
-      "title": "Metallic Form",
-      "description": "A machined-metal obsidian form container with sequential entry animations, validation overlays, and typing state signals.",
-      "dependencies": [
-        "framer-motion"
-      ],
-      "files": [
-        {
-          "path": "components/ui/MetallicForm.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "pookie-form",
-      "type": "registry:ui",
-      "title": "Pookie Form",
-      "description": "An industrial-grade registration plate form component inspired by Braun, Muji, and Dieter Rams. Features corner screws, deep inset inputs, and heavy tactile buttons.",
-      "dependencies": [
-        "framer-motion"
-      ],
-      "files": [
-        {
-          "path": "components/ui/PookieForm.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "anisotropic-knob",
       "type": "registry:ui",
       "title": "Anisotropic Knob",
@@ -385,22 +355,6 @@
       "files": [
         {
           "path": "components/ui/AnisotropicKnob.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "mechanical-timer",
-      "type": "registry:ui",
-      "title": "Mechanical Timer",
-      "description": "Machined metal tactile timer/stopwatch component with dragging physical dials, mechanical cogwheel meshes, Web Audio click synthesis ticks, and glowing segment MM:SS.CC timer displays.",
-      "dependencies": [
-        "framer-motion",
-        "lucide-react"
-      ],
-      "files": [
-        {
-          "path": "components/ui/MechanicalTimer.tsx",
           "type": "registry:ui"
         }
       ]
@@ -898,6 +852,22 @@
         },
         {
           "path": "components/ui/dashed-marquee/DashedFeatureCard.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "marquee-2",
+      "type": "registry:ui",
+      "title": "Marquee 2",
+      "description": "An infinite curved path marquee section animating official colored brand icons along a custom bezier SVG path.",
+      "dependencies": [
+        "framer-motion",
+        "devicons-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/Marquee2.tsx",
           "type": "registry:ui"
         }
       ]

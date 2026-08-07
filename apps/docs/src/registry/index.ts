@@ -379,34 +379,7 @@ export const registry: RegistryEntry[] = [
   },
 
 
-  {
-    name: "Metallic Form",
-    slug: "metallic-form",
-    category: "animated",
-    description: "A machined-metal obsidian form container with sequential entry animations, validation overlays, and typing state signals.",
-    dependencies: ["framer-motion"],
-    packagePath: "animated/MetallicForm.tsx",
-    files: ["animated/MetallicForm.tsx"],
-  },
-  {
-    name: "Pookie Form",
-    slug: "pookie-form",
-    category: "animated",
-    description: "An industrial-grade registration plate form component inspired by Braun, Muji, and Dieter Rams. Features corner screws, deep inset inputs, and heavy tactile buttons.",
-    dependencies: ["framer-motion"],
-    packagePath: "animated/PookieForm.tsx",
-    files: ["animated/PookieForm.tsx"],
-    propDefs: [
-      { name: "title", type: "string", default: "Workshop Entry", description: "Main plate header title", required: false },
-      { name: "serialNumber", type: "string", default: "REGISTER / SERIAL NO. 04-2024", description: "Top serial code", required: false },
-      { name: "buttonText", type: "string", default: "SUBMIT PLATE", description: "Button text label", required: false },
-      { name: "backgroundColor", type: "color", default: "#ECE9DF", description: "Hex background color", required: false },
-      { name: "paperTexture", type: "boolean", default: true, description: "Subtle recycled paper fiber grid texture overlay", required: false },
-      { name: "showScrews", type: "boolean", default: true, description: "Show corner brushed aluminum workshop screws", required: false },
-      { name: "shadowIntensity", type: "select", default: "medium", description: "Card elevation shadow depth style", required: false, options: ["low", "medium", "high"] },
-      { name: "rounded", type: "select", default: "lg", description: "Corner radius style", required: false, options: ["sm", "md", "lg", "xl", "none"] },
-    ],
-  },
+
   {
     name: "Anisotropic Knob",
     slug: "anisotropic-knob",
@@ -425,19 +398,7 @@ export const registry: RegistryEntry[] = [
       { name: "sound", type: "boolean", default: true, description: "Enable click feedback sound", required: false },
     ],
   },
-  {
-    name: "Mechanical Timer",
-    slug: "mechanical-timer",
-    category: "widgets",
-    description: "Machined metal tactile timer/stopwatch component with dragging physical dials, mechanical cogwheel meshes, Web Audio click synthesis ticks, and glowing segment MM:SS.CC timer displays.",
-    dependencies: ["framer-motion", "lucide-react"],
-    packagePath: "animated/MechanicalTimer.tsx",
-    files: ["animated/MechanicalTimer.tsx"],
-    propDefs: [
-      { name: "rimColor", type: "color", default: "#a78bfa", description: "Color of the active LED progress ring", required: false },
-      { name: "defaultDuration", type: "number", default: 30, description: "Default starting duration in seconds", required: false, min: 5, max: 60, step: 5 },
-    ],
-  },
+
   {
     name: "Laser Vault Password",
     slug: "laser-vault-password",
@@ -819,6 +780,21 @@ export const registry: RegistryEntry[] = [
     ],
   },
   {
+    name: "Marquee 2",
+    slug: "marquee-2",
+    category: "animated",
+    description: "An infinite curved path marquee section animating official colored brand icons along a custom bezier SVG path.",
+    dependencies: ["framer-motion", "devicons-react"],
+    packagePath: "animated/Marquee2.tsx",
+    files: ["animated/Marquee2.tsx"],
+    presentationStrategy: "fullscreen",
+    propDefs: [
+      { name: "variant", type: "select", default: "wave", description: "Curved motion path style", options: ["wave", "arch"], required: false },
+      { name: "speed", type: "number", default: 1, description: "Animation speed multiplier", required: false, min: 0.2, max: 5, step: 0.1 },
+      { name: "pauseOnHover", type: "boolean", default: true, description: "Pause marquee sliding on mouse hover", required: false },
+    ],
+  },
+  {
     name: "Bevel Accordion",
     slug: "bevel-accordion",
     category: "animated",
@@ -894,6 +870,7 @@ export const registry: RegistryEntry[] = [
     files: ["animated/ForgeUILanding.tsx"],
     presentationStrategy: "fullscreen",
   },
+
   {
     name: "Moon Landing",
     slug: "moon-landing",

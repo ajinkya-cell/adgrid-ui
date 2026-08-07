@@ -1,5 +1,5 @@
-import React, { forwardRef, useImperativeHandle, useId } from "react";
-import { LayoutGroup, motion } from "framer-motion";
+import React, { forwardRef, useImperativeHandle, useId, useRef } from "react";
+import { LayoutGroup } from "framer-motion";
 import { ExpandOnHoverProps, ExpandOnHoverRef } from "../../types";
 import { useExpand } from "../../hooks/useExpand";
 import { ExpandCard } from "./ExpandCard";
@@ -10,8 +10,8 @@ export const ExpandOnHover = forwardRef<ExpandOnHoverRef, ExpandOnHoverProps>(
     {
       items,
       variant = "modern",
-      expandHeight = 420,
-      collapsedHeight = 52,
+      expandHeight = 440,
+      collapsedHeight = 60,
       animation = "spring",
       expandedId,
       onExpandedChange,
@@ -101,17 +101,29 @@ export const ExpandOnHover = forwardRef<ExpandOnHoverRef, ExpandOnHoverProps>(
       }
     };
 
-    // Auto-collapse when cursor fully exits the component area
+    const leaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    // Auto-collapse when cursor fully exits the component area with gentle 120ms buffer
     const handleMouseLeaveContainer = () => {
       if (autoCollapseOnLeave && !clickToExpand) {
-        setExpanded(null);
+        if (leaveTimeoutRef.current) clearTimeout(leaveTimeoutRef.current);
+        leaveTimeoutRef.current = setTimeout(() => {
+          setExpanded(null);
+        }, 120);
+      }
+    };
+
+    const handleMouseEnterContainer = () => {
+      if (leaveTimeoutRef.current) {
+        clearTimeout(leaveTimeoutRef.current);
+        leaveTimeoutRef.current = null;
       }
     };
 
     return (
       <LayoutGroup id={layoutGroupId}>
-        <motion.div
-          layout
+        <div
+          onMouseEnter={handleMouseEnterContainer}
           onMouseLeave={handleMouseLeaveContainer}
           style={{ gap: `${gap}px` }}
           className={cn("flex flex-col w-full max-w-xl mx-auto", className)}
@@ -143,7 +155,7 @@ export const ExpandOnHover = forwardRef<ExpandOnHoverRef, ExpandOnHoverProps>(
               />
             );
           })}
-        </motion.div>
+        </div>
       </LayoutGroup>
     );
   }

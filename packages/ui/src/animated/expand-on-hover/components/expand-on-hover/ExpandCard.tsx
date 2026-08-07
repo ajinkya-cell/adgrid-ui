@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ExpandItem, ExpandVariant, ExpandAnimationType } from "../../types";
 import { Preview } from "./Preview";
 import { CardContent } from "./CardContent";
@@ -32,9 +32,7 @@ export function ExpandCard({
   expandHeight,
   collapsedHeight,
   variant,
-  animation,
   borderRadius,
-  clickToExpand,
   onHoverStart,
   onHoverEnd,
   onClick,
@@ -43,77 +41,25 @@ export function ExpandCard({
   cardClassName,
 }: ExpandCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
-  
-  // Motion Values for tilt and image parallax
-  const rotateXValue = useMotionValue(0);
-  const rotateYValue = useMotionValue(0);
-  const imageXValue = useMotionValue(0);
-  const imageYValue = useMotionValue(0);
 
-  // Easing/Spring configurations
-  const springSettings = { stiffness: 170, damping: 22, mass: 0.8 };
-  const smoothSettings = { type: "tween", ease: [0.16, 1, 0.3, 1], duration: 0.6 };
-  const transitionConfig = animation === "spring" ? springSettings : smoothSettings;
-
-  // React springs for lag-free cursor tracking
-  const rotateX = useSpring(rotateXValue, { stiffness: 220, damping: 25 });
-  const rotateY = useSpring(rotateYValue, { stiffness: 220, damping: 25 });
-  const imageX = useSpring(imageXValue, { stiffness: 220, damping: 25 });
-  const imageY = useSpring(imageYValue, { stiffness: 220, damping: 25 });
-
-  // Handle cursor movement inside card to execute 3D tilt and image shift
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isExpanded || clickToExpand || !cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    
-    // Relative coordinates (-0.5 to 0.5)
-    const relativeX = (e.clientX - rect.left) / rect.width - 0.5;
-    const relativeY = (e.clientY - rect.top) / rect.height - 0.5;
-
-    // Subtle 3D tilt (max 3 degrees)
-    rotateXValue.set(relativeY * -3);
-    rotateYValue.set(relativeX * 3);
-
-    // Subtle image parallax shift (max 8px)
-    imageXValue.set(relativeX * 8);
-    imageYValue.set(relativeY * 8);
-  };
-
-  const handleMouseLeave = () => {
-    // Reset positions smoothly
-    rotateXValue.set(0);
-    rotateYValue.set(0);
-    imageXValue.set(0);
-    imageYValue.set(0);
-    onHoverEnd();
-  };
-
-  // Sibling layout displacement (parting effect)
-  let partingY = 0;
   let scale = 1;
   let opacity = 1;
 
   if (activeIndex !== null) {
     if (activeIndex === index) {
-      partingY = 0;
       scale = 1;
       opacity = 1;
     } else {
-      scale = 0.98;
-      opacity = 0.65;
-      // Cards above shift up (-12px), cards below shift down (+12px)
-      partingY = index < activeIndex ? -12 : 12;
+      scale = 0.985;
+      opacity = 0.75;
     }
   }
 
-  // Variant classes
   const isModern = variant === "modern";
   const variantClasses = isModern
     ? cn(
-        "bg-neutral-900/40 border border-white/10 backdrop-blur-md",
-        isExpanded 
-          ? "shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8),0_0_40px_rgba(255,255,255,0.05)] border-white/20" 
-          : "shadow-md hover:border-white/20 hover:bg-neutral-900/60"
+        "bg-neutral-900/60 border border-white/10 backdrop-blur-md shadow-lg transition-colors duration-200 hover:border-white/20",
+        isExpanded && "border-white/25 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.85)]"
       )
     : "bg-neutral-950 border border-neutral-800 shadow-none";
 
@@ -126,28 +72,25 @@ export function ExpandCard({
       aria-controls={`panel-${item.id}`}
       id={`card-${index}`}
       layout
-      transition={transitionConfig}
+      transition={{
+        layout: { type: "spring", stiffness: 380, damping: 32, mass: 0.6 },
+        scale: { duration: 0.15 },
+        opacity: { duration: 0.15 },
+      }}
       onMouseEnter={onHoverStart}
-      onMouseLeave={handleMouseLeave}
-      onMouseMove={handleMouseMove}
+      onMouseLeave={onHoverEnd}
       onClick={onClick}
       onKeyDown={onKeyDown}
       animate={{
-        y: partingY,
         scale,
         opacity,
       }}
       style={{
         height: isExpanded ? expandHeight : collapsedHeight,
         borderRadius: `${borderRadius}px`,
-        clipPath: `inset(0px round ${borderRadius}px)`,
-        WebkitClipPath: `inset(0px round ${borderRadius}px)`,
-        rotateX,
-        rotateY,
-        perspective: 1000,
       }}
       className={cn(
-        "relative w-full overflow-hidden cursor-pointer select-none outline-none transition-all duration-300 rounded-[inherit]",
+        "relative w-full overflow-hidden cursor-pointer select-none outline-none rounded-[inherit]",
         "focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-4 focus-visible:ring-offset-neutral-950",
         variantClasses,
         cardClassName
@@ -156,46 +99,31 @@ export function ExpandCard({
       {renderItem ? (
         renderItem(item, isExpanded)
       ) : (
-        <div 
-          className="relative w-full h-full rounded-[inherit] overflow-hidden"
-          style={{
-            clipPath: `inset(0px round ${borderRadius}px)`,
-            WebkitClipPath: `inset(0px round ${borderRadius}px)`,
-          }}
-        >
-          {/* Collapsed Preview container */}
-          <motion.div
-            layout="position"
-            animate={{ 
-              opacity: isExpanded ? 0 : 1,
-              pointerEvents: isExpanded ? "none" : "auto" 
-            }}
-            transition={{ duration: 0.2 }}
-            className="absolute inset-0 w-full h-full flex items-center rounded-[inherit] overflow-hidden"
-          >
-            <Preview item={item} index={index} />
-          </motion.div>
-
-          {/* Expanded Content Panel container */}
-          <motion.div
-            layout="position"
-            animate={{ 
-              opacity: isExpanded ? 1 : 0,
-              pointerEvents: isExpanded ? "auto" : "none" 
-            }}
-            transition={{ duration: 0.3 }}
-            className="absolute inset-0 w-full h-full rounded-[inherit] overflow-hidden"
-          >
-            {isExpanded && (
-              <CardContent 
-                item={item} 
-                index={index} 
-                borderRadius={borderRadius}
-                imageParallaxStyle={{ x: imageX, y: imageY }} 
-              />
-            )}
-          </motion.div>
-        </div>
+        <AnimatePresence mode="wait" initial={false}>
+          {!isExpanded ? (
+            <motion.div
+              key="preview"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.12 }}
+              className="w-full h-[60px] flex items-center"
+            >
+              <Preview item={item} index={index} />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="content"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18 }}
+              className="relative w-full h-full overflow-hidden"
+            >
+              <CardContent item={item} index={index} borderRadius={borderRadius} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       )}
     </motion.div>
   );
