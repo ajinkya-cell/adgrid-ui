@@ -93,8 +93,6 @@ import {
   IconBrandGolang,
   IconBrandRust,
   IconBolt,
-  IconServer,
-  IconGitPullRequest,
   IconFlame,
   IconCpu,
   IconBrandGithub,

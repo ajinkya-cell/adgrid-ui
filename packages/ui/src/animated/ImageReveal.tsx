@@ -36,32 +36,45 @@ const ImageLayer: React.FC<ImageLayerProps> = ({
   // Step bounds for each image in the scroll sequence
   const start = index / total;
   const end = (index + 1) / total;
-  const peak = start + (end - start) * 0.22; // Point where entry reaches active focus before receding
+  const revealEnd = start + (end - start) * 0.40; // Progressive bottom-to-top curtain wipe reveal window
 
-  // Scale: enters slightly enlarged (1.08) then recedes back into screen depth (0.88)
+  // Stage 1: Clip Path Progressive Reveal (bottom to top)
+  // Top inset: 100% (hidden) -> 50% (bottom half visible) -> 0% (100% full picture visible)
+  const clipTopPercent = useTransform(
+    progress,
+    [start, revealEnd],
+    [index === 0 ? 0 : 100, 0]
+  );
+
+  const clipPath = useTransform(
+    clipTopPercent,
+    (top) => `inset(${top}% 0% 0% 0%)`
+  );
+
+  // Stage 2: Scale Receding into Depth (1.08 -> 1.04 during reveal -> 0.88 as scroll continues)
   const scale = useTransform(
     progress,
-    [start, peak, end],
+    [start, revealEnd, end],
     [1.08, 1.04, 0.88]
   );
 
-  // Y-translation: First image is pinned. Subsequent images glide up smoothly from bottom on entry [start, peak]
+  // Subtle Y translation syncing with the curtain reveal
   const y = useTransform(
     progress,
-    [start, peak],
-    [index === 0 ? "0%" : "100%", "0%"]
+    [start, revealEnd],
+    [index === 0 ? "0%" : "8%", "0%"]
   );
 
-  // Elegant, subtle brightness & contrast glow (tuned down from harsh blown-out values)
+  // Elegant brightness & contrast exposure glow (peaks during active unroll, normalizes to 1.0)
   const brightness = useTransform(
     progress,
-    [start, peak, end],
+    [start, revealEnd, end],
     [1.35, 1.15, 1.0]
   );
 
   const contrast = useTransform(
     progress,
-    [start, peak, end],
+    [start, revealEnd, end],
     [1.20, 1.08, 1.0]
   );
 
@@ -71,17 +84,17 @@ const ImageLayer: React.FC<ImageLayerProps> = ({
     ([b, c]) => `brightness(${b}) contrast(${c})`
   );
 
-  // Smooth entry opacity
+  // Opacity: smooth entry flag
   const opacity = useTransform(
     progress,
     [start, start + (index === 0 ? 0 : 0.02)],
     [index === 0 ? 1 : 0, 1]
   );
 
-  // Rich backdrop dimming overlay as image recedes deep into the background stack
+  // Backdrop darkness vignette fading in as image recedes into screen depth
   const recedeDarkness = useTransform(
     progress,
-    [peak, end],
+    [revealEnd, end],
     [0, 0.55]
   );
 
@@ -92,6 +105,7 @@ const ImageLayer: React.FC<ImageLayerProps> = ({
         scale,
         opacity,
         filter,
+        clipPath,
         zIndex: index + 1,
         transformStyle: "preserve-3d",
       }}
@@ -110,7 +124,7 @@ const ImageLayer: React.FC<ImageLayerProps> = ({
         className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none z-10"
       />
 
-      {/* SVG Grain Overlay - Tactile film noise texture */}
+      {/* SVG Grain Overlay - Film noise texture */}
       <div className="absolute inset-0 pointer-events-none opacity-25 mix-blend-overlay z-20">
         <svg className="w-full h-full">
           <filter id={`grain-${index}`}>
