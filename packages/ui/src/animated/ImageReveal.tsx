@@ -9,13 +9,13 @@ import {
   MotionValue,
 } from "framer-motion";
 
-// Default high-quality sample images
+// Default high-quality verified sample images
 const DEFAULT_IMAGES = [
   "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80",
 ];
 
 export interface ImageLayerProps {
@@ -116,6 +116,10 @@ const ImageLayer: React.FC<ImageLayerProps> = ({
         src={src}
         alt={alt || `Reveal Image ${index + 1}`}
         className="w-full h-full object-cover select-none"
+        onError={(e) => {
+          (e.currentTarget as HTMLImageElement).src =
+            DEFAULT_IMAGES[index % DEFAULT_IMAGES.length];
+        }}
       />
 
       {/* Receding Dark Backdrop Vignette */}
