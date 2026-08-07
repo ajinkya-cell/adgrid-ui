@@ -109,7 +109,7 @@ const ImageLayer: React.FC<ImageLayerProps> = ({
         zIndex: index + 1,
         transformStyle: "preserve-3d",
       }}
-      className="absolute inset-0 w-full h-full overflow-hidden bg-neutral-950 flex items-center justify-center rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
+      className="absolute inset-0 w-full h-full overflow-hidden flex items-center justify-center rounded-xl"
     >
       {/* Background Image */}
       <img
@@ -159,6 +159,10 @@ export interface ImageRevealProps {
   src?: string;
   /** Fallback alt text */
   alt?: string;
+  /** Custom width for the container */
+  width?: string | number;
+  /** Custom height for the container */
+  height?: string | number;
   /** Enable mouse wheel scroll locking hook (default: true) */
   wheelHook?: boolean;
   /** Scroll sensitivity factor (higher = slower step per wheel click) */
@@ -171,6 +175,8 @@ export function ImageReveal({
   images,
   src,
   alt,
+  width = "100%",
+  height,
   wheelHook = true,
   sensitivity = 1400,
   className = "",
@@ -252,26 +258,24 @@ export function ImageReveal({
   return (
     <div
       ref={containerRef}
-      className={`relative w-full h-screen bg-neutral-950 text-white flex flex-col items-center justify-center overflow-hidden select-none ${className}`}
-      style={{ perspective: "1200px" }}
+      className={`relative w-full h-full min-h-[440px] py-6 text-white flex flex-col items-center justify-center overflow-hidden select-none ${className}`}
+      style={{ perspective: "1200px", width, height }}
     >
       {/* Introductory Scroll Prompt */}
       <motion.div
         style={{ opacity: promptOpacity }}
         className="absolute z-0 flex flex-col items-center justify-center text-center space-y-3 pointer-events-none"
       >
-        <p className="text-xs uppercase tracking-[0.3em] font-mono text-neutral-400">
+        <p className="text-[10px] uppercase tracking-[0.3em] font-mono text-neutral-400">
           Scroll Down
           <br />
           To Reveal
-          <br />
-          The Images
         </p>
-        <div className="w-[1px] h-12 bg-neutral-600 animate-pulse" />
+        <div className="w-[1px] h-8 bg-neutral-600 animate-pulse" />
       </motion.div>
 
-      {/* Framed Display Area with Specular Bevel Border */}
-      <div className="relative w-[85%] max-w-4xl aspect-[4/3] sm:aspect-[16/10] overflow-hidden border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.9),inset_0_1px_1px_rgba(255,255,255,0.12)] z-10 rounded-2xl bg-black">
+      {/* Pure Floating Image Container (No outer card frame, no borders, no box-shadows) */}
+      <div className="relative w-full max-w-lg sm:max-w-xl aspect-[16/10] overflow-hidden z-10 rounded-xl">
         {imageList.map((imgSrc, index) => (
           <ImageLayer
             key={index}
@@ -282,9 +286,6 @@ export function ImageReveal({
             alt={alt}
           />
         ))}
-
-        {/* Specular Edge Highlight Overlay */}
-        <div className="absolute inset-0 rounded-2xl border border-white/10 pointer-events-none z-30 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]" />
       </div>
     </div>
   );
