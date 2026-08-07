@@ -411,8 +411,19 @@ export function PresentationRenderer({
   const [framework, setFramework] = useState("Next.js");
 
   switch (entry.slug) {
-    case "image-reveal":
-      return <ImageReveal />;
+    case "image-reveal": {
+      const imageRevealProps = {
+        images: [
+          "https://unsplash.com/photos/white-flower-in-tilt-shift-lens-GHQJhB2ATKM",
+          "https://unsplash.com/photos/delicate-white-flowers-against-a-dark-blurred-background-gCWctwbJesc",
+          "https://unsplash.com/photos/close-up-of-a-flower-HNh9EfacXXM",
+          "https://unsplash.com/photos/purple-flower-in-close-up-photography-RKk9yMOONZs",
+          "https://unsplash.com/photos/a-close-up-of-a-flower-SByu-FXu0Pw",
+        ],
+        ...liveProps,
+      };
+      return <ImageReveal {...(imageRevealProps as any)} />;
+    }
     case "image-parallax": {
       const imageParallaxProps = {
         src: imageTwo,

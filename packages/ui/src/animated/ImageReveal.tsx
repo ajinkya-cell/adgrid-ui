@@ -9,14 +9,36 @@ import {
   MotionValue,
 } from "framer-motion";
 
-// Default high-quality verified sample images
+// Default high-quality floral images matching requested Unsplash flower photography
 const DEFAULT_IMAGES = [
-  "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1621447578058-6543ad48e6b2?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1784239608832-a23eff7a2b4c?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1658702716533-2af83477971e?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1589002817350-3be549af43b7?auto=format&fit=crop&w=1200&q=80",
+  "https://images.unsplash.com/photo-1657177458783-77f02f83e129?auto=format&fit=crop&w=1200&q=80",
 ];
+
+// Unsplash photo page ID to direct image CDN URL mapping
+const UNSPLASH_PAGE_MAP: Record<string, string> = {
+  "gCWctwbJesc": "https://images.unsplash.com/photo-1784239608832-a23eff7a2b4c?auto=format&fit=crop&w=1200&q=80",
+  "HNh9EfacXXM": "https://images.unsplash.com/photo-1658702716533-2af83477971e?auto=format&fit=crop&w=1200&q=80",
+  "RKk9yMOONZs": "https://images.unsplash.com/photo-1589002817350-3be549af43b7?auto=format&fit=crop&w=1200&q=80",
+  "GHQJhB2ATKM": "https://images.unsplash.com/photo-1621447578058-6543ad48e6b2?auto=format&fit=crop&w=1200&q=80",
+  "SByu-FXu0Pw": "https://images.unsplash.com/photo-1657177458783-77f02f83e129?auto=format&fit=crop&w=1200&q=80",
+};
+
+/** Normalizes Unsplash photo web page links to direct image CDN links */
+export function normalizeImageUrl(url: string): string {
+  if (!url) return url;
+  if (url.includes("unsplash.com/photos/")) {
+    for (const key of Object.keys(UNSPLASH_PAGE_MAP)) {
+      if (url.includes(key)) {
+        return UNSPLASH_PAGE_MAP[key];
+      }
+    }
+  }
+  return url;
+}
 
 export interface ImageLayerProps {
   src: string;
@@ -36,14 +58,13 @@ const ImageLayer: React.FC<ImageLayerProps> = ({
   // Step bounds for each image in the scroll sequence
   const start = index / total;
   const end = (index + 1) / total;
-  const revealEnd = start + (end - start) * 0.40; // Progressive bottom-to-top curtain wipe reveal window
+  const revealEnd = start + (end - start) * 0.45; // Curtain wipe unroll window
 
-  // Stage 1: Clip Path Progressive Reveal (bottom to top)
-  // Top inset: 100% (hidden) -> 50% (bottom half visible) -> 0% (100% full picture visible)
+  // Stage 1: Clip Path Progressive Reveal (bottom to top for ALL images starting from blank canvas)
   const clipTopPercent = useTransform(
     progress,
     [start, revealEnd],
-    [index === 0 ? 0 : 100, 0]
+    [100, 0]
   );
 
   const clipPath = useTransform(
@@ -51,31 +72,38 @@ const ImageLayer: React.FC<ImageLayerProps> = ({
     (top) => `inset(${top}% 0% 0% 0%)`
   );
 
-  // Stage 2: Scale Receding into Depth (1.08 -> 1.04 during reveal -> 0.88 as scroll continues)
+  // Stage 2: 3D Depth Shrink & Recede (starts at 1.12 during unroll -> 1.0 settled -> shrinks to 0.85 receding into depth)
   const scale = useTransform(
     progress,
     [start, revealEnd, end],
-    [1.08, 1.04, 0.88]
+    [1.12, 1.0, 0.85]
   );
 
-  // Subtle Y translation syncing with the curtain reveal
+  // Y translation syncing with the curtain reveal & recession
   const y = useTransform(
     progress,
-    [start, revealEnd],
-    [index === 0 ? "0%" : "8%", "0%"]
+    [start, revealEnd, end],
+    ["8%", "0%", "-3%"]
   );
 
   // Elegant brightness & contrast exposure glow (peaks during active unroll, normalizes to 1.0)
   const brightness = useTransform(
     progress,
     [start, revealEnd, end],
-    [1.35, 1.15, 1.0]
+    [1.45, 1.15, 1.0]
   );
 
   const contrast = useTransform(
     progress,
     [start, revealEnd, end],
-    [1.20, 1.08, 1.0]
+    [1.25, 1.10, 1.0]
+  );
+
+  // Dynamic Film Grain Burst (flashes intense analog film noise during unroll, softens to subtle texture)
+  const grainOpacity = useTransform(
+    progress,
+    [start, revealEnd, end],
+    [0.65, 0.35, 0.20]
   );
 
   // Combine motion values into standard CSS filter string
@@ -84,18 +112,18 @@ const ImageLayer: React.FC<ImageLayerProps> = ({
     ([b, c]) => `brightness(${b}) contrast(${c})`
   );
 
-  // Opacity: smooth entry flag
+  // Opacity: smooth entry flag (fades in as unroll begins for all images)
   const opacity = useTransform(
     progress,
-    [start, start + (index === 0 ? 0 : 0.02)],
-    [index === 0 ? 1 : 0, 1]
+    [start, start + 0.015],
+    [0, 1]
   );
 
-  // Backdrop darkness vignette fading in as image recedes into screen depth
+  // Backdrop darkness vignette fading in as image recedes into depth
   const recedeDarkness = useTransform(
     progress,
     [revealEnd, end],
-    [0, 0.55]
+    [0, 0.65]
   );
 
   return (
@@ -128,14 +156,17 @@ const ImageLayer: React.FC<ImageLayerProps> = ({
         className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none z-10"
       />
 
-      {/* SVG Grain Overlay - Film noise texture */}
-      <div className="absolute inset-0 pointer-events-none opacity-25 mix-blend-overlay z-20">
+      {/* SVG Dynamic Grain Overlay - Film noise texture */}
+      <motion.div
+        style={{ opacity: grainOpacity }}
+        className="absolute inset-0 pointer-events-none mix-blend-overlay z-20"
+      >
         <svg className="w-full h-full">
           <filter id={`grain-${index}`}>
             <feTurbulence
               type="fractalNoise"
-              baseFrequency="0.80"
-              numOctaves="3"
+              baseFrequency="0.75"
+              numOctaves="4"
               stitchTiles="stitch"
             />
             <feColorMatrix type="saturate" values="0" />
@@ -147,7 +178,7 @@ const ImageLayer: React.FC<ImageLayerProps> = ({
             filter={`url(#grain-${index})`}
           />
         </svg>
-      </div>
+      </motion.div>
     </motion.div>
   );
 };
@@ -185,12 +216,13 @@ export function ImageReveal({
   const rawProgress = useMotionValue(0);
   const progress = useSpring(rawProgress, { stiffness: 65, damping: 26, mass: 1.1 });
 
-  const imageList =
+  const imageList = (
     images && images.length > 0
       ? images
       : src
       ? [src]
-      : DEFAULT_IMAGES;
+      : DEFAULT_IMAGES
+  ).map(normalizeImageUrl);
 
   // Intercept wheel & touch events to advance reveal progress smoothly with velocity clamping
   useEffect(() => {
@@ -261,21 +293,20 @@ export function ImageReveal({
       className={`relative w-full h-full min-h-[440px] my-auto py-6 text-white flex flex-col items-center justify-center overflow-hidden select-none ${className}`}
       style={{ perspective: "1200px", width, height }}
     >
+      {/* Poppins Font Loader */}
+      <style dangerouslySetInnerHTML={{ __html: `@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');` }} />
       {/* Introductory Scroll Prompt */}
       <motion.div
         style={{ opacity: promptOpacity }}
-        className="absolute z-0 flex flex-col items-center justify-center text-center space-y-3 pointer-events-none"
+        className="absolute inset-0 z-0 flex items-center justify-center text-center pointer-events-none"
       >
-        <p className="text-[10px] uppercase tracking-[0.3em] font-mono text-neutral-400">
-          Scroll Down
-          <br />
-          To Reveal
-        </p>
-        <div className="w-[1px] h-8 bg-neutral-600 animate-pulse" />
+        <span className="text-5xl sm:text-6xl md:text-7xl font-semibold font-['Poppins',sans-serif] text-neutral-300 tracking-tighter select-none drop-shadow-[0_0_30px_rgba(255,255,255,0.12)]">
+          Scroll
+        </span>
       </motion.div>
 
       {/* Pure Floating Image Container — Full Square (No rounded edges, no borders, no cards) */}
-      <div className="relative w-full max-w-lg sm:max-w-xl aspect-[16/10] overflow-hidden z-10 rounded-none shadow-none">
+      <div className="relative w-full max-w-lg sm:max-w-xl aspect-[16/10] overflow-hidden z-10 rounded-none shadow-none mt-16 sm:mt-24">
         {imageList.map((imgSrc, index) => (
           <ImageLayer
             key={index}

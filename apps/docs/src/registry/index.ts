@@ -66,6 +66,18 @@ export const registry: RegistryEntry[] = [
     packagePath: "animated/ImageReveal.tsx",
     files: ["animated/ImageReveal.tsx"],
     presentationStrategy: "fullscreen",
+    propDefs: [
+      {
+        name: "sensitivity",
+        type: "number",
+        default: 1400,
+        description: "Scroll sensitivity factor (higher = slower reveal pace)",
+        required: false,
+        min: 400,
+        max: 3000,
+        step: 100,
+      },
+    ],
   },
   {
     name: "Image Parallax",
