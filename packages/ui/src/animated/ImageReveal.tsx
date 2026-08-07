@@ -109,13 +109,13 @@ const ImageLayer: React.FC<ImageLayerProps> = ({
         zIndex: index + 1,
         transformStyle: "preserve-3d",
       }}
-      className="absolute inset-0 w-full h-full overflow-hidden flex items-center justify-center rounded-xl"
+      className="absolute inset-0 w-full h-full overflow-hidden flex items-center justify-center rounded-none"
     >
       {/* Background Image */}
       <img
         src={src}
         alt={alt || `Reveal Image ${index + 1}`}
-        className="w-full h-full object-cover select-none"
+        className="w-full h-full object-cover select-none rounded-none"
         onError={(e) => {
           (e.currentTarget as HTMLImageElement).src =
             DEFAULT_IMAGES[index % DEFAULT_IMAGES.length];
@@ -258,7 +258,7 @@ export function ImageReveal({
   return (
     <div
       ref={containerRef}
-      className={`relative w-full h-full min-h-[440px] py-6 text-white flex flex-col items-center justify-center overflow-hidden select-none ${className}`}
+      className={`relative w-full h-full min-h-[440px] my-auto py-6 text-white flex flex-col items-center justify-center overflow-hidden select-none ${className}`}
       style={{ perspective: "1200px", width, height }}
     >
       {/* Introductory Scroll Prompt */}
@@ -274,8 +274,8 @@ export function ImageReveal({
         <div className="w-[1px] h-8 bg-neutral-600 animate-pulse" />
       </motion.div>
 
-      {/* Pure Floating Image Container (No outer card frame, no borders, no box-shadows) */}
-      <div className="relative w-full max-w-lg sm:max-w-xl aspect-[16/10] overflow-hidden z-10 rounded-xl">
+      {/* Pure Floating Image Container — Full Square (No rounded edges, no borders, no cards) */}
+      <div className="relative w-full max-w-lg sm:max-w-xl aspect-[16/10] overflow-hidden z-10 rounded-none shadow-none">
         {imageList.map((imgSrc, index) => (
           <ImageLayer
             key={index}

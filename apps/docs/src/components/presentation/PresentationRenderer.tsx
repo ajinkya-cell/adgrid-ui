@@ -95,7 +95,6 @@ import {
   IconBolt,
   IconBrandGithub,
   IconBrandGitlab,
-  IconCode,
   IconTerminal,
   IconBrandChrome,
   IconEye,
