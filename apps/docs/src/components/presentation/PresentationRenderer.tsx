@@ -95,7 +95,6 @@ import {
   IconBolt,
   IconBrandGithub,
   IconBrandGitlab,
-  IconTerminal,
   IconBrandChrome,
   IconEye,
 } from "@tabler/icons-react";
