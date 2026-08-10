@@ -68,6 +68,7 @@ import {
   Globe,
   BentoGrid,
   BentoGridItem,
+  Meter,
 } from "@adgrid-ui/ui";
 import { Cards } from "../../../../../packages/ui/src/animated/Cards";
 import {
@@ -1104,6 +1105,12 @@ export function PresentationRenderer({
       return <StepperDemo />;
     case "globe":
       return <Globe />;
+    case "meter":
+      return (
+        <div className="w-full min-h-[400px] flex items-center justify-center p-6 bg-transparent">
+          <Meter value={45} {...liveProps} />
+        </div>
+      );
     case "bento-grid":
       return <BentoGridDemo liveProps={liveProps} />;
     default:

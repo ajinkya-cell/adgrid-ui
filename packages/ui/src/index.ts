@@ -224,5 +224,6 @@ export type { GlobeProps } from "./animated/Globe";
 export { BentoGrid, BentoGridItem } from "./animated/BentoGrid";
 export type { BentoGridProps, BentoGridItemProps, BentoIconType } from "./animated/BentoGrid";
 
-
-
+// Minimalist Precision Meter / Sentiment Gauge Component
+export { Meter } from "./animated/Meter";
+export type { MeterProps } from "./animated/Meter";

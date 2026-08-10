@@ -1077,6 +1077,19 @@ export const registry: RegistryEntry[] = [
       },
     ],
   },
+  {
+    name: "Meter",
+    slug: "meter",
+    category: "animated",
+    description: "Minimalist precision sentiment meter & gauge with automatic mount sweep calibration, dynamic sentiment colors, and real-time synchronized numerical counter.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/Meter.tsx",
+    files: ["animated/Meter.tsx"],
+    presentationStrategy: "center",
+    propDefs: [
+      { name: "value", type: "number", default: 45, description: "Score value (-100 to 100)", required: true, min: -100, max: 100, step: 5 },
+    ],
+  },
 ];
 
 
