@@ -225,3 +225,4 @@ export { BentoGrid, BentoGridItem } from "./animated/BentoGrid";
 export type { BentoGridProps, BentoGridItemProps, BentoIconType } from "./animated/BentoGrid";
 
 
+
