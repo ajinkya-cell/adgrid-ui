@@ -282,26 +282,7 @@ export const registry: RegistryEntry[] = [
       { name: "theme", type: "select", default: "charcoal", description: "Color theme variation", required: false, options: ["charcoal", "danger", "tactical"] }
     ],
   },
-  {
-    name: "Animated Beam",
-    slug: "animated-beam",
-    category: "animated",
-    description: "An animated, coordinate-tracking connection beam connecting premium recessed beveled nodes in a modular hub-integration grid.",
-    dependencies: ["framer-motion"],
-    packagePath: "animated/animated-beam/BeveledBeamShowcase.tsx",
-    files: [
-      "animated/animated-beam/index.ts",
-      "animated/animated-beam/AnimatedBeam.tsx",
-      "animated/animated-beam/BeveledNode.tsx",
-      "animated/animated-beam/BeveledBeamShowcase.tsx",
-    ],
-    propDefs: [
-      { name: "variant", type: "select", default: "default", description: "Color theme variation", required: false, options: ["default", "monochrome", "neon"] },
-      { name: "pathWidth", type: "number", default: 1.5, description: "Stroke width of the path line", required: false, min: 0.5, max: 8, step: 0.5 },
-      { name: "pathOpacity", type: "number", default: 0.5, description: "Stroke opacity of static background line", required: false, min: 0.1, max: 1, step: 0.05 },
-      { name: "duration", type: "number", default: 3.5, description: "Duration in seconds of gradient travel sweep", required: false, min: 1, max: 10, step: 0.5 }
-    ],
-  },
+
   {
     name: "Pixel Melt",
     slug: "pixel-melt",

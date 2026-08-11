@@ -8,7 +8,6 @@ import {
   BreathingBackground,
   BrushedTitaniumButton,
   ButtonAlpha,
-  BeveledBeamShowcase,
   ChromeInput,
   ChromeSelect,
   CoverflowCarousel,
@@ -687,42 +686,7 @@ export function PresentationRenderer({
         </div>
       );
     }
-    case "animated-beam": {
-      const beamProps = {
-        variant: "default" as const,
-        pathWidth: 3.5,
-        pathOpacity: 0.9,
-        duration: 3.5,
-        ...liveProps,
-      };
 
-      const leftItems = [
-        { id: "database", icon: <IconDatabase size={20} className="text-red-500" />, beamStartColor: "#ef4444", beamStopColor: "#ea580c" },
-        { id: "nodejs", icon: <IconBrandNodejs size={20} className="text-emerald-500" />, beamStartColor: "#22c55e", beamStopColor: "#16a34a" },
-        { id: "python", icon: <IconBrandPython size={20} className="text-yellow-500" />, beamStartColor: "#eab308", beamStopColor: "#ca8a04" },
-      ];
-
-      const rightItems = [
-        { id: "nextjs", icon: <IconBrandNextjs size={20} className="text-white" />, beamStartColor: "#ffffff", beamStopColor: "#d4d4d8" },
-        { id: "docker", icon: <IconBrandDocker size={20} className="text-cyan-400" />, beamStartColor: "#06b6d4", beamStopColor: "#0284c7" },
-        { id: "github", icon: <IconBrandGithub size={20} className="text-purple-400" />, beamStartColor: "#a855f7", beamStopColor: "#9333ea" },
-      ];
-
-      return (
-        <div className="flex items-center justify-center w-full min-h-[350px]">
-          <BeveledBeamShowcase
-            variant={beamProps.variant}
-            centerIcon={<IconBrandReact size={32} className="text-cyan-400 animate-[spin_12s_linear_infinite]" />}
-            centerShape="circle"
-            leftItems={leftItems}
-            rightItems={rightItems}
-            pathWidth={beamProps.pathWidth}
-            pathOpacity={beamProps.pathOpacity}
-            duration={beamProps.duration}
-          />
-        </div>
-      );
-    }
     case "pixel-melt":
       return <><PixelMeltBackground /><FullscreenLabel title="Pixel Melt" subtitle="Move your cursor" /></>;
     case "breathing-grid":

@@ -14,7 +14,6 @@ export default async function EmbedComponentPage({
   const getScaleClass = (s: string, category?: string) => {
     if (s === "image-parallax") return "scale-[0.15]";
     if (s === "living-text") return "scale-[0.30]";
-    if (s === "animated-beam") return "scale-[0.42]";
     if (s === "coverflow-carousel") return "scale-[0.35]";
     if (s === "anisotropic-knob") return "scale-[0.65]";
     if (s === "dot-matrix") return "scale-[0.40]";
@@ -40,9 +39,7 @@ export default async function EmbedComponentPage({
   };
   const scaleClass = getScaleClass(slug, entry.category);
   const liveProps =
-    slug === "animated-beam"
-      ? { variant: "monochrome", pathWidth: 3.5, pathOpacity: 0.9 }
-      : slug === "dot-matrix"
+    slug === "dot-matrix"
       ? { animation: "rain", color: "#10b981", columns: 22 }
       : slug === "hero"
       ? { name: "ajinkya", iconVariant: "flower", iconPosition: "inline", introduction: "", hideFooter: true, hideNav: true }

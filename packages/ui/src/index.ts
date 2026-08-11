@@ -152,9 +152,6 @@ export { default as NavBar1 } from "./animated/NavBar1";
 export { BevelAlertDialog } from "./animated/BevelAlertDialog";
 export type { BevelAlertDialogProps } from "./animated/BevelAlertDialog";
 
-// Animated Beam & Beveled Node system
-export * from "./animated/animated-beam";
-
 // ForgeUI Landing
 export { ForgeUILanding } from "./animated/ForgeUILanding";
 export type { ForgeUILandingProps } from "./animated/ForgeUILanding";

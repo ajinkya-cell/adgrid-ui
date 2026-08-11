@@ -19,7 +19,6 @@ const UI = {
   LiquidGoldButton: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.LiquidGoldButton }))),
   GuillocheButton: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.GuillocheButton }))),
   ButtonAlpha: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.ButtonAlpha }))),
-  BeveledBeamShowcase: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.BeveledBeamShowcase }))),
   ChromeInput: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.ChromeInput }))),
   ChromeSelect: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.ChromeSelect }))),
   AnisotropicKnob: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.AnisotropicKnob }))),
@@ -97,28 +96,7 @@ export function MiniPreviewRenderer({ slug }: { slug: string }) {
           </Suspense>
         </div>
       );
-    case "animated-beam": {
-      const leftItems = [
-        { id: "db", icon: <IconDatabase size={12} className="text-red-500" />, beamStartColor: "#ef4444", beamStopColor: "#ea580c" },
-        { id: "node", icon: <IconBrandNodejs size={12} className="text-emerald-500" />, beamStartColor: "#22c55e", beamStopColor: "#16a34a" },
-      ];
-      const rightItems = [
-        { id: "next", icon: <IconBrandNextjs size={12} className="text-white" />, beamStartColor: "#ffffff", beamStopColor: "#d4d4d8" },
-        { id: "docker", icon: <IconBrandDocker size={12} className="text-cyan-400" />, beamStartColor: "#06b6d4", beamStopColor: "#0284c7" },
-      ];
-      return (
-        <div className="flex h-full w-full items-center justify-center scale-[0.6] origin-center p-2">
-          <Suspense fallback={null}>
-            <UI.BeveledBeamShowcase
-              centerIcon={<IconBrandReact size={18} className="text-cyan-400" />}
-              leftItems={leftItems}
-              rightItems={rightItems}
-              pathWidth={1}
-            />
-          </Suspense>
-        </div>
-      );
-    }
+
 
     // ── Primitives & Forms ───────────────────────────────────────────────
     case "chrome-input":
