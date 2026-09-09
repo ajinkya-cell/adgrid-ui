@@ -265,11 +265,9 @@ export function MiniPreviewRenderer({ slug }: { slug: string }) {
     case "spotlight-text":
       return (
         <div className="flex h-full w-full items-center justify-center p-4">
-          <div className="relative w-full max-w-[280px] bg-surface-charcoal border-y border-border-hairline rounded-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95),inset_0_0_0_1px_rgba(255,255,255,0.05),inset_0_1px_0_rgba(255,255,255,0.08)] transition-all duration-300 p-5">
-            <Suspense fallback={null}>
-              <UI.SpotlightText text="Antimetal" theme="light" fontSize="2.5rem" />
-            </Suspense>
-          </div>
+          <Suspense fallback={null}>
+            <UI.SpotlightText text="Antimetal" colorMode="default" fontSize="2.5rem" />
+          </Suspense>
         </div>
       );
     case "text-shuffle":

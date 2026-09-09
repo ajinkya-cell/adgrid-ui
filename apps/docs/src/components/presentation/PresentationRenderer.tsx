@@ -446,16 +446,13 @@ export function PresentationRenderer({
     case "spotlight-text": {
       const spotlightTextProps = {
         text: "Antimetal",
-        theme: "light" as const,
-        spotlightRadius: 120,
-        showBulb: true,
+        colorMode: "default" as const,
+        spotlightRadius: 140,
         ...liveProps,
       };
       return (
         <div className="flex items-center justify-center w-full min-h-[300px] p-6">
-          <div className="relative bg-surface-charcoal border-y border-border-hairline rounded-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95),inset_0_0_0_1px_rgba(255,255,255,0.05),inset_0_1px_0_rgba(255,255,255,0.08)] hover:shadow-[0_35px_70px_-10px_rgba(0,0,0,1),inset_0_0_0_1px_rgba(255,255,255,0.08),inset_0_1px_0_rgba(255,255,255,0.12)] transition-all duration-300 p-6">
-            <SpotlightText {...(spotlightTextProps as Parameters<typeof SpotlightText>[0])} />
-          </div>
+          <SpotlightText {...(spotlightTextProps as Parameters<typeof SpotlightText>[0])} />
         </div>
       );
     }

@@ -161,7 +161,7 @@ export const registry: RegistryEntry[] = [
     name: "Spotlight Text",
     slug: "spotlight-text",
     category: "animated",
-    description: "Debossed display text with a cursor-following golden spotlight clipped to glyph shapes. Auto-detects i/j ascender dots as glowing bulbs.",
+    description: "Debossed display text with a cursor-following spotlight clipped to glyph shapes and a minimal glowing bulb on the dot of 'i' and 'j'.",
     dependencies: [],
     packagePath: "animated/spotlight-text/SpotlightText.tsx",
     files: [
@@ -169,19 +169,18 @@ export const registry: RegistryEntry[] = [
       "animated/spotlight-text/SpotlightText.tsx",
       "animated/spotlight-text/types.ts",
       "animated/spotlight-text/themes.ts",
-      "animated/spotlight-text/hooks/useSpotlightCursor.ts",
+      "animated/spotlight-text/hooks/useSpotlightHover.ts",
     ],
     presentationStrategy: "center",
     variants: [
-      { name: "Light", props: { text: "Antimetal", theme: "light" } },
-      { name: "Dark", props: { text: "Antimetal", theme: "dark" } },
+      { name: "Default (Purple)", props: { text: "Antimetal", colorMode: "default" } },
+      { name: "Yellow Tone", props: { text: "Antimetal", colorMode: "yellow" } },
     ],
     propDefs: [
       { name: "text", type: "string", default: "Antimetal", description: "Text content to render", required: true },
-      { name: "theme", type: "select", default: "light", description: "Surface and glow palette", required: false, options: ["light", "dark"] },
-      { name: "spotlightRadius", type: "number", default: 120, description: "Spotlight radius in px", required: false, min: 60, max: 300, step: 10 },
+      { name: "colorMode", type: "select", default: "default", description: "Color illumination mode (default purple or yellow tone)", required: false, options: ["default", "yellow"] },
+      { name: "spotlightRadius", type: "number", default: 140, description: "Spotlight radius in px", required: false, min: 60, max: 300, step: 10 },
       { name: "fontWeight", type: "number", default: 800, description: "Font weight", required: false, min: 400, max: 900, step: 100 },
-      { name: "showBulb", type: "boolean", default: true, description: "Show glowing bulbs on i/j dots", required: false },
     ],
   },
   {

@@ -1,17 +1,21 @@
 import type { CSSProperties, ElementType } from "react";
 
-export type SpotlightTextTheme = "light" | "dark";
+export type SpotlightColorMode = "default" | "yellow";
+export type SpotlightTextTheme = SpotlightColorMode | "light" | "dark";
 
 export interface SpotlightGlowColors {
   core?: string;
   mid?: string;
   bulb?: string;
+  bloom?: string;
 }
 
 export interface SpotlightTextProps {
   /** Text to render */
   text: string;
-  /** Surface and deboss palette */
+  /** Color mode: "default" (purple) or "yellow" (warm gold) */
+  colorMode?: SpotlightColorMode;
+  /** Legacy alias for colorMode */
   theme?: SpotlightTextTheme;
   /** Spotlight radius in px */
   spotlightRadius?: number;
@@ -19,8 +23,6 @@ export interface SpotlightTextProps {
   fontSize?: string | number;
   fontWeight?: number;
   letterSpacing?: string;
-  /** Glowing ascender-dot bulbs on i/j characters */
-  showBulb?: boolean;
   /** Override theme glow colors */
   glowColors?: SpotlightGlowColors;
   /** Semantic HTML element */

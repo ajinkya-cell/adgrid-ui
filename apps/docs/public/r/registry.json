@@ -68,7 +68,7 @@
       "name": "spotlight-text",
       "type": "registry:ui",
       "title": "Spotlight Text",
-      "description": "Debossed display text with a cursor-following golden spotlight clipped to glyph shapes. Auto-detects i/j ascender dots as glowing bulbs.",
+      "description": "Debossed display text with a cursor-following spotlight clipped to glyph shapes and a minimal glowing bulb on the dot of 'i' and 'j'.",
       "files": [
         {
           "path": "components/ui/spotlight-text/index.ts",
@@ -87,7 +87,7 @@
           "type": "registry:ui"
         },
         {
-          "path": "components/ui/spotlight-text/hooks/useSpotlightCursor.ts",
+          "path": "components/ui/spotlight-text/hooks/useSpotlightHover.ts",
           "type": "registry:hook"
         }
       ]

@@ -8,12 +8,12 @@ import {
   useSpotlightHover,
 } from "./hooks/useSpotlightHover";
 import { SPOTLIGHT_THEMES } from "./themes";
-import type { SpotlightTextProps } from "./types";
+import type { SpotlightColorMode, SpotlightTextProps } from "./types";
 
-const DEFAULT_FONT_SIZE = "clamp(4rem, 15vw, 11.25rem)";
+const DEFAULT_FONT_SIZE = "clamp(3.5rem, 12vw, 9rem)";
 const BULB_CHARS = new Set(["i", "j"]);
-/** Sits on the ascender dot — tuned slightly above center of the glyph cap */
-const BULB_TOP = "0.16em";
+/** Center of the glyph tittle / ascender dot */
+const BULB_TOP = "0.145em";
 
 function resolveFontSize(fontSize: string | number | undefined): string {
   if (fontSize === undefined) return DEFAULT_FONT_SIZE;
@@ -23,19 +23,19 @@ function resolveFontSize(fontSize: string | number | undefined): string {
 function renderCharacters(
   text: string,
   options: {
-    showBulb: boolean;
     bulbColor: string;
+    bulbBloom: string;
     isActive: boolean;
     glowOnly?: boolean;
   }
 ): ReactNode[] {
-  const { showBulb, bulbColor, glowOnly = false } = options;
+  const { bulbColor, bulbBloom, isActive, glowOnly = false } = options;
   const chars: ReactNode[] = [];
 
   for (let index = 0; index < text.length; index++) {
     const char = text[index]!;
 
-    if (showBulb && BULB_CHARS.has(char)) {
+    if (BULB_CHARS.has(char)) {
       chars.push(
         <span key={`${char}-${index}`} className="relative inline-block">
           {!glowOnly && char}
@@ -44,16 +44,17 @@ function renderCharacters(
             <span
               aria-hidden
               data-bulb=""
-              className="pointer-events-none absolute left-1/2 rounded-full transition-opacity duration-200 ease-out"
+              className="pointer-events-none absolute left-1/2 rounded-full transition-all duration-300 ease-out"
               style={{
                 top: BULB_TOP,
-                width: "0.09em",
-                height: "0.09em",
-                minWidth: 12,
-                minHeight: 12,
+                width: "0.065em",
+                height: "0.065em",
+                minWidth: 4,
+                minHeight: 4,
                 transform: "translate(-50%, -50%)",
-                background: bulbColor,
-              opacity: 0,
+                background: isActive ? bulbColor : "rgba(255, 255, 255, 0.25)",
+                boxShadow: isActive ? bulbBloom : "none",
+                opacity: isActive ? 1 : 0.45,
               }}
             />
           )}
@@ -73,25 +74,28 @@ function renderCharacters(
 
 export function SpotlightText({
   text,
-  theme = "light",
-  spotlightRadius = 120,
+  colorMode = "default",
+  theme,
+  spotlightRadius = 140,
   fontSize,
   fontWeight = 800,
   letterSpacing = "-0.02em",
-  showBulb = true,
   glowColors,
   as: Component = "span",
   className,
   style,
 }: SpotlightTextProps) {
-  const tokens = SPOTLIGHT_THEMES[theme];
+  const activeColorMode: SpotlightColorMode =
+    colorMode || (theme === "yellow" ? "yellow" : "default");
+  const tokens = SPOTLIGHT_THEMES[activeColorMode] || SPOTLIGHT_THEMES.default;
   const resolvedFontSize = resolveFontSize(fontSize);
 
   const glowCore = glowColors?.core ?? tokens.glowCore;
   const glowMid = glowColors?.mid ?? tokens.glowMid;
   const bulbColor = glowColors?.bulb ?? tokens.bulb;
+  const bulbBloom = glowColors?.bloom ?? tokens.bulbBloom;
 
-  const hasBulbChars = showBulb && [...text].some((c) => BULB_CHARS.has(c));
+  const hasBulbChars = [...text].some((c) => BULB_CHARS.has(c));
 
   const { containerRef, textLayerRef, isHovered, reducedMotion, handlers } =
     useSpotlightHover();
@@ -103,7 +107,7 @@ export function SpotlightText({
     resolvedFontSize,
     fontWeight,
     letterSpacing,
-    showBulb,
+    activeColorMode,
   ]);
 
   const sharedTextStyle: CSSProperties = {
@@ -115,14 +119,9 @@ export function SpotlightText({
     whiteSpace: "pre",
   };
 
-  const containerStyle: CSSProperties = {
-    background: tokens.surface,
-    ...style,
-  };
-
   const charOptions = useMemo(
-    () => ({ showBulb, bulbColor, isActive }),
-    [showBulb, bulbColor, isActive]
+    () => ({ bulbColor, bulbBloom, isActive }),
+    [bulbColor, bulbBloom, isActive]
   );
 
   const baseCharacters = useMemo(
@@ -131,7 +130,7 @@ export function SpotlightText({
   );
 
   const glowCharacters = useMemo(
-    () => renderCharacters(text, { ...charOptions, glowOnly: true, showBulb: false }),
+    () => renderCharacters(text, { ...charOptions, glowOnly: true }),
     [text, charOptions]
   );
 
@@ -146,10 +145,10 @@ export function SpotlightText({
     <div
       ref={containerRef}
       className={cn(
-        "relative inline-flex items-center justify-center select-none px-8 py-10",
+        "relative inline-flex items-center justify-center select-none",
         className
       )}
-      style={containerStyle}
+      style={style}
       {...handlers}
     >
       <Component
@@ -157,7 +156,7 @@ export function SpotlightText({
         className="relative inline-block"
         style={sharedTextStyle}
       >
-        {/* Base: debossed idle text + bulb markers for measurement */}
+        {/* Base: debossed idle text + subtle bulb marker for measurement and resting state */}
         <span
           className="relative z-[1] block"
           style={{
@@ -182,14 +181,14 @@ export function SpotlightText({
               backgroundClip: "text",
               WebkitTextFillColor: "transparent",
               opacity: isActive ? 1 : 0,
-              transition: "opacity 800ms cubic-bezier(0.16, 1, 0.3, 1)",
+              transition: "opacity 600ms cubic-bezier(0.16, 1, 0.3, 1)",
             }}
           >
             {glowCharacters}
           </span>
         )}
 
-        {/* Reduced motion: static warm tint on glyphs only */}
+        {/* Reduced motion: static glow on glyphs */}
         {reducedMotion && hasBulbChars && (
           <span
             aria-hidden
