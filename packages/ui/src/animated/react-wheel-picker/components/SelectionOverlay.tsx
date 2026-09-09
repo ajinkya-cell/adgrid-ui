@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { cn } from "../../../lib/utils";
 
 interface SelectionOverlayProps {
-  variant: "glass" | "minimal";
+  variant?: "glass" | "minimal" | "void";
   itemHeight: number;
   visibleItems: number;
   className?: string;

@@ -8,7 +8,7 @@ export interface WheelPickerProps {
   value?: string;
   defaultValue?: string;
   onChange?: (value: string) => void;
-  variant?: "glass" | "minimal";
+  variant?: "glass" | "minimal" | "void";
   loop?: boolean;
   sound?: boolean;
   disabled?: boolean;

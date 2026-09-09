@@ -116,20 +116,20 @@ export function VoidButton({
     mouseY.set(e.clientY - rect.top);
   };
 
-  const maskTemplate = useMotionTemplate`radial-gradient(circle 80px at ${springX}px ${springY}px, black 30%, transparent 100%)`;
+  const maskTemplate = useMotionTemplate`radial-gradient(circle 75px at ${springX}px ${springY}px, black 30%, transparent 100%)`;
 
-  let baseStyleClass = "bg-[#07070a] border-neutral-900 text-white/70";
-  let activeGrad = activeGradientClass || "bg-gradient-to-r from-neutral-800 via-neutral-700 to-neutral-800";
-  let activeText = activeTextClass || "text-white font-bold";
-  let defaultShadow = "inset 0 3px 8px rgba(0,0,0,0.9), inset 0 -1px 2px rgba(255,255,255,0.03), 0 2px 4px rgba(0,0,0,0.4)";
-  let tappedShadow = "inset 0 8px 24px rgba(0,0,0,0.95), 0 1px 1px rgba(0,0,0,0.8)";
+  let baseStyleClass = "bg-[#0d0d11] border-white/[0.06] text-white/70";
+  let activeGrad = activeGradientClass || "bg-white/[0.08]";
+  let activeText = activeTextClass || "text-white font-medium";
+  let defaultShadow = "inset 0 1.5px 3px rgba(0,0,0,0.8), inset 0 -1px 2px rgba(255,255,255,0.02), 0 2px 4px rgba(0,0,0,0.4)";
+  let tappedShadow = "inset 0 6px 18px rgba(0,0,0,0.95), 0 1px 1px rgba(0,0,0,0.8)";
 
   if (variant === "classic-gold") {
-    activeGrad = activeGradientClass || "bg-gradient-to-r from-[#ffe066] via-[#f39c12] to-[#ffffff]";
-    activeText = activeTextClass || "text-black";
+    activeGrad = activeGradientClass || "bg-gradient-to-r from-amber-500/20 via-yellow-500/15 to-amber-500/20";
+    activeText = activeTextClass || "text-amber-200";
   } else if (variant === "ambient") {
-    activeGrad = activeGradientClass || "bg-gradient-to-r from-[#161619] via-[#2d2d35] to-[#161619]";
-    activeText = activeTextClass || "text-white/95";
+    activeGrad = activeGradientClass || "bg-white/[0.08]";
+    activeText = activeTextClass || "text-white";
   } else if (variant === "neon-edge") {
     activeGrad = "bg-transparent";
     activeText = "text-white/95";
@@ -161,7 +161,7 @@ export function VoidButton({
       }}
       transition={{ type: "spring", stiffness: 450, damping: 18 }}
       className={cn(
-        "relative w-full h-12 rounded-xl border font-syncopate text-[9px] uppercase tracking-[0.2em] font-bold cursor-pointer select-none overflow-hidden outline-none transition-colors duration-300 flex items-center justify-center",
+        "relative w-full h-12 rounded-xl border font-['Poppins',sans-serif] text-[9px] uppercase tracking-[0.2em] font-bold cursor-pointer select-none overflow-hidden outline-none transition-colors duration-300 flex items-center justify-center",
         baseStyleClass,
         className
       )}
@@ -273,7 +273,7 @@ export function LaserVaultPassword({ className = "" }: { className?: string }) {
       animate={lockedState === "error" ? { x: [0, -10, 10, -10, 10, 0] } : {}}
       transition={{ duration: 0.4 }}
       className={cn(
-        "relative w-full max-w-[340px] p-6 rounded-3xl border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 flex flex-col gap-6",
+        "relative w-full max-w-[340px] p-6 rounded-3xl border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 flex flex-col gap-6 font-['Poppins',sans-serif]",
         className
       )}
       style={{
@@ -281,6 +281,8 @@ export function LaserVaultPassword({ className = "" }: { className?: string }) {
         boxShadow: "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.4), 0 30px 80px rgba(0,0,0,0.6)"
       }}
     >
+      {/* Poppins font loader */}
+      <style dangerouslySetInnerHTML={{ __html: `@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&display=swap');` }} />
       
       {/* Absolute overlay red alert warning lasers */}
       <AnimatePresence>
@@ -330,7 +332,7 @@ export function LaserVaultPassword({ className = "" }: { className?: string }) {
       {/* Passcode Display Box Slot */}
       {lockedState !== "unlocked" && (
         <div className="w-full bg-[#050505] border border-white/[0.05] rounded-2xl p-4 flex flex-col gap-1.5 shadow-[inset_0_2.5px_5px_rgba(0,0,0,0.85)] relative overflow-hidden">
-          <span className="font-syncopate text-[7px] uppercase tracking-[0.2em] text-neutral-600">PASSCODE</span>
+          <span className="font-['Poppins',sans-serif] text-[8px] uppercase tracking-[0.2em] text-neutral-500 font-semibold">PASSCODE</span>
           
           {/* Laser Etch Letter Display */}
           <div className="relative h-10 flex items-center gap-2 pl-1 select-none">
@@ -358,7 +360,7 @@ export function LaserVaultPassword({ className = "" }: { className?: string }) {
                       times: [0, 0.25, 1],
                       ease: "easeOut",
                     }}
-                    className="font-share-mono text-2xl font-black w-4 flex items-center justify-center relative"
+                    className="font-['Poppins',sans-serif] text-2xl font-bold w-4 flex items-center justify-center relative"
                   >
                     {/* Morphs letter into passcode dot bullet after 500ms */}
                     <motion.span
@@ -420,9 +422,9 @@ export function LaserVaultPassword({ className = "" }: { className?: string }) {
               key={num}
               variant="ambient"
               onClick={() => handleKeyPress(num)}
-              activeGradientClass="bg-gradient-to-r from-neutral-200 via-white to-neutral-200"
-              activeTextClass="text-black font-black"
-              className="h-12 border-white/[0.04] bg-[#090909]/40 hover:border-white/[0.08] shadow-[inset_0_1.5px_3px_rgba(0,0,0,0.6)] rounded-xl font-syncopate text-[10px] tracking-[0.2em] font-bold"
+              activeGradientClass="bg-gradient-to-b from-white/[0.12] via-white/[0.05] to-transparent"
+              activeTextClass="text-white font-semibold drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]"
+              className="h-12 border border-white/[0.06] bg-[#0c0c0f]/80 hover:border-white/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.04),0_2px_4px_rgba(0,0,0,0.5)] rounded-xl font-['Poppins',sans-serif] text-[13px] tracking-[0.1em] font-medium text-neutral-300 transition-colors duration-200"
             >
               {num}
             </VoidButton>
@@ -432,9 +434,9 @@ export function LaserVaultPassword({ className = "" }: { className?: string }) {
           <VoidButton
             variant="ambient"
             onClick={handleClear}
-            activeGradientClass="bg-gradient-to-r from-[#ffd369] via-[#f39c12] to-[#ffffff]"
-            activeTextClass="text-black font-black"
-            className="h-12 border-white/[0.04] bg-[#090909]/40 hover:border-white/[0.08] shadow-[inset_0_1.5px_3px_rgba(0,0,0,0.6)] rounded-xl font-syncopate text-[8px] tracking-[0.2em] font-bold"
+            activeGradientClass="bg-gradient-to-b from-amber-500/[0.18] via-amber-500/[0.06] to-transparent"
+            activeTextClass="text-amber-300 font-semibold drop-shadow-[0_0_8px_rgba(245,158,11,0.4)]"
+            className="h-12 border border-amber-500/20 bg-[#0c0c0f]/80 hover:border-amber-500/40 shadow-[inset_0_1px_1px_rgba(245,158,11,0.06),0_2px_4px_rgba(0,0,0,0.5)] rounded-xl font-['Poppins',sans-serif] text-[10px] tracking-[0.1em] font-semibold text-amber-400/80 transition-colors duration-200"
           >
             Clear
           </VoidButton>
@@ -443,9 +445,9 @@ export function LaserVaultPassword({ className = "" }: { className?: string }) {
           <VoidButton
             variant="ambient"
             onClick={() => handleKeyPress("0")}
-            activeGradientClass="bg-gradient-to-r from-neutral-200 via-white to-neutral-200"
-            activeTextClass="text-black font-black"
-            className="h-12 border-white/[0.04] bg-[#090909]/40 hover:border-white/[0.08] shadow-[inset_0_1.5px_3px_rgba(0,0,0,0.6)] rounded-xl font-syncopate text-[10px] tracking-[0.2em] font-bold"
+            activeGradientClass="bg-gradient-to-b from-white/[0.12] via-white/[0.05] to-transparent"
+            activeTextClass="text-white font-semibold drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]"
+            className="h-12 border border-white/[0.06] bg-[#0c0c0f]/80 hover:border-white/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.04),0_2px_4px_rgba(0,0,0,0.5)] rounded-xl font-['Poppins',sans-serif] text-[13px] tracking-[0.1em] font-medium text-neutral-300 transition-colors duration-200"
           >
             0
           </VoidButton>
@@ -455,9 +457,9 @@ export function LaserVaultPassword({ className = "" }: { className?: string }) {
             variant="ambient"
             onClick={handleSubmit}
             disabled={passcode.length === 0}
-            activeGradientClass="bg-gradient-to-r from-[#86e3ce] to-[#d6e6f2]"
-            activeTextClass="text-black font-black"
-            className="h-12 border-white/[0.04] bg-[#090909]/40 hover:border-white/[0.08] shadow-[inset_0_1.5px_3px_rgba(0,0,0,0.6)] rounded-xl font-syncopate text-[8px] tracking-[0.2em] font-bold disabled:opacity-25"
+            activeGradientClass="bg-gradient-to-b from-emerald-500/[0.20] via-teal-500/[0.06] to-transparent"
+            activeTextClass="text-emerald-300 font-semibold drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]"
+            className="h-12 border border-emerald-500/20 bg-[#0c0c0f]/80 hover:border-emerald-500/40 shadow-[inset_0_1px_1px_rgba(16,185,129,0.06),0_2px_4px_rgba(0,0,0,0.5)] rounded-xl font-['Poppins',sans-serif] text-[10px] tracking-[0.1em] font-semibold text-emerald-400/80 disabled:opacity-25 transition-colors duration-200"
           >
             <div className="flex items-center justify-center gap-1">
               <Lock className="w-3.5 h-3.5" />
@@ -469,3 +471,6 @@ export function LaserVaultPassword({ className = "" }: { className?: string }) {
     </motion.div>
   );
 }
+
+export const Vault = LaserVaultPassword;
+

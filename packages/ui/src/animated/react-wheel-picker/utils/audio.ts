@@ -146,7 +146,7 @@ export function closeAudio(): void {
 }
 
 export function setClickVolume(volume: number): void {
-  if (audioContext) {
-    audioContext.destination.gain.value = Math.max(0, Math.min(1, volume));
+  if (audioContext && (audioContext.destination as any).gain) {
+    (audioContext.destination as any).gain.value = Math.max(0, Math.min(1, volume));
   }
 }

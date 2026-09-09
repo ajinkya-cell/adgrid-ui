@@ -18,7 +18,7 @@ The registry follows a **CLI-driven workflow**. Developers use commands like `ad
 2. **Buttons**: Luxury-focused interactive elements such as `Void Button` (a black button with gold gradient reveals) and `Brushed Titanium Button` (with metallic textures and spotlight effects). These buttons combine animated transitions with tactile feedback.
 3. **Backgrounds**: Full-screen visuals like `PixelMelt` (a glowing pixel grid reacting to cursor movement) and `Lumina Wave` (an aurora-like WebGL background). These elements often use presentation strategies like "fullscreen" to dominate the viewport.
 4. **Primitives**: Core UI building blocks like `Chrome Input` (a dark input field with glow effects) and `Anisotropic Knob` (a rotary dial with realistic metal textures). These components emphasize polish and interactivity.
-5. **Widgets**: Functional utilities like `Mechanical Timer` (a tactile timer with Web Audio ticks) and `Laser Vault Password` (a secure keypad with tactile clicks). These widgets blend aesthetics with practical use cases.
+5. **Widgets**: Functional utilities like `Mechanical Timer` (a tactile timer with Web Audio ticks) and `Vault` (a secure keypad with tactile clicks). These widgets blend aesthetics with practical use cases.
 
 Each component is built with **TypeScript** and adheres to strict prop definitions, ensuring type safety and reducing runtime errors. For instance, the `Dot Matrix` component allows customization via props like `animation mode`, color, and grid dimensions, all defined in `registry/index.ts`.
 

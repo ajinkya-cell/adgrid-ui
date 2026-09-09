@@ -231,33 +231,6 @@
       ]
     },
     {
-      "name": "animated-beam",
-      "type": "registry:ui",
-      "title": "Animated Beam",
-      "description": "An animated, coordinate-tracking connection beam connecting premium recessed beveled nodes in a modular hub-integration grid.",
-      "dependencies": [
-        "framer-motion"
-      ],
-      "files": [
-        {
-          "path": "components/ui/animated-beam/index.ts",
-          "type": "registry:lib"
-        },
-        {
-          "path": "components/ui/animated-beam/AnimatedBeam.tsx",
-          "type": "registry:ui"
-        },
-        {
-          "path": "components/ui/animated-beam/BeveledNode.tsx",
-          "type": "registry:ui"
-        },
-        {
-          "path": "components/ui/animated-beam/BeveledBeamShowcase.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "pixel-melt",
       "type": "registry:ui",
       "title": "Pixel Melt",
@@ -362,7 +335,7 @@
     {
       "name": "laser-vault-password",
       "type": "registry:ui",
-      "title": "Laser Vault Password",
+      "title": "Vault",
       "description": "Passcode vault keypad with laser-etch cooling characters, dynamic cursor sweeps, tactile clicks, container rattles, and friction-metal creak alarms.",
       "dependencies": [
         "framer-motion",
@@ -1177,6 +1150,21 @@
       "files": [
         {
           "path": "components/ui/BentoGrid.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "meter",
+      "type": "registry:ui",
+      "title": "Meter",
+      "description": "Minimalist precision sentiment meter & gauge with automatic mount sweep calibration, dynamic sentiment colors, and real-time synchronized numerical counter.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/Meter.tsx",
           "type": "registry:ui"
         }
       ]

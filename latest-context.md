@@ -223,7 +223,7 @@ packages/ui/src/
 | **buttons** | 4 | Void Button, Brushed Titanium Button, Liquid Gold Button, Guilloche Button |
 | **backgrounds** | 5 | Pixel Melt, Breathing Grid, Floating Embers, Spotlight Grid, Lumina Wave |
 | **primitives** | 1 | Anisotropic Knob |
-| **widgets** | 2 | Mechanical Timer, Laser Vault Password |
+| **widgets** | 2 | Mechanical Timer, Vault |
 | **charts** | **0** | **(category defined but empty)** |
 
 ### Components with Features
@@ -351,7 +351,7 @@ Full present mode system: `PresentationLayout.tsx`, `PresentationProvider.tsx`, 
 | Metallic Form | metallic-form |
 | Pookie Form | pookie-form |
 | Mechanical Timer | mechanical-timer |
-| Laser Vault Password | laser-vault-password |
+| Vault | laser-vault-password |
 | Scroll Progress | scroll-progress |
 | Now Playing Card | now-playing-card |
 | Wheel Picker | wheel-picker |

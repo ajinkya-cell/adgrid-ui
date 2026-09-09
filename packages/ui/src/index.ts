@@ -30,7 +30,7 @@ export type { ChromeSelectProps, ChromeSelectOption } from "./animated/ChromeSel
 export { AnisotropicKnob } from "./animated/AnisotropicKnob";
 export type { AnisotropicKnobProps } from "./animated/AnisotropicKnob";
 
-export { LaserVaultPassword } from "./animated/LaserVaultPassword";
+export { LaserVaultPassword, Vault } from "./animated/LaserVaultPassword";
 export { FlickeringGrid } from "./animated/FlickeringGrid";
 export type { FlickeringGridProps } from "./animated/FlickeringGrid";
 export { FlickeringGridPlayground } from "./animated/FlickeringGridPlayground";

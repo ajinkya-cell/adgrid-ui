@@ -79,28 +79,25 @@ import {
 import type { RegistryEntry } from "@/registry";
 import { usePresentationStore } from "@/lib/presentation/store";
 import {
-  IconBrandReact,
-  IconBrandNodejs,
-  IconBrandPython,
-  IconBrandDocker,
-  IconDatabase,
   IconGitBranch,
-  IconShieldCheck,
-  IconTerminal2,
-  IconBrandNextjs,
-  IconBrandTailwind,
-  IconBrandSvelte,
-  IconBrandGolang,
-  IconBrandRust,
-  IconBolt,
   IconBrandGithub,
   IconBrandGitlab,
+  IconShieldCheck,
   IconBrandChrome,
   IconEye,
+  IconBrandNextjs,
+  IconBrandRust,
+  IconBrandDocker,
+  IconBrandTailwind,
+  IconBrandGolang,
+  IconDatabase,
+  IconBrandSvelte,
+  IconTerminal2,
+  IconBolt,
 } from "@tabler/icons-react";
 
-const imageOne = "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900&q=80";
 const imageTwo = "/utils/image-parallax.png";
+
 
 const weaponWheelDevItems = [
   {

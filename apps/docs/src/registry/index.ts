@@ -394,7 +394,7 @@ export const registry: RegistryEntry[] = [
   },
 
   {
-    name: "Laser Vault Password",
+    name: "Vault",
     slug: "laser-vault-password",
     category: "widgets",
     description: "Passcode vault keypad with laser-etch cooling characters, dynamic cursor sweeps, tactile clicks, container rattles, and friction-metal creak alarms.",
