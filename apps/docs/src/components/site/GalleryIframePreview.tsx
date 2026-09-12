@@ -6,9 +6,13 @@ import { useInView } from "framer-motion";
 export function GalleryIframePreview({
   slug,
   title,
+  mode = "gallery",
+  className = "",
 }: {
   slug: string;
   title: string;
+  mode?: string;
+  className?: string;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, margin: "200px 0px" });
@@ -17,7 +21,7 @@ export function GalleryIframePreview({
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-full min-h-[170px] bg-[#070707] flex items-center justify-center overflow-hidden"
+      className={`relative w-full h-full min-h-[170px] bg-[#070707] flex items-center justify-center overflow-hidden ${className}`}
     >
       {/* Loading Skeleton Pulse */}
       {!loaded && (
@@ -29,7 +33,7 @@ export function GalleryIframePreview({
       {/* Lazy Loaded Iframe */}
       {isInView && (
         <iframe
-          src={`/embed/${slug}`}
+          src={`/embed/${slug}${mode ? `?mode=${mode}` : ""}`}
           title={`Live preview of ${title}`}
           onLoad={() => setLoaded(true)}
           className={`w-full h-full min-h-[170px] border-0 pointer-events-none transition-opacity duration-700 ${

@@ -400,9 +400,12 @@ function ScrollPathDrawDemo(props: any) {
 export function PresentationRenderer({
   entry,
   liveProps = {},
+  hideIntro = false,
 }: {
   entry: RegistryEntry;
   liveProps?: Record<string, unknown>;
+  hideIntro?: boolean;
+  mode?: "gallery" | "present";
 }) {
   const playTactileSounds = usePresentationStore((state) => state.settings.playTactileSounds !== false);
   const [framework, setFramework] = useState("Next.js");
@@ -682,22 +685,22 @@ export function PresentationRenderer({
     }
 
     case "pixel-melt":
-      return <><PixelMeltBackground /><FullscreenLabel title="Pixel Melt" subtitle="Move your cursor" /></>;
+      return <><PixelMeltBackground />{!hideIntro && <FullscreenLabel title="Pixel Melt" subtitle="Move your cursor" />}</>;
     case "breathing-grid":
-      return <><BreathingGrid /><FullscreenLabel title="Breathing Grid" subtitle="Cursor-responsive field" /></>;
+      return <><BreathingGrid />{!hideIntro && <FullscreenLabel title="Breathing Grid" subtitle="Cursor-responsive field" />}</>;
     case "breathing-background":
       return (
         <>
           <BreathingBackground {...(liveProps as any)} />
-          <FullscreenLabel title="Breathing Background" subtitle="Ambient Pattern Field" />
+          {!hideIntro && <FullscreenLabel title="Breathing Background" subtitle="Ambient Pattern Field" />}
         </>
       );
     case "floating-embers":
-      return <><FloatingEmbers /><FullscreenLabel title="Floating Embers" subtitle="Scroll and cursor drift" /></>;
+      return <><FloatingEmbers />{!hideIntro && <FullscreenLabel title="Floating Embers" subtitle="Scroll and cursor drift" />}</>;
     case "spotlight-grid":
-      return <SpotlightGrid><FullscreenLabel title="Spotlight Grid" subtitle="Move through the field" /></SpotlightGrid>;
+      return <SpotlightGrid>{!hideIntro && <FullscreenLabel title="Spotlight Grid" subtitle="Move through the field" />}</SpotlightGrid>;
     case "lumina-wave":
-      return <><LuminaWave /><FullscreenLabel title="Lumina Wave" subtitle="Interactive aurora surface" /></>;
+      return <><LuminaWave />{!hideIntro && <FullscreenLabel title="Lumina Wave" subtitle="Interactive aurora surface" />}</>;
     case "matrix-rain": {
       const rainProps = {
         speed: 1.0,

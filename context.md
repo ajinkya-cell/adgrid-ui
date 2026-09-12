@@ -1,44 +1,71 @@
-# Project Context
+# Project Context: `adgrid-ui` Monorepo
 
-## Overview
-The `adgrid-ui` project is a sophisticated frontend framework designed to deliver high-fidelity, animated UI components built with React and modern JavaScript. At its core lies a **component registry system**, a centralized hub that manages component metadata, dependencies, and rendering strategies. This registry, implemented in `apps/docs/src/registry/index.ts`, acts as a blueprint for component discovery, usage, and integration. Each component is meticulously documented with details like its name, slug (a URL-friendly identifier), category, description, dependencies, and file paths. This structured approach ensures consistency across the codebase and simplifies maintenance for developers.
+> **Monorepo**: `adgrid-ui-monorepo`  
+> **Package Manager**: `pnpm@10.10.0` (with Workspaces)  
+> **Build Orchestration**: Turborepo  
+> **Node Engine**: `>=18`  
 
-### Registry System: Architecture and Workflow
-The registry system is a critical component of `adgrid-ui`, enabling seamless organization and documentation of 393+ UI elements. Each entry in the registry includes:
-- **Metadata**: Key fields such as category (e.g., "animated," "backgrounds"), dependencies (e.g., `framer-motion`, `matter-js`), and a `packagePath` that maps to its source location.
-- **Rendering Strategy**: Components specify how they should display (e.g., "fullscreen" for background elements like `PixelMelt`, "cover" for hero sections).
-- **Prop Definitions**: Detailed schema for customizable properties (e.g., text size, color, interaction modes), enabling a "Props Tweaker" panel for real-time configuration.
-- **Variant Support**: Components can have multiple variants (e.g., different configurations for buttons or animations), stored as structured objects with specific prop overrides.
+---
 
-The registry follows a **CLI-driven workflow**. Developers use commands like `add` to register new components, which automatically populates the registry with metadata. The CLI also handles dependency installation (`install-deps`), ensuring all required libraries (e.g., Web Audio API, GSAP) are available. This integration streamlines development by reducing manual setup. Additionally, the registry syncs with the documentation site (`apps/docs`), auto-generating component listings and usage guides based on registry entries.
+## 1. Monorepo Overview
 
-### Component Categories and Implementation Patterns
-`adgrid-ui` categorizes components into five core types: **Animated**, **Buttons**, **Backgrounds**, **Primitives**, and **Widgets**. Each category reflects a distinct design focus:
-1. **Animated**: Motion-driven elements like `Coverflow Carousel`, `Gravity Card Stack`, and `Scroll Progress`. These components leverage `framer-motion` for fluid animations, `matter-js` for physics simulations (e.g., falling cards), and Web Audio API for interactive sound effects. For example, `Gravity Card Stack` uses cloth-style physics to simulate falling graphics, while `Coverflow` employs 3D perspective transforms for an immersive carousel.
-2. **Buttons**: Luxury-focused interactive elements such as `Void Button` (a black button with gold gradient reveals) and `Brushed Titanium Button` (with metallic textures and spotlight effects). These buttons combine animated transitions with tactile feedback.
-3. **Backgrounds**: Full-screen visuals like `PixelMelt` (a glowing pixel grid reacting to cursor movement) and `Lumina Wave` (an aurora-like WebGL background). These elements often use presentation strategies like "fullscreen" to dominate the viewport.
-4. **Primitives**: Core UI building blocks like `Chrome Input` (a dark input field with glow effects) and `Anisotropic Knob` (a rotary dial with realistic metal textures). These components emphasize polish and interactivity.
-5. **Widgets**: Functional utilities like `Mechanical Timer` (a tactile timer with Web Audio ticks) and `Vault` (a secure keypad with tactile clicks). These widgets blend aesthetics with practical use cases.
+`adgrid-ui` (also distributed as `void-ui`) is a motion-focused, dark-first UI ecosystem. It provides luxury skeuomorphic components, physics simulations (Matter.js), GPU shader backgrounds (WebGL), tactile audio feedback, and an interactive studio platform.
 
-Each component is built with **TypeScript** and adheres to strict prop definitions, ensuring type safety and reducing runtime errors. For instance, the `Dot Matrix` component allows customization via props like `animation mode`, color, and grid dimensions, all defined in `registry/index.ts`.
+The project is architected as a modular monorepo divided into dedicated packages and applications.
 
-### CLI Integration and Developer Experience
-The `packages/cli/src` directory houses command-line tools that streamline component management:
-- `init`: Sets up a new registry session, initializing core files and dependencies.
-- `add`: Registers a new component by prompting for metadata (name, category, dependencies). This command generates a registry entry and links it to the component’s source files.
-- `list`: Queries the registry to display available components, filtering by category or search term.
-- `install-deps`: Automatically installs dependencies listed in a component’s registry entry, ensuring all required libraries are available.
+---
 
-This CLI-centric approach minimizes boilerplate and enforces consistency. Developers can add a component in seconds, with the system handling validation and dependency resolution.
+## 2. Dedicated Section Contexts
 
-### Advanced Features and Future Enhancements
-`adgrid-ui` pushes the boundaries of UI animation and interaction:
-- **Physics Simulations**: Components like `Gravity Card Stack` use `matter-js` to create realistic motion, while `Mechanical Timer` generates authentic ticking sounds via Web Audio.
-- **Shader and WebGL Effects**: `Lumina Wave` and `Spotlight Grid` employ custom shaders for dynamic visuals, integrating WebGL for performance.
-- **API Integration**: `Now Playing Card` fetches real-time data from the Last.fm API, demonstrating how components can interact with external services.
-- **Customizable Presentations**: The `presentationStrategy` property allows components to adapt to layouts (e.g., "cover" for hero sections).
+Each section of the repository maintains its own exhaustive, specialized `context.md` file:
 
-Upcoming enhancements include full registry documentation (e.g., variant use cases for each component) and installation guides for advanced features like `torch`-dependent components. These additions will further democratize access to `adgrid-ui`, making it easier for developers to adopt and extend.
+| Section / Subsystem | Path | Description & Deep-Dive |
+| :--- | :--- | :--- |
+| **UI Component Library** | [`packages/ui/context.md`](file:///C:/Users/ajink/OneDrive/Desktop/personal%20-%20coding%20-%20ventures/adgrid-ui/adgrid-ui/packages/ui/context.md) | `@adgrid-ui/ui` library — 42 exported components across Animated, Luxury Buttons, Backgrounds, Primitives, and Widgets. Covers physics, WebGL, build pipeline, and styling conventions. |
+| **Docs & Showcase App** | [`apps/docs/context.md`](file:///C:/Users/ajink/OneDrive/Desktop/personal%20-%20coding%20-%20ventures/adgrid-ui/adgrid-ui/apps/docs/context.md) | Next.js 16 App Router application — Home landing, Gallery (`/gallery`), Presentation Studio (`/present/[category]/[slug]`), standalone sandboxes (`/matrix-demo`, `/hero-demo`), and distribution endpoints. |
+| **Component Registry & Runtime** | [`apps/docs/src/registry/context.md`](file:///C:/Users/ajink/OneDrive/Desktop/personal%20-%20coding%20-%20ventures/adgrid-ui/adgrid-ui/apps/docs/src/registry/context.md) | Central single source of truth (`registry/index.ts`) for component schemas, prop definitions (`PropDefinition`), dynamic Props Tweaker controls, and shadcn CLI schema generation. |
+| **Void UI CLI** | [`packages/cli/context.md`](file:///C:/Users/ajink/OneDrive/Desktop/personal%20-%20coding%20-%20ventures/adgrid-ui/adgrid-ui/packages/cli/context.md) | `void-ui` CLI package — `add`, `list`, and `init` commands for downloading component source code into user codebases with automated dependency installation. |
 
-### Conclusion
-`adgrid-ui` is a meticulously designed system where the registry acts as both a catalog and a development tool. Its component-driven architecture, coupled with CLI automation and advanced animation techniques, makes it a powerful framework for building modern, interactive UIs. By prioritizing structure and extensibility, `adgrid-ui` sets a high bar for component-based design in React ecosystems. As the project evolves, deeper documentation and tooling will likely expand its accessibility and utility, cementing its role as a go-to solution for animated, high-quality UI components.
+---
+
+## 3. Workspace Layout & Package Graph
+
+```
+adgrid-ui/
+├── package.json
+├── pnpm-workspace.yaml
+├── turbo.json
+├── packages/
+│   ├── ui/                    # @adgrid-ui/ui (Core component library)
+│   ├── cli/                   # void-ui (Developer CLI tool)
+│   ├── typescript-config/     # Shared tsconfig base, nextjs, react-library
+│   ├── eslint-config/         # Shared ESLint configurations
+│   └── public/                # Shared static assets
+└── apps/
+    └── docs/                  # Next.js showcase, gallery, presentation studio & API
+```
+
+### Dependency Flow
+* `apps/docs` depends on `packages/ui` (via pnpm workspace reference `workspace:*`).
+* `packages/cli` interacts with `apps/docs` distribution API (`/r/[name].json` & `/r/registry.json`) to fetch and copy component source files.
+* Both `apps/docs` and `packages/ui` share TypeScript and ESLint standards from `@repo/typescript-config` and `@repo/eslint-config`.
+
+---
+
+## 4. Root Monorepo Scripts
+
+| Command | Action |
+| :--- | :--- |
+| `pnpm dev` | Starts development servers across apps and packages via Turborepo. |
+| `pnpm build` | Compiles `@adgrid-ui/ui` with `tsup`, builds the CLI, and runs `next build` on docs. |
+| `pnpm lint` | Runs ESLint across all workspaces. |
+| `pnpm build:registry` | Runs the registry pre-compilation script in `apps/docs`. |
+| `pnpm release` | Builds monorepo and publishes `void-ui` package to npm. |
+
+---
+
+## 5. Development Guidelines
+
+1. **New Components**: Implement under `packages/ui/src/animated/` or `packages/ui/src/backgrounds/`, export in `packages/ui/src/index.ts`, and register in `apps/docs/src/registry/index.ts`.
+2. **Component Customization**: Always provide typed `propDefs` in the registry entry to automatically enable live editing in the `/present` studio's Props Tweaker panel.
+3. **Distribution**: Keep dependencies in `registry/index.ts` synchronized with any new external packages used by the component.

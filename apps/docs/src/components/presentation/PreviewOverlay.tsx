@@ -4,13 +4,6 @@ import React, { useEffect, useState, Suspense } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import type { RegistryEntry } from "@/registry";
-import {
-  IconDatabase,
-  IconBrandNodejs,
-  IconBrandNextjs,
-  IconBrandDocker,
-  IconBrandReact,
-} from "@tabler/icons-react";
 
 // Lazy-load UI components from package
 const UI = {

@@ -12,18 +12,19 @@
   --color-surface-container: #201f1f;
   --color-surface-container-high: #2a2a2a;
   
-  --font-display: var(--font-space-grotesk);
-  --font-body: var(--font-inter);
+  --font-sans: var(--font-poppins, "Poppins", sans-serif);
+  --font-body: var(--font-poppins, "Poppins", sans-serif);
+  --font-display: var(--font-poppins, "Poppins", sans-serif);
   --font-mono: var(--font-jetbrains-mono);
   
   --font-syncopate: "Syncopate", sans-serif;
   --font-jura: "Jura", sans-serif;
   --font-share-mono: "Share Tech Mono", monospace;
-  --font-plus-jakarta: "Plus Jakarta Sans", sans-serif;
-  --font-dm-sans: "DM Sans", sans-serif;
+  --font-plus-jakarta: var(--font-poppins, "Poppins", sans-serif);
+  --font-dm-sans: var(--font-poppins, "Poppins", sans-serif);
   --font-syne: "Syne", sans-serif;
   --font-cinzel: "Cinzel", serif;
-  --font-poppins: "Poppins", sans-serif;
+  --font-poppins: var(--font-poppins, "Poppins", sans-serif);
 }
 
 * { box-sizing: border-box; }
@@ -33,9 +34,15 @@ html { color-scheme: dark; }
 body {
   background: var(--color-background);
   color: #e5e2e1;
-  font-family: var(--font-body);
+  font-family: var(--font-poppins, 'Poppins', sans-serif);
   -webkit-font-smoothing: antialiased;
   position: relative;
+}
+
+.font-poppins,
+.font-sans,
+.font-body {
+  font-family: var(--font-poppins, 'Poppins', sans-serif) !important;
 }
 
 main {
