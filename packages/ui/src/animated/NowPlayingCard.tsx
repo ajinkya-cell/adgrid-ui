@@ -26,12 +26,19 @@ export function NowPlayingCard({ song }: { song: Song }) {
       className="group relative block h-80 w-full max-w-[450px] overflow-hidden rounded-3xl bg-gradient-to-br from-zinc-900 to-black text-white shadow-2xl transition-transform duration-300"
     >
       <style dangerouslySetInnerHTML={{__html: `
+        @import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
         @keyframes vinyl-spin {
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
         }
         .vinyl-spinning {
           animation: vinyl-spin 6s linear infinite;
+        }
+        .now-playing-outfit {
+          font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif !important;
+        }
+        .now-playing-mono {
+          font-family: 'Geist Mono', monospace !important;
         }
       `}} />
 
@@ -48,21 +55,21 @@ export function NowPlayingCard({ song }: { song: Song }) {
         {/* Top */}
         <div className="flex items-center gap-2 text-xs font-semibold tracking-wider">
           <FaSpotify className={`h-8 w-8 ${song.isPlaying ? "text-green-400" : "text-white/60"}`} />
-          <span className={`${song.isPlaying ? "text-green-400" : "text-white/60"} text-2xl`} style={{ fontFamily: '"Outfit", sans-serif' }}>
+          <span className={`${song.isPlaying ? "text-green-400" : "text-white/60"} text-2xl font-semibold now-playing-outfit`} style={{ fontFamily: "'Outfit', sans-serif" }}>
             {song.isPlaying ? "Now Playing" : "Last Played"}
           </span>
         </div>
 
         {/* Info */}
         <div className="mt-3 flex-1">
-          <h3 className="text-xl leading-tight line-clamp-2" style={{ fontFamily: '"Outfit", sans-serif' }}>
+          <h3 className="text-xl leading-tight line-clamp-2 now-playing-outfit" style={{ fontFamily: "'Outfit', sans-serif" }}>
             I am listening to{" "}
             <span className="font-semibold">{song.title}</span>
           </h3>
-          <p className="mt-2 uppercase text-base text-white/70" style={{ fontFamily: '"Geist Mono", monospace' }}>
+          <p className="mt-2 uppercase text-base text-white/70 now-playing-mono" style={{ fontFamily: "'Geist Mono', monospace" }}>
             {song.artist}
           </p>
-          <p className="mt-1 text-sm text-white/50" style={{ fontFamily: '"Geist Mono", monospace' }}>
+          <p className="mt-1 text-sm text-white/50 now-playing-mono" style={{ fontFamily: "'Geist Mono', monospace" }}>
             {song.album}
           </p>
         </div>

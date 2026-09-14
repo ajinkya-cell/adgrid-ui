@@ -37,7 +37,11 @@ export default async function EmbedComponentPage({
       if (s === "cards" || s === "simple-card" || s === "sticker-card") return "scale-[0.65] sm:scale-[0.75]";
       if (s === "laser-vault-password") return "scale-[0.65] sm:scale-[0.75]";
       if (s === "morphing-nav") return "scale-[0.75] sm:scale-[0.85]";
-      if (s === "now-playing-card") return "scale-[0.75] sm:scale-[0.85]";
+      if (s === "now-playing-card") return "scale-[0.85] sm:scale-100";
+      if (s === "github-heatmap") return "scale-[0.80] sm:scale-[0.92] lg:scale-100";
+      if (s === "breathing-scale-card") return "scale-[0.85] sm:scale-100";
+      if (s === "meter") return "scale-[0.85] sm:scale-100";
+      if (s === "dashed-marquee") return "scale-[0.85] sm:scale-100";
       if (s === "wheel-picker" || s === "weapon-wheel") return "scale-[0.65] sm:scale-[0.75]";
       if (s === "hero" || s === "premium-hero") return "scale-[0.35] sm:scale-[0.42]";
       if (s === "infinite-scroll") return "scale-[0.45] sm:scale-[0.55]";
@@ -86,6 +90,16 @@ export default async function EmbedComponentPage({
     return (
       <div className="w-screen h-screen bg-[#070707] text-white overflow-hidden relative select-none">
         <PresentationRenderer entry={entry} liveProps={liveProps} hideIntro={hideIntro} mode={isGallery ? "gallery" : "present"} />
+      </div>
+    );
+  }
+
+  if (isGallery && slug === "coverflow-carousel") {
+    return (
+      <div className="w-screen h-screen bg-[#070707] text-white overflow-hidden relative select-none flex items-center justify-center">
+        <div className="w-[860px] h-[480px] shrink-0 transform scale-[0.78] sm:scale-[0.88] lg:scale-[0.92] origin-center flex items-center justify-center overflow-hidden pointer-events-none select-none">
+          <PresentationRenderer entry={entry} liveProps={liveProps} hideIntro={hideIntro} mode="gallery" />
+        </div>
       </div>
     );
   }

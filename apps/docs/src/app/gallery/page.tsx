@@ -25,59 +25,82 @@ const CATEGORY_ACCENT: Record<ComponentCategory, string> = {
   charts: "#fb923c",
 };
 
+// ── Curated slugs list for /gallery ─────────────────────────────────
+const CURATED_GALLERY_SLUGS = [
+  "coverflow-carousel",
+  "laser-vault-password",
+  "github-heatmap",
+  "spotlight-text",
+  "void-button",
+  "matrix-rain",
+  "globe",
+  "brushed-titanium-button",
+  "text-shuffle",
+  "breathing-scale-card",
+  "breathing-grid",
+  "meter",
+  "now-playing-card",
+  "liquid-gold-button",
+  "guilloche-button",
+  "timeline",
+  "floating-embers",
+  "dashed-marquee",
+  "button-alpha",
+];
+
+const curatedRegistry = CURATED_GALLERY_SLUGS
+  .map((slug) => registry.find((item) => item.slug === slug))
+  .filter((item): item is (typeof registry)[number] => Boolean(item));
+
 // ── Helpers to determine layout role & scattered spans ─────────────
 function isAmbientCanvas(slug: string, category: ComponentCategory) {
   return (
     category === "backgrounds" ||
-    slug === "pixel-melt" ||
     slug === "breathing-grid" ||
-    slug === "breathing-background" ||
     slug === "floating-embers" ||
-    slug === "spotlight-grid" ||
-    slug === "lumina-wave" ||
-    slug === "matrix-rain" ||
-    slug === "flickering-grid-playground" ||
-    slug === "dot-pattern-playground"
+    slug === "matrix-rain"
   );
 }
 
 function getCardSpan(slug: string, category: ComponentCategory) {
-  // Wide: Big atmospheric canvases & wide horizontal showcases
+  // Feature Showcase / Biggest Cards (8-col width + 2-row height = 464px)
   if (
-    slug === "pixel-melt" ||
-    slug === "spotlight-grid" ||
-    slug === "floating-embers" ||
-    slug === "lumina-wave" ||
-    slug === "matrix-rain" ||
-    slug === "breathing-grid" ||
     slug === "coverflow-carousel" ||
-    slug === "infinite-scroll" ||
-    slug === "image-parallax" ||
-    slug === "living-text" ||
-    slug === "bento-grid" ||
-    slug === "globe" ||
-    slug === "hero" ||
-    slug === "premium-hero"
+    slug === "github-heatmap" ||
+    slug === "breathing-scale-card" ||
+    slug === "now-playing-card"
   ) {
-    return "col-span-12 sm:col-span-6 lg:col-span-6 min-h-[300px]";
+    return "col-span-12 sm:col-span-6 lg:col-span-8 row-span-2";
   }
 
-  // Compact: Buttons & modular micro-controls
+  // Large Panoramic Canvases & Big Showcases (6-col width + 2-row height = 464px)
   if (
-    category === "buttons" ||
-    slug === "anisotropic-knob" ||
-    slug === "switch" ||
-    slug === "stepper" ||
-    slug === "otp-input" ||
-    slug === "tooltip" ||
-    slug === "animated-icons-1" ||
-    slug === "scroll-progress"
+    slug === "meter" ||
+    slug === "globe" ||
+    slug === "timeline" ||
+    slug === "matrix-rain" ||
+    slug === "floating-embers" ||
+    slug === "breathing-grid"
   ) {
-    return "col-span-12 sm:col-span-6 lg:col-span-3 min-h-[220px]";
+    return "col-span-12 sm:col-span-6 lg:col-span-6 row-span-2";
   }
 
-  // Medium: Standard interactive cards & widgets
-  return "col-span-12 sm:col-span-6 lg:col-span-4 min-h-[260px]";
+  // Wide 1-row marquee (8-col width + 1-row height = 220px)
+  if (slug === "dashed-marquee") {
+    return "col-span-12 sm:col-span-6 lg:col-span-8 row-span-1";
+  }
+
+  // Standard 2-row Interactive Cards & Widgets (4-col width + 2-row height = 464px)
+  if (slug === "laser-vault-password") {
+    return "col-span-12 sm:col-span-6 lg:col-span-4 row-span-2";
+  }
+
+  // Buttons & Standard 1-row items (4-col width + 1-row height = 220px)
+  if (category === "buttons") {
+    return "col-span-12 sm:col-span-6 lg:col-span-4 row-span-1";
+  }
+
+  return "col-span-12 sm:col-span-6 lg:col-span-4 row-span-1";
 }
 
 // ── Card Component ────────────────────────────────────────────────
@@ -116,8 +139,8 @@ function GalleryCard({
 
         {ambient ? (
           /* ── Ambient Background Canvas: Edge-to-edge, zero intro, just name ── */
-          <div className="relative w-full h-full min-h-[260px] flex-1 overflow-hidden">
-            <GalleryIframePreview slug={item.slug} title={item.name} mode="gallery" className="min-h-[260px]" />
+          <div className="relative w-full h-full flex-1 overflow-hidden">
+            <GalleryIframePreview slug={item.slug} title={item.name} mode="gallery" className="w-full h-full" />
 
             {/* Minimalist floating title badge */}
             <div className="absolute bottom-3.5 left-3.5 z-20 pointer-events-none flex items-center gap-2">
@@ -138,7 +161,7 @@ function GalleryCard({
           /* ── Interactive Component: Full-div presentation without nested socket ── */
           <div className="relative w-full h-full flex-1 flex flex-col justify-between">
             {/* Component preview occupying the full div */}
-            <div className="relative w-full flex-1 min-h-[170px] flex items-center justify-center overflow-hidden">
+            <div className="relative w-full flex-1 flex items-center justify-center overflow-hidden">
               <GalleryIframePreview slug={item.slug} title={item.name} mode="gallery" />
             </div>
 
@@ -192,7 +215,7 @@ function CompletedComponentsBadge() {
         <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
       </span>
       <span className="tracking-wide">
-        <AnimatingComponentsCount value={registry.length} /> components completed,{" "}
+        <AnimatingComponentsCount value={curatedRegistry.length} /> components completed,{" "}
         <span className="text-emerald-400 font-medium">
           <motion.span
             animate={{ opacity: [0.4, 1, 0.4] }}
@@ -212,7 +235,7 @@ export default function GalleryPage() {
   const [activeCategory, setActiveCategory] = useState<ComponentCategory | "all">("all");
   const [search, setSearch] = useState("");
 
-  const visible = registry.filter((item) => {
+  const visible = curatedRegistry.filter((item) => {
     const matchesCat = activeCategory === "all" || item.category === activeCategory;
     const q = search.toLowerCase();
     const matchesSearch =
@@ -222,6 +245,10 @@ export default function GalleryPage() {
       item.category.includes(q);
     return matchesCat && matchesSearch;
   });
+
+  const availableCategories = CATEGORIES.filter(
+    (cat) => cat.id === "all" || curatedRegistry.some((item) => item.category === cat.id)
+  );
 
   return (
     <div className="min-h-screen bg-[#090808] font-poppins" style={{ fontFamily: "'Poppins', sans-serif" }}>
@@ -271,12 +298,12 @@ export default function GalleryPage() {
           
           {/* Category Tabs */}
           <div className="flex items-center gap-1.5 skeuo-inner-socket rounded-xl p-1.5 overflow-x-auto scrollbar-none shrink-0 relative">
-            {CATEGORIES.map((cat) => {
+            {availableCategories.map((cat) => {
               const active = activeCategory === cat.id;
               const catCount =
                 cat.id === "all"
-                  ? registry.length
-                  : registry.filter((i) => i.category === cat.id).length;
+                  ? curatedRegistry.length
+                  : curatedRegistry.filter((i) => i.category === cat.id).length;
               const accent = cat.id === "all" ? "#f59e0b" : CATEGORY_ACCENT[cat.id];
               return (
                 <button
@@ -364,7 +391,7 @@ export default function GalleryPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
-              className="grid grid-cols-1 sm:grid-cols-6 lg:grid-cols-12 gap-6"
+              className="grid grid-cols-1 sm:grid-cols-6 lg:grid-cols-12 auto-rows-[220px] grid-flow-dense gap-6"
             >
               {visible.map((item, i) => (
                 <GalleryCard
