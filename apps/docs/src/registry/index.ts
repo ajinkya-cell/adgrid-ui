@@ -225,9 +225,9 @@ export const registry: RegistryEntry[] = [
     packagePath: "animated/VoidButton.tsx",
     files: ["animated/VoidButton.tsx"],
     propDefs: [
-      { name: "variant", type: "select", default: "ambient", description: "Button style variant", required: false, options: ["ambient", "neon-edge", "metallic-sheen", "glassmorphic"] },
+      { name: "variant", type: "select", default: "default", description: "Button style variant", required: false, options: ["default", "ambient", "neon-edge", "metallic-sheen", "glassmorphic"] },
       { name: "style", type: "select", default: "default", description: "Corner radius style of the button (pill renders rounded-full)", required: false, options: ["default", "pill"] },
-      { name: "children", type: "string", default: "Void Button", description: "Button text label", required: false }
+      { name: "children", type: "string", default: "Default", description: "Button text label", required: false }
     ],
   },
   {

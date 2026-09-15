@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import {
   AnisotropicKnob,
@@ -397,10 +397,36 @@ function ScrollPathDrawDemo(props: any) {
   );
 }
 
+function AnisotropicKnobGalleryDemo(props: Record<string, unknown>) {
+  const [val, setVal] = useState(20);
+
+  useEffect(() => {
+    let animId: number;
+    let startTime: number | null = null;
+    const duration = 5000; // 5-second smooth oscillation cycle
+
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = (timestamp - startTime) % duration;
+      // Oscillate smoothly using sine wave between 15 and 85
+      const progress = (Math.sin((elapsed / duration) * Math.PI * 2 - Math.PI / 2) + 1) / 2;
+      const currentVal = Math.round(15 + progress * 70);
+      setVal(currentVal);
+      animId = requestAnimationFrame(animate);
+    };
+
+    animId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animId);
+  }, []);
+
+  return <AnisotropicKnob size={132} sound={false} value={val} label="VOLUME" {...props} />;
+}
+
 export function PresentationRenderer({
   entry,
   liveProps = {},
   hideIntro = false,
+  mode = "present",
 }: {
   entry: RegistryEntry;
   liveProps?: Record<string, unknown>;
@@ -619,9 +645,9 @@ export function PresentationRenderer({
     // ── Buttons category ───────────────────────────────────────────────────
     case "void-button": {
       const voidProps = {
-        variant: "ambient" as const,
+        variant: "default" as const,
         style: "default" as const,
-        children: "Void Button",
+        children: "Default",
         ...liveProps,
       };
       return (
@@ -732,6 +758,9 @@ export function PresentationRenderer({
     case "chrome-select":
       return <ChromeSelect className="w-[320px]" options={[{ label: "Obsidian", value: "obsidian" }, { label: "Titanium", value: "titanium" }, { label: "Carbon", value: "carbon" }]} />;
     case "anisotropic-knob":
+      if (mode === "gallery") {
+        return <AnisotropicKnobGalleryDemo size={132} {...liveProps} />;
+      }
       return <AnisotropicKnob size={132} sound={playTactileSounds} {...liveProps} />;
     case "laser-vault-password":
       return <LaserVaultPassword />;
@@ -906,7 +935,7 @@ export function PresentationRenderer({
       );
     case "simple-card":
       return (
-        <div className="flex items-center justify-center w-full min-h-[400px]">
+        <div className="flex items-center justify-center w-full h-full min-h-[360px]">
           <SimpleCard
             title="Working Knowledge"
             description="Practical skills and insights gained through hands-on experience that drive real-world problem solving."

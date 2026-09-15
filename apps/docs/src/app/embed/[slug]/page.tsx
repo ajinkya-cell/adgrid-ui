@@ -7,10 +7,10 @@ export default async function EmbedComponentPage({
   searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams?: Promise<{ mode?: string; hideIntro?: string }>;
+  searchParams?: Promise<{ mode?: string; hideIntro?: string; [key: string]: string | undefined }>;
 }) {
   const { slug } = await params;
-  const search = searchParams ? await searchParams : {};
+  const search = (searchParams ? await searchParams : {}) as Record<string, string | undefined>;
   const isGallery = search?.mode === "gallery";
   const hideIntro = isGallery || search?.hideIntro === "true";
 
@@ -30,14 +30,16 @@ export default async function EmbedComponentPage({
       if (s === "living-text") return "scale-[0.85] sm:scale-100";
       if (s === "spotlight-text") return "scale-[0.9] sm:scale-100";
       if (s === "text-shuffle") return "scale-[0.9] sm:scale-100";
-      if (s === "anisotropic-knob") return "scale-[0.95] sm:scale-100";
+      if (s === "anisotropic-knob") return "scale-100 sm:scale-[1.05]";
       if (s === "coverflow-carousel") return "scale-[0.60] sm:scale-[0.75]";
       if (s === "image-parallax") return "scale-[0.55] sm:scale-[0.65]";
       if (s === "cards-two") return "scale-[0.65] sm:scale-[0.80]";
-      if (s === "cards" || s === "simple-card" || s === "sticker-card") return "scale-[0.65] sm:scale-[0.75]";
+      if (s === "simple-card") return "scale-[0.95] sm:scale-100";
+      if (s === "cards" || s === "sticker-card") return "scale-[0.65] sm:scale-[0.75]";
       if (s === "laser-vault-password") return "scale-[0.65] sm:scale-[0.75]";
       if (s === "morphing-nav") return "scale-[0.75] sm:scale-[0.85]";
       if (s === "now-playing-card") return "scale-[0.85] sm:scale-100";
+      if (s === "dot-matrix") return "scale-[0.85] sm:scale-[0.95]";
       if (s === "github-heatmap") return "scale-[0.80] sm:scale-[0.92] lg:scale-100";
       if (s === "breathing-scale-card") return "scale-[0.85] sm:scale-100";
       if (s === "meter") return "scale-[0.85] sm:scale-100";
@@ -77,7 +79,13 @@ export default async function EmbedComponentPage({
   const scaleClass = getScaleClass(slug, entry.category);
   const liveProps =
     slug === "dot-matrix"
-      ? { animation: "rain", color: "#10b981", columns: 22 }
+      ? {
+          animation: (search?.animation as any) || "ripple",
+          rows: Number(search?.rows) || 20,
+          columns: Number(search?.cols || search?.columns) || 20,
+          glow: search?.glow !== "false",
+          color: (search?.color as string) || "#e7e5df",
+        }
       : slug === "hero"
       ? { name: "ajinkya", iconVariant: "flower", iconPosition: "inline", introduction: "", hideFooter: true, hideNav: true }
       : slug === "premium-hero"
