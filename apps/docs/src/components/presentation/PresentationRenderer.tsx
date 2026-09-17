@@ -65,7 +65,6 @@ import {
   Tooltip,
   Stepper,
   Globe,
-  Globe2,
   BentoGrid,
   BentoGridItem,
   Meter,
@@ -1099,12 +1098,6 @@ export function PresentationRenderer({
       return <StepperDemo />;
     case "globe":
       return <Globe />;
-    case "globe-2":
-      return (
-        <div className="w-[380px] h-[380px] sm:w-[500px] sm:h-[500px] flex items-center justify-center">
-          <Globe2 {...liveProps} />
-        </div>
-      );
     case "meter":
       return (
         <div className="w-full min-h-[400px] flex items-center justify-center p-6 bg-transparent">
