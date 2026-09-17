@@ -1,4 +1,4 @@
-# Marquee2 Variations & Logo Title Toggle Design Specification
+# Marquee2 Variations & Hover Title Toggle Design Specification (Revised)
 
 **Date:** 2026-09-18  
 **Status:** Approved  
@@ -8,123 +8,110 @@
 
 ## 1. Overview
 
-The `Marquee2` (`marquee-2`) component in Void UI / Adgrid UI renders dynamic floating brand icons (`devicons-react`) along parametric SVG paths using `performance.now()` and `requestAnimationFrame`.
+The `Marquee2` (`marquee-2`) component renders dynamic floating brand icons (`devicons-react`) along SVG motion paths.
 
-Currently, `Marquee2` only provides open path options: `"wave"` and `"arch"`. Additionally, brand labels/names are only displayed on mouse hover within an absolute-positioned tooltip.
-
-This update introduces:
-1. **New Motion Path Variations**:
-   - `"circle"`: A closed circular orbit centered at $(720, 225)$ with radius $R=170\text{px}$.
-   - `"infinity"`: A smooth $C^1$-continuous figure-8 lemniscate curve crossing through $(720, 225)$.
-2. **Logo Title Toggle (`showTitle?: boolean`)**:
-   - A toggle prop allowing users to display brand title labels permanently below each logo or keep them as hover-only tooltips.
+Based on feedback:
+1. Closed orbit shapes (`circle` and `infinity`) were removed due to aesthetic clutter on wide viewports.
+2. The primary `wave` motion path is refined into a balanced, symmetrical sinusoidal flow with matching entrance/exit tangents and ample vertical clearance.
+3. Added complementary banner-optimized curves: `valley` (inverted arch / smile curve) and `double-wave` (gentle harmonic ripple).
+4. Refactored the title prop into `showTitleOnHover` (boolean, default: `true`). When enabled, brand titles appear elegantly on hover; when disabled, icons remain clean without hover tooltips.
 
 ---
 
-## 2. Component Specifications
+## 2. Component Interface & Paths (`packages/ui/src/animated/Marquee2.tsx`)
 
-### 2.1 Component Interface (`packages/ui/src/animated/Marquee2.tsx`)
+### 2.1 Types & Props
 
 ```typescript
-export type Marquee2Variant = "wave" | "arch" | "circle" | "infinity";
+export type Marquee2Variant = "wave" | "arch" | "valley" | "double-wave";
 
 export interface Marquee2Props {
   className?: string;
   speed?: number;
   pauseOnHover?: boolean;
   variant?: Marquee2Variant;
-  showTitle?: boolean;
+  showTitleOnHover?: boolean;
+  showTitle?: boolean; // alias for convenience & backwards compatibility
 }
 ```
 
-### 2.2 SVG Motion Paths
+### 2.2 SVG Paths (`viewBox="0 0 1440 450"`)
 
-ViewBox: `0 0 1440 450` (center at $x=720, y=225$).
+- **`wave`**: A balanced, symmetrical S-curve centered at $y=225$ with peak at $y\approx 110$ and trough at $y\approx 340$:
+  ```svg
+  M -100 225 C 180 80, 440 80, 720 225 C 1000 370, 1260 370, 1540 225
+  ```
+- **`arch`**: A symmetrical dome curve rising to $y\approx 100$:
+  ```svg
+  M -100 400 C 320 0, 1120 0, 1540 400
+  ```
+- **`valley`**: An inverted smile curve dipping smoothly to $y\approx 350$:
+  ```svg
+  M -100 50 C 320 450, 1120 450, 1540 50
+  ```
+- **`double-wave`**: A smooth two-cycle harmonic wave with matching tangents at all inflections and endpoints:
+  ```svg
+  M -100 225 C 0 125, 210 125, 310 225 C 410 325, 620 325, 720 225 C 820 125, 1030 125, 1130 225 C 1230 325, 1440 325, 1540 225
+  ```
 
-- **`wave`**:
-  `"M -100 240 C 250 80, 550 380, 850 200 S 1300 60, 1550 260"`
-- **`arch`**:
-  `"M -100 480 C 200 40, 1240 40, 1540 480"`
-- **`circle`**:
-  `"M 720 55 A 170 170 0 1 1 720 395 A 170 170 0 1 1 720 55 Z"`
-  - Center $(720, 225)$, radius $170\text{px}$, circumference $\approx 1068\text{px}$.
-  - Seamless loop with equidistant spacing ($\approx 67\text{px}$) across all 16 brand icons.
-- **`infinity`**:
-  `"M 720 225 C 860 100, 1140 100, 1140 225 C 1140 350, 860 350, 720 225 C 580 100, 300 100, 300 225 C 300 350, 580 350, 720 225 Z"`
-  - Symmetrical two-lobe lemniscate with matching incoming/outgoing tangent vectors at the $(720, 225)$ crossing point for smooth velocity and zero jerkiness.
-
-### 2.3 Logo Title Tag Display
+### 2.3 Hover Title Tooltip
 
 ```tsx
 <div className="relative flex flex-col items-center justify-center p-2 group-hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-all">
   <IconComp size={48} />
-  <span
-    className={cn(
-      "px-2 py-0.5 rounded bg-neutral-900/90 border border-white/10 text-[10px] font-mono text-white/80 whitespace-nowrap shadow-lg transition-all duration-200",
-      showTitle
-        ? "mt-1.5 opacity-100"
-        : "absolute -bottom-8 opacity-0 group-hover:opacity-100 pointer-events-none"
-    )}
-  >
-    {item.name}
-  </span>
+  {isTitleEnabled && (
+    <span className="absolute -bottom-8 px-2.5 py-1 rounded-md bg-neutral-900/90 border border-white/10 text-xs font-medium text-white/90 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-xl backdrop-blur-sm z-40">
+      {item.name}
+    </span>
+  )}
 </div>
 ```
 
-- When `showTitle = true`: Text label renders right beneath the icon as a clear badge.
-- When `showTitle = false`: Preserves existing tooltip behavior (absolute positioned, appears only on hover).
-
 ---
 
-## 3. Monorepo & Registry Integration
+## 3. Registry Definition (`apps/docs/src/registry/index.ts`)
 
-### 3.1 Registry Configuration (`apps/docs/src/registry/index.ts`)
-
-Update `marquee-2` `propDefs`:
 ```typescript
-{
-  name: "variant",
-  type: "select",
-  default: "wave",
-  description: "Curved motion path style",
-  options: ["wave", "arch", "circle", "infinity"],
-  required: false,
-},
-{
-  name: "showTitle",
-  type: "boolean",
-  default: false,
-  description: "Always display brand title label below each logo",
-  required: false,
-},
-{
-  name: "speed",
-  type: "number",
-  default: 1,
-  description: "Animation speed multiplier",
-  required: false,
-  min: 0.2,
-  max: 5,
-  step: 0.1,
-},
-{
-  name: "pauseOnHover",
-  type: "boolean",
-  default: true,
-  description: "Pause marquee sliding on mouse hover",
-  required: false,
-},
+propDefs: [
+  {
+    name: "variant",
+    type: "select",
+    default: "wave",
+    description: "Curved motion path style",
+    options: ["wave", "arch", "valley", "double-wave"],
+    required: false,
+  },
+  {
+    name: "showTitleOnHover",
+    type: "boolean",
+    default: true,
+    description: "Display brand title badge on mouse hover",
+    required: false,
+  },
+  {
+    name: "speed",
+    type: "number",
+    default: 1,
+    description: "Animation speed multiplier",
+    required: false,
+    min: 0.2,
+    max: 5,
+    step: 0.1,
+  },
+  {
+    name: "pauseOnHover",
+    type: "boolean",
+    default: true,
+    description: "Pause marquee sliding on mouse hover",
+    required: false,
+  },
+],
 ```
 
-### 3.2 Presentation Studio & Precompiled Artifacts
-
-- Presentation studio (`apps/docs/src/components/presentation/PresentationRenderer.tsx`) already spreads `liveProps` directly onto `<Marquee2 />`.
-- Precompile registry outputs using `pnpm build:registry` to update `apps/docs/public/r/marquee-2.json` and `apps/docs/public/r/registry.json`.
-
 ---
 
-## 4. Verification Plan
+## 4. Verification
 
-1. **Typecheck & Lint**: Verify TypeScript compiles without errors across `@adgrid-ui/ui` and `apps/docs`.
-2. **Registry Generation**: Run `turbo build:registry` and ensure JSON schemas build cleanly.
-3. **Interactive Studio Verification**: Test switching `variant` across `"wave"`, `"arch"`, `"circle"`, and `"infinity"` and toggling `showTitle` in the presentation studio tweaker.
+1. Compile `@adgrid-ui/ui` via `tsup`.
+2. Build docs registry via `turbo build:registry`.
+3. Verify Next.js build passes with no errors.
