@@ -9,10 +9,6 @@ export interface ImageParallaxProps {
   src: string;
   /** Alt text */
   alt: string;
-  /** Container width — any CSS value (default: "100%") */
-  width?: string | number;
-  /** Container height — any CSS value (default: 420) */
-  height?: string | number;
   /** How many px the image travels on full mouse sweep */
   depth?: number;
   /** Yaw/Pitch 3D tilt factor in degrees */
@@ -30,8 +26,6 @@ export interface ImageParallaxProps {
 export function ImageParallax({
   src,
   alt,
-  width = "100%",
-  height = 420,
   depth = 40,
   tiltAmount = 5,
   overlayColor = "rgba(255,255,255,0.04)",
@@ -89,9 +83,7 @@ export function ImageParallax({
   // Scroll mode removed
 
   const containerStyle: React.CSSProperties = {
-    width,
-    height: aspectRatio ? undefined : height,
-    aspectRatio: aspectRatio ? `${aspectRatio}` : undefined,
+    aspectRatio: aspectRatio ? `${aspectRatio}` : "16/9",
     position: "relative",
     overflow: "hidden",
     borderRadius: "1.25rem",
@@ -99,10 +91,10 @@ export function ImageParallax({
   };
 
   return (
-    <div style={{ perspective: "1200px", width }}>
+    <div className="w-full" style={{ perspective: "1200px" }}>
       <motion.div
         ref={wrapRef}
-        className={`group relative overflow-hidden ${className}`}
+        className={`group relative overflow-hidden w-full ${className}`}
         style={{
           ...containerStyle,
           rotateX,

@@ -3,7 +3,7 @@
 @source "../../../../packages/ui/src/**/*.tsx";
 
 @theme {
-  --color-background: #141313;
+  --color-background: #050505;
   --color-surface-charcoal: #0A0A0A;
   --color-pure-black: #000000;
   --color-border-hairline: #262626;
@@ -25,6 +25,7 @@
   --font-syne: "Syne", sans-serif;
   --font-cinzel: "Cinzel", serif;
   --font-poppins: var(--font-poppins, "Poppins", sans-serif);
+  --font-eb-garamond: var(--font-eb-garamond), "EB Garamond", serif;
 }
 
 * { box-sizing: border-box; }

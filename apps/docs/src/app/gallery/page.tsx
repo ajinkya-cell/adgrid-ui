@@ -39,7 +39,6 @@ const CURATED_GALLERY_SLUGS = [
   "guilloche-button",
   "timeline",
   "floating-embers",
-  "dashed-marquee",
   "button-alpha",
 ];
 
@@ -83,11 +82,6 @@ function getCardSpan(slug: string, category: ComponentCategory) {
     slug === "breathing-grid"
   ) {
     return "col-span-12 sm:col-span-6 lg:col-span-6 row-span-2";
-  }
-
-  // Wide 1-row marquee (8-col width + 1-row height = 220px)
-  if (slug === "dashed-marquee") {
-    return "col-span-12 sm:col-span-6 lg:col-span-8 row-span-1";
   }
 
   // Standard 2-row Interactive Cards & Widgets (4-col width + 2-row height = 464px)
@@ -218,7 +212,7 @@ function GalleryCard({
 // ── Main Page ─────────────────────────────────────────────────────
 export default function GalleryPage() {
   return (
-    <div className="min-h-screen bg-[#090808] font-poppins" style={{ fontFamily: "'Poppins', sans-serif" }}>
+    <div className="min-h-screen bg-[#050505] font-poppins" style={{ fontFamily: "'Poppins', sans-serif" }}>
       {/* Explicit Poppins Font Injection for absolute browser reliability */}
       <style dangerouslySetInnerHTML={{ __html: `
         @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&display=swap');
@@ -235,12 +229,12 @@ export default function GalleryPage() {
           className="absolute inset-0 opacity-5"
           style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px)", backgroundSize: "20px 20px" }}
         />
-        <div className="max-w-[1600px] mx-auto px-6 pt-12 pb-8 relative z-10">
+        <div className="max-w-[1600px] mx-auto px-6 pt-24 sm:pt-28 pb-8 relative z-10">
           <h1
             className="font-poppins text-4xl md:text-5xl font-bold tracking-tight text-white leading-tight"
             style={{ fontFamily: "'Poppins', sans-serif" }}
           >
-            Component <span className="text-white/30 font-medium">Registry</span>
+            Component <span className="text-white/30 font-medium">Gallery</span>
           </h1>
         </div>
       </div>

@@ -12,7 +12,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
   return (
     <LayoutGroup id="site-shell">
       {!isIsolated && <Navbar />}
-      <div className={`${isIsolated ? "" : "pt-16"} min-h-screen flex flex-col`}>
+      <div className="min-h-screen flex flex-col">
         {isIsolated ? children : <PageTransition>{children}</PageTransition>}
       </div>
     </LayoutGroup>

@@ -217,6 +217,10 @@ export type { StepperProps, StepItem } from "./animated/Stepper";
 export { Globe } from "./animated/Globe";
 export type { GlobeProps } from "./animated/Globe";
 
+// WebGL 3D Globe Component (Three.js / R3F)
+export { Globe2 } from "./animated/Globe2";
+export type { Globe2Props } from "./animated/Globe2";
+
 // 3D Skeuomorphic BentoGrid Component
 export { BentoGrid, BentoGridItem } from "./animated/BentoGrid";
 export type { BentoGridProps, BentoGridItemProps, BentoIconType } from "./animated/BentoGrid";

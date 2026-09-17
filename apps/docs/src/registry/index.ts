@@ -90,18 +90,6 @@ export const registry: RegistryEntry[] = [
     presentationStrategy: "center",
     propDefs: [
       {
-        name: "src",
-        type: "select",
-        default: "/utils/image-parallax.png",
-        description: "Image source URL asset",
-        required: false,
-        options: [
-          "/utils/image-parallax.png",
-          "/utils/image-parallax-2.png",
-          "/utils/image-parallax-3.jpg",
-        ]
-      },
-      {
         name: "depth",
         type: "number",
         default: 10,
@@ -121,25 +109,7 @@ export const registry: RegistryEntry[] = [
         max: 20,
         step: 1,
       },
-      {
-        name: "width",
-        type: "select",
-        default: "100%",
-        description: "Container width layout",
-        required: false,
-        options: ["100%", "300px", "400px", "500px", "600px"]
-      },
-      {
-        name: "height",
-        type: "number",
-        default: 420,
-        description: "Container height in pixels",
-        required: false,
-        min: 200,
-        max: 600,
-        step: 10,
-      }
-    ]
+    ],
   },
   {
     name: "Living Text",
@@ -208,6 +178,7 @@ export const registry: RegistryEntry[] = [
     description: "A hardware-accelerated 3D coverflow carousel with continuous modular perspective transforms and comprehensive gesture tracking.",
     dependencies: ["framer-motion"],
     packagePath: "animated/coverflow/CoverflowCarousel.tsx",
+    presentationStrategy: "fullscreen",
     files: [
       "animated/coverflow/CoverflowCarousel.tsx",
       "animated/coverflow/CoverflowCard.tsx",
@@ -1036,6 +1007,67 @@ export const registry: RegistryEntry[] = [
     packagePath: "animated/Globe.tsx",
     files: ["animated/Globe.tsx"],
     presentationStrategy: "center",
+  },
+  {
+    name: "Globe 2",
+    slug: "globe-2",
+    category: "animated",
+    description: "A photorealistic 3D WebGL Earth globe powered by Three.js and React Three Fiber with all-around daytime satellite colors, 4K mountain bump relief, nocturnal city lights, dual-sided cinematic illumination, and a 3D celestial atmospheric glow.",
+    dependencies: ["three", "@react-three/fiber", "@react-three/drei"],
+    packagePath: "animated/Globe2.tsx",
+    files: ["animated/Globe2.tsx"],
+    presentationStrategy: "center",
+    propDefs: [
+      {
+        name: "mode",
+        type: "select",
+        default: "realistic",
+        description: "Visual theme style",
+        required: false,
+        options: ["realistic", "monochrome", "midnight"],
+      },
+      {
+        name: "bumpScale",
+        type: "number",
+        default: 0.07,
+        description: "Surface mountain bump relief scale",
+        required: false,
+        min: 0.01,
+        max: 0.2,
+        step: 0.01,
+      },
+      {
+        name: "showLights",
+        type: "boolean",
+        default: true,
+        description: "Show nighttime city lights on dark hemisphere",
+        required: false,
+      },
+      {
+        name: "showAtmosphere",
+        type: "boolean",
+        default: true,
+        description: "Render outer celestial atmospheric glow halo",
+        required: false,
+      },
+      {
+        name: "rotationSpeed",
+        type: "number",
+        default: 0.0015,
+        description: "Idle spin rotation speed per frame",
+        required: false,
+        min: 0,
+        max: 0.008,
+        step: 0.0005,
+      },
+      {
+        name: "autoRotate",
+        type: "boolean",
+        default: true,
+        description: "Enable automatic idle spin",
+        required: false,
+      },
+    ],
   },
   {
     name: "Bento Grid",

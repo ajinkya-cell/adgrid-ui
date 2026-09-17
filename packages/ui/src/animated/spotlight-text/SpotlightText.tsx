@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { useMemo, type CSSProperties, type ReactNode } from "react";
 import { cn } from "../../lib/utils";
 import {
@@ -151,12 +152,15 @@ export function SpotlightText({
       style={style}
       {...handlers}
     >
-      <Component
-        ref={textLayerRef}
-        className="relative inline-block"
-        style={sharedTextStyle}
-      >
-        {/* Base: debossed idle text + subtle bulb marker for measurement and resting state */}
+      {React.createElement(
+        Component as any,
+        {
+          ref: textLayerRef,
+          className: "relative inline-block",
+          style: sharedTextStyle,
+        },
+        <>
+          {/* Base: debossed idle text + subtle bulb marker for measurement and resting state */}
         <span
           className="relative z-[1] block"
           style={{
@@ -213,7 +217,8 @@ export function SpotlightText({
             {glowCharacters}
           </span>
         )}
-      </Component>
-    </div>
+      </>
+    )}
+  </div>
   );
 }

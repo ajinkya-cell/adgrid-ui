@@ -133,7 +133,7 @@ export function CoverflowCarousel({ className }: { className?: string }) {
     <div
       ref={containerRef}
       className={cn(
-        "relative w-full h-[480px] overflow-hidden flex flex-col items-center justify-center select-none bg-[#050507] border border-neutral-900 rounded-3xl p-6 outline-none",
+        "relative w-full h-full min-h-[500px] md:min-h-screen overflow-hidden flex flex-col items-center justify-center select-none outline-none",
         className
       )}
       tabIndex={0}
@@ -148,7 +148,7 @@ export function CoverflowCarousel({ className }: { className?: string }) {
     >
       {/* 3D Viewport container */}
       <div
-        className="relative w-full h-[400px] flex items-center justify-center cursor-grab active:cursor-grabbing"
+        className="relative w-full h-[440px] md:h-[500px] flex items-center justify-center cursor-grab active:cursor-grabbing"
         style={{
           perspective: "1200px",
           transformStyle: "preserve-3d",

@@ -1,94 +1,77 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export function Navbar() {
   const pathname = usePathname();
-  const [copied, setCopied] = useState(false);
 
   const links = [
-    { label: "Gallery", href: "/gallery" },
-    { label: "Docs", href: "/docs/getting-started" },
-    { label: "Lab", href: "/lab" },
-    { label: "Hero Demo", href: "/hero-demo" },
-    { label: "Matrix Demo", href: "/matrix-demo" },
+    {
+      label: "Gallery",
+      href: "/gallery",
+      isActive: pathname === "/gallery",
+    },
+    {
+      label: "Components",
+      href: "/present/buttons/void-button",
+      isActive:
+        pathname.startsWith("/present") ||
+        pathname.startsWith("/components") ||
+        pathname.startsWith("/docs"),
+    },
   ];
 
-  const handleCopyInstall = () => {
-    navigator.clipboard.writeText("pnpm add @adgrid-ui/ui");
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
-    <header className="fixed top-0 left-0 w-full z-50 px-4 pt-3 pb-2 select-none pointer-events-none">
-      <nav className="max-w-[1280px] mx-auto h-14 rounded-2xl bg-[#09090b]/85 backdrop-blur-xl border border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.1)] flex items-center justify-between px-5 pointer-events-auto transition-all duration-300">
-        
-        {/* Brand / Logo */}
-        <div className="flex items-center gap-4">
-          <Link
-            href="/"
-            className="group flex items-center gap-2 font-display text-xl uppercase tracking-tighter text-white font-extrabold"
-          >
-            <div className="w-7 h-7 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center group-hover:border-white/40 transition-colors shadow-inner">
-              <span className="material-symbols-outlined text-[16px] text-white">terminal</span>
-            </div>
-            <span>
-              void<span className="text-white/40 font-light">/</span>ui
-            </span>
-          </Link>
+    <header className="fixed top-3 sm:top-4 left-0 w-full z-50 px-4 flex justify-center pointer-events-none select-none">
+      <nav className="w-full max-w-[420px] h-11 rounded-full bg-[#09090b]/85 backdrop-blur-xl border border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.08)] flex items-center justify-between px-5 pointer-events-auto transition-all duration-300">
+        {/* Left: Brand / Logo */}
+        <Link
+          href="/"
+          className="font-display text-sm font-bold tracking-tight text-white hover:text-white/80 transition-colors select-none"
+        >
+          void UI
+        </Link>
 
-          <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full border border-white/10 bg-white/5 font-mono text-[9px] text-white/50 tracking-widest uppercase">
-            V1.0.4
-          </span>
+        {/* Middle: Gallery & Components in EB Garamond Italics */}
+        <div className="flex items-center gap-7">
+          {links.map((link) => (
+            <Link
+              key={link.label}
+              href={link.href}
+              className={`text-sm md:text-base italic tracking-wide transition-colors ${
+                link.isActive
+                  ? "text-white font-medium"
+                  : "text-white/45 hover:text-white"
+              }`}
+              style={{ fontFamily: 'var(--font-eb-garamond), "EB Garamond", serif' }}
+            >
+              {link.label}
+            </Link>
+          ))}
         </div>
 
-        {/* Navigation Pill Tabs */}
-        <div className="hidden md:flex items-center gap-1 bg-white/[0.03] p-1 rounded-xl border border-white/5">
-          {links.map((link) => {
-            const active = pathname === link.href || (link.href !== "/gallery" && pathname.startsWith(link.href));
-            return (
-              <Link
-                key={link.label}
-                href={link.href}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-mono tracking-wider transition-all duration-200 ${
-                  active
-                    ? "bg-white text-black font-bold shadow-md"
-                    : "text-white/60 hover:text-white hover:bg-white/5"
-                }`}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex items-center gap-3">
-          {/* CLI Copy Command Button */}
-          <button
-            onClick={handleCopyInstall}
-            className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-white/80 hover:text-white font-mono text-xs transition-colors cursor-pointer"
-            title="Copy install command"
+        {/* Right: Modern GitHub Icon without any wrapper div or box */}
+        <a
+          href="https://github.com/ajinkya-cell/adgrid-ui"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-white/75 hover:text-white transition-all hover:scale-105 p-0.5"
+          title="GitHub"
+          aria-label="GitHub Repository"
+        >
+          <svg
+            className="w-6 h-6 fill-current"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
           >
-            <span className="text-white/40">$</span>
-            <span>{copied ? "COPIED!" : "pnpm add @adgrid-ui/ui"}</span>
-            <span className="material-symbols-outlined text-[14px]">
-              {copied ? "check" : "content_copy"}
-            </span>
-          </button>
-
-          {/* Docs CTA */}
-          <Link
-            href="/docs/getting-started"
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white text-black font-mono text-xs font-bold uppercase tracking-wider hover:bg-white/90 transition-all shadow-md"
-          >
-            <span>Get Started</span>
-            <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
-          </Link>
-        </div>
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+            />
+          </svg>
+        </a>
       </nav>
     </header>
   );

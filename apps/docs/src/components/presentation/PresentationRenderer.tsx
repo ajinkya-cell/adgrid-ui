@@ -65,6 +65,7 @@ import {
   Tooltip,
   Stepper,
   Globe,
+  Globe2,
   BentoGrid,
   BentoGridItem,
   Meter,
@@ -96,7 +97,7 @@ import {
   IconBolt,
 } from "@tabler/icons-react";
 
-const imageTwo = "/utils/image-parallax.png";
+const imageParallaxDemo = "/utils/image-parallax.png";
 
 
 const weaponWheelDevItems = [
@@ -452,14 +453,17 @@ export function PresentationRenderer({
     }
     case "image-parallax": {
       const imageParallaxProps = {
-        src: imageTwo,
+        src: imageParallaxDemo,
         alt: "Aerial mountain landscape",
-        height: 420,
         depth: 10,
         tiltAmount: 5,
         ...liveProps,
       };
-      return <ImageParallax {...(imageParallaxProps as any)} />;
+      return (
+        <div className="w-full max-w-4xl mx-auto">
+          <ImageParallax {...(imageParallaxProps as any)} />
+        </div>
+      );
     }
     case "living-text": {
       const livingTextProps = {
@@ -1095,6 +1099,12 @@ export function PresentationRenderer({
       return <StepperDemo />;
     case "globe":
       return <Globe />;
+    case "globe-2":
+      return (
+        <div className="w-[380px] h-[380px] sm:w-[500px] sm:h-[500px] flex items-center justify-center">
+          <Globe2 {...liveProps} />
+        </div>
+      );
     case "meter":
       return (
         <div className="w-full min-h-[400px] flex items-center justify-center p-6 bg-transparent">

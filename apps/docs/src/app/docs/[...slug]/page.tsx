@@ -30,7 +30,7 @@ export default async function DocsSlugPage({
 
   // Render static doc page based on pageSlug
   return (
-    <div className="flex min-h-screen bg-pure-black text-white">
+    <div className="flex min-h-screen bg-pure-black text-white pt-16">
       <Sidebar />
       <main className="flex-1 max-w-4xl px-8 py-12 mx-auto space-y-12">
         {pageSlug === "installation" ? (

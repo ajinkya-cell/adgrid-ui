@@ -1140,6 +1140,23 @@
       ]
     },
     {
+      "name": "globe-2",
+      "type": "registry:ui",
+      "title": "Globe 2",
+      "description": "A photorealistic 3D WebGL Earth globe powered by Three.js and React Three Fiber with all-around daytime satellite colors, 4K mountain bump relief, nocturnal city lights, dual-sided cinematic illumination, and a 3D celestial atmospheric glow.",
+      "dependencies": [
+        "three",
+        "@react-three/fiber",
+        "@react-three/drei"
+      ],
+      "files": [
+        {
+          "path": "components/ui/Globe2.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "bento-grid",
       "type": "registry:ui",
       "title": "Bento Grid",

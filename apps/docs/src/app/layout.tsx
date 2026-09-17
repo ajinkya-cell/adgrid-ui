@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Inter, JetBrains_Mono, Caveat, Poppins } from "next/font/google";
+import { Space_Grotesk, Inter, JetBrains_Mono, Caveat, Poppins, EB_Garamond } from "next/font/google";
 import { SiteChrome } from "@/components/site/SiteChrome";
 import "./globals.css";
+
+const ebGaramond = EB_Garamond({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  variable: "--font-eb-garamond",
+  display: "swap",
+});
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -39,7 +46,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${poppins.variable} ${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} ${caveat.variable} dark`}>
+    <html lang="en" className={`${poppins.variable} ${ebGaramond.variable} ${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} ${caveat.variable} dark`}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

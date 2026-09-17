@@ -11,6 +11,9 @@ import { DockButton } from "./DockButton";
 
 export function FloatingDock({ entry }: { entry: RegistryEntry }) {
   const { dockVisible } = useDockVisibility();
+  const sidebarOpen = usePresentationStore((state) => state.sidebarOpen);
+  const sidebarTab = usePresentationStore((state) => state.sidebarTab);
+  const isVisible = dockVisible && !(sidebarOpen && sidebarTab === "code");
   const reducedMotion = useReducedMotion();
   const presentation = usePresentation(entry);
   const toggleSettings = usePresentationStore((state) => state.toggleSettings);
@@ -32,17 +35,18 @@ export function FloatingDock({ entry }: { entry: RegistryEntry }) {
 
   return (
     <motion.div
-      className="fixed top-4 md:top-6 left-1/2 z-50 flex items-center gap-1 rounded-2xl border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 p-1.5 backdrop-blur-2xl select-none"
+      className={`fixed top-4 md:top-6 right-4 md:right-6 z-30 flex items-center gap-1 rounded-2xl border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 p-1.5 backdrop-blur-2xl select-none ${
+        isVisible ? "pointer-events-auto" : "pointer-events-none"
+      }`}
       style={{
         backgroundColor: "#171717",
         boxShadow: "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.4), 0 30px 80px rgba(0,0,0,0.6)"
       }}
-      initial={{ opacity: 0, y: -12, x: "-50%" }}
+      initial={{ opacity: 0, y: -12 }}
       animate={{
-        opacity: dockVisible ? 1 : 0,
-        y: dockVisible ? 0 : -12,
-        x: "-50%",
-        filter: dockVisible ? "blur(0px)" : "blur(4px)",
+        opacity: isVisible ? 1 : 0,
+        y: isVisible ? 0 : -12,
+        filter: isVisible ? "blur(0px)" : "blur(4px)",
       }}
       transition={reducedMotion ? { duration: 0 } : { duration: 0.22, ease: [0.25, 1, 0.5, 1] }}
     >
