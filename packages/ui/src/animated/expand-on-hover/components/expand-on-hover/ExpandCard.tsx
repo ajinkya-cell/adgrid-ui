@@ -6,6 +6,7 @@ import { CardContent } from "./CardContent";
 import { cn } from "../../../../lib/utils";
 
 interface ExpandCardProps {
+  id?: string;
   item: ExpandItem;
   index: number;
   activeIndex: number | null;
@@ -13,7 +14,7 @@ interface ExpandCardProps {
   expandHeight: number;
   collapsedHeight: number;
   variant: ExpandVariant;
-  animation: ExpandAnimationType;
+  animation?: ExpandAnimationType;
   borderRadius: number;
   clickToExpand: boolean;
   onHoverStart: () => void;
@@ -25,6 +26,7 @@ interface ExpandCardProps {
 }
 
 export function ExpandCard({
+  id,
   item,
   index,
   activeIndex,
@@ -32,6 +34,7 @@ export function ExpandCard({
   expandHeight,
   collapsedHeight,
   variant,
+  animation = "spring",
   borderRadius,
   onHoverStart,
   onHoverEnd,
@@ -42,6 +45,21 @@ export function ExpandCard({
 }: ExpandCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
 
+  // Unified physics transitions
+  const transitionConfig =
+    animation === "smooth"
+      ? {
+          type: "tween" as const,
+          ease: [0.25, 1, 0.5, 1], // easeOutQuart
+          duration: 0.52,
+        }
+      : {
+          type: "spring" as const,
+          stiffness: 220,
+          damping: 28,
+          mass: 0.8,
+        };
+
   let scale = 1;
   let opacity = 1;
 
@@ -50,16 +68,16 @@ export function ExpandCard({
       scale = 1;
       opacity = 1;
     } else {
-      scale = 0.985;
-      opacity = 0.75;
+      scale = 0.99;
+      opacity = 0.65;
     }
   }
 
   const isModern = variant === "modern";
   const variantClasses = isModern
     ? cn(
-        "bg-neutral-900/60 border border-white/10 backdrop-blur-md shadow-lg transition-colors duration-200 hover:border-white/20",
-        isExpanded && "border-white/25 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.85)]"
+        "bg-neutral-900/70 border border-white/[0.08] backdrop-blur-md shadow-lg transition-colors duration-300 hover:border-white/20",
+        isExpanded && "border-white/25 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.85)]"
       )
     : "bg-neutral-950 border border-neutral-800 shadow-none";
 
@@ -70,12 +88,12 @@ export function ExpandCard({
       tabIndex={0}
       aria-expanded={isExpanded}
       aria-controls={`panel-${item.id}`}
-      id={`card-${index}`}
+      id={id || `card-${index}`}
       layout
       transition={{
-        layout: { type: "spring", stiffness: 380, damping: 32, mass: 0.6 },
-        scale: { duration: 0.15 },
-        opacity: { duration: 0.15 },
+        layout: transitionConfig,
+        scale: transitionConfig,
+        opacity: transitionConfig,
       }}
       onMouseEnter={onHoverStart}
       onMouseLeave={onHoverEnd}
@@ -90,40 +108,75 @@ export function ExpandCard({
         borderRadius: `${borderRadius}px`,
       }}
       className={cn(
-        "relative w-full overflow-hidden cursor-pointer select-none outline-none rounded-[inherit]",
+        "relative w-full overflow-hidden cursor-pointer select-none outline-none group",
         "focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-4 focus-visible:ring-offset-neutral-950",
         variantClasses,
         cardClassName
       )}
     >
+      {/* Background Anime/Hero Poster Image (Always in DOM to eliminate paint stutter) */}
+      <motion.div
+        className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none rounded-[inherit]"
+        animate={{
+          scale: isExpanded ? 1.04 : 1.0,
+          opacity: isExpanded ? 0.85 : 0.16,
+        }}
+        transition={transitionConfig}
+      >
+        <img
+          src={item.image}
+          alt={item.title}
+          loading="eager"
+          className="w-full h-full object-cover rounded-[inherit] filter contrast-105"
+        />
+        {/* Soft Dark Vignette & Gradient Overlays */}
+        <div
+          className={cn(
+            "absolute inset-0 transition-opacity duration-500 rounded-[inherit]",
+            isExpanded
+              ? "bg-gradient-to-t from-neutral-950 via-neutral-950/75 to-neutral-950/25"
+              : "bg-neutral-950/70"
+          )}
+        />
+      </motion.div>
+
+      {/* Render Custom Item if provided */}
       {renderItem ? (
         renderItem(item, isExpanded)
       ) : (
-        <AnimatePresence mode="wait" initial={false}>
-          {!isExpanded ? (
-            <motion.div
-              key="preview"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.12 }}
-              className="w-full h-[60px] flex items-center"
-            >
-              <Preview item={item} index={index} />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="content"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.18 }}
-              className="relative w-full h-full overflow-hidden"
-            >
-              <CardContent item={item} index={index} borderRadius={borderRadius} />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <>
+          {/* Top Bar Preview (Always present at top of card) */}
+          <div
+            style={{ height: `${collapsedHeight}px` }}
+            className="w-full flex items-center relative z-20"
+          >
+            <Preview item={item} index={index} isExpanded={isExpanded} />
+          </div>
+
+          {/* Expanded Content View (Smoothly fades in over the lower portion of the card) */}
+          <AnimatePresence initial={false}>
+            {isExpanded && (
+              <motion.div
+                key="content"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{
+                  opacity: 0,
+                  y: 6,
+                  transition: { duration: 0.14, ease: "easeOut" },
+                }}
+                transition={{
+                  duration: 0.28,
+                  ease: [0.25, 1, 0.5, 1],
+                  delay: 0.08,
+                }}
+                className="absolute inset-0 w-full h-full pointer-events-none"
+              >
+                <CardContent item={item} index={index} borderRadius={borderRadius} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </>
       )}
     </motion.div>
   );

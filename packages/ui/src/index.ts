@@ -143,7 +143,7 @@ export { default as Datepicker } from "./animated/Datepicker";
 
 // Marquee2
 export { default as Marquee2 } from "./animated/Marquee2";
-export type { Marquee2Props } from "./animated/Marquee2";
+export type { Marquee2Props, Marquee2Variant } from "./animated/Marquee2";
 
 // NavBar1
 export { default as NavBar1 } from "./animated/NavBar1";

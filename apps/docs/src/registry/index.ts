@@ -558,6 +558,14 @@ export const registry: RegistryEntry[] = [
       "animated/expand-on-hover/components/expand-on-hover/CardContent.tsx",
       "animated/expand-on-hover/components/expand-on-hover/ExpandCard.tsx",
     ],
+    propDefs: [
+      { name: "animation", type: "select", default: "spring", description: "Expansion transition physics", required: false, options: ["spring", "smooth"] },
+      { name: "variant", type: "select", default: "modern", description: "Card visual style", required: false, options: ["modern", "minimal"] },
+      { name: "expandHeight", type: "number", default: 440, description: "Height of expanded card (px)", required: false, min: 280, max: 600, step: 20 },
+      { name: "collapsedHeight", type: "number", default: 64, description: "Height of collapsed card (px)", required: false, min: 48, max: 100, step: 4 },
+      { name: "borderRadius", type: "number", default: 20, description: "Border radius of cards (px)", required: false, min: 0, max: 36, step: 2 },
+      { name: "gap", type: "number", default: 12, description: "Gap between cards (px)", required: false, min: 4, max: 32, step: 2 },
+    ],
   },
   {
     name: "Text Shuffle",
@@ -753,7 +761,8 @@ export const registry: RegistryEntry[] = [
     files: ["animated/Marquee2.tsx"],
     presentationStrategy: "fullscreen",
     propDefs: [
-      { name: "variant", type: "select", default: "wave", description: "Curved motion path style", options: ["wave", "arch"], required: false },
+      { name: "variant", type: "select", default: "wave", description: "Curved motion path style", options: ["wave", "arch", "valley", "double-wave"], required: false },
+      { name: "showTitleOnHover", type: "boolean", default: true, description: "Display brand title badge on mouse hover", required: false },
       { name: "speed", type: "number", default: 1, description: "Animation speed multiplier", required: false, min: 0.2, max: 5, step: 0.1 },
       { name: "pauseOnHover", type: "boolean", default: true, description: "Pause marquee sliding on mouse hover", required: false },
     ],

@@ -11,14 +11,14 @@ export const ExpandOnHover = forwardRef<ExpandOnHoverRef, ExpandOnHoverProps>(
       items,
       variant = "modern",
       expandHeight = 440,
-      collapsedHeight = 60,
+      collapsedHeight = 64,
       animation = "spring",
       expandedId,
       onExpandedChange,
       defaultExpanded = null,
       gap = 12,
-      borderRadius = 24,
-      hoverDelay = 50,
+      borderRadius = 20,
+      hoverDelay = 60,
       clickToExpand = false,
       autoCollapseOnLeave = true,
       renderItem,
@@ -27,7 +27,7 @@ export const ExpandOnHover = forwardRef<ExpandOnHoverRef, ExpandOnHoverProps>(
     },
     ref
   ) => {
-    // Generate unique LayoutGroup ID to prevent cross-component interference
+    // Unique LayoutGroup ID to prevent cross-component interference
     const layoutGroupId = useId();
 
     const {
@@ -45,11 +45,9 @@ export const ExpandOnHover = forwardRef<ExpandOnHoverRef, ExpandOnHoverProps>(
       clickToExpand,
     });
 
-    // Find the numerical index of the currently active/expanded card
     const activeIndex = items.findIndex((item) => item.id === activeId);
     const resolvedActiveIndex = activeIndex === -1 ? null : activeIndex;
 
-    // Expose Imperative API methods via forwardRef
     useImperativeHandle(ref, () => ({
       expand: (index: number) => {
         if (index >= 0 && index < items.length) {
@@ -72,10 +70,10 @@ export const ExpandOnHover = forwardRef<ExpandOnHoverRef, ExpandOnHoverProps>(
       },
     }));
 
-    // Keyboard controls for Arrow keys + Escape + Space/Enter
+    // Keyboard navigation (Arrow keys + Escape + Space/Enter)
     const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
       const targetItem = items[index];
-      
+
       switch (e.key) {
         case "ArrowDown":
           e.preventDefault();
@@ -103,13 +101,13 @@ export const ExpandOnHover = forwardRef<ExpandOnHoverRef, ExpandOnHoverProps>(
 
     const leaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-    // Auto-collapse when cursor fully exits the component area with gentle 120ms buffer
+    // Smooth auto-collapse with 160ms buffer across card gaps
     const handleMouseLeaveContainer = () => {
       if (autoCollapseOnLeave && !clickToExpand) {
         if (leaveTimeoutRef.current) clearTimeout(leaveTimeoutRef.current);
         leaveTimeoutRef.current = setTimeout(() => {
           setExpanded(null);
-        }, 120);
+        }, 160);
       }
     };
 
@@ -130,10 +128,11 @@ export const ExpandOnHover = forwardRef<ExpandOnHoverRef, ExpandOnHoverProps>(
         >
           {items.map((item, index) => {
             const isExpanded = activeId === item.id;
-            
+
             return (
               <ExpandCard
                 key={item.id}
+                id={`card-${layoutGroupId}-${index}`}
                 item={item}
                 index={index}
                 activeIndex={resolvedActiveIndex}
@@ -150,8 +149,6 @@ export const ExpandOnHover = forwardRef<ExpandOnHoverRef, ExpandOnHoverProps>(
                 onKeyDown={(e) => handleKeyDown(e, index)}
                 renderItem={renderItem}
                 cardClassName={cardClassName}
-                // Overriding ID with layoutGroupId prefix to prevent focus collision when rendering multiple lists
-                {...{ id: `card-${layoutGroupId}-${index}` }}
               />
             );
           })}

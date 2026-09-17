@@ -240,26 +240,42 @@ const expandItems = [
   {
     id: "akira",
     title: "Akira",
+    subtitle: "Cyberpunk Classic",
+    description:
+      "In Neo-Tokyo, a secret military project endangers the city when it turns a biker gang member into a rampaging psychic psychopath.",
     year: "1988",
-    image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1200&q=85&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1200&q=85&auto=format&fit=crop",
   },
   {
     id: "spirited-away",
     title: "Spirited Away",
+    subtitle: "Studio Ghibli",
+    description:
+      "During her family's move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits.",
     year: "2001",
-    image: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=1200&q=85&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=1200&q=85&auto=format&fit=crop",
   },
   {
     id: "evangelion",
     title: "Neon Genesis Evangelion",
+    subtitle: "Mecha Psychological",
+    description:
+      "A teenage boy finds himself recruited by his estranged father to pilot a giant biomechanical mecha against otherworldly entities.",
     year: "1995",
-    image: "https://images.unsplash.com/photo-1563089145-599997674d42?w=1200&q=85&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1563089145-599997674d42?w=1200&q=85&auto=format&fit=crop",
   },
   {
     id: "your-name",
     title: "Your Name",
+    subtitle: "Romantic Fantasy",
+    description:
+      "Two teenagers share a profound, magical connection upon discovering they are swapping bodies across space and time.",
     year: "2016",
-    image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1200&q=85&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1200&q=85&auto=format&fit=crop",
   },
 ];
 
@@ -909,7 +925,16 @@ export function PresentationRenderer({
       );
     }
     case "expand-on-hover":
-      return <div className="w-full max-w-xl"><ExpandOnHover items={expandItems} variant="modern" animation="spring" /></div>;
+      return (
+        <div className="w-full max-w-xl flex items-center justify-center p-4">
+          <ExpandOnHover
+            items={expandItems}
+            variant="modern"
+            animation="spring"
+            {...(liveProps as unknown as Partial<Parameters<typeof ExpandOnHover>[0]>)}
+          />
+        </div>
+      );
     case "text-shuffle": {
       const textShuffleProps = {
         words: ["Like This?", "Connect", "For More", "Such Projects"],

@@ -21,11 +21,15 @@ import {
   SassOriginal,
 } from "devicons-react";
 
+export type Marquee2Variant = "wave" | "arch" | "valley" | "double-wave";
+
 export interface Marquee2Props {
   className?: string;
   speed?: number;
   pauseOnHover?: boolean;
-  variant?: "wave" | "arch";
+  variant?: Marquee2Variant;
+  showTitleOnHover?: boolean;
+  showTitle?: boolean;
 }
 
 const DEFAULT_ICONS = [
@@ -47,9 +51,12 @@ const DEFAULT_ICONS = [
   { name: "Sass", Icon: SassOriginal },
 ];
 
-const PATHS = {
-  wave: "M -100 240 C 250 80, 550 380, 850 200 S 1300 60, 1550 260",
-  arch: "M -100 480 C 200 40, 1240 40, 1540 480",
+const PATHS: Record<Marquee2Variant, string> = {
+  wave: "M -100 225 C 180 80, 440 80, 720 225 C 1000 370, 1260 370, 1540 225",
+  arch: "M -100 400 C 320 0, 1120 0, 1540 400",
+  valley: "M -100 50 C 320 450, 1120 450, 1540 50",
+  "double-wave":
+    "M -100 225 C 0 125, 210 125, 310 225 C 410 325, 620 325, 720 225 C 820 125, 1030 125, 1130 225 C 1230 325, 1440 325, 1540 225",
 };
 
 export default function Marquee2({
@@ -57,7 +64,10 @@ export default function Marquee2({
   speed = 1,
   pauseOnHover = true,
   variant = "wave",
+  showTitleOnHover = true,
+  showTitle,
 }: Marquee2Props) {
+  const isTitleEnabled = showTitle ?? showTitleOnHover;
   const pathRef = useRef<SVGPathElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [positions, setPositions] = useState<{ x: number; y: number }[]>([]);
@@ -153,12 +163,14 @@ export default function Marquee2({
               }}
               className="absolute pointer-events-auto transition-transform duration-200 hover:scale-130 hover:z-30 cursor-pointer group"
             >
-              <div className="relative flex items-center justify-center p-2 group-hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-all">
+              <div className="relative flex flex-col items-center justify-center p-2 group-hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-all">
                 <IconComp size={48} />
                 {/* Tooltip on hover */}
-                <span className="absolute -bottom-8 px-2 py-0.5 rounded bg-neutral-900/90 border border-white/10 text-[10px] font-mono text-white/80 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
-                  {item.name}
-                </span>
+                {isTitleEnabled && (
+                  <span className="absolute -bottom-8 px-2 py-0.5 rounded bg-neutral-900/90 border border-white/10 text-[10px] font-mono text-white/80 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-lg">
+                    {item.name}
+                  </span>
+                )}
               </div>
             </div>
           );
