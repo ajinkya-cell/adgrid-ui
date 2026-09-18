@@ -761,7 +761,7 @@ export const registry: RegistryEntry[] = [
     files: ["animated/Marquee2.tsx"],
     presentationStrategy: "fullscreen",
     propDefs: [
-      { name: "variant", type: "select", default: "wave", description: "Curved motion path style", options: ["wave", "arch", "valley", "double-wave"], required: false },
+      { name: "variant", type: "select", default: "wave", description: "Curved motion path style", options: ["wave", "arch", "valley", "double-wave", "straight"], required: false },
       { name: "showTitleOnHover", type: "boolean", default: true, description: "Display brand title badge on mouse hover", required: false },
       { name: "speed", type: "number", default: 1, description: "Animation speed multiplier", required: false, min: 0.2, max: 5, step: 0.1 },
       { name: "pauseOnHover", type: "boolean", default: true, description: "Pause marquee sliding on mouse hover", required: false },

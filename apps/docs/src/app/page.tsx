@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { HandMadeHighlight } from "@/components/site/HandMadeHighlight";
 
 export default function HomePage() {
   const featuredComponents = [
@@ -53,17 +54,19 @@ export default function HomePage() {
           <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white font-sans">
             Void UI
           </h1>
-          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-mono text-neutral-500">
-            <span>Tactile Interface Ecosystem</span>
-            <span>•</span>
-            <span>Created by Ajinkya Adharkar</span>
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs  text-neutral-500">
+            
+           
+            <span>Created by </span>
+            <span>Ajinkya Dharkar</span> 
+          {/*change this font Ajinkya Dharkar to Reenie Beanie*/}
             <span>•</span>
             <time>Updated Sep 2026</time>
           </div>
         </header>
 
         {/* ── About Void UI ─────────────────────────────────────── */}
-        <article className="space-y-4 text-sm sm:text-sm leading-relaxed text-neutral-300 font-normal">
+        <article className="space-y-4 text-sm leading-relaxed text-neutral-300 font-normal">
           <p>
             <strong className="font-medium text-white">Void UI</strong> (published as{" "}
             <a
@@ -78,10 +81,10 @@ export default function HomePage() {
             ) is an open-source React component ecosystem engineered for tactile friction, dark-first skeuomorphism, and sensory computing.
           </p>
           <p>
-            Most modern web applications have flattened into sterile, frictionless planes. Void UI rejects that homogeny by combining physical spring dynamics, custom WebGL shaders, and synthesized Web Audio feedback — creating interfaces with tangible weight, physical resistance, and visceral depth.
+            Most modern web applications have flattened into sterile, frictionless planes. Void UI rejects that homogeny by combining physical spring dynamics, custom WebGL shaders, and synthesized Web Audio feedback  creating interfaces with tangible weight, physical resistance, and visceral depth.
           </p>
           <p>
-            Every component is built with Next.js 15, React 19, and Tailwind CSS v4, distributed via copy-paste CLI workflows. You can explore the full collection of interactive components in the{" "}
+            Every component is built with Next.js 16, framer-motion, and Tailwind CSS , distributed via copy-paste CLI workflows. You can explore the full collection of interactive components in the{" "}
             <Link
               href="/gallery"
               className="text-white underline underline-offset-4 decoration-white/25 hover:decoration-white transition-colors"
@@ -104,7 +107,7 @@ export default function HomePage() {
         {/* ── About the Creator ─────────────────────────────────── */}
         <section className="space-y-4">
           <div className="border-b border-white/[0.08] pb-2">
-            <h2 className="text-xs font-mono uppercase tracking-widest text-neutral-400">
+            <h2 className="text-xs  uppercase tracking-widest text-neutral-400">
               About the Creator
             </h2>
           </div>
@@ -117,7 +120,11 @@ export default function HomePage() {
               My work focuses on bridging the gap between interaction design and deep systems engineering — exploring how mechanical haptics, physics simulations, and micro-animations can make software feel like a finely tuned instrument rather than just pixels on glass.
             </p>
             <p>
-              You can follow my work and experiments on{" "}
+              You can{" "}
+              <HandMadeHighlight>
+                follow my work
+              </HandMadeHighlight>{" "}
+              and experiments on{" "}
               <a
                 href="https://github.com/ajinkya-cell"
                 target="_blank"
@@ -142,7 +149,7 @@ export default function HomePage() {
         {/* ── Featured Components ───────────────────────────────── */}
         <section className="space-y-4">
           <div className="flex items-baseline justify-between border-b border-white/[0.08] pb-2">
-            <h2 className="text-xs font-mono uppercase tracking-widest text-neutral-400">
+            <h2 className="text-xs  uppercase tracking-widest text-neutral-400">
               Featured Components
             </h2>
             <Link

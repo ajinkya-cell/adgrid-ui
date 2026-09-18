@@ -21,7 +21,7 @@ import {
   SassOriginal,
 } from "devicons-react";
 
-export type Marquee2Variant = "wave" | "arch" | "valley" | "double-wave";
+export type Marquee2Variant = "wave" | "arch" | "valley" | "double-wave" | "straight";
 
 export interface Marquee2Props {
   className?: string;
@@ -57,6 +57,7 @@ const PATHS: Record<Marquee2Variant, string> = {
   valley: "M -100 50 C 320 450, 1120 450, 1540 50",
   "double-wave":
     "M -100 225 C 0 125, 210 125, 310 225 C 410 325, 620 325, 720 225 C 820 125, 1030 125, 1130 225 C 1230 325, 1440 325, 1540 225",
+  straight: "M -100 225 L 1540 225",
 };
 
 export default function Marquee2({
