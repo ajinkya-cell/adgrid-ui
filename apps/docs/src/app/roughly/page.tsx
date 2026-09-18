@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Roughly, RoughCircle } from "@adgrid-ui/ui";
+import { Roughly, RoughCircle, RoughUnderline, RoughStrike } from "@adgrid-ui/ui";
 import type {
   RoughlyType,
   BracketSide,
   BracketStyle,
   UnderlineVariant,
+  StrikeVariant,
 } from "@adgrid-ui/ui";
 import { Check, Copy, RefreshCw, Sparkles, Terminal, BookOpen, Layers } from "lucide-react";
 
@@ -20,6 +21,7 @@ export default function RoughlyPage() {
   const [bracketSide, setBracketSide] = useState<BracketSide>("left");
   const [bracketStyle, setBracketStyle] = useState<BracketStyle>("curly");
   const [underlineVariant, setUnderlineVariant] = useState<UnderlineVariant>("single");
+  const [strikeVariant, setStrikeVariant] = useState<StrikeVariant>("single");
   const [circlePaddingX, setCirclePaddingX] = useState(22);
   const [circlePaddingY, setCirclePaddingY] = useState(10);
   const [circleIterations, setCircleIterations] = useState(2);
@@ -71,14 +73,31 @@ export default function RoughlyPage() {
       return `<RoughCircle${propsString}>\n  ${text}\n</RoughCircle>`;
     }
 
+    if (selectedType === "underline") {
+      const propsList: string[] = [];
+      if (selectedColor !== "#6366F1") propsList.push(`color="${selectedColor}"`);
+      if (strokeWidth !== 2) propsList.push(`strokeWidth={${strokeWidth}}`);
+      if (duration !== 750) propsList.push(`animationDuration={${duration}}`);
+      if (underlineVariant !== "single") propsList.push(`variant="${underlineVariant}"`);
+
+      const propsString = propsList.length > 0 ? ` ${propsList.join(" ")}` : "";
+      return `<RoughUnderline${propsString}>\n  ${text}\n</RoughUnderline>`;
+    }
+
+    if (selectedType === "strike-through") {
+      const propsList: string[] = [];
+      if (selectedColor !== "#EF4444") propsList.push(`color="${selectedColor}"`);
+      if (strokeWidth !== 2) propsList.push(`strokeWidth={${strokeWidth}}`);
+      if (duration !== 650) propsList.push(`animationDuration={${duration}}`);
+      if (strikeVariant !== "single") propsList.push(`variant="${strikeVariant}"`);
+
+      const propsString = propsList.length > 0 ? ` ${propsList.join(" ")}` : "";
+      return `<RoughStrike${propsString}>\n  ${text}\n</RoughStrike>`;
+    }
+
     const propsList: string[] = [];
-    if (selectedType !== "underline") propsList.push(`type="${selectedType}"`);
     if (selectedColor !== "#6366F1") propsList.push(`color="${selectedColor}"`);
     if (strokeWidth !== 2) propsList.push(`strokeWidth={${strokeWidth}}`);
-    if (duration !== 750) propsList.push(`animationDuration={${duration}}`);
-    if (selectedType === "underline" && underlineVariant !== "single") {
-      propsList.push(`variant="${underlineVariant}"`);
-    }
     if (selectedType === "bracket") {
       if (bracketSide !== "left") propsList.push(`brackets="${bracketSide}"`);
       if (bracketStyle !== "curly") propsList.push(`bracketStyle="${bracketStyle}"`);
@@ -347,13 +366,36 @@ export default function RoughlyPage() {
                       <button
                         key={v}
                         onClick={() => setUnderlineVariant(v)}
-                        className={`flex-1 py-1 text-xs rounded-md capitalize cursor-pointer transition-colors ${
+                        className={`flex-1 py-1.5 text-xs rounded-lg capitalize cursor-pointer transition-colors ${
                           underlineVariant === v
-                            ? "bg-white/20 text-white font-medium"
+                            ? "bg-white/20 text-white font-medium shadow-sm"
                             : "bg-white/[0.04] text-neutral-400 hover:text-white"
                         }`}
                       >
                         {v}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {selectedType === "strike-through" && (
+                <div className="space-y-2">
+                  <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                    Strike Style
+                  </label>
+                  <div className="flex gap-2">
+                    {(["single", "double", "triple"] as StrikeVariant[]).map((v) => (
+                      <button
+                        key={v}
+                        onClick={() => setStrikeVariant(v)}
+                        className={`flex-1 py-1.5 text-xs rounded-lg capitalize cursor-pointer transition-colors ${
+                          strikeVariant === v
+                            ? "bg-white/20 text-white font-medium shadow-sm"
+                            : "bg-white/[0.04] text-neutral-400 hover:text-white"
+                        }`}
+                      >
+                        {v} Line
                       </button>
                     ))}
                   </div>
@@ -515,6 +557,28 @@ export default function RoughlyPage() {
                     >
                       {text}
                     </RoughCircle>
+                  ) : selectedType === "underline" ? (
+                    <RoughUnderline
+                      key={`underline-${replayKey}-${underlineVariant}-${selectedColor}`}
+                      variant={underlineVariant}
+                      color={selectedColor}
+                      strokeWidth={strokeWidth}
+                      animationDuration={duration}
+                      animate={true}
+                    >
+                      {text}
+                    </RoughUnderline>
+                  ) : selectedType === "strike-through" ? (
+                    <RoughStrike
+                      key={`strike-${replayKey}-${strikeVariant}-${selectedColor}`}
+                      variant={strikeVariant}
+                      color={selectedColor}
+                      strokeWidth={strokeWidth}
+                      animationDuration={duration}
+                      animate={true}
+                    >
+                      {text}
+                    </RoughStrike>
                   ) : (
                     <Roughly
                       type={selectedType}
@@ -523,7 +587,6 @@ export default function RoughlyPage() {
                       animationDuration={duration}
                       brackets={bracketSide}
                       bracketStyle={bracketStyle}
-                      variant={underlineVariant}
                       animate={true}
                     >
                       {text}
@@ -585,7 +648,7 @@ export default function RoughlyPage() {
 
             <p>
               In traditional software development, designers often rely on{" "}
-              <Roughly.Strike color="#EF4444">
+              <Roughly.Strike variant="double" color="#EF4444">
                 bland grey boxes
               </Roughly.Strike>{" "}
               and lifeless borders. With Roughly, you can draw attention to{" "}
@@ -684,9 +747,11 @@ export default function RoughlyPage() {
                 </tr>
                 <tr>
                   <td className="p-3 font-semibold text-white">variant</td>
-                  <td className="p-3 text-indigo-400">UnderlineVariant</td>
+                  <td className="p-3 text-indigo-400">string</td>
                   <td className="p-3 text-neutral-500">&quot;single&quot;</td>
-                  <td className="p-3 font-sans text-neutral-400">&quot;single&quot; | &quot;double&quot; | &quot;wavy&quot; (for underline type)</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    &quot;single&quot; | &quot;double&quot; | &quot;wavy&quot; (for underline) &bull; &quot;single&quot; | &quot;double&quot; | &quot;triple&quot; (for strike-through)
+                  </td>
                 </tr>
               </tbody>
             </table>

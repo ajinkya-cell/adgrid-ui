@@ -2,6 +2,9 @@
 
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { RoughCircle } from "./roughly/RoughCircle";
+import { RoughUnderline } from "./roughly/RoughUnderline";
+import { RoughStrike, type StrikeVariant } from "./roughly/RoughStrike";
+import { RoughCross, type CrossVariant } from "./roughly/RoughCross";
 
 export type RoughlyType =
   | "underline"
@@ -15,6 +18,8 @@ export type RoughlyType =
 export type BracketSide = "left" | "right" | "top" | "bottom";
 export type BracketStyle = "curly" | "square";
 export type UnderlineVariant = "single" | "double" | "wavy";
+export type { StrikeVariant } from "./roughly/RoughStrike";
+export type { CrossVariant } from "./roughly/RoughCross";
 
 export interface RoughlyProps {
   children: React.ReactNode;
@@ -34,8 +39,8 @@ export interface RoughlyProps {
   side?: BracketSide;
   /** Bracket style: 'curly' ({) or 'square' ([) */
   bracketStyle?: BracketStyle;
-  /** Underline variant: 'single' | 'double' | 'wavy' */
-  variant?: UnderlineVariant;
+  /** Variant for underline ('single' | 'double' | 'wavy'), strike-through ('single' | 'double' | 'triple'), or cross-off ('single' | 'double') */
+  variant?: UnderlineVariant | StrikeVariant | CrossVariant;
   /** Custom wrapper class */
   className?: string;
   /** Custom text class */
@@ -83,6 +88,54 @@ export function Roughly({
       >
         {children}
       </RoughCircle>
+    );
+  }
+
+  if (type === "underline") {
+    return (
+      <RoughUnderline
+        variant={variant as UnderlineVariant}
+        color={color || DEFAULT_COLORS.underline}
+        strokeWidth={strokeWidth}
+        animate={animate}
+        animationDuration={animationDuration}
+        className={className}
+        textClassName={textClassName}
+      >
+        {children}
+      </RoughUnderline>
+    );
+  }
+
+  if (type === "strike-through") {
+    return (
+      <RoughStrike
+        variant={(variant as StrikeVariant) || "single"}
+        color={color || DEFAULT_COLORS["strike-through"]}
+        strokeWidth={strokeWidth}
+        animate={animate}
+        animationDuration={animationDuration}
+        className={className}
+        textClassName={textClassName}
+      >
+        {children}
+      </RoughStrike>
+    );
+  }
+
+  if (type === "cross-off") {
+    return (
+      <RoughCross
+        variant={(variant as CrossVariant) || "single"}
+        color={color || DEFAULT_COLORS["cross-off"]}
+        strokeWidth={strokeWidth}
+        animate={animate}
+        animationDuration={animationDuration}
+        className={className}
+        textClassName={textClassName}
+      >
+        {children}
+      </RoughCross>
     );
   }
   const containerRef = useRef<HTMLSpanElement>(null);
@@ -219,116 +272,6 @@ export function Roughly({
           : ""
       } ${className}`}
     >
-      {/* ── 1. UNDERLINE ────────────────────────────────────────── */}
-      {type === "underline" && (
-        <svg
-          aria-hidden="true"
-          className="absolute left-0 right-0 -bottom-1.5 w-full h-3 pointer-events-none -z-10 overflow-visible"
-          viewBox={`0 0 ${w} 12`}
-          fill="none"
-        >
-          {variant === "single" && (
-            <path
-              ref={type === "underline" ? pathRef : undefined}
-              d={`M 1.5 6 C ${(w * 0.3).toFixed(1)} 8.5, ${(w * 0.7).toFixed(1)} 4.2, ${(w - 1.5).toFixed(1)} 7.5`}
-              stroke={strokeColor}
-              strokeWidth={strokeWidth}
-              strokeLinecap="round"
-              vectorEffect="non-scaling-stroke"
-              style={strokeTransition}
-            />
-          )}
-
-          {variant === "double" && (
-            <>
-              <path
-                ref={type === "underline" ? pathRef : undefined}
-                d={`M 2 4.5 C ${(w * 0.3).toFixed(1)} 7, ${(w * 0.7).toFixed(1)} 3.5, ${(w - 2).toFixed(1)} 5.5`}
-                stroke={strokeColor}
-                strokeWidth={strokeWidth}
-                strokeLinecap="round"
-                vectorEffect="non-scaling-stroke"
-                style={strokeTransition}
-              />
-              <path
-                d={`M 4 9 C ${(w * 0.35).toFixed(1)} 11, ${(w * 0.65).toFixed(1)} 7.8, ${(w - 4).toFixed(1)} 10`}
-                stroke={strokeColor}
-                strokeWidth={strokeWidth * 0.85}
-                strokeLinecap="round"
-                vectorEffect="non-scaling-stroke"
-                style={{
-                  ...strokeTransition,
-                  transitionDelay: `${animationDuration * 0.25}ms`,
-                }}
-              />
-            </>
-          )}
-
-          {variant === "wavy" && (
-            <path
-              ref={type === "underline" ? pathRef : undefined}
-              d={`M 2 7 Q 10 3, 18 7 T 34 7 T 50 7 T 66 7 T 82 7 T ${(w - 2).toFixed(1)} 7`}
-              stroke={strokeColor}
-              strokeWidth={strokeWidth}
-              strokeLinecap="round"
-              vectorEffect="non-scaling-stroke"
-              style={strokeTransition}
-            />
-          )}
-        </svg>
-      )}
-
-      {/* ── 3. STRIKE-THROUGH (TEXT CUTTER) ────────────────────── */}
-      {type === "strike-through" && (
-        <svg
-          aria-hidden="true"
-          className="absolute left-0 right-0 top-1/2 -translate-y-1/2 w-full h-2.5 pointer-events-none z-20 overflow-visible"
-          viewBox={`0 0 ${w} 10`}
-          fill="none"
-        >
-          <path
-            ref={type === "strike-through" ? pathRef : undefined}
-            d={`M 1 5 C ${(w * 0.28).toFixed(1)} 3.5, ${(w * 0.65).toFixed(1)} 6.5, ${(w - 1).toFixed(1)} 4.8`}
-            stroke={strokeColor}
-            strokeWidth={strokeWidth}
-            strokeLinecap="round"
-            vectorEffect="non-scaling-stroke"
-            style={strokeTransition}
-          />
-        </svg>
-      )}
-
-      {/* ── 4. CROSS-OFF ("X") ─────────────────────────────────── */}
-      {type === "cross-off" && (
-        <svg
-          aria-hidden="true"
-          className="absolute -inset-1 w-[calc(100%+8px)] h-[calc(100%+8px)] pointer-events-none z-20 overflow-visible"
-          viewBox={`0 0 ${w} ${h}`}
-          fill="none"
-        >
-          <path
-            ref={type === "cross-off" ? pathRef : undefined}
-            d={`M 4 4 C ${(w * 0.3).toFixed(1)} ${(h * 0.4).toFixed(1)}, ${(w * 0.65).toFixed(1)} ${(h * 0.6).toFixed(1)}, ${(w - 4).toFixed(1)} ${(h - 4).toFixed(1)}`}
-            stroke={strokeColor}
-            strokeWidth={strokeWidth}
-            strokeLinecap="round"
-            vectorEffect="non-scaling-stroke"
-            style={strokeTransition}
-          />
-          <path
-            d={`M ${(w - 4).toFixed(1)} 4 C ${(w * 0.65).toFixed(1)} ${(h * 0.4).toFixed(1)}, ${(w * 0.3).toFixed(1)} ${(h * 0.6).toFixed(1)}, 4 ${(h - 4).toFixed(1)}`}
-            stroke={strokeColor}
-            strokeWidth={strokeWidth}
-            strokeLinecap="round"
-            vectorEffect="non-scaling-stroke"
-            style={{
-              ...strokeTransition,
-              transitionDelay: `${animationDuration * 0.3}ms`,
-            }}
-          />
-        </svg>
-      )}
-
       {/* ── 5. BRACKET ({ or [) ────────────────────────────────── */}
       {type === "bracket" && (
         <svg
@@ -506,9 +449,9 @@ export function Roughly({
 
 // ── Subcomponent Semantic Shortcuts ─────────────────────────────
 Roughly.Underline = function RoughlyUnderline(
-  props: Omit<RoughlyProps, "type">
+  props: React.ComponentProps<typeof RoughUnderline>
 ) {
-  return <Roughly type="underline" {...props} />;
+  return <RoughUnderline {...props} />;
 };
 
 Roughly.Circle = function RoughlyCircle(
@@ -517,12 +460,16 @@ Roughly.Circle = function RoughlyCircle(
   return <RoughCircle {...props} />;
 };
 
-Roughly.Strike = function RoughlyStrike(props: Omit<RoughlyProps, "type">) {
-  return <Roughly type="strike-through" {...props} />;
+Roughly.Strike = function RoughlyStrike(
+  props: React.ComponentProps<typeof RoughStrike>
+) {
+  return <RoughStrike {...props} />;
 };
 
-Roughly.Cross = function RoughlyCross(props: Omit<RoughlyProps, "type">) {
-  return <Roughly type="cross-off" {...props} />;
+Roughly.Cross = function RoughlyCross(
+  props: React.ComponentProps<typeof RoughCross>
+) {
+  return <RoughCross {...props} />;
 };
 
 Roughly.Bracket = function RoughlyBracket(props: Omit<RoughlyProps, "type">) {

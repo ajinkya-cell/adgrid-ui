@@ -237,4 +237,10 @@ export type {
 } from "./animated/Roughly";
 export { RoughCircle } from "./animated/roughly/RoughCircle";
 export type { RoughCircleProps } from "./animated/roughly/RoughCircle";
+export { RoughUnderline } from "./animated/roughly/RoughUnderline";
+export type { RoughUnderlineProps } from "./animated/roughly/RoughUnderline";
+export { RoughStrike } from "./animated/roughly/RoughStrike";
+export type { RoughStrikeProps, StrikeVariant } from "./animated/roughly/RoughStrike";
+export { RoughCross } from "./animated/roughly/RoughCross";
+export type { RoughCrossProps, CrossVariant } from "./animated/roughly/RoughCross";
 
