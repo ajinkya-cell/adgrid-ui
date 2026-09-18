@@ -20,11 +20,16 @@ export function Navbar() {
         pathname.startsWith("/components") ||
         pathname.startsWith("/docs"),
     },
+    {
+      label: "Roughly",
+      href: "/roughly",
+      isActive: pathname.startsWith("/roughly"),
+    },
   ];
 
   return (
     <header className="fixed top-3 sm:top-4 left-0 w-full z-50 px-4 flex justify-center pointer-events-none select-none">
-      <nav className="w-full max-w-[420px] h-11 rounded-full bg-[#09090b]/85 backdrop-blur-xl border border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.08)] flex items-center justify-between px-5 pointer-events-auto transition-all duration-300">
+      <nav className="w-full max-w-[480px] h-11 rounded-full bg-[#09090b]/85 backdrop-blur-xl border border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.08)] flex items-center justify-between px-5 pointer-events-auto transition-all duration-300">
         {/* Left: Brand / Logo */}
         <Link
           href="/"
@@ -33,8 +38,8 @@ export function Navbar() {
           void UI
         </Link>
 
-        {/* Middle: Gallery & Components in EB Garamond Italics */}
-        <div className="flex items-center gap-7">
+        {/* Middle: Gallery, Components & Roughly in EB Garamond Italics */}
+        <div className="flex items-center gap-5 sm:gap-6">
           {links.map((link) => (
             <Link
               key={link.label}

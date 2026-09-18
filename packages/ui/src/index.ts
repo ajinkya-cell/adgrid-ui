@@ -225,3 +225,16 @@ export type { BentoGridProps, BentoGridItemProps, BentoIconType } from "./animat
 // Minimalist Precision Meter / Sentiment Gauge Component
 export { Meter } from "./animated/Meter";
 export type { MeterProps } from "./animated/Meter";
+
+// Roughly - Hand-Drawn Text Annotation Suite
+export { Roughly } from "./animated/Roughly";
+export type {
+  RoughlyProps,
+  RoughlyType,
+  BracketSide,
+  BracketStyle,
+  UnderlineVariant,
+} from "./animated/Roughly";
+export { RoughCircle } from "./animated/roughly/RoughCircle";
+export type { RoughCircleProps } from "./animated/roughly/RoughCircle";
+
