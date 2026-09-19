@@ -1,13 +1,28 @@
 "use client";
 
 import { useState } from "react";
-import { Roughly, RoughCircle, RoughUnderline, RoughStrike } from "@adgrid-ui/ui";
+import {
+  Roughly,
+  RoughCircle,
+  RoughUnderline,
+  RoughStrike,
+  RoughCross,
+  RoughBracket,
+  RoughHighlight,
+  RoughBox,
+  RoughArrow,
+} from "@adgrid-ui/ui";
 import type {
   RoughlyType,
   BracketSide,
   BracketStyle,
   UnderlineVariant,
   StrikeVariant,
+  CrossVariant,
+  BoxVariant,
+  ArrowPlacement,
+  ArrowVariant,
+  ArrowheadStyle,
 } from "@adgrid-ui/ui";
 import { Check, Copy, RefreshCw, Sparkles, Terminal, BookOpen, Layers } from "lucide-react";
 
@@ -22,9 +37,22 @@ export default function RoughlyPage() {
   const [bracketStyle, setBracketStyle] = useState<BracketStyle>("curly");
   const [underlineVariant, setUnderlineVariant] = useState<UnderlineVariant>("single");
   const [strikeVariant, setStrikeVariant] = useState<StrikeVariant>("single");
+  const [crossVariant, setCrossVariant] = useState<CrossVariant>("single");
+  const [boxVariant, setBoxVariant] = useState<BoxVariant>("double");
+  const [boxPaddingX, setBoxPaddingX] = useState(8);
+  const [boxPaddingY, setBoxPaddingY] = useState(4);
+  const [arrowPlacement, setArrowPlacement] = useState<ArrowPlacement>("top-right");
+  const [arrowVariant, setArrowVariant] = useState<ArrowVariant>("curved");
+  const [arrowheadStyle, setArrowheadStyle] = useState<ArrowheadStyle>("open");
+  const [arrowIterations, setArrowIterations] = useState<number>(2);
+  const [arrowLabel, setArrowLabel] = useState<string>("Instant deploy ⚡");
+  const [arrowDistance, setArrowDistance] = useState<number>(65);
+  const [arrowOffset, setArrowOffset] = useState<number>(8);
+  const [arrowFlip, setArrowFlip] = useState<boolean>(false);
   const [circlePaddingX, setCirclePaddingX] = useState(22);
   const [circlePaddingY, setCirclePaddingY] = useState(10);
   const [circleIterations, setCircleIterations] = useState(2);
+  const [highlightIterations, setHighlightIterations] = useState(2);
   const [canvasTheme, setCanvasTheme] = useState<"dark" | "paper" | "light">("dark");
   const [fontSize, setFontSize] = useState<"text-base" | "text-2xl" | "text-4xl" | "text-6xl">("text-2xl");
   const [fontWeight, setFontWeight] = useState<"font-normal" | "font-semibold" | "font-bold">("font-semibold");
@@ -40,6 +68,7 @@ export default function RoughlyPage() {
     { id: "bracket", label: "Bracket { }" },
     { id: "box", label: "Box Frame" },
     { id: "highlight", label: "Highlight" },
+    { id: "arrow", label: "Arrow Callout ➔" },
   ];
 
   const colorPresets = [
@@ -95,13 +124,77 @@ export default function RoughlyPage() {
       return `<RoughStrike${propsString}>\n  ${text}\n</RoughStrike>`;
     }
 
+    if (selectedType === "cross-off") {
+      const propsList: string[] = [];
+      if (selectedColor !== "#F43F5E") propsList.push(`color="${selectedColor}"`);
+      if (strokeWidth !== 2) propsList.push(`strokeWidth={${strokeWidth}}`);
+      if (duration !== 700) propsList.push(`animationDuration={${duration}}`);
+      if (crossVariant !== "single") propsList.push(`variant="${crossVariant}"`);
+
+      const propsString = propsList.length > 0 ? ` ${propsList.join(" ")}` : "";
+      return `<RoughCross${propsString}>\n  ${text}\n</RoughCross>`;
+    }
+
+    if (selectedType === "bracket") {
+      const propsList: string[] = [];
+      if (selectedColor !== "#F59E0B") propsList.push(`color="${selectedColor}"`);
+      if (strokeWidth !== 2) propsList.push(`strokeWidth={${strokeWidth}}`);
+      if (duration !== 750) propsList.push(`animationDuration={${duration}}`);
+      if (bracketSide !== "left") propsList.push(`side="${bracketSide}"`);
+      if (bracketStyle !== "curly") propsList.push(`bracketStyle="${bracketStyle}"`);
+
+      const propsString = propsList.length > 0 ? ` ${propsList.join(" ")}` : "";
+      const indentedText = text
+        .split("\n")
+        .map((l) => `    <p>${l}</p>`)
+        .join("\n");
+      return `<RoughBracket${propsString}>\n  <div className="space-y-1">\n${indentedText}\n  </div>\n</RoughBracket>`;
+    }
+
+    if (selectedType === "highlight") {
+      const propsList: string[] = [];
+      if (selectedColor !== "#4338CA") propsList.push(`color="${selectedColor}"`);
+      if (duration !== 800) propsList.push(`animationDuration={${duration}}`);
+      if (highlightIterations !== 2) propsList.push(`iterations={${highlightIterations}}`);
+
+      const propsString = propsList.length > 0 ? ` ${propsList.join(" ")}` : "";
+      return `<RoughHighlight${propsString}>\n  ${text}\n</RoughHighlight>`;
+    }
+
+    if (selectedType === "box") {
+      const propsList: string[] = [];
+      if (selectedColor !== "#10B981") propsList.push(`color="${selectedColor}"`);
+      if (strokeWidth !== 2.5) propsList.push(`strokeWidth={${strokeWidth}}`);
+      if (boxPaddingX !== 8) propsList.push(`paddingX={${boxPaddingX}}`);
+      if (boxPaddingY !== 4) propsList.push(`paddingY={${boxPaddingY}}`);
+      if (duration !== 750) propsList.push(`animationDuration={${duration}}`);
+      if (boxVariant !== "double") propsList.push(`variant="${boxVariant}"`);
+
+      const propsString = propsList.length > 0 ? ` ${propsList.join(" ")}` : "";
+      return `<RoughBox${propsString}>\n  ${text}\n</RoughBox>`;
+    }
+
+    if (selectedType === "arrow") {
+      const propsList: string[] = [];
+      if (arrowPlacement !== "top-right") propsList.push(`placement="${arrowPlacement}"`);
+      if (arrowVariant !== "curved") propsList.push(`variant="${arrowVariant}"`);
+      if (arrowheadStyle !== "open") propsList.push(`arrowhead="${arrowheadStyle}"`);
+      if (selectedColor !== "#F59E0B") propsList.push(`color="${selectedColor}"`);
+      if (strokeWidth !== 2) propsList.push(`strokeWidth={${strokeWidth}}`);
+      if (arrowIterations !== 2) propsList.push(`iterations={${arrowIterations}}`);
+      if (arrowDistance !== 65) propsList.push(`distance={${arrowDistance}}`);
+      if (arrowOffset !== 8) propsList.push(`offset={${arrowOffset}}`);
+      if (arrowFlip) propsList.push(`flipCurve={true}`);
+      if (duration !== 800) propsList.push(`animationDuration={${duration}}`);
+      if (arrowLabel) propsList.push(`label="${arrowLabel}"`);
+
+      const propsString = propsList.length > 0 ? ` ${propsList.join(" ")}` : "";
+      return `<RoughArrow${propsString}>\n  ${text}\n</RoughArrow>`;
+    }
+
     const propsList: string[] = [];
     if (selectedColor !== "#6366F1") propsList.push(`color="${selectedColor}"`);
     if (strokeWidth !== 2) propsList.push(`strokeWidth={${strokeWidth}}`);
-    if (selectedType === "bracket") {
-      if (bracketSide !== "left") propsList.push(`brackets="${bracketSide}"`);
-      if (bracketStyle !== "curly") propsList.push(`bracketStyle="${bracketStyle}"`);
-    }
 
     const propsString = propsList.length > 0 ? ` ${propsList.join(" ")}` : "";
     return `<Roughly${propsString}>\n  ${text}\n</Roughly>`;
@@ -193,7 +286,28 @@ export default function RoughlyPage() {
                   {typePresets.map((t) => (
                     <button
                       key={t.id}
-                      onClick={() => setSelectedType(t.id)}
+                      onClick={() => {
+                        setSelectedType(t.id);
+                        if (t.id === "bracket") {
+                          if (!text.includes("\n")) {
+                            setText(
+                              "Zero layout shift on page reloads\nSized to encompass tall ascenders\nHardware-accelerated SVG draw stroke"
+                            );
+                          }
+                          setSelectedColor("#F59E0B");
+                        } else {
+                          if (text.includes("\n")) {
+                            setText("Interfaces with visceral depth");
+                          }
+                          if (t.id === "circle") setSelectedColor("#EC4899");
+                          else if (t.id === "underline") setSelectedColor("#6366F1");
+                          else if (t.id === "strike-through") setSelectedColor("#EF4444");
+                          else if (t.id === "cross-off") setSelectedColor("#F43F5E");
+                          else if (t.id === "box") setSelectedColor("#10B981");
+                          else if (t.id === "highlight") setSelectedColor("#4338CA");
+                          else if (t.id === "arrow") setSelectedColor("#F59E0B");
+                        }
+                      }}
                       className={`px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all text-center cursor-pointer ${
                         selectedType === t.id
                           ? "bg-indigo-600 text-white shadow-sm"
@@ -210,36 +324,85 @@ export default function RoughlyPage() {
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
                   <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
-                    Sample Text
+                    Sample Text {selectedType === "bracket" && "(Multiline)"}
                   </label>
-                  <div className="flex items-center gap-1.5">
-                    <button
-                      onClick={() => setText("Roughly")}
-                      className="px-2 py-0.5 text-[10px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
-                    >
-                      Short
-                    </button>
-                    <button
-                      onClick={() => setText("Interfaces with visceral")}
-                      className="px-2 py-0.5 text-[10px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
-                    >
-                      Medium
-                    </button>
-                    <button
-                      onClick={() => setText("Interfaces with visceral depth and tactile precision")}
-                      className="px-2 py-0.5 text-[10px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
-                    >
-                      Long
-                    </button>
-                  </div>
+                  {selectedType === "bracket" ? (
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() =>
+                          setText(
+                            "Dynamic multiline bracket\nSmooth single stroke animation"
+                          )
+                        }
+                        className="px-2 py-0.5 text-[10px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                      >
+                        2 Lines
+                      </button>
+                      <button
+                        onClick={() =>
+                          setText(
+                            "Zero layout shift on page reloads\nSized to encompass tall ascenders\nHardware-accelerated SVG draw stroke"
+                          )
+                        }
+                        className="px-2 py-0.5 text-[10px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                      >
+                        3 Lines
+                      </button>
+                      <button
+                        onClick={() =>
+                          setText(
+                            "const theme = 'void';\nconst fluid = true;\nrender(<RoughBracket />);"
+                          )
+                        }
+                        className="px-2 py-0.5 text-[10px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                      >
+                        Code
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => setText("Roughly")}
+                        className="px-2 py-0.5 text-[10px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                      >
+                        Short
+                      </button>
+                      <button
+                        onClick={() => setText("Interfaces with visceral")}
+                        className="px-2 py-0.5 text-[10px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                      >
+                        Medium
+                      </button>
+                      <button
+                        onClick={() =>
+                          setText(
+                            "Interfaces with visceral depth and tactile precision"
+                          )
+                        }
+                        className="px-2 py-0.5 text-[10px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                      >
+                        Long
+                      </button>
+                    </div>
+                  )}
                 </div>
-                <input
-                  type="text"
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-black/50 border border-white/10 text-sm text-white focus:outline-none focus:border-indigo-500 font-sans transition-colors"
-                  placeholder="Enter text to annotate..."
-                />
+                {selectedType === "bracket" ? (
+                  <textarea
+                    rows={3}
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg bg-black/50 border border-white/10 text-sm text-white focus:outline-none focus:border-indigo-500 font-sans transition-colors resize-y leading-relaxed"
+                    placeholder="Enter multiline text..."
+                  />
+                ) : (
+                  <input
+                    type="text"
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg bg-black/50 border border-white/10 text-sm text-white focus:outline-none focus:border-indigo-500 font-sans transition-colors"
+                    placeholder="Enter text to annotate..."
+                  />
+                )}
 
                 {/* Typography: Size & Boldness */}
                 <div className="grid grid-cols-2 gap-2 pt-1">
@@ -402,35 +565,390 @@ export default function RoughlyPage() {
                 </div>
               )}
 
-              {selectedType === "bracket" && (
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
-                      Bracket Side
-                    </label>
-                    <select
-                      value={bracketSide}
-                      onChange={(e) => setBracketSide(e.target.value as BracketSide)}
-                      className="w-full px-2.5 py-1.5 rounded-lg bg-black/50 border border-white/10 text-xs text-white focus:outline-none focus:border-indigo-500"
-                    >
-                      <option value="left">Left</option>
-                      <option value="right">Right</option>
-                      <option value="top">Top</option>
-                      <option value="bottom">Bottom</option>
-                    </select>
+              {selectedType === "cross-off" && (
+                <div className="space-y-2">
+                  <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                    Cross Cut Style
+                  </label>
+                  <div className="flex gap-2">
+                    {[
+                      { id: "single", label: "Single Cut (2 Strokes)" },
+                      { id: "double", label: "Double Sketch (4 Strokes)" },
+                    ].map((item) => (
+                      <button
+                        key={item.id}
+                        onClick={() => setCrossVariant(item.id as CrossVariant)}
+                        className={`flex-1 py-1.5 text-xs rounded-lg cursor-pointer transition-colors ${
+                          crossVariant === item.id
+                            ? "bg-white/20 text-white font-medium shadow-sm"
+                            : "bg-white/[0.04] text-neutral-400 hover:text-white"
+                        }`}
+                      >
+                        {item.label}
+                      </button>
+                    ))}
                   </div>
+                </div>
+              )}
+
+              {selectedType === "bracket" && (
+                <div className="space-y-3.5 p-3 rounded-xl bg-black/40 border border-white/10">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-white flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                      RoughBracket Architecture
+                    </span>
+                    <span className="text-[10px] font-mono text-neutral-400 bg-white/[0.05] px-2 py-0.5 rounded">
+                      Single Vector Stroke &bull; Multiline
+                    </span>
+                  </div>
+
                   <div className="space-y-1.5">
                     <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
                       Bracket Style
                     </label>
-                    <select
-                      value={bracketStyle}
-                      onChange={(e) => setBracketStyle(e.target.value as BracketStyle)}
-                      className="w-full px-2.5 py-1.5 rounded-lg bg-black/50 border border-white/10 text-xs text-white focus:outline-none focus:border-indigo-500"
+                    <div className="flex gap-2">
+                      {[
+                        { id: "curly", label: "Curly { }" },
+                        { id: "square", label: "Square [ ]" },
+                      ].map((style) => (
+                        <button
+                          key={style.id}
+                          onClick={() => setBracketStyle(style.id as BracketStyle)}
+                          className={`flex-1 py-1.5 text-xs rounded-lg font-mono transition-colors cursor-pointer ${
+                            bracketStyle === style.id
+                              ? "bg-white/20 text-white font-medium shadow-sm"
+                              : "bg-white/[0.04] text-neutral-400 hover:text-white"
+                          }`}
+                        >
+                          {style.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                      Placement Side
+                    </label>
+                    <div className="grid grid-cols-5 gap-1">
+                      {(["left", "right", "both", "top", "bottom"] as BracketSide[]).map((s) => (
+                        <button
+                          key={s}
+                          onClick={() => setBracketSide(s)}
+                          className={`py-1 text-[11px] font-mono capitalize rounded transition-colors cursor-pointer ${
+                            bracketSide === s
+                              ? "bg-white/20 text-white font-medium shadow-sm"
+                              : "bg-white/[0.04] text-neutral-400 hover:text-white"
+                          }`}
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {selectedType === "highlight" && (
+                <div className="space-y-3.5 p-3 rounded-xl bg-black/40 border border-white/10">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-white flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
+                      RoughHighlight Architecture
+                    </span>
+                    <span className="text-[10px] font-mono text-neutral-400 bg-white/[0.05] px-2 py-0.5 rounded">
+                      rough.js engine &bull; double strokes
+                    </span>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                      Highlighter Stroke Passes
+                    </label>
+                    <div className="flex gap-2">
+                      {[
+                        { id: 2, label: "Double Stroke (Authentic 2 Passes)" },
+                        { id: 1, label: "Single Stroke (Clean 1 Pass)" },
+                      ].map((item) => (
+                        <button
+                          key={item.id}
+                          onClick={() => setHighlightIterations(item.id)}
+                          className={`flex-1 py-1.5 text-xs rounded-lg cursor-pointer transition-colors ${
+                            highlightIterations === item.id
+                              ? "bg-white/20 text-white font-medium shadow-sm"
+                              : "bg-white/[0.04] text-neutral-400 hover:text-white"
+                          }`}
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-[10px] text-neutral-500 pt-0.5">
+                      Double strokes sweep forward and back with rough.js roughness and bowing for realistic marker depth.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {selectedType === "box" && (
+                <div className="space-y-3.5 p-3 rounded-xl bg-black/40 border border-white/10">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-white flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      RoughBox Architecture
+                    </span>
+                    <span className="text-[10px] font-mono text-neutral-400 bg-white/[0.05] px-2 py-0.5 rounded">
+                      rough.js engine &bull; hand-drawn box
+                    </span>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                      Box Frame Passes
+                    </label>
+                    <div className="flex gap-2">
+                      {[
+                        { id: "double", label: "Double Strokes (Authentic Hand-Drawn)" },
+                        { id: "single", label: "Single Stroke (Clean Frame)" },
+                      ].map((item) => (
+                        <button
+                          key={item.id}
+                          onClick={() => setBoxVariant(item.id as BoxVariant)}
+                          className={`flex-1 py-1.5 text-xs rounded-lg cursor-pointer transition-colors ${
+                            boxVariant === item.id
+                              ? "bg-white/20 text-white font-medium shadow-sm"
+                              : "bg-white/[0.04] text-neutral-400 hover:text-white"
+                          }`}
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-[10px] text-neutral-500 pt-0.5">
+                      Double strokes draw 2 organic loops with corner overshoots and slight line curvature via rough.js.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 pt-1">
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-[11px] font-mono text-neutral-400">
+                        <span>Padding X</span>
+                        <span>{boxPaddingX}px</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="2"
+                        max="24"
+                        step="1"
+                        value={boxPaddingX}
+                        onChange={(e) => setBoxPaddingX(Number(e.target.value))}
+                        className="w-full accent-emerald-500 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-[11px] font-mono text-neutral-400">
+                        <span>Padding Y</span>
+                        <span>{boxPaddingY}px</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="1"
+                        max="16"
+                        step="1"
+                        value={boxPaddingY}
+                        onChange={(e) => setBoxPaddingY(Number(e.target.value))}
+                        className="w-full accent-emerald-500 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {selectedType === "arrow" && (
+                <div className="space-y-3.5 p-3 rounded-xl bg-black/40 border border-white/10">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-white flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                      RoughArrow Architecture
+                    </span>
+                    <span className="text-[10px] font-mono text-neutral-400 bg-white/[0.05] px-2 py-0.5 rounded">
+                      rough.js vector &bull; 8 placements
+                    </span>
+                  </div>
+
+                  {/* Callout Label Input */}
+                  <div className="space-y-1">
+                    <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                      Callout Label (Handwritten Caveat)
+                    </label>
+                    <input
+                      type="text"
+                      value={arrowLabel}
+                      onChange={(e) => setArrowLabel(e.target.value)}
+                      placeholder="e.g. Look here! ⚡"
+                      className="w-full px-3 py-1.5 text-xs rounded-lg bg-white/[0.04] border border-white/10 text-white font-[family-name:var(--font-caveat),cursive] text-base focus:outline-none focus:border-amber-400"
+                    />
+                  </div>
+
+                  {/* Placement Grid */}
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                      Arrow Placement (8 Directions)
+                    </label>
+                    <div className="grid grid-cols-4 gap-1">
+                      {(
+                        [
+                          "top-left",
+                          "top",
+                          "top-right",
+                          "right",
+                          "bottom-right",
+                          "bottom",
+                          "bottom-left",
+                          "left",
+                        ] as ArrowPlacement[]
+                      ).map((p) => (
+                        <button
+                          key={p}
+                          onClick={() => setArrowPlacement(p)}
+                          className={`py-1 text-[10px] font-mono capitalize rounded transition-colors cursor-pointer ${
+                            arrowPlacement === p
+                              ? "bg-white/20 text-white font-medium shadow-sm"
+                              : "bg-white/[0.04] text-neutral-400 hover:text-white"
+                          }`}
+                        >
+                          {p.replace("-", " ")}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Curve Variant */}
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                      Curve Trajectory
+                    </label>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {[
+                        { id: "curved", label: "Curved Arc" },
+                        { id: "loop", label: "Loop-de-Loop" },
+                        { id: "s-curve", label: "S-Curve Wave" },
+                        { id: "straight", label: "Straight Line" },
+                      ].map((v) => (
+                        <button
+                          key={v.id}
+                          onClick={() => setArrowVariant(v.id as ArrowVariant)}
+                          className={`py-1.5 text-xs rounded-lg cursor-pointer transition-colors ${
+                            arrowVariant === v.id
+                              ? "bg-white/20 text-white font-medium shadow-sm"
+                              : "bg-white/[0.04] text-neutral-400 hover:text-white"
+                          }`}
+                        >
+                          {v.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Arrowhead & Stroke Passes */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-1">
+                      <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                        Arrowhead Style
+                      </label>
+                      <div className="flex gap-1">
+                        {[
+                          { id: "open", label: "Open >" },
+                          { id: "filled", label: "Filled ▲" },
+                          { id: "curved", label: "Curved ~" },
+                        ].map((h) => (
+                          <button
+                            key={h.id}
+                            onClick={() => setArrowheadStyle(h.id as ArrowheadStyle)}
+                            className={`flex-1 py-1 text-[11px] rounded transition-colors cursor-pointer ${
+                              arrowheadStyle === h.id
+                                ? "bg-white/20 text-white font-medium"
+                                : "bg-white/[0.04] text-neutral-400 hover:text-white"
+                            }`}
+                          >
+                            {h.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                        Stroke Passes
+                      </label>
+                      <div className="flex gap-1">
+                        {[
+                          { id: 2, label: "Double" },
+                          { id: 1, label: "Single" },
+                        ].map((item) => (
+                          <button
+                            key={item.id}
+                            onClick={() => setArrowIterations(item.id)}
+                            className={`flex-1 py-1 text-[11px] rounded transition-colors cursor-pointer ${
+                              arrowIterations === item.id
+                                ? "bg-white/20 text-white font-medium"
+                                : "bg-white/[0.04] text-neutral-400 hover:text-white"
+                            }`}
+                          >
+                            {item.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Sliders: Distance & Offset */}
+                  <div className="grid grid-cols-2 gap-3 pt-1">
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-[11px] font-mono text-neutral-400">
+                        <span>Distance</span>
+                        <span>{arrowDistance}px</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="35"
+                        max="120"
+                        step="5"
+                        value={arrowDistance}
+                        onChange={(e) => setArrowDistance(Number(e.target.value))}
+                        className="w-full accent-amber-500 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-[11px] font-mono text-neutral-400">
+                        <span>Target Offset</span>
+                        <span>{arrowOffset}px</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="2"
+                        max="24"
+                        step="1"
+                        value={arrowOffset}
+                        onChange={(e) => setArrowOffset(Number(e.target.value))}
+                        className="w-full accent-amber-500 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="pt-1 flex items-center justify-between">
+                    <span className="text-xs text-neutral-400">Invert Arc Curvature</span>
+                    <button
+                      onClick={() => setArrowFlip((prev) => !prev)}
+                      className={`px-2.5 py-1 text-[11px] rounded font-mono transition-colors cursor-pointer ${
+                        arrowFlip
+                          ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                          : "bg-white/[0.04] text-neutral-400 hover:text-white border border-transparent"
+                      }`}
                     >
-                      <option value="curly">Curly {"{ }"}</option>
-                      <option value="square">Square [ ]</option>
-                    </select>
+                      {arrowFlip ? "Flipped" : "Normal"}
+                    </button>
                   </div>
                 </div>
               )}
@@ -579,14 +1097,82 @@ export default function RoughlyPage() {
                     >
                       {text}
                     </RoughStrike>
+                  ) : selectedType === "cross-off" ? (
+                    <RoughCross
+                      key={`cross-${replayKey}-${crossVariant}-${selectedColor}`}
+                      variant={crossVariant}
+                      color={selectedColor}
+                      strokeWidth={strokeWidth}
+                      animationDuration={duration}
+                      animate={true}
+                    >
+                      {text}
+                    </RoughCross>
+                  ) : selectedType === "bracket" ? (
+                    <RoughBracket
+                      key={`bracket-${replayKey}-${bracketSide}-${bracketStyle}-${selectedColor}-${strokeWidth}`}
+                      side={bracketSide}
+                      bracketStyle={bracketStyle}
+                      color={selectedColor}
+                      strokeWidth={strokeWidth}
+                      animationDuration={duration}
+                      animate={true}
+                    >
+                      <div className="space-y-1.5 text-left">
+                        {text.split("\n").map((line, idx) => (
+                          <div key={idx}>{line}</div>
+                        ))}
+                      </div>
+                    </RoughBracket>
+                  ) : selectedType === "highlight" ? (
+                    <RoughHighlight
+                      key={`highlight-${replayKey}-${highlightIterations}-${selectedColor}`}
+                      color={selectedColor}
+                      animationDuration={duration}
+                      iterations={highlightIterations}
+                      animate={true}
+                    >
+                      {text}
+                    </RoughHighlight>
+                  ) : selectedType === "box" ? (
+                    <RoughBox
+                      key={`box-${replayKey}-${boxVariant}-${boxPaddingX}-${boxPaddingY}-${selectedColor}-${strokeWidth}`}
+                      variant={boxVariant}
+                      paddingX={boxPaddingX}
+                      paddingY={boxPaddingY}
+                      color={selectedColor}
+                      strokeWidth={strokeWidth}
+                      animationDuration={duration}
+                      animate={true}
+                    >
+                      {text}
+                    </RoughBox>
+                  ) : selectedType === "arrow" ? (
+                    <div className="py-16 px-10 flex items-center justify-center">
+                      <RoughArrow
+                        key={`arrow-${replayKey}-${arrowPlacement}-${arrowVariant}-${arrowheadStyle}-${arrowIterations}-${arrowDistance}-${arrowOffset}-${arrowFlip}-${selectedColor}-${strokeWidth}-${arrowLabel}`}
+                        placement={arrowPlacement}
+                        variant={arrowVariant}
+                        arrowhead={arrowheadStyle}
+                        iterations={arrowIterations}
+                        distance={arrowDistance}
+                        offset={arrowOffset}
+                        flipCurve={arrowFlip}
+                        label={arrowLabel}
+                        color={selectedColor}
+                        strokeWidth={strokeWidth}
+                        animationDuration={duration}
+                        animate={true}
+                      >
+                        {text}
+                      </RoughArrow>
+                    </div>
                   ) : (
                     <Roughly
                       type={selectedType}
                       color={selectedColor}
                       strokeWidth={strokeWidth}
                       animationDuration={duration}
-                      brackets={bracketSide}
-                      bracketStyle={bracketStyle}
                       animate={true}
                     >
                       {text}
@@ -656,8 +1242,8 @@ export default function RoughlyPage() {
                 critical insights
               </Roughly.Circle>{" "}
               or mark deprecated features with an organic{" "}
-              <Roughly.Cross color="#F43F5E">
-                strike
+              <Roughly.Cross variant="single" color="#F43F5E">
+                cross out
               </Roughly.Cross>
               .
             </p>
@@ -674,10 +1260,24 @@ export default function RoughlyPage() {
 
             <p>
               Every annotation is enclosed in a{" "}
-              <Roughly.Box color="#10B981">
-                deterministic vector frame
+              <Roughly.Box color="#10B981" variant="double">
+                hand-drawn rough frame
               </Roughly.Box>{" "}
-              ensuring 100% consistent rendering across browsers and devices.
+              with natural corner overshoots and fluid double stroke sketch loops.
+            </p>
+
+            <p className="pt-3">
+              Direct the reader&apos;s gaze with an expressive{" "}
+              <RoughArrow
+                label="Direct vector pointing ✨"
+                placement="top-right"
+                variant="curved"
+                color="#F59E0B"
+                distance={55}
+              >
+                hand-drawn callout arrow
+              </RoughArrow>{" "}
+              that automatically calculates its trajectory, clearance, and entry angle directly onto the target word.
             </p>
           </div>
         </section>
@@ -706,7 +1306,7 @@ export default function RoughlyPage() {
                   <td className="p-3 text-indigo-400">RoughlyType</td>
                   <td className="p-3 text-neutral-500">&quot;underline&quot;</td>
                   <td className="p-3 font-sans text-neutral-400">
-                    &quot;underline&quot; | &quot;circle&quot; | &quot;strike-through&quot; | &quot;cross-off&quot; | &quot;bracket&quot; | &quot;box&quot; | &quot;highlight&quot;
+                    &quot;underline&quot; | &quot;circle&quot; | &quot;strike-through&quot; | &quot;cross-off&quot; | &quot;bracket&quot; | &quot;box&quot; | &quot;highlight&quot; | &quot;arrow&quot;
                   </td>
                 </tr>
                 <tr>
@@ -734,10 +1334,10 @@ export default function RoughlyPage() {
                   <td className="p-3 font-sans text-neutral-400">Duration of drawing in milliseconds</td>
                 </tr>
                 <tr>
-                  <td className="p-3 font-semibold text-white">brackets</td>
+                  <td className="p-3 font-semibold text-white">side / brackets</td>
                   <td className="p-3 text-indigo-400">BracketSide</td>
                   <td className="p-3 text-neutral-500">&quot;left&quot;</td>
-                  <td className="p-3 font-sans text-neutral-400">&quot;left&quot; | &quot;right&quot; | &quot;top&quot; | &quot;bottom&quot; (for bracket type)</td>
+                  <td className="p-3 font-sans text-neutral-400">&quot;left&quot; | &quot;right&quot; | &quot;both&quot; | &quot;top&quot; | &quot;bottom&quot; (for bracket type)</td>
                 </tr>
                 <tr>
                   <td className="p-3 font-semibold text-white">bracketStyle</td>
@@ -750,7 +1350,47 @@ export default function RoughlyPage() {
                   <td className="p-3 text-indigo-400">string</td>
                   <td className="p-3 text-neutral-500">&quot;single&quot;</td>
                   <td className="p-3 font-sans text-neutral-400">
-                    &quot;single&quot; | &quot;double&quot; | &quot;wavy&quot; (for underline) &bull; &quot;single&quot; | &quot;double&quot; | &quot;triple&quot; (for strike-through)
+                    &quot;single&quot; | &quot;double&quot; | &quot;wavy&quot; (underline) &bull; &quot;single&quot; | &quot;double&quot; | &quot;triple&quot; (strike) &bull; &quot;single&quot; | &quot;double&quot; (cross &amp; box)
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">iterations</td>
+                  <td className="p-3 text-indigo-400">number</td>
+                  <td className="p-3 text-neutral-500">2</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Number of stroke passes (e.g. 2 for double strokes in box, arrow, highlight, and circle)
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">placement</td>
+                  <td className="p-3 text-indigo-400">ArrowPlacement</td>
+                  <td className="p-3 text-neutral-500">&quot;top-right&quot;</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Direction from which the arrow points at the target: &quot;top-left&quot; | &quot;top&quot; | &quot;top-right&quot; | &quot;right&quot; | &quot;bottom-right&quot; | &quot;bottom&quot; | &quot;bottom-left&quot; | &quot;left&quot;
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">arrowVariant / variant</td>
+                  <td className="p-3 text-indigo-400">ArrowVariant</td>
+                  <td className="p-3 text-neutral-500">&quot;curved&quot;</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Curve trajectory: &quot;curved&quot; (parabolic arc) | &quot;loop&quot; (loop-de-loop) | &quot;s-curve&quot; (double wave) | &quot;straight&quot;
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">arrowhead</td>
+                  <td className="p-3 text-indigo-400">ArrowheadStyle</td>
+                  <td className="p-3 text-neutral-500">&quot;open&quot;</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Style of arrow tip: &quot;open&quot; (&gt;) | &quot;filled&quot; (solid triangle) | &quot;curved&quot; (flared barbs)
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">label</td>
+                  <td className="p-3 text-indigo-400">ReactNode</td>
+                  <td className="p-3 text-neutral-500">undefined</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Handwritten callout text displayed at the tail of the arrow with cursive Caveat styling
                   </td>
                 </tr>
               </tbody>

@@ -243,4 +243,17 @@ export { RoughStrike } from "./animated/roughly/RoughStrike";
 export type { RoughStrikeProps, StrikeVariant } from "./animated/roughly/RoughStrike";
 export { RoughCross } from "./animated/roughly/RoughCross";
 export type { RoughCrossProps, CrossVariant } from "./animated/roughly/RoughCross";
+export { RoughBracket } from "./animated/roughly/RoughBracket";
+export type { RoughBracketProps } from "./animated/roughly/RoughBracket";
+export { RoughHighlight } from "./animated/roughly/RoughHighlight";
+export type { RoughHighlightProps } from "./animated/roughly/RoughHighlight";
+export { RoughBox } from "./animated/roughly/RoughBox";
+export type { RoughBoxProps, BoxVariant } from "./animated/roughly/RoughBox";
+export { RoughArrow } from "./animated/roughly/RoughArrow";
+export type {
+  RoughArrowProps,
+  ArrowPlacement,
+  ArrowVariant,
+  ArrowheadStyle,
+} from "./animated/roughly/RoughArrow";
 
