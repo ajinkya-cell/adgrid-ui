@@ -24,7 +24,23 @@ import type {
   ArrowVariant,
   ArrowheadStyle,
 } from "@adgrid-ui/ui";
-import { Check, Copy, RefreshCw, Sparkles, Terminal, BookOpen, Layers } from "lucide-react";
+import {
+  Check,
+  Copy,
+  RefreshCw,
+  Sparkles,
+  Terminal,
+  BookOpen,
+  Layers,
+  Underline as UnderlineIcon,
+  Circle as CircleIcon,
+  Strikethrough as StrikeIcon,
+  X as CrossIcon,
+  Brackets as BracketIcon,
+  Square as BoxIcon,
+  Highlighter as HighlightIcon,
+  ArrowRight as ArrowIcon,
+} from "lucide-react";
 
 export default function RoughlyPage() {
   // Playground State
@@ -54,21 +70,23 @@ export default function RoughlyPage() {
   const [circleIterations, setCircleIterations] = useState(2);
   const [highlightIterations, setHighlightIterations] = useState(2);
   const [canvasTheme, setCanvasTheme] = useState<"dark" | "paper" | "light">("dark");
-  const [fontSize, setFontSize] = useState<"text-base" | "text-2xl" | "text-4xl" | "text-6xl">("text-2xl");
-  const [fontWeight, setFontWeight] = useState<"font-normal" | "font-semibold" | "font-bold">("font-semibold");
   const [replayKey, setReplayKey] = useState(0);
   const [copiedCode, setCopiedCode] = useState(false);
   const [copiedInstall, setCopiedInstall] = useState(false);
 
-  const typePresets: { id: RoughlyType; label: string }[] = [
-    { id: "underline", label: "Underline" },
-    { id: "circle", label: "Circle" },
-    { id: "strike-through", label: "Strike-Through" },
-    { id: "cross-off", label: "Cross-Off (X)" },
-    { id: "bracket", label: "Bracket { }" },
-    { id: "box", label: "Box Frame" },
-    { id: "highlight", label: "Highlight" },
-    { id: "arrow", label: "Arrow Callout ➔" },
+  const typePresets: {
+    id: RoughlyType;
+    label: string;
+    icon: React.ComponentType<{ className?: string }>;
+  }[] = [
+    { id: "underline", label: "Underline", icon: UnderlineIcon },
+    { id: "circle", label: "Circle", icon: CircleIcon },
+    { id: "strike-through", label: "Strike", icon: StrikeIcon },
+    { id: "cross-off", label: "Cross", icon: CrossIcon },
+    { id: "bracket", label: "Bracket", icon: BracketIcon },
+    { id: "box", label: "Box", icon: BoxIcon },
+    { id: "highlight", label: "Highlight", icon: HighlightIcon },
+    { id: "arrow", label: "Arrow", icon: ArrowIcon },
   ];
 
   const colorPresets = [
@@ -279,44 +297,61 @@ export default function RoughlyPage() {
             <div className="lg:col-span-5 space-y-5 p-5 rounded-2xl bg-[#111114] border border-white/[0.08]">
               {/* Type Switcher */}
               <div className="space-y-2">
-                <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
-                  Annotation Type
-                </label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
-                  {typePresets.map((t) => (
-                    <button
-                      key={t.id}
-                      onClick={() => {
-                        setSelectedType(t.id);
-                        if (t.id === "bracket") {
-                          if (!text.includes("\n")) {
-                            setText(
-                              "Zero layout shift on page reloads\nSized to encompass tall ascenders\nHardware-accelerated SVG draw stroke"
-                            );
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                    Annotation Type
+                  </label>
+                  <span className="text-[10px] font-mono text-neutral-500">8 styles</span>
+                </div>
+                <div className="rounded-xl border border-white/[0.08] bg-black/40 overflow-hidden divide-y divide-white/[0.04]">
+                  {typePresets.map((t) => {
+                    const Icon = t.icon;
+                    const isSelected = selectedType === t.id;
+                    return (
+                      <button
+                        key={t.id}
+                        onClick={() => {
+                          setSelectedType(t.id);
+                          if (t.id === "bracket") {
+                            if (!text.includes("\n")) {
+                              setText(
+                                "Zero layout shift on page reloads\nSized to encompass tall ascenders\nHardware-accelerated SVG draw stroke"
+                              );
+                            }
+                            setSelectedColor("#F59E0B");
+                          } else {
+                            if (text.includes("\n")) {
+                              setText("Interfaces with visceral depth");
+                            }
+                            if (t.id === "circle") setSelectedColor("#EC4899");
+                            else if (t.id === "underline") setSelectedColor("#6366F1");
+                            else if (t.id === "strike-through") setSelectedColor("#EF4444");
+                            else if (t.id === "cross-off") setSelectedColor("#F43F5E");
+                            else if (t.id === "box") setSelectedColor("#10B981");
+                            else if (t.id === "highlight") setSelectedColor("#4338CA");
+                            else if (t.id === "arrow") setSelectedColor("#F59E0B");
                           }
-                          setSelectedColor("#F59E0B");
-                        } else {
-                          if (text.includes("\n")) {
-                            setText("Interfaces with visceral depth");
-                          }
-                          if (t.id === "circle") setSelectedColor("#EC4899");
-                          else if (t.id === "underline") setSelectedColor("#6366F1");
-                          else if (t.id === "strike-through") setSelectedColor("#EF4444");
-                          else if (t.id === "cross-off") setSelectedColor("#F43F5E");
-                          else if (t.id === "box") setSelectedColor("#10B981");
-                          else if (t.id === "highlight") setSelectedColor("#4338CA");
-                          else if (t.id === "arrow") setSelectedColor("#F59E0B");
-                        }
-                      }}
-                      className={`px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all text-center cursor-pointer ${
-                        selectedType === t.id
-                          ? "bg-indigo-600 text-white shadow-sm"
-                          : "bg-white/[0.03] text-neutral-400 hover:text-white hover:bg-white/[0.06]"
-                      }`}
-                    >
-                      {t.label}
-                    </button>
-                  ))}
+                        }}
+                        className={`w-full px-3 py-2 flex items-center justify-between text-left transition-colors cursor-pointer ${
+                          isSelected
+                            ? "bg-indigo-600/15 text-white font-medium"
+                            : "text-neutral-400 hover:text-neutral-200 hover:bg-white/[0.03]"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <Icon
+                            className={`w-3.5 h-3.5 transition-colors ${
+                              isSelected ? "text-indigo-400" : "text-neutral-500"
+                            }`}
+                          />
+                          <span className="text-xs">{t.label}</span>
+                        </div>
+                        {isSelected && (
+                          <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -404,45 +439,6 @@ export default function RoughlyPage() {
                   />
                 )}
 
-                {/* Typography: Size & Boldness */}
-                <div className="grid grid-cols-2 gap-2 pt-1">
-                  <div className="space-y-1">
-                    <span className="text-[10px] uppercase tracking-wider text-neutral-500 font-mono">Size</span>
-                    <div className="grid grid-cols-4 gap-1">
-                      {(["text-base", "text-2xl", "text-4xl", "text-6xl"] as const).map((s) => (
-                        <button
-                          key={s}
-                          onClick={() => setFontSize(s)}
-                          className={`py-1 text-[10px] font-mono rounded transition-colors cursor-pointer ${
-                            fontSize === s
-                              ? "bg-indigo-600/80 text-white font-semibold"
-                              : "bg-white/[0.03] text-neutral-400 hover:text-white"
-                          }`}
-                        >
-                          {s.replace("text-", "").toUpperCase()}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="space-y-1">
-                    <span className="text-[10px] uppercase tracking-wider text-neutral-500 font-mono">Weight</span>
-                    <div className="grid grid-cols-3 gap-1">
-                      {(["font-normal", "font-semibold", "font-bold"] as const).map((w) => (
-                        <button
-                          key={w}
-                          onClick={() => setFontWeight(w)}
-                          className={`py-1 text-[10px] font-mono rounded transition-colors cursor-pointer ${
-                            fontWeight === w
-                              ? "bg-indigo-600/80 text-white font-semibold"
-                              : "bg-white/[0.03] text-neutral-400 hover:text-white"
-                          }`}
-                        >
-                          {w.replace("font-", "").slice(0, 4).toUpperCase()}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
               </div>
 
               {/* Type-Specific Options */}
@@ -1058,7 +1054,7 @@ export default function RoughlyPage() {
 
                 <div
                   key={replayKey}
-                  className={`relative z-10 ${fontSize} ${fontWeight} tracking-tight transition-colors duration-200 ${
+                  className={`relative z-10 text-2xl font-semibold tracking-tight transition-colors duration-200 ${
                     canvasTheme === "dark" ? "text-white" : "text-neutral-900"
                   }`}
                 >
