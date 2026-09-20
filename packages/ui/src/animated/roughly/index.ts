@@ -22,4 +22,6 @@ export type {
   ArrowPlacement,
   ArrowVariant,
   ArrowheadStyle,
+  ArrowLabelFont,
 } from "./RoughArrow";
+

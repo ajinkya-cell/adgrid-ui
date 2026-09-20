@@ -249,7 +249,9 @@ export default function RoughlyPage() {
   };
 
   const handleCopyInstall = () => {
-    navigator.clipboard.writeText("pnpm add @adgrid-ui/ui");
+    navigator.clipboard.writeText(
+      "pnpm dlx shadcn@latest add https://void-ui.vercel.app/r/roughly.json"
+    );
     setCopiedInstall(true);
     setTimeout(() => setCopiedInstall(false), 2000);
   };
@@ -264,10 +266,10 @@ export default function RoughlyPage() {
   };
 
   const installCommands: Record<string, string> = {
-    pnpm: "pnpm add @adgrid-ui/ui framer-motion",
-    npm: "npm install @adgrid-ui/ui framer-motion",
-    yarn: "yarn add @adgrid-ui/ui framer-motion",
-    bun: "bun add @adgrid-ui/ui framer-motion",
+    pnpm: "pnpm dlx shadcn@latest add https://void-ui.vercel.app/r/roughly.json",
+    npm: "npx shadcn@latest add https://void-ui.vercel.app/r/roughly.json",
+    yarn: "yarn dlx shadcn@latest add https://void-ui.vercel.app/r/roughly.json",
+    bun: "bunx --bun shadcn@latest add https://void-ui.vercel.app/r/roughly.json",
   };
 
   return (
@@ -288,6 +290,12 @@ export default function RoughlyPage() {
 
         {/* Hero Content (Centered in the open void of the illustration) */}
         <div className="relative z-10 space-y-6 text-center max-w-2xl mx-auto">
+          {/* Brand Eyebrow Badge */}
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono text-neutral-400 bg-white/[0.04] border border-white/10 backdrop-blur-md">
+            <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
+            Void UI / Roughly
+          </div>
+
           <h1 className="text-5xl sm:text-7xl font-bold tracking-tight text-white font-sans drop-shadow-md">
             <Roughly type="circle" color="#6366F1" strokeWidth={2.5}>
               Roughly
@@ -303,7 +311,7 @@ export default function RoughlyPage() {
             {/* Recessed Command Capsule with Tactile Depth */}
             <div
               onClick={handleCopyInstall}
-              className="relative flex  items-center gap-2.5 h-11 px-8 rounded-full font-mono text-xs text-neutral-200 border border-white/10 bg-[#0c0c0f]/90 backdrop-blur-xl transition-all cursor-pointer group select-all"
+              className="relative flex items-center gap-2.5 h-11 px-6 sm:px-8 rounded-full font-mono text-xs text-neutral-200 border border-white/10 bg-[#0c0c0f]/90 backdrop-blur-xl transition-all cursor-pointer group select-all"
               style={{
                 boxShadow:
                   "inset 0 1.5px 3px rgba(0, 0, 0, 0.9), inset 0 -1px 0 rgba(255, 255, 255, 0.06), 0 8px 20px -2px rgba(0, 0, 0, 0.7)",
@@ -315,8 +323,9 @@ export default function RoughlyPage() {
 
               {/* Command Text */}
               <div className="flex items-center gap-1.5 tracking-tight">
-                <span className="text-neutral-400 select-none">pnpm add</span>
-                <span className="text-white font-medium">@adgrid-ui/ui</span>
+                <span className="text-neutral-500 select-none">$</span>
+                <span className="text-neutral-400">pnpm dlx shadcn@latest add</span>
+                <span className="text-white font-medium">https://void-ui.vercel.app/r/roughly.json</span>
               </div>
             </div>
 
@@ -1353,14 +1362,14 @@ export default function RoughlyPage() {
                 <span className="px-2.5 py-0.5 rounded-full font-mono text-[11px] font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
                   Step 01
                 </span>
-                <span className="text-xs font-mono text-neutral-500">Prerequisite: framer-motion</span>
+                <span className="text-xs font-mono text-neutral-500">CLI Distribution</span>
               </div>
               <div className="space-y-1">
                 <h3 className="text-base font-semibold text-white font-sans">
-                  Install Dependencies
+                  Install via Void UI CLI
                 </h3>
                 <p className="text-xs sm:text-sm text-neutral-400 font-normal leading-relaxed">
-                  Install <code className="text-indigo-300 font-mono text-xs">@adgrid-ui/ui</code> along with <code className="text-indigo-300 font-mono text-xs">framer-motion</code> for scroll-triggered vector drawing animations.
+                  Add Void UI&apos;s Roughly annotations directly into your project via the shadcn CLI. This downloads the source code into <code className="text-indigo-300 font-mono text-xs">components/ui/roughly/</code> and automatically resolves all peer dependencies.
                 </p>
               </div>
 
@@ -1412,14 +1421,14 @@ export default function RoughlyPage() {
                 <span className="px-2.5 py-0.5 rounded-full font-mono text-[11px] font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
                   Step 02
                 </span>
-                <span className="text-xs font-mono text-neutral-500">Tree-shakable</span>
+                <span className="text-xs font-mono text-neutral-500">Direct Source Ownership</span>
               </div>
               <div className="space-y-1">
                 <h3 className="text-base font-semibold text-white font-sans">
                   Import Components
                 </h3>
                 <p className="text-xs sm:text-sm text-neutral-400 font-normal leading-relaxed">
-                  Import the individual annotation subcomponents for optimal bundle tree-shaking, or use the unified compound <code className="text-indigo-300 font-mono text-xs">&lt;Roughly&gt;</code> component.
+                  Import the individual annotation subcomponents from your local UI directory for optimal tree-shaking, or use the unified compound <code className="text-indigo-300 font-mono text-xs">&lt;Roughly&gt;</code> component.
                 </p>
               </div>
 
@@ -1430,7 +1439,7 @@ export default function RoughlyPage() {
                     onClick={() =>
                       handleCopyGuide(
                         "import",
-                        `import {\n  Roughly,\n  RoughCircle,\n  RoughUnderline,\n  RoughHighlight,\n  RoughBox,\n  RoughBracket,\n  RoughStrike,\n  RoughCross,\n  RoughArrow,\n} from "@adgrid-ui/ui";`
+                        `import {\n  Roughly,\n  RoughCircle,\n  RoughUnderline,\n  RoughHighlight,\n  RoughBox,\n  RoughBracket,\n  RoughStrike,\n  RoughCross,\n  RoughArrow,\n} from "@/components/ui/roughly";`
                       )
                     }
                     className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-300 hover:text-white transition-colors cursor-pointer"
@@ -1459,7 +1468,7 @@ export default function RoughlyPage() {
   RoughStrike,
   RoughCross,
   RoughArrow,
-} from "@adgrid-ui/ui";`}</code>
+} from "@/components/ui/roughly";`}</code>
                 </pre>
               </div>
             </div>
@@ -1488,7 +1497,7 @@ export default function RoughlyPage() {
                     onClick={() =>
                       handleCopyGuide(
                         "usage",
-                        `export default function ArticleHero() {\n  return (\n    <div className="space-y-4">\n      {/* Tactile Marker Highlight */}\n      <h1 className="text-3xl font-bold text-white">\n        Design with <RoughHighlight color="#4338CA">physical friction</RoughHighlight>\n      </h1>\n\n      {/* Hand-drawn Pen Circle */}\n      <p className="text-neutral-300">\n        Focus on <RoughCircle color="#6366F1">critical insights</RoughCircle> inside body copy.\n      </p>\n\n      {/* Wavy Underline */}\n      <p className="text-neutral-300">\n        Add energy with <RoughUnderline variant="wavy" color="#10B981">expressive underlines</RoughUnderline>.\n      </p>\n\n      {/* Sketch Box Frame */}\n      <p className="text-neutral-300">\n        Enclose cards in a <RoughBox color="#F59E0B" variant="double">hand-drawn frame</RoughBox>.\n      </p>\n    </div>\n  );\n}`
+                        `import {\n  RoughHighlight,\n  RoughCircle,\n  RoughUnderline,\n  RoughBox,\n} from "@/components/ui/roughly";\n\nexport default function ArticleHero() {\n  return (\n    <div className="space-y-4">\n      {/* Tactile Marker Highlight */}\n      <h1 className="text-3xl font-bold text-white">\n        Design with <RoughHighlight color="#4338CA">physical friction</RoughHighlight>\n      </h1>\n\n      {/* Hand-drawn Pen Circle */}\n      <p className="text-neutral-300">\n        Focus on <RoughCircle color="#6366F1">critical insights</RoughCircle> inside body copy.\n      </p>\n\n      {/* Wavy Underline */}\n      <p className="text-neutral-300">\n        Add energy with <RoughUnderline variant="wavy" color="#10B981">expressive underlines</RoughUnderline>.\n      </p>\n\n      {/* Sketch Box Frame */}\n      <p className="text-neutral-300">\n        Enclose cards in a <RoughBox color="#F59E0B" variant="double">hand-drawn frame</RoughBox>.\n      </p>\n    </div>\n  );\n}`
                       )
                     }
                     className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-300 hover:text-white transition-colors cursor-pointer"
@@ -1507,7 +1516,14 @@ export default function RoughlyPage() {
                   </button>
                 </div>
                 <pre className="p-4 font-mono text-xs sm:text-sm text-neutral-200 overflow-x-auto leading-relaxed">
-                  <code>{`export default function ArticleHero() {
+                  <code>{`import {
+  RoughHighlight,
+  RoughCircle,
+  RoughUnderline,
+  RoughBox,
+} from "@/components/ui/roughly";
+
+export default function ArticleHero() {
   return (
     <div className="space-y-4">
       {/* Tactile Marker Highlight */}
@@ -1560,7 +1576,7 @@ export default function RoughlyPage() {
                     onClick={() =>
                       handleCopyGuide(
                         "arrow",
-                        `<div className="p-12 flex justify-center">\n  <RoughArrow\n    placement="top-right"\n    variant="curved"\n    arrowhead="open"\n    color="#F59E0B"\n    label="Interactive Studio ✨"\n    labelFont="caveat"\n    distance={65}\n  >\n    <button className="px-6 py-3 rounded-xl bg-white text-black font-semibold shadow-lg">\n      Launch Console\n    </button>\n  </RoughArrow>\n</div>`
+                        `import { RoughArrow } from "@/components/ui/roughly";\n\nexport function CalloutDemo() {\n  return (\n    <div className="p-12 flex justify-center">\n      <RoughArrow\n        placement="top-right"\n        variant="curved"\n        arrowhead="open"\n        color="#F59E0B"\n        label="Interactive Studio ✨"\n        labelFont="caveat"\n        distance={65}\n      >\n        <button className="px-6 py-3 rounded-xl bg-white text-black font-semibold shadow-lg">\n          Launch Console\n        </button>\n      </RoughArrow>\n    </div>\n  );\n}`
                       )
                     }
                     className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-300 hover:text-white transition-colors cursor-pointer"
@@ -1579,21 +1595,27 @@ export default function RoughlyPage() {
                   </button>
                 </div>
                 <pre className="p-4 font-mono text-xs sm:text-sm text-neutral-200 overflow-x-auto leading-relaxed">
-                  <code>{`<div className="p-12 flex justify-center">
-  <RoughArrow
-    placement="top-right"
-    variant="curved"
-    arrowhead="open"
-    color="#F59E0B"
-    label="Interactive Studio ✨"
-    labelFont="caveat"
-    distance={65}
-  >
-    <button className="px-6 py-3 rounded-xl bg-white text-black font-semibold shadow-lg">
-      Launch Console
-    </button>
-  </RoughArrow>
-</div>`}</code>
+                  <code>{`import { RoughArrow } from "@/components/ui/roughly";
+
+export function CalloutDemo() {
+  return (
+    <div className="p-12 flex justify-center">
+      <RoughArrow
+        placement="top-right"
+        variant="curved"
+        arrowhead="open"
+        color="#F59E0B"
+        label="Interactive Studio ✨"
+        labelFont="caveat"
+        distance={65}
+      >
+        <button className="px-6 py-3 rounded-xl bg-white text-black font-semibold shadow-lg">
+          Launch Console
+        </button>
+      </RoughArrow>
+    </div>
+  );
+}`}</code>
                 </pre>
               </div>
             </div>
