@@ -13,7 +13,7 @@ export const Navbar: React.FC = () => {
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 180, damping: 18, mass: 0.8 }}
-      className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between w-full max-w-[1400px] mx-auto px-6 py-6 bg-transparent"
+      className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between w-full max-w-[1400px] mx-auto px-6 py-6 bg-transparent font-inter"
     >
       {/* Logo */}
       <div className="flex items-center gap-2 select-none">

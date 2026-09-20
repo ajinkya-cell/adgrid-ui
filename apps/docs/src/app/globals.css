@@ -26,6 +26,7 @@
   --font-cinzel: "Cinzel", serif;
   --font-poppins: var(--font-poppins, "Poppins", sans-serif);
   --font-eb-garamond: var(--font-eb-garamond), "EB Garamond", serif;
+  --font-inter: var(--font-inter), "Inter", sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -38,6 +39,10 @@ body {
   font-family: var(--font-poppins, 'Poppins', sans-serif);
   -webkit-font-smoothing: antialiased;
   position: relative;
+}
+
+.font-inter {
+  font-family: var(--font-inter), 'Inter', sans-serif !important;
 }
 
 .font-poppins,

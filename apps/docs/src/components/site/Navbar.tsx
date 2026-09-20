@@ -29,27 +29,26 @@ export function Navbar() {
 
   return (
     <header className="fixed top-3 sm:top-4 left-0 w-full z-50 px-4 flex justify-center pointer-events-none select-none">
-      <nav className="w-full max-w-[480px] h-11 rounded-full bg-[#09090b]/85 backdrop-blur-xl border border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.08)] flex items-center justify-between px-5 pointer-events-auto transition-all duration-300">
+      <nav className="w-full max-w-[480px] h-11 rounded-full bg-[#09090b]/85 backdrop-blur-xl border border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.08)] flex items-center justify-between px-5 pointer-events-auto transition-all duration-300 font-inter">
         {/* Left: Brand / Logo */}
         <Link
           href="/"
-          className="font-display text-sm font-bold tracking-tight text-white hover:text-white/80 transition-colors select-none"
+          className="text-sm font-bold tracking-tight text-white hover:text-white/80 transition-colors select-none font-inter"
         >
           void UI
         </Link>
 
-        {/* Middle: Gallery, Components & Roughly in EB Garamond Italics */}
+        {/* Middle: Gallery, Components & Roughly in Inter */}
         <div className="flex items-center gap-5 sm:gap-6">
           {links.map((link) => (
             <Link
               key={link.label}
               href={link.href}
-              className={`text-sm md:text-base italic tracking-wide transition-colors ${
+              className={`text-xs sm:text-sm font-medium tracking-normal transition-colors font-inter ${
                 link.isActive
-                  ? "text-white font-medium"
-                  : "text-white/45 hover:text-white"
+                  ? "text-white font-semibold"
+                  : "text-white/50 hover:text-white"
               }`}
-              style={{ fontFamily: 'var(--font-eb-garamond), "EB Garamond", serif' }}
             >
               {link.label}
             </Link>
