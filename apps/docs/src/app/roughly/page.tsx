@@ -505,10 +505,10 @@ export default function RoughlyPage() {
               {selectedType === "circle" && (
                 <div className="space-y-3.5 p-3 rounded-xl bg-black/40 border border-white/10">
 
-                  <div className="space-y-1.5">
-                    <div className="flex justify-between text-xs font-mono">
-                      <span className="text-neutral-400">Horizontal Space</span>
-                      <span className="text-white">{circlePaddingX}px</span>
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-[11px] font-mono text-neutral-400">
+                      <span>Horizontal Space</span>
+                      <span>{circlePaddingX}px</span>
                     </div>
                     <input
                       type="range"
@@ -517,14 +517,14 @@ export default function RoughlyPage() {
                       step={1}
                       value={circlePaddingX}
                       onChange={(e) => setCirclePaddingX(Number(e.target.value))}
-                      className="w-full accent-indigo-500 cursor-pointer"
+                      className="w-full accent-indigo-500 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer"
                     />
                   </div>
 
-                  <div className="space-y-1.5">
-                    <div className="flex justify-between text-xs font-mono">
-                      <span className="text-neutral-400">Vertical Space</span>
-                      <span className="text-white">{circlePaddingY}px</span>
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-[11px] font-mono text-neutral-400">
+                      <span>Vertical Space</span>
+                      <span>{circlePaddingY}px</span>
                     </div>
                     <input
                       type="range"
@@ -533,7 +533,7 @@ export default function RoughlyPage() {
                       step={1}
                       value={circlePaddingY}
                       onChange={(e) => setCirclePaddingY(Number(e.target.value))}
-                      className="w-full accent-indigo-500 cursor-pointer"
+                      className="w-full accent-indigo-500 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer"
                     />
                   </div>
 
@@ -1040,8 +1040,8 @@ export default function RoughlyPage() {
               </div>
 
               {/* Sliders: Stroke Width & Duration */}
-              <div className="grid grid-cols-2 gap-4 pt-1">
-                <div className="space-y-1.5">
+              <div className="grid grid-cols-2 gap-3 pt-1">
+                <div className="space-y-1">
                   <div className="flex justify-between text-[11px] font-mono text-neutral-400">
                     <span>Stroke Width</span>
                     <span>{strokeWidth}px</span>
@@ -1053,10 +1053,10 @@ export default function RoughlyPage() {
                     step="0.5"
                     value={strokeWidth}
                     onChange={(e) => setStrokeWidth(parseFloat(e.target.value))}
-                    className="w-full accent-indigo-500 cursor-pointer"
+                    className="w-full accent-indigo-500 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer"
                   />
                 </div>
-                <div className="space-y-1.5">
+                <div className="space-y-1">
                   <div className="flex justify-between text-[11px] font-mono text-neutral-400">
                     <span>Duration</span>
                     <span>{duration}ms</span>
@@ -1068,7 +1068,7 @@ export default function RoughlyPage() {
                     step="50"
                     value={duration}
                     onChange={(e) => setDuration(parseInt(e.target.value))}
-                    className="w-full accent-indigo-500 cursor-pointer"
+                    className="w-full accent-indigo-500 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer"
                   />
                 </div>
               </div>
