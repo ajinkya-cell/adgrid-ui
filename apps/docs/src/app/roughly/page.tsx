@@ -325,7 +325,7 @@ export default function RoughlyPage() {
 
         {/* Scroll Indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-neutral-400/80 pointer-events-none select-none">
-          <span className="text-[10px] font-mono tracking-widest uppercase">Scroll to explore</span>
+          <span className="text-[11px] font-poppins tracking-widest uppercase font-medium text-neutral-400">Scroll</span>
           <ChevronDown className="w-4 h-4 animate-bounce text-neutral-400" />
         </div>
       </section>
