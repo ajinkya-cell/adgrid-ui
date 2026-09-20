@@ -43,6 +43,8 @@ export interface RoughArrowProps {
   distance?: number;
   /** Gap in pixels between arrow tip and target edge (default: 8) */
   offset?: number;
+  /** Arc curvature intensity factor for curved arrows (default: 0.38) */
+  curvature?: number;
   /** Invert the curvature direction of the arc (default: false) */
   flipCurve?: boolean;
   /** Whether the drawing stroke animates into view (default: true) */
@@ -80,6 +82,7 @@ export function RoughArrow({
   label,
   distance = 60,
   offset = 8,
+  curvature = 0.38,
   flipCurve = false,
   animate = true,
   animationDuration = 800,
@@ -160,7 +163,7 @@ export function RoughArrow({
   const D = distance;
   const gap = offset;
 
-  const { tip, ctrlPoints, labelPos, labelTransform } = useMemo(() => {
+  const { tip, ctrlPoints, tipTangent, labelPos, labelTransform } = useMemo(() => {
     let P_tip: Point;
     let P_tail: Point;
     let lblPos: Point;
@@ -242,9 +245,10 @@ export function RoughArrow({
     const normalSign = flipCurve ? -1 : 1;
     const nx = -uy * normalSign;
     const ny = ux * normalSign;
-    const bulge = dist * 0.22;
+    const bowDepth = dist * curvature;
 
     let points: [number, number][];
+    let tipTangent: { x: number; y: number };
 
     switch (variant) {
       case "straight":
@@ -252,40 +256,77 @@ export function RoughArrow({
           [P_tail.x, P_tail.y],
           [P_tip.x, P_tip.y],
         ];
+        tipTangent = { x: dx, y: dy };
         break;
 
       case "curved": {
-        const midX = (P_tail.x + P_tip.x) / 2 + nx * bulge;
-        const midY = (P_tail.y + P_tip.y) / 2 + ny * bulge;
-        points = [
-          [P_tail.x, P_tail.y],
-          [midX, midY],
-          [P_tip.x, P_tip.y],
-        ];
+        // Cubic Bézier curve with organic hand-drawn sweep matching Layer 3.png
+        // C1 departs gracefully with outward deflection, C2 curls inward toward target
+        const c1X = P_tail.x + dx * 0.35 + nx * (bowDepth * 1.05);
+        const c1Y = P_tail.y + dy * 0.35 + ny * (bowDepth * 1.05);
+        const c2X = P_tail.x + dx * 0.75 + nx * (bowDepth * 0.88);
+        const c2Y = P_tail.y + dy * 0.75 + ny * (bowDepth * 0.88);
+
+        // Sample 6 points along the cubic Bézier curve for seamless rough.js spline
+        const sampled: [number, number][] = [];
+        const steps = 5;
+        for (let i = 0; i <= steps; i++) {
+          const t = i / steps;
+          const mt = 1 - t;
+          const b0 = mt * mt * mt;
+          const b1 = 3 * mt * mt * t;
+          const b2 = 3 * mt * t * t;
+          const b3 = t * t * t;
+          sampled.push([
+            b0 * P_tail.x + b1 * c1X + b2 * c2X + b3 * P_tip.x,
+            b0 * P_tail.y + b1 * c1Y + b2 * c2Y + b3 * P_tip.y,
+          ]);
+        }
+        points = sampled;
+        // Exact analytical arrival tangent: B'(1) = 3 * (P_tip - C2)
+        tipTangent = {
+          x: P_tip.x - c2X,
+          y: P_tip.y - c2Y,
+        };
         break;
       }
 
       case "s-curve": {
-        const c1X = P_tail.x + dx * 0.33 + nx * (bulge * 0.8);
-        const c1Y = P_tail.y + dy * 0.33 + ny * (bulge * 0.8);
-        const c2X = P_tail.x + dx * 0.67 - nx * (bulge * 0.8);
-        const c2Y = P_tail.y + dy * 0.67 - ny * (bulge * 0.8);
-        points = [
-          [P_tail.x, P_tail.y],
-          [c1X, c1Y],
-          [c2X, c2Y],
-          [P_tip.x, P_tip.y],
-        ];
+        // S-curve with smooth inflection
+        const c1X = P_tail.x + dx * 0.3 + nx * (bowDepth * 0.85);
+        const c1Y = P_tail.y + dy * 0.3 + ny * (bowDepth * 0.85);
+        const c2X = P_tail.x + dx * 0.7 - nx * (bowDepth * 0.85);
+        const c2Y = P_tail.y + dy * 0.7 - ny * (bowDepth * 0.85);
+
+        const sampled: [number, number][] = [];
+        const steps = 6;
+        for (let i = 0; i <= steps; i++) {
+          const t = i / steps;
+          const mt = 1 - t;
+          const b0 = mt * mt * mt;
+          const b1 = 3 * mt * mt * t;
+          const b2 = 3 * mt * t * t;
+          const b3 = t * t * t;
+          sampled.push([
+            b0 * P_tail.x + b1 * c1X + b2 * c2X + b3 * P_tip.x,
+            b0 * P_tail.y + b1 * c1Y + b2 * c2Y + b3 * P_tip.y,
+          ]);
+        }
+        points = sampled;
+        tipTangent = {
+          x: P_tip.x - c2X,
+          y: P_tip.y - c2Y,
+        };
         break;
       }
 
       case "loop": {
-        const l1X = P_tail.x + dx * 0.35 + nx * (bulge * 1.5);
-        const l1Y = P_tail.y + dy * 0.35 + ny * (bulge * 1.5);
-        const l2X = P_tail.x + dx * 0.55 + nx * (bulge * 2.2);
-        const l2Y = P_tail.y + dy * 0.55 + ny * (bulge * 2.2);
-        const l3X = P_tail.x + dx * 0.42 + nx * (bulge * 0.3);
-        const l3Y = P_tail.y + dy * 0.42 + ny * (bulge * 0.3);
+        const l1X = P_tail.x + dx * 0.35 + nx * (bowDepth * 1.5);
+        const l1Y = P_tail.y + dy * 0.35 + ny * (bowDepth * 1.5);
+        const l2X = P_tail.x + dx * 0.55 + nx * (bowDepth * 2.2);
+        const l2Y = P_tail.y + dy * 0.55 + ny * (bowDepth * 2.2);
+        const l3X = P_tail.x + dx * 0.42 + nx * (bowDepth * 0.3);
+        const l3Y = P_tail.y + dy * 0.42 + ny * (bowDepth * 0.3);
         points = [
           [P_tail.x, P_tail.y],
           [l1X, l1Y],
@@ -293,15 +334,19 @@ export function RoughArrow({
           [l3X, l3Y],
           [P_tip.x, P_tip.y],
         ];
+        tipTangent = {
+          x: P_tip.x - l3X,
+          y: P_tip.y - l3Y,
+        };
         break;
       }
 
       default:
         points = [
           [P_tail.x, P_tail.y],
-          [(P_tail.x + P_tip.x) / 2 + nx * bulge, (P_tail.y + P_tip.y) / 2 + ny * bulge],
           [P_tip.x, P_tip.y],
         ];
+        tipTangent = { x: dx, y: dy };
         break;
     }
 
@@ -309,10 +354,11 @@ export function RoughArrow({
       tail: P_tail,
       tip: P_tip,
       ctrlPoints: points,
+      tipTangent,
       labelPos: lblPos,
       labelTransform: lblTransform,
     };
-  }, [w, h, D, gap, placement, variant, flipCurve]);
+  }, [w, h, D, gap, placement, variant, flipCurve, curvature]);
 
   // Generate rough.js SVG paths for shaft and arrowhead
   const { shaftPaths, headPaths } = useMemo(() => {
@@ -348,15 +394,13 @@ export function RoughArrow({
     const sPaths = gen.toPaths(shaftDrawable);
 
     // 2. Arrowhead Tangent and Barb Generation
-    const lastCtrl = ctrlPoints[ctrlPoints.length - 2] || ctrlPoints[0];
     const endX = tip.x;
     const endY = tip.y;
-    const tanX = endX - lastCtrl[0];
-    const tanY = endY - lastCtrl[1];
-    const theta = Math.atan2(tanY, tanX);
+    const theta = Math.atan2(tipTangent.y, tipTangent.x);
 
-    const barbLen = Math.max(10, strokeWidth * 4.5);
-    const alpha = 26 * (Math.PI / 180);
+    // Proportional barb length and angle matching authentic hand-drawn markers
+    const barbLen = Math.max(13, strokeWidth * 5.2);
+    const alpha = 28 * (Math.PI / 180);
 
     const b1 = {
       x: endX - barbLen * Math.cos(theta - alpha),
@@ -387,22 +431,23 @@ export function RoughArrow({
       );
       hPaths = gen.toPaths(poly);
     } else if (arrowhead === "curved") {
-      // Slightly flared barbs
-      const mid1 = [
-        (endX + b1.x) / 2 - 2 * Math.sin(theta),
-        (endY + b1.y) / 2 + 2 * Math.cos(theta),
+      // Calligraphic flared barbs with organic outward scoop
+      const flare = Math.max(2.5, barbLen * 0.16);
+      const mid1: [number, number] = [
+        (endX + b1.x) / 2 - flare * Math.sin(theta),
+        (endY + b1.y) / 2 + flare * Math.cos(theta),
       ];
-      const mid2 = [
-        (endX + b2.x) / 2 + 2 * Math.sin(theta),
-        (endY + b2.y) / 2 - 2 * Math.cos(theta),
+      const mid2: [number, number] = [
+        (endX + b2.x) / 2 + flare * Math.sin(theta),
+        (endY + b2.y) / 2 - flare * Math.cos(theta),
       ];
-      const c1 = gen.curve([[endX, endY], mid1 as [number, number], [b1.x, b1.y]], {
+      const c1 = gen.curve([[endX, endY], mid1, [b1.x, b1.y]], {
         roughness: Math.max(0.5, roughness * 0.6),
         stroke: color,
         strokeWidth,
         disableMultiStroke,
       });
-      const c2 = gen.curve([[endX, endY], mid2 as [number, number], [b2.x, b2.y]], {
+      const c2 = gen.curve([[endX, endY], mid2, [b2.x, b2.y]], {
         roughness: Math.max(0.5, roughness * 0.6),
         stroke: color,
         strokeWidth,
@@ -427,7 +472,7 @@ export function RoughArrow({
     }
 
     return { shaftPaths: sPaths, headPaths: hPaths };
-  }, [ctrlPoints, tip, variant, arrowhead, color, strokeWidth, iterations, roughness, bowing]);
+  }, [ctrlPoints, tip, tipTangent, variant, arrowhead, color, strokeWidth, iterations, roughness, bowing]);
 
   return (
     <span

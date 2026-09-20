@@ -63,6 +63,8 @@ export interface RoughlyProps {
   arrowVariant?: ArrowVariant;
   /** Callout label for arrow */
   arrowLabel?: React.ReactNode;
+  /** Arc curvature intensity factor for curved arrows (default: 0.38) */
+  arrowCurvature?: number;
   /** Custom wrapper class */
   className?: string;
   /** Custom text class */
@@ -73,10 +75,10 @@ export interface RoughlyProps {
 const DEFAULT_COLORS: Record<RoughlyType, string> = {
   underline: "#6366F1", // Indigo
   circle: "#EC4899", // Rose / Pink
-  "strike-through": "#EF4444", // Red
-  "cross-off": "#F43F5E", // Rose Red
-  bracket: "#F59E0B", // Cyber Amber
-  box: "#10B981", // Emerald
+  "strike-through": "#EF4444", // Crimson Red
+  "cross-off": "#EF4444", // Crimson Red
+  bracket: "#10B981", // Emerald Green
+  box: "#10B981", // Emerald Green
   highlight: "#4338CA", // Deep Royal Indigo
   arrow: "#F59E0B", // Cyber Amber
 };
@@ -95,6 +97,7 @@ export function Roughly({
   placement,
   arrowVariant,
   arrowLabel,
+  arrowCurvature,
   className = "",
   textClassName = "",
 }: RoughlyProps) {
@@ -215,6 +218,7 @@ export function Roughly({
         placement={placement}
         variant={arrowVariant}
         label={arrowLabel}
+        curvature={arrowCurvature}
         color={color || DEFAULT_COLORS.arrow}
         strokeWidth={strokeWidth}
         animate={animate}

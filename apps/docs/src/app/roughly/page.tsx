@@ -64,12 +64,12 @@ export default function RoughlyPage() {
   const [arrowLabel, setArrowLabel] = useState<string>("Instant deploy ⚡");
   const [arrowDistance, setArrowDistance] = useState<number>(65);
   const [arrowOffset, setArrowOffset] = useState<number>(8);
+  const [arrowCurvature, setArrowCurvature] = useState<number>(0.38);
   const [arrowFlip, setArrowFlip] = useState<boolean>(false);
   const [circlePaddingX, setCirclePaddingX] = useState(22);
   const [circlePaddingY, setCirclePaddingY] = useState(10);
   const [circleIterations, setCircleIterations] = useState(2);
   const [highlightIterations, setHighlightIterations] = useState(2);
-  const [canvasTheme, setCanvasTheme] = useState<"dark" | "paper" | "light">("dark");
   const [replayKey, setReplayKey] = useState(0);
   const [copiedCode, setCopiedCode] = useState(false);
   const [copiedInstall, setCopiedInstall] = useState(false);
@@ -202,6 +202,7 @@ export default function RoughlyPage() {
       if (arrowIterations !== 2) propsList.push(`iterations={${arrowIterations}}`);
       if (arrowDistance !== 65) propsList.push(`distance={${arrowDistance}}`);
       if (arrowOffset !== 8) propsList.push(`offset={${arrowOffset}}`);
+      if (arrowCurvature !== 0.38) propsList.push(`curvature={${arrowCurvature}}`);
       if (arrowFlip) propsList.push(`flipCurve={true}`);
       if (duration !== 800) propsList.push(`animationDuration={${duration}}`);
       if (arrowLabel) propsList.push(`label="${arrowLabel}"`);
@@ -444,19 +445,10 @@ export default function RoughlyPage() {
               {/* Type-Specific Options */}
               {selectedType === "circle" && (
                 <div className="space-y-3.5 p-3 rounded-xl bg-black/40 border border-white/10">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-white flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse" />
-                      RoughCircle Architecture
-                    </span>
-                    <span className="text-[10px] font-mono text-neutral-400 bg-white/[0.05] px-2 py-0.5 rounded">
-                      rough-notation engine
-                    </span>
-                  </div>
 
                   <div className="space-y-1.5">
                     <div className="flex justify-between text-xs font-mono">
-                      <span className="text-neutral-400">Horizontal Space (Left & Right Symmetric)</span>
+                      <span className="text-neutral-400">Horizontal Space</span>
                       <span className="text-white">{circlePaddingX}px</span>
                     </div>
                     <input
@@ -468,14 +460,11 @@ export default function RoughlyPage() {
                       onChange={(e) => setCirclePaddingX(Number(e.target.value))}
                       className="w-full accent-indigo-500 cursor-pointer"
                     />
-                    <p className="text-[10px] text-neutral-500">
-                      Guarantees identical sweeping curvature and breathing room on both left and right edges.
-                    </p>
                   </div>
 
                   <div className="space-y-1.5">
                     <div className="flex justify-between text-xs font-mono">
-                      <span className="text-neutral-400">Vertical Space (Top & Bottom)</span>
+                      <span className="text-neutral-400">Vertical Space</span>
                       <span className="text-white">{circlePaddingY}px</span>
                     </div>
                     <input
@@ -491,12 +480,12 @@ export default function RoughlyPage() {
 
                   <div className="space-y-1.5">
                     <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
-                      Sketch Loops (Iterations)
+                      Sketch Loops
                     </label>
                     <div className="flex gap-2">
                       {[
-                        { id: 1, label: "Single Loop (Clean)" },
-                        { id: 2, label: "Double Loop (Authentic)" },
+                        { id: 1, label: "Single Loop" },
+                        { id: 2, label: "Double Loop" },
                       ].map((item) => (
                         <button
                           key={item.id}
@@ -564,12 +553,12 @@ export default function RoughlyPage() {
               {selectedType === "cross-off" && (
                 <div className="space-y-2">
                   <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
-                    Cross Cut Style
+                    Cross Style
                   </label>
                   <div className="flex gap-2">
                     {[
-                      { id: "single", label: "Single Cut (2 Strokes)" },
-                      { id: "double", label: "Double Sketch (4 Strokes)" },
+                      { id: "single", label: "Single Cut" },
+                      { id: "double", label: "Double Sketch" },
                     ].map((item) => (
                       <button
                         key={item.id}
@@ -589,24 +578,14 @@ export default function RoughlyPage() {
 
               {selectedType === "bracket" && (
                 <div className="space-y-3.5 p-3 rounded-xl bg-black/40 border border-white/10">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-white flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                      RoughBracket Architecture
-                    </span>
-                    <span className="text-[10px] font-mono text-neutral-400 bg-white/[0.05] px-2 py-0.5 rounded">
-                      Single Vector Stroke &bull; Multiline
-                    </span>
-                  </div>
-
                   <div className="space-y-1.5">
                     <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
                       Bracket Style
                     </label>
                     <div className="flex gap-2">
                       {[
-                        { id: "curly", label: "Curly { }" },
-                        { id: "square", label: "Square [ ]" },
+                        { id: "curly", label: "Curly" },
+                        { id: "square", label: "Square" },
                       ].map((style) => (
                         <button
                           key={style.id}
@@ -648,24 +627,14 @@ export default function RoughlyPage() {
 
               {selectedType === "highlight" && (
                 <div className="space-y-3.5 p-3 rounded-xl bg-black/40 border border-white/10">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-white flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
-                      RoughHighlight Architecture
-                    </span>
-                    <span className="text-[10px] font-mono text-neutral-400 bg-white/[0.05] px-2 py-0.5 rounded">
-                      rough.js engine &bull; double strokes
-                    </span>
-                  </div>
-
                   <div className="space-y-1.5">
                     <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
-                      Highlighter Stroke Passes
+                      Stroke Passes
                     </label>
                     <div className="flex gap-2">
                       {[
-                        { id: 2, label: "Double Stroke (Authentic 2 Passes)" },
-                        { id: 1, label: "Single Stroke (Clean 1 Pass)" },
+                        { id: 2, label: "Double Stroke" },
+                        { id: 1, label: "Single Stroke" },
                       ].map((item) => (
                         <button
                           key={item.id}
@@ -680,33 +649,20 @@ export default function RoughlyPage() {
                         </button>
                       ))}
                     </div>
-                    <p className="text-[10px] text-neutral-500 pt-0.5">
-                      Double strokes sweep forward and back with rough.js roughness and bowing for realistic marker depth.
-                    </p>
                   </div>
                 </div>
               )}
 
               {selectedType === "box" && (
                 <div className="space-y-3.5 p-3 rounded-xl bg-black/40 border border-white/10">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-white flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      RoughBox Architecture
-                    </span>
-                    <span className="text-[10px] font-mono text-neutral-400 bg-white/[0.05] px-2 py-0.5 rounded">
-                      rough.js engine &bull; hand-drawn box
-                    </span>
-                  </div>
-
                   <div className="space-y-1.5">
                     <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
-                      Box Frame Passes
+                      Frame Passes
                     </label>
                     <div className="flex gap-2">
                       {[
-                        { id: "double", label: "Double Strokes (Authentic Hand-Drawn)" },
-                        { id: "single", label: "Single Stroke (Clean Frame)" },
+                        { id: "double", label: "Double Strokes" },
+                        { id: "single", label: "Single Stroke" },
                       ].map((item) => (
                         <button
                           key={item.id}
@@ -721,9 +677,6 @@ export default function RoughlyPage() {
                         </button>
                       ))}
                     </div>
-                    <p className="text-[10px] text-neutral-500 pt-0.5">
-                      Double strokes draw 2 organic loops with corner overshoots and slight line curvature via rough.js.
-                    </p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3 pt-1">
@@ -763,20 +716,10 @@ export default function RoughlyPage() {
 
               {selectedType === "arrow" && (
                 <div className="space-y-3.5 p-3 rounded-xl bg-black/40 border border-white/10">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-white flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                      RoughArrow Architecture
-                    </span>
-                    <span className="text-[10px] font-mono text-neutral-400 bg-white/[0.05] px-2 py-0.5 rounded">
-                      rough.js vector &bull; 8 placements
-                    </span>
-                  </div>
-
                   {/* Callout Label Input */}
                   <div className="space-y-1">
                     <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
-                      Callout Label (Handwritten Caveat)
+                      Callout Label
                     </label>
                     <input
                       type="text"
@@ -790,7 +733,7 @@ export default function RoughlyPage() {
                   {/* Placement Grid */}
                   <div className="space-y-1.5">
                     <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
-                      Arrow Placement (8 Directions)
+                      Arrow Placement
                     </label>
                     <div className="grid grid-cols-4 gap-1">
                       {(
@@ -827,10 +770,10 @@ export default function RoughlyPage() {
                     </label>
                     <div className="grid grid-cols-2 gap-1.5">
                       {[
-                        { id: "curved", label: "Curved Arc" },
-                        { id: "loop", label: "Loop-de-Loop" },
-                        { id: "s-curve", label: "S-Curve Wave" },
-                        { id: "straight", label: "Straight Line" },
+                        { id: "curved", label: "Curved" },
+                        { id: "loop", label: "Loop" },
+                        { id: "s-curve", label: "S-Curve" },
+                        { id: "straight", label: "Straight" },
                       ].map((v) => (
                         <button
                           key={v.id}
@@ -855,9 +798,9 @@ export default function RoughlyPage() {
                       </label>
                       <div className="flex gap-1">
                         {[
-                          { id: "open", label: "Open >" },
-                          { id: "filled", label: "Filled ▲" },
-                          { id: "curved", label: "Curved ~" },
+                          { id: "open", label: "Open" },
+                          { id: "filled", label: "Filled" },
+                          { id: "curved", label: "Curved" },
                         ].map((h) => (
                           <button
                             key={h.id}
@@ -932,6 +875,25 @@ export default function RoughlyPage() {
                       />
                     </div>
                   </div>
+
+                  {/* Arc Curvature Slider */}
+                  {arrowVariant !== "straight" && (
+                    <div className="space-y-1 pt-1">
+                      <div className="flex justify-between text-[11px] font-mono text-neutral-400">
+                        <span>Arc Curvature</span>
+                        <span>{arrowCurvature}</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="0.15"
+                        max="0.65"
+                        step="0.05"
+                        value={arrowCurvature}
+                        onChange={(e) => setArrowCurvature(Number(e.target.value))}
+                        className="w-full accent-amber-500 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer"
+                      />
+                    </div>
+                  )}
 
                   <div className="pt-1 flex items-center justify-between">
                     <span className="text-xs text-neutral-400">Invert Arc Curvature</span>
@@ -1010,53 +972,24 @@ export default function RoughlyPage() {
 
             {/* Right: Live Preview & Code Box */}
             <div className="lg:col-span-7 space-y-4">
-              {/* Surface Theme Switcher Bar */}
               <div className="flex items-center justify-between px-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-[11px] font-mono text-neutral-400">Surface Theme:</span>
-                  <div className="flex rounded-lg bg-white/[0.05] p-0.5 border border-white/[0.08]">
-                    {(["dark", "paper", "light"] as const).map((theme) => (
-                      <button
-                        key={theme}
-                        onClick={() => setCanvasTheme(theme)}
-                        className={`px-2.5 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded-md transition-colors cursor-pointer ${
-                          canvasTheme === theme
-                            ? "bg-white/20 text-white font-semibold shadow-sm"
-                            : "text-neutral-400 hover:text-white"
-                        }`}
-                      >
-                        {theme}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <span className="text-[11px] font-mono text-neutral-500 hidden sm:inline">Live Canvas</span>
+                <span className="text-[11px] font-mono text-neutral-500">Live Canvas</span>
               </div>
 
               {/* Canvas Preview */}
-              <div
-                className={`relative min-h-[220px] sm:min-h-[260px] rounded-2xl border p-8 flex flex-col items-center justify-center text-center overflow-hidden shadow-2xl transition-colors duration-300 ${
-                  canvasTheme === "dark"
-                    ? "bg-[#09090b] border-white/10"
-                    : canvasTheme === "paper"
-                    ? "bg-[#f5f2eb] border-[#e4dfd5]"
-                    : "bg-white border-neutral-200"
-                }`}
-              >
+              <div className="relative min-h-[220px] sm:min-h-[260px] rounded-2xl border border-[#e4dfd5] bg-[#f5f2eb] p-8 flex flex-col items-center justify-center text-center overflow-hidden shadow-2xl transition-colors duration-300">
                 {/* Minimal Grid Pattern */}
                 <div
                   className="absolute inset-0 opacity-[0.03] pointer-events-none"
                   style={{
-                    backgroundImage: `radial-gradient(circle, ${canvasTheme === "dark" ? "#ffffff" : "#000000"} 1px, transparent 1px)`,
+                    backgroundImage: `radial-gradient(circle, #000000 1px, transparent 1px)`,
                     backgroundSize: `16px 16px`,
                   }}
                 />
 
                 <div
                   key={replayKey}
-                  className={`relative z-10 text-2xl font-semibold tracking-tight transition-colors duration-200 ${
-                    canvasTheme === "dark" ? "text-white" : "text-neutral-900"
-                  }`}
+                  className="relative z-10 text-2xl font-semibold tracking-tight text-neutral-900 transition-colors duration-200"
                 >
                   {selectedType === "circle" ? (
                     <RoughCircle
@@ -1146,13 +1079,14 @@ export default function RoughlyPage() {
                   ) : selectedType === "arrow" ? (
                     <div className="py-16 px-10 flex items-center justify-center">
                       <RoughArrow
-                        key={`arrow-${replayKey}-${arrowPlacement}-${arrowVariant}-${arrowheadStyle}-${arrowIterations}-${arrowDistance}-${arrowOffset}-${arrowFlip}-${selectedColor}-${strokeWidth}-${arrowLabel}`}
+                        key={`arrow-${replayKey}-${arrowPlacement}-${arrowVariant}-${arrowheadStyle}-${arrowIterations}-${arrowDistance}-${arrowOffset}-${arrowCurvature}-${arrowFlip}-${selectedColor}-${strokeWidth}-${arrowLabel}`}
                         placement={arrowPlacement}
                         variant={arrowVariant}
                         arrowhead={arrowheadStyle}
                         iterations={arrowIterations}
                         distance={arrowDistance}
                         offset={arrowOffset}
+                        curvature={arrowCurvature}
                         flipCurve={arrowFlip}
                         label={arrowLabel}
                         color={selectedColor}
