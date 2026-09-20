@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import {
   Roughly,
   RoughCircle,
@@ -28,7 +29,7 @@ import {
   Check,
   Copy,
   RefreshCw,
-  Sparkles,
+  ChevronDown,
   Terminal,
   BookOpen,
   Layers,
@@ -252,33 +253,47 @@ export default function RoughlyPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#09090b] text-neutral-300 pt-24 sm:pt-32 pb-24 px-4 sm:px-8 flex justify-center selection:bg-white selection:text-black">
-      <div className="w-full max-w-7xl space-y-16 sm:space-y-20">
-        {/* ── 1. Hero Header ───────────────────────────────────── */}
-        <section className="space-y-6 text-center max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-mono text-neutral-400">
-            <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-            <span>Standalone Extension Suite</span>
-          </div>
+    <main className="min-h-screen bg-[#09090b] text-neutral-300 selection:bg-white selection:text-black flex flex-col items-center">
+      {/* ── 1. Hero Header (Full Desktop Screen) ─────────────── */}
+      <section className="relative w-full min-h-screen flex flex-col items-center justify-center px-4 sm:px-8 pt-16 pb-20 overflow-hidden select-none">
+        {/* Background Image & Contrast Overlays */}
+        <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+          <Image
+            src="/previews/roughly.png"
+            alt="Roughly Hand-drawn Vector Annotations"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center opacity-75 select-none"
+          />
+          {/* Subtle radial vignette to emphasize center typography */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(9,9,11,0.35)_0%,rgba(9,9,11,0.85)_100%)]" />
+          {/* Top fade for clean contrast beneath the floating navbar */}
+          <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#09090b]/80 to-transparent" />
+          {/* Bottom fade for seamless transition into the page content */}
+          <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#09090b] via-[#09090b]/80 to-transparent" />
+        </div>
 
-          <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-white font-sans">
+        {/* Hero Content (Centered in the open void of the illustration) */}
+        <div className="relative z-10 space-y-6 text-center max-w-2xl mx-auto">
+          <h1 className="text-5xl sm:text-7xl font-bold tracking-tight text-white font-sans drop-shadow-md">
             <Roughly type="circle" color="#6366F1" strokeWidth={2.5}>
               Roughly
             </Roughly>
           </h1>
 
-          <p className="text-base sm:text-lg text-neutral-400 font-normal leading-relaxed">
+          <p className="text-base sm:text-lg text-neutral-300 font-normal leading-relaxed drop-shadow-sm">
             Organic, hand-drawn vector annotations designed for high-friction digital typography. Wobbly underlines, pen circles, editorial strikethroughs, curly brackets, and tactile highlights.
           </p>
 
           <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
-            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-black/60 border border-white/10 font-mono text-xs text-neutral-300">
-              <Terminal className="w-3.5 h-3.5 text-neutral-500" />
+            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-black/70 backdrop-blur-md border border-white/10 font-mono text-xs text-neutral-200 shadow-xl">
+              <Terminal className="w-3.5 h-3.5 text-neutral-400" />
               <span>pnpm add @adgrid-ui/ui</span>
             </div>
             <button
               onClick={handleCopyInstall}
-              className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 border border-white/10 text-xs font-mono text-white transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 backdrop-blur-md border border-white/10 text-xs font-mono text-white transition-colors flex items-center gap-1.5 cursor-pointer shadow-xl active:scale-95"
             >
               {copiedInstall ? (
                 <>
@@ -293,8 +308,17 @@ export default function RoughlyPage() {
               )}
             </button>
           </div>
-        </section>
+        </div>
 
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-neutral-400/80 pointer-events-none select-none">
+          <span className="text-[10px] font-mono tracking-widest uppercase">Scroll to explore</span>
+          <ChevronDown className="w-4 h-4 animate-bounce text-neutral-400" />
+        </div>
+      </section>
+
+      {/* ── Main Content (Interactive Studio Playground, Editorial, API) ── */}
+      <div className="w-full max-w-7xl px-4 sm:px-8 pb-24 pt-12 space-y-16 sm:space-y-20">
         {/* ── 2. Interactive Studio Playground ────────────────── */}
         <section ref={playgroundRef} className="space-y-6">
           <div className="flex items-baseline justify-between border-b border-white/[0.08] pb-3">
