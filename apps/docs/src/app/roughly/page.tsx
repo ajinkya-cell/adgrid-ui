@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Roughly,
   RoughCircle,
@@ -73,6 +73,26 @@ export default function RoughlyPage() {
   const [replayKey, setReplayKey] = useState(0);
   const [copiedCode, setCopiedCode] = useState(false);
   const [copiedInstall, setCopiedInstall] = useState(false);
+  const playgroundRef = useRef<HTMLElement>(null);
+  const [editorialRevision, setEditorialRevision] = useState(0);
+
+  // Monitor layout shifts in the interactive playground so the editorial showcase re-anchors
+  useEffect(() => {
+    const el = playgroundRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return undefined;
+
+    let prevHeight = el.offsetHeight;
+    const observer = new ResizeObserver(() => {
+      const currentHeight = el.offsetHeight;
+      if (Math.abs(currentHeight - prevHeight) > 10) {
+        prevHeight = currentHeight;
+        setEditorialRevision((r) => r + 1);
+      }
+    });
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const typePresets: {
     id: RoughlyType;
@@ -276,7 +296,7 @@ export default function RoughlyPage() {
         </section>
 
         {/* ── 2. Interactive Studio Playground ────────────────── */}
-        <section className="space-y-6">
+        <section ref={playgroundRef} className="space-y-6">
           <div className="flex items-baseline justify-between border-b border-white/[0.08] pb-3">
             <div className="flex items-center gap-2">
               <Layers className="w-4 h-4 text-indigo-400" />
@@ -1141,7 +1161,10 @@ export default function RoughlyPage() {
         </section>
 
         {/* ── 3. Editorial In-Context Showcase ─────────────────── */}
-        <section className="space-y-6 max-w-5xl mx-auto w-full">
+        <section
+          key={`${selectedType}-${editorialRevision}`}
+          className="space-y-6 max-w-5xl mx-auto w-full"
+        >
           <div className="flex items-center gap-2 border-b border-white/[0.08] pb-3">
             <BookOpen className="w-4 h-4 text-indigo-400" />
             <h2 className="text-xs uppercase tracking-widest text-neutral-400 font-medium">
@@ -1149,8 +1172,8 @@ export default function RoughlyPage() {
             </h2>
           </div>
 
-          <div className="p-6 sm:p-10 rounded-2xl bg-[#111114] border border-white/[0.08] space-y-6 leading-relaxed text-sm sm:text-base text-neutral-300 font-normal">
-            <p>
+          <div className="relative p-6 sm:p-10 rounded-2xl bg-[#111114] border border-white/[0.08] space-y-6 leading-relaxed text-sm sm:text-base text-neutral-300 font-normal">
+            <p className="relative">
               Void UI components are designed with{" "}
               <Roughly.Highlight color="#4338CA">
                 tactile physical friction
@@ -1162,7 +1185,7 @@ export default function RoughlyPage() {
               .
             </p>
 
-            <p>
+            <p className="relative">
               In traditional software development, designers often rely on{" "}
               <Roughly.Strike variant="double" color="#EF4444">
                 bland grey boxes
@@ -1178,7 +1201,7 @@ export default function RoughlyPage() {
               .
             </p>
 
-            <div className="py-2 pl-4">
+            <div className="relative py-2 pl-4">
               <Roughly.Bracket side="left" bracketStyle="curly" color="#F59E0B">
                 <div className="space-y-1.5 text-xs sm:text-sm text-neutral-400 pl-2">
                   <p>• Zero layout shift on page reloads</p>
@@ -1188,7 +1211,7 @@ export default function RoughlyPage() {
               </Roughly.Bracket>
             </div>
 
-            <p>
+            <p className="relative">
               Every annotation is enclosed in a{" "}
               <Roughly.Box color="#10B981" variant="double">
                 hand-drawn rough frame
@@ -1196,7 +1219,7 @@ export default function RoughlyPage() {
               with natural corner overshoots and fluid double stroke sketch loops.
             </p>
 
-            <p className="pt-3">
+            <p className="relative pt-3">
               Direct the reader&apos;s gaze with an expressive{" "}
               <RoughArrow
                 label="Direct vector pointing ✨"
