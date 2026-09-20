@@ -233,7 +233,7 @@ export default function RoughlyPage() {
 
   return (
     <main className="min-h-screen bg-[#09090b] text-neutral-300 pt-24 sm:pt-32 pb-24 px-4 sm:px-8 flex justify-center selection:bg-white selection:text-black">
-      <div className="w-full max-w-[960px] space-y-16 sm:space-y-20">
+      <div className="w-full max-w-7xl space-y-16 sm:space-y-20">
         {/* ── 1. Hero Header ───────────────────────────────────── */}
         <section className="space-y-6 text-center max-w-2xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-mono text-neutral-400">
@@ -294,68 +294,68 @@ export default function RoughlyPage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* Left: Controls Panel */}
-            <div className="lg:col-span-5 space-y-5 p-5 rounded-2xl bg-[#111114] border border-white/[0.08]">
-              {/* Type Switcher */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
-                    Annotation Type
-                  </label>
-                  <span className="text-[10px] font-mono text-neutral-500">8 styles</span>
-                </div>
-                <div className="rounded-xl border border-white/[0.08] bg-black/40 overflow-hidden divide-y divide-white/[0.04]">
-                  {typePresets.map((t) => {
-                    const Icon = t.icon;
-                    const isSelected = selectedType === t.id;
-                    return (
-                      <button
-                        key={t.id}
-                        onClick={() => {
-                          setSelectedType(t.id);
-                          if (t.id === "bracket") {
-                            if (!text.includes("\n")) {
-                              setText(
-                                "Zero layout shift on page reloads\nSized to encompass tall ascenders\nHardware-accelerated SVG draw stroke"
-                              );
-                            }
-                            setSelectedColor("#F59E0B");
-                          } else {
-                            if (text.includes("\n")) {
-                              setText("Interfaces with visceral depth");
-                            }
-                            if (t.id === "circle") setSelectedColor("#EC4899");
-                            else if (t.id === "underline") setSelectedColor("#6366F1");
-                            else if (t.id === "strike-through") setSelectedColor("#EF4444");
-                            else if (t.id === "cross-off") setSelectedColor("#F43F5E");
-                            else if (t.id === "box") setSelectedColor("#10B981");
-                            else if (t.id === "highlight") setSelectedColor("#4338CA");
-                            else if (t.id === "arrow") setSelectedColor("#F59E0B");
-                          }
-                        }}
-                        className={`w-full px-3 py-2 flex items-center justify-between text-left transition-colors cursor-pointer ${
-                          isSelected
-                            ? "bg-indigo-600/15 text-white font-medium"
-                            : "text-neutral-400 hover:text-neutral-200 hover:bg-white/[0.03]"
-                        }`}
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <Icon
-                            className={`w-3.5 h-3.5 transition-colors ${
-                              isSelected ? "text-indigo-400" : "text-neutral-500"
-                            }`}
-                          />
-                          <span className="text-xs">{t.label}</span>
-                        </div>
-                        {isSelected && (
-                          <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
+            {/* 1. Left: Annotation Type Selector */}
+            <div className="order-1 lg:order-none lg:col-span-3 space-y-3 p-4 rounded-2xl bg-[#111114] border border-white/[0.08]">
+              <div className="flex items-center justify-between px-1">
+                <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                  Annotation Type
+                </label>
+                <span className="text-[10px] font-mono text-neutral-500">8 styles</span>
               </div>
+              <div className="rounded-xl border border-white/[0.08] bg-black/40 overflow-hidden divide-y divide-white/[0.04]">
+                {typePresets.map((t) => {
+                  const Icon = t.icon;
+                  const isSelected = selectedType === t.id;
+                  return (
+                    <button
+                      key={t.id}
+                      onClick={() => {
+                        setSelectedType(t.id);
+                        if (t.id === "bracket") {
+                          if (!text.includes("\n")) {
+                            setText(
+                              "Zero layout shift on page reloads\nSized to encompass tall ascenders\nHardware-accelerated SVG draw stroke"
+                            );
+                          }
+                          setSelectedColor("#F59E0B");
+                        } else {
+                          if (text.includes("\n")) {
+                            setText("Interfaces with visceral depth");
+                          }
+                          if (t.id === "circle") setSelectedColor("#EC4899");
+                          else if (t.id === "underline") setSelectedColor("#6366F1");
+                          else if (t.id === "strike-through") setSelectedColor("#EF4444");
+                          else if (t.id === "cross-off") setSelectedColor("#F43F5E");
+                          else if (t.id === "box") setSelectedColor("#10B981");
+                          else if (t.id === "highlight") setSelectedColor("#4338CA");
+                          else if (t.id === "arrow") setSelectedColor("#F59E0B");
+                        }
+                      }}
+                      className={`w-full px-3 py-2.5 flex items-center justify-between text-left transition-colors cursor-pointer ${
+                        isSelected
+                          ? "bg-indigo-600/15 text-white font-medium"
+                          : "text-neutral-400 hover:text-neutral-200 hover:bg-white/[0.03]"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <Icon
+                          className={`w-3.5 h-3.5 transition-colors ${
+                            isSelected ? "text-indigo-400" : "text-neutral-500"
+                          }`}
+                        />
+                        <span className="text-xs">{t.label}</span>
+                      </div>
+                      {isSelected && (
+                        <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
+            {/* 2. Middle: Controls Panel */}
+            <div className="order-3 lg:order-none lg:col-span-4 space-y-5 p-5 rounded-2xl bg-[#111114] border border-white/[0.08]">
               {/* Editable Text & Presets */}
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
@@ -970,8 +970,8 @@ export default function RoughlyPage() {
               </div>
             </div>
 
-            {/* Right: Live Preview & Code Box */}
-            <div className="lg:col-span-7 space-y-4">
+            {/* 3. Right: Live Preview & Code Box */}
+            <div className="order-2 lg:order-none lg:col-span-5 space-y-4 lg:sticky lg:top-24">
               <div className="flex items-center justify-between px-1">
                 <span className="text-[11px] font-mono text-neutral-500">Live Canvas</span>
               </div>
@@ -1141,7 +1141,7 @@ export default function RoughlyPage() {
         </section>
 
         {/* ── 3. Editorial In-Context Showcase ─────────────────── */}
-        <section className="space-y-6">
+        <section className="space-y-6 max-w-5xl mx-auto w-full">
           <div className="flex items-center gap-2 border-b border-white/[0.08] pb-3">
             <BookOpen className="w-4 h-4 text-indigo-400" />
             <h2 className="text-xs uppercase tracking-widest text-neutral-400 font-medium">
@@ -1213,7 +1213,7 @@ export default function RoughlyPage() {
         </section>
 
         {/* ── 4. API Reference Table ───────────────────────────── */}
-        <section className="space-y-4">
+        <section className="space-y-4 max-w-5xl mx-auto w-full">
           <div className="border-b border-white/[0.08] pb-3">
             <h2 className="text-xs uppercase tracking-widest text-neutral-400 font-medium">
               API Reference
