@@ -412,7 +412,11 @@ export function PresentationRenderer({
       return <GravityCardStack />;
 
     case "coverflow-carousel":
-      return <CoverflowCarousel />;
+      return (
+        <div className="w-full max-w-6xl flex items-center justify-center">
+          <CoverflowCarousel className="h-[480px] md:h-[520px] min-h-0 md:min-h-0" />
+        </div>
+      );
 
     // ── Buttons category ───────────────────────────────────────────────────
     case "void-button": {

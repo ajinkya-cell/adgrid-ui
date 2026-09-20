@@ -190,7 +190,7 @@ export const registry: RegistryEntry[] = [
     description: "A hardware-accelerated 3D coverflow carousel with continuous modular perspective transforms and comprehensive gesture tracking.",
     dependencies: ["framer-motion"],
     packagePath: "animated/coverflow/CoverflowCarousel.tsx",
-    presentationStrategy: "fullscreen",
+    presentationStrategy: "center",
     files: [
       "animated/coverflow/CoverflowCarousel.tsx",
       "animated/coverflow/CoverflowCard.tsx",
