@@ -133,7 +133,7 @@ export function CoverflowCarousel({ className }: { className?: string }) {
     <div
       ref={containerRef}
       className={cn(
-        "relative w-full h-full min-h-[500px] md:min-h-screen overflow-hidden flex flex-col items-center justify-center select-none outline-none",
+        "relative w-full h-full min-h-[500px] md:min-h-screen  flex flex-col items-center justify-center select-none outline-none",
         className
       )}
       tabIndex={0}

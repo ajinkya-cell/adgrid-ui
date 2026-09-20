@@ -1,5 +1,7 @@
 "use client";
 
+// Note: CoverflowCarousel is imported from "@adgrid-ui/ui" in the imports section below and rendered under the "coverflow-carousel" case in the switch-statement inside the PresentationRenderer component.
+
 import { useState, useEffect } from "react";
 
 import {
@@ -414,7 +416,7 @@ export function PresentationRenderer({
     case "coverflow-carousel":
       return (
         <div className="w-full max-w-6xl flex items-center justify-center">
-          <CoverflowCarousel className="h-[480px] md:h-[520px] min-h-0 md:min-h-0" />
+          <CoverflowCarousel className="h-[480px] translate-y-15 md:h-[520px] min-h-0 md:min-h-0" />
         </div>
       );
 
