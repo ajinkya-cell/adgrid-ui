@@ -33,6 +33,7 @@ import {
   ChevronDown,
   BookOpen,
   Layers,
+  Terminal,
   Underline as UnderlineIcon,
   Circle as CircleIcon,
   Strikethrough as StrikeIcon,
@@ -251,6 +252,22 @@ export default function RoughlyPage() {
     navigator.clipboard.writeText("pnpm add @adgrid-ui/ui");
     setCopiedInstall(true);
     setTimeout(() => setCopiedInstall(false), 2000);
+  };
+
+  const [installPm, setInstallPm] = useState<"pnpm" | "npm" | "yarn" | "bun">("pnpm");
+  const [copiedGuideKey, setCopiedGuideKey] = useState<string | null>(null);
+
+  const handleCopyGuide = (key: string, content: string) => {
+    navigator.clipboard.writeText(content);
+    setCopiedGuideKey(key);
+    setTimeout(() => setCopiedGuideKey(null), 2000);
+  };
+
+  const installCommands: Record<string, string> = {
+    pnpm: "pnpm add @adgrid-ui/ui framer-motion",
+    npm: "npm install @adgrid-ui/ui framer-motion",
+    yarn: "yarn add @adgrid-ui/ui framer-motion",
+    bun: "bun add @adgrid-ui/ui framer-motion",
   };
 
   return (
@@ -1320,7 +1337,323 @@ export default function RoughlyPage() {
           </div>
         </section>
 
-        {/* ── 4. API Reference Table ───────────────────────────── */}
+        {/* ── 4. How to Use / Quickstart Guide ──────────────────── */}
+        <section className="space-y-6 max-w-5xl mx-auto w-full">
+          <div className="flex items-center gap-2 border-b border-white/[0.08] pb-3">
+            <Terminal className="w-4 h-4 text-indigo-400" />
+            <h2 className="text-xs uppercase tracking-widest text-neutral-400 font-medium">
+              How to Use
+            </h2>
+          </div>
+
+          <div className="space-y-6">
+            {/* Step 1: Install Dependencies */}
+            <div className="p-6 sm:p-7 rounded-2xl bg-[#111114] border border-white/[0.08] space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="px-2.5 py-0.5 rounded-full font-mono text-[11px] font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                  Step 01
+                </span>
+                <span className="text-xs font-mono text-neutral-500">Prerequisite: framer-motion</span>
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-base font-semibold text-white font-sans">
+                  Install Dependencies
+                </h3>
+                <p className="text-xs sm:text-sm text-neutral-400 font-normal leading-relaxed">
+                  Install <code className="text-indigo-300 font-mono text-xs">@adgrid-ui/ui</code> along with <code className="text-indigo-300 font-mono text-xs">framer-motion</code> for scroll-triggered vector drawing animations.
+                </p>
+              </div>
+
+              {/* Package Manager Switcher & Code Box */}
+              <div className="rounded-xl border border-white/10 bg-black/60 overflow-hidden">
+                <div className="flex items-center justify-between px-3 py-2 border-b border-white/[0.06] bg-white/[0.02]">
+                  <div className="flex items-center gap-1">
+                    {(["pnpm", "npm", "yarn", "bun"] as const).map((pm) => (
+                      <button
+                        key={pm}
+                        onClick={() => setInstallPm(pm)}
+                        className={`px-2.5 py-1 text-xs font-mono rounded transition-colors cursor-pointer ${
+                          installPm === pm
+                            ? "bg-white/15 text-white font-medium"
+                            : "text-neutral-400 hover:text-white"
+                        }`}
+                      >
+                        {pm}
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => handleCopyGuide("install", installCommands[installPm])}
+                    className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-300 hover:text-white transition-colors cursor-pointer"
+                  >
+                    {copiedGuideKey === "install" ? (
+                      <>
+                        <Check className="w-3 h-3 text-emerald-400" />
+                        <span className="text-emerald-400">Copied</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3 h-3 text-neutral-400" />
+                        <span>Copy</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+                <div className="p-4 font-mono text-xs sm:text-sm text-neutral-200 overflow-x-auto select-all">
+                  <span className="text-neutral-500 mr-2">$</span>
+                  {installCommands[installPm]}
+                </div>
+              </div>
+            </div>
+
+            {/* Step 2: Import Components */}
+            <div className="p-6 sm:p-7 rounded-2xl bg-[#111114] border border-white/[0.08] space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="px-2.5 py-0.5 rounded-full font-mono text-[11px] font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                  Step 02
+                </span>
+                <span className="text-xs font-mono text-neutral-500">Tree-shakable</span>
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-base font-semibold text-white font-sans">
+                  Import Components
+                </h3>
+                <p className="text-xs sm:text-sm text-neutral-400 font-normal leading-relaxed">
+                  Import the individual annotation subcomponents for optimal bundle tree-shaking, or use the unified compound <code className="text-indigo-300 font-mono text-xs">&lt;Roughly&gt;</code> component.
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-white/10 bg-black/60 overflow-hidden">
+                <div className="flex items-center justify-between px-3.5 py-2 border-b border-white/[0.06] bg-white/[0.02]">
+                  <span className="text-[11px] font-mono text-neutral-400">Named Imports</span>
+                  <button
+                    onClick={() =>
+                      handleCopyGuide(
+                        "import",
+                        `import {\n  Roughly,\n  RoughCircle,\n  RoughUnderline,\n  RoughHighlight,\n  RoughBox,\n  RoughBracket,\n  RoughStrike,\n  RoughCross,\n  RoughArrow,\n} from "@adgrid-ui/ui";`
+                      )
+                    }
+                    className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-300 hover:text-white transition-colors cursor-pointer"
+                  >
+                    {copiedGuideKey === "import" ? (
+                      <>
+                        <Check className="w-3 h-3 text-emerald-400" />
+                        <span className="text-emerald-400">Copied</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3 h-3 text-neutral-400" />
+                        <span>Copy</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+                <pre className="p-4 font-mono text-xs sm:text-sm text-neutral-200 overflow-x-auto leading-relaxed">
+                  <code>{`import {
+  Roughly,
+  RoughCircle,
+  RoughUnderline,
+  RoughHighlight,
+  RoughBox,
+  RoughBracket,
+  RoughStrike,
+  RoughCross,
+  RoughArrow,
+} from "@adgrid-ui/ui";`}</code>
+                </pre>
+              </div>
+            </div>
+
+            {/* Step 3: Wrap Words & Elements */}
+            <div className="p-6 sm:p-7 rounded-2xl bg-[#111114] border border-white/[0.08] space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="px-2.5 py-0.5 rounded-full font-mono text-[11px] font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                  Step 03
+                </span>
+                <span className="text-xs font-mono text-neutral-500">Zero Layout Shift</span>
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-base font-semibold text-white font-sans">
+                  Annotate Text &amp; Keywords
+                </h3>
+                <p className="text-xs sm:text-sm text-neutral-400 font-normal leading-relaxed">
+                  Wrap any word, phrase, or inline block. Annotations automatically measure bounding boxes and draw with organic hand-drawn roughness when scrolled into view.
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-white/10 bg-black/60 overflow-hidden">
+                <div className="flex items-center justify-between px-3.5 py-2 border-b border-white/[0.06] bg-white/[0.02]">
+                  <span className="text-[11px] font-mono text-neutral-400">Example Component</span>
+                  <button
+                    onClick={() =>
+                      handleCopyGuide(
+                        "usage",
+                        `export default function ArticleHero() {\n  return (\n    <div className="space-y-4">\n      {/* Tactile Marker Highlight */}\n      <h1 className="text-3xl font-bold text-white">\n        Design with <RoughHighlight color="#4338CA">physical friction</RoughHighlight>\n      </h1>\n\n      {/* Hand-drawn Pen Circle */}\n      <p className="text-neutral-300">\n        Focus on <RoughCircle color="#6366F1">critical insights</RoughCircle> inside body copy.\n      </p>\n\n      {/* Wavy Underline */}\n      <p className="text-neutral-300">\n        Add energy with <RoughUnderline variant="wavy" color="#10B981">expressive underlines</RoughUnderline>.\n      </p>\n\n      {/* Sketch Box Frame */}\n      <p className="text-neutral-300">\n        Enclose cards in a <RoughBox color="#F59E0B" variant="double">hand-drawn frame</RoughBox>.\n      </p>\n    </div>\n  );\n}`
+                      )
+                    }
+                    className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-300 hover:text-white transition-colors cursor-pointer"
+                  >
+                    {copiedGuideKey === "usage" ? (
+                      <>
+                        <Check className="w-3 h-3 text-emerald-400" />
+                        <span className="text-emerald-400">Copied</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3 h-3 text-neutral-400" />
+                        <span>Copy</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+                <pre className="p-4 font-mono text-xs sm:text-sm text-neutral-200 overflow-x-auto leading-relaxed">
+                  <code>{`export default function ArticleHero() {
+  return (
+    <div className="space-y-4">
+      {/* Tactile Marker Highlight */}
+      <h1 className="text-3xl font-bold text-white">
+        Design with <RoughHighlight color="#4338CA">physical friction</RoughHighlight>
+      </h1>
+
+      {/* Hand-drawn Pen Circle */}
+      <p className="text-neutral-300">
+        Focus on <RoughCircle color="#6366F1">critical insights</RoughCircle> inside body copy.
+      </p>
+
+      {/* Wavy Underline */}
+      <p className="text-neutral-300">
+        Add energy with <RoughUnderline variant="wavy" color="#10B981">expressive underlines</RoughUnderline>.
+      </p>
+
+      {/* Sketch Box Frame */}
+      <p className="text-neutral-300">
+        Enclose cards in a <RoughBox color="#F59E0B" variant="double">hand-drawn frame</RoughBox>.
+      </p>
+    </div>
+  );
+}`}</code>
+                </pre>
+              </div>
+            </div>
+
+            {/* Step 4: Directional Callout Arrows */}
+            <div className="p-6 sm:p-7 rounded-2xl bg-[#111114] border border-white/[0.08] space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="px-2.5 py-0.5 rounded-full font-mono text-[11px] font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                  Step 04
+                </span>
+                <span className="text-xs font-mono text-neutral-500">Directional Trajectory</span>
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-base font-semibold text-white font-sans">
+                  Expressive Callout Arrows
+                </h3>
+                <p className="text-xs sm:text-sm text-neutral-400 font-normal leading-relaxed">
+                  Wrap any CTA button or keyword with <code className="text-indigo-300 font-mono text-xs">&lt;RoughArrow&gt;</code> to anchor an arrow with dynamic curve trajectories and handwritten callout notes.
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-white/10 bg-black/60 overflow-hidden">
+                <div className="flex items-center justify-between px-3.5 py-2 border-b border-white/[0.06] bg-white/[0.02]">
+                  <span className="text-[11px] font-mono text-neutral-400">Arrow Callout</span>
+                  <button
+                    onClick={() =>
+                      handleCopyGuide(
+                        "arrow",
+                        `<div className="p-12 flex justify-center">\n  <RoughArrow\n    placement="top-right"\n    variant="curved"\n    arrowhead="open"\n    color="#F59E0B"\n    label="Interactive Studio ✨"\n    labelFont="caveat"\n    distance={65}\n  >\n    <button className="px-6 py-3 rounded-xl bg-white text-black font-semibold shadow-lg">\n      Launch Console\n    </button>\n  </RoughArrow>\n</div>`
+                      )
+                    }
+                    className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-300 hover:text-white transition-colors cursor-pointer"
+                  >
+                    {copiedGuideKey === "arrow" ? (
+                      <>
+                        <Check className="w-3 h-3 text-emerald-400" />
+                        <span className="text-emerald-400">Copied</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3 h-3 text-neutral-400" />
+                        <span>Copy</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+                <pre className="p-4 font-mono text-xs sm:text-sm text-neutral-200 overflow-x-auto leading-relaxed">
+                  <code>{`<div className="p-12 flex justify-center">
+  <RoughArrow
+    placement="top-right"
+    variant="curved"
+    arrowhead="open"
+    color="#F59E0B"
+    label="Interactive Studio ✨"
+    labelFont="caveat"
+    distance={65}
+  >
+    <button className="px-6 py-3 rounded-xl bg-white text-black font-semibold shadow-lg">
+      Launch Console
+    </button>
+  </RoughArrow>
+</div>`}</code>
+                </pre>
+              </div>
+            </div>
+
+            {/* Step 5: Handwriting Cursive Fonts */}
+            <div className="p-6 sm:p-7 rounded-2xl bg-[#111114] border border-white/[0.08] space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="px-2.5 py-0.5 rounded-full font-mono text-[11px] font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                  Step 05
+                </span>
+                <span className="text-xs font-mono text-neutral-500">Optional Styling</span>
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-base font-semibold text-white font-sans">
+                  Handwritten Callout Fonts Setup
+                </h3>
+                <p className="text-xs sm:text-sm text-neutral-400 font-normal leading-relaxed">
+                  To use handwriting script for callouts (<code className="text-indigo-300 font-mono text-xs">&quot;caveat&quot;</code>, <code className="text-indigo-300 font-mono text-xs">&quot;reenie-beanie&quot;</code>, or <code className="text-indigo-300 font-mono text-xs">&quot;cedarville-cursive&quot;</code>), load Google Fonts in your root layout:
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-white/10 bg-black/60 overflow-hidden">
+                <div className="flex items-center justify-between px-3.5 py-2 border-b border-white/[0.06] bg-white/[0.02]">
+                  <span className="text-[11px] font-mono text-neutral-400">app/layout.tsx</span>
+                  <button
+                    onClick={() =>
+                      handleCopyGuide(
+                        "fonts",
+                        `<head>\n  <link\n    rel="stylesheet"\n    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cedarville+Cursive&family=Reenie+Beanie&display=swap"\n  />\n</head>`
+                      )
+                    }
+                    className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-300 hover:text-white transition-colors cursor-pointer"
+                  >
+                    {copiedGuideKey === "fonts" ? (
+                      <>
+                        <Check className="w-3 h-3 text-emerald-400" />
+                        <span className="text-emerald-400">Copied</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3 h-3 text-neutral-400" />
+                        <span>Copy</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+                <pre className="p-4 font-mono text-xs sm:text-sm text-neutral-200 overflow-x-auto leading-relaxed">
+                  <code>{`<head>
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cedarville+Cursive&family=Reenie+Beanie&display=swap"
+  />
+</head>`}</code>
+                </pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── 5. API Reference Table ───────────────────────────── */}
         <section className="space-y-4 max-w-5xl mx-auto w-full">
           <div className="border-b border-white/[0.08] pb-3">
             <h2 className="text-xs uppercase tracking-widest text-neutral-400 font-medium">
