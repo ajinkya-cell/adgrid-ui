@@ -425,12 +425,17 @@ export function PresentationRenderer({
       const voidProps = {
         variant: "default" as const,
         style: "default" as const,
+        length: 192,
         children: "Default",
         ...liveProps,
       };
       return (
-        <div className="flex items-center justify-center w-full min-h-[300px]">
-          <VoidButton variant={voidProps.variant} style={voidProps.style}>
+        <div className="flex items-center justify-center w-full min-h-[300px] p-6">
+          <VoidButton
+            variant={voidProps.variant}
+            style={voidProps.style}
+            length={voidProps.length}
+          >
             {voidProps.children}
           </VoidButton>
         </div>

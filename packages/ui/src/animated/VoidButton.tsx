@@ -7,6 +7,8 @@ import { cn } from "../lib/utils";
 export interface VoidButtonProps extends Omit<React.ComponentPropsWithoutRef<"button">, "style"> {
   variant?: "default" | "ambient" | "neon-edge" | "metallic-sheen" | "glassmorphic";
   style?: "default" | "pill" | React.CSSProperties;
+  length?: number | string;
+  width?: number | string;
   activeGradientClass?: string;
   activeTextClass?: string;
 }
@@ -18,6 +20,8 @@ export function VoidButton({
   children,
   variant = "default",
   style = "default",
+  length,
+  width,
   activeGradientClass,
   activeTextClass,
   ...props
@@ -40,7 +44,7 @@ export function VoidButton({
       mouseX.set(containerRef.current.offsetWidth / 2);
       mouseY.set(containerRef.current.offsetHeight / 2);
     }
-  }, []);
+  }, [length, width, variant]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!containerRef.current) return;
@@ -113,6 +117,7 @@ export function VoidButton({
   let activeGrad = activeGradientClass || "bg-gradient-to-r from-white/[0.03] via-white/[0.08] to-white/[0.03]";
   let activeText = activeTextClass || "text-white";
   let fontClass = "font-sans text-xs font-bold tracking-normal";
+
   let sizeClass = "px-5 h-11 w-auto";
 
   let shadowNormal = "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.12), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.45), 0 4px 14px rgba(0, 0, 0, 0.6)";
@@ -157,6 +162,16 @@ export function VoidButton({
     shadowTap = "inset 0 4px 14px rgba(0,0,0,0.75), inset 0 1px 1px rgba(255,255,255,0.05), 0 2px 8px rgba(0,0,0,0.4)";
   }
 
+  // Dynamic horizontal length / width override
+  const buttonWidth = length ?? width;
+  let customWidthStyle: React.CSSProperties = {};
+  if (buttonWidth !== undefined) {
+    customWidthStyle = {
+      width: typeof buttonWidth === "number" ? `${buttonWidth}px` : buttonWidth,
+    };
+    sizeClass = sizeClass.replace("w-48", "").replace("w-auto", "").trim();
+  }
+
   // Resolve shape/style class (default: rounded-xl, pill: rounded-full)
   const stylePresetMap: Record<string, string> = {
     default: "rounded-xl",
@@ -197,6 +212,7 @@ export function VoidButton({
       )}
       style={{
         ...(variant === "default" ? { backgroundColor: "#171717" } : {}),
+        ...customWidthStyle,
         ...customInlineStyle,
       }}
       {...(props as any)}

@@ -210,6 +210,7 @@ export const registry: RegistryEntry[] = [
     propDefs: [
       { name: "variant", type: "select", default: "default", description: "Button style variant", required: false, options: ["default", "ambient", "neon-edge", "metallic-sheen", "glassmorphic"] },
       { name: "style", type: "select", default: "default", description: "Corner radius style of the button (pill renders rounded-full)", required: false, options: ["default", "pill"] },
+      { name: "length", type: "number", default: 192, min: 120, max: 480, step: 4, description: "Horizontal length of the button in pixels", required: false },
       { name: "children", type: "string", default: "Default", description: "Button text label", required: false }
     ],
   },

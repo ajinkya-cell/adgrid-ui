@@ -20,6 +20,58 @@
       ]
     },
     {
+      "name": "roughly",
+      "type": "registry:ui",
+      "title": "Roughly",
+      "description": "Organic, hand-drawn vector annotations designed for high-friction digital typography. Wobbly underlines, pen circles, editorial strikethroughs, curly brackets, and tactile highlights.",
+      "dependencies": [
+        "framer-motion",
+        "roughjs"
+      ],
+      "files": [
+        {
+          "path": "components/ui/roughly/Roughly.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/roughly/roughly/index.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/roughly/roughly/RoughArrow.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/roughly/roughly/RoughBox.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/roughly/roughly/RoughBracket.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/roughly/roughly/RoughCircle.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/roughly/roughly/RoughCross.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/roughly/roughly/RoughHighlight.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/roughly/roughly/RoughStrike.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/roughly/roughly/RoughUnderline.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "image-reveal",
       "type": "registry:ui",
       "title": "Image Reveal",
@@ -104,22 +156,6 @@
       "files": [
         {
           "path": "components/ui/GravityCardStack.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "morphing-nav",
-      "type": "registry:ui",
-      "title": "Morphing Nav",
-      "description": "An interactive navigation bar with liquid morphing SVG background shapes.",
-      "dependencies": [
-        "framer-motion",
-        "lucide-react"
-      ],
-      "files": [
-        {
-          "path": "components/ui/MorphingNav.tsx",
           "type": "registry:ui"
         }
       ]
@@ -447,41 +483,6 @@
       ]
     },
     {
-      "name": "scroll-path-draw",
-      "type": "registry:ui",
-      "title": "Scroll Path Draw",
-      "description": "An animated scroll-linked SVG path drawer supporting scroll-jacked viewport locks and passive viewport animations with multiple visual variants.",
-      "dependencies": [
-        "framer-motion"
-      ],
-      "files": [
-        {
-          "path": "components/ui/scroll-path-draw/ScrollPathContext.tsx",
-          "type": "registry:ui"
-        },
-        {
-          "path": "components/ui/scroll-path-draw/ScrollPathContainer.tsx",
-          "type": "registry:ui"
-        },
-        {
-          "path": "components/ui/scroll-path-draw/variants/ScrollPathWaves.tsx",
-          "type": "registry:ui"
-        },
-        {
-          "path": "components/ui/scroll-path-draw/variants/ScrollPathCircuit.tsx",
-          "type": "registry:ui"
-        },
-        {
-          "path": "components/ui/scroll-path-draw/variants/ScrollPathProcess.tsx",
-          "type": "registry:ui"
-        },
-        {
-          "path": "components/ui/scroll-path-draw/index.ts",
-          "type": "registry:lib"
-        }
-      ]
-    },
-    {
       "name": "now-playing-card",
       "type": "registry:ui",
       "title": "Now Playing Card",
@@ -739,41 +740,6 @@
       ]
     },
     {
-      "name": "cards-two",
-      "type": "registry:ui",
-      "title": "Cards Two (3D Orbit Ring)",
-      "description": "A premium spatial 3D circular card carousel that arranges cards around an invisible 3D ring with momentum dragging, snapping, reflection, lighting depth, and custom transforms.",
-      "dependencies": [
-        "framer-motion"
-      ],
-      "files": [
-        {
-          "path": "components/ui/cards-two/CardsTwo.tsx",
-          "type": "registry:ui"
-        },
-        {
-          "path": "components/ui/cards-two/types.ts",
-          "type": "registry:lib"
-        },
-        {
-          "path": "components/ui/cards-two/hooks/useCylinder.ts",
-          "type": "registry:hook"
-        },
-        {
-          "path": "components/ui/cards-two/hooks/useRotation.ts",
-          "type": "registry:hook"
-        },
-        {
-          "path": "components/ui/cards-two/hooks/useCardTransforms.ts",
-          "type": "registry:hook"
-        },
-        {
-          "path": "components/ui/cards-two/hooks/useCardsTwo.ts",
-          "type": "registry:hook"
-        }
-      ]
-    },
-    {
       "name": "animated-icons-1",
       "type": "registry:ui",
       "title": "Animated Icons 1",
@@ -904,21 +870,6 @@
       "files": [
         {
           "path": "components/ui/NavBar1.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "bevel-alert-dialog",
-      "type": "registry:ui",
-      "title": "Bevel Alert Dialog",
-      "description": "A tactile 3D beveled alert dialog panel matching the machined console aesthetic, featuring physical drop shadows, recessed wells, action buttons, and status LED alerts.",
-      "dependencies": [
-        "framer-motion"
-      ],
-      "files": [
-        {
-          "path": "components/ui/BevelAlertDialog.tsx",
           "type": "registry:ui"
         }
       ]
