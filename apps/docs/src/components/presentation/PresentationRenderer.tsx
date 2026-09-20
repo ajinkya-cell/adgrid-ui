@@ -444,12 +444,16 @@ export function PresentationRenderer({
     case "brushed-titanium-button": {
       const titaniumProps = {
         disabled: false,
-        children: "Titanium Button",
+        length: 192,
+        children: "TITANIUM",
         ...liveProps,
       };
       return (
-        <div className="flex items-center justify-center w-full min-h-[300px]">
-          <BrushedTitaniumButton disabled={titaniumProps.disabled}>
+        <div className="flex items-center justify-center w-full min-h-[300px] p-6">
+          <BrushedTitaniumButton
+            disabled={titaniumProps.disabled}
+            length={titaniumProps.length}
+          >
             {titaniumProps.children}
           </BrushedTitaniumButton>
         </div>

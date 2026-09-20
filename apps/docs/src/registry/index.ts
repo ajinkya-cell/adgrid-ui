@@ -223,7 +223,8 @@ export const registry: RegistryEntry[] = [
     packagePath: "animated/BrushedTitaniumButton.tsx",
     files: ["animated/BrushedTitaniumButton.tsx"],
     propDefs: [
-      { name: "children", type: "string", default: "Titanium Button", description: "Button text label", required: false },
+      { name: "children", type: "string", default: "TITANIUM", description: "Button text label", required: false },
+      { name: "length", type: "number", default: 192, min: 120, max: 480, step: 4, description: "Horizontal length of the button in pixels", required: false },
       { name: "disabled", type: "boolean", default: false, description: "Disable button state", required: false }
     ],
   },
