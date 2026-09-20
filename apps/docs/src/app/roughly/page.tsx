@@ -259,8 +259,8 @@ export default function RoughlyPage() {
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/previews/roughly.png"
-            alt="Roughly Hand-drawn Vector Annotations"
+            src="/previews/new-roughly.png"
+            alt="Roughly Hand-drawn Vector Annotations - Drafting & Stationery Artwork"
             className="w-full h-full object-cover object-center pointer-events-none select-none"
           />
           {/* Subtle bottom fade for seamless transition into the page content */}
