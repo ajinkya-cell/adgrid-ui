@@ -11,6 +11,7 @@ import {
   RoughHighlight,
   RoughBox,
   RoughArrow,
+  VoidButton,
 } from "@adgrid-ui/ui";
 import type {
   RoughlyType,
@@ -279,27 +280,49 @@ export default function RoughlyPage() {
             Organic, hand-drawn vector annotations designed for high-friction digital typography. Wobbly underlines, pen circles, editorial strikethroughs, curly brackets, and tactile highlights.
           </p>
 
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
-            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-black/70 backdrop-blur-md border border-white/10 font-mono text-xs text-neutral-200 shadow-xl">
-              <Terminal className="w-3.5 h-3.5 text-neutral-400" />
-              <span>pnpm add @adgrid-ui/ui</span>
-            </div>
-            <button
+          {/* Hero Action Bar: Recessed Console Well + Default VoidButton */}
+          <div className="pt-3 flex flex-wrap items-center justify-center gap-3">
+            {/* Recessed Command Capsule with Tactile Depth */}
+            <div
               onClick={handleCopyInstall}
-              className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 backdrop-blur-md border border-white/10 text-xs font-mono text-white transition-colors flex items-center gap-1.5 cursor-pointer shadow-xl active:scale-95"
+              className="relative flex  items-center gap-2.5 h-11 px-8 rounded-full font-mono text-xs text-neutral-200 border border-white/10 bg-[#0c0c0f]/90 backdrop-blur-xl transition-all cursor-pointer group select-all"
+              style={{
+                boxShadow:
+                  "inset 0 1.5px 3px rgba(0, 0, 0, 0.9), inset 0 -1px 0 rgba(255, 255, 255, 0.06), 0 8px 20px -2px rgba(0, 0, 0, 0.7)",
+              }}
+              title="Click to copy"
+            >
+              {/* Inner top specular micro-rim */}
+              <div className="absolute inset-x-3 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none" />
+
+              {/* Recessed Terminal Icon Socket */}
+             
+
+              {/* Command Text */}
+              <div className="flex items-center gap-1.5 tracking-tight">
+                <span className="text-neutral-400 select-none">pnpm add</span>
+                <span className="text-white font-medium">@adgrid-ui/ui</span>
+              </div>
+            </div>
+
+            {/* Default VoidButton */}
+            <VoidButton
+              variant="default"
+              onClick={handleCopyInstall}
+              className="  text-xs font-mono flex items-center rounded-full shrink-5 cursor-pointer"
             >
               {copiedInstall ? (
                 <>
                   <Check className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Copied!</span>
+                  <span className="text-emerald-300">Copied!</span>
                 </>
               ) : (
                 <>
-                  <Copy className="w-3.5 h-3.5" />
+                  <Copy className="w-3.5 h-3.5 text-neutral-400" />
                   <span>Copy</span>
                 </>
               )}
-            </button>
+            </VoidButton>
           </div>
         </div>
 
@@ -1208,7 +1231,7 @@ export default function RoughlyPage() {
                 bland grey boxes
               </Roughly.Strike>{" "}
               and lifeless borders. With Roughly, you can draw attention to{" "}
-              <Roughly.Circle color="#EC4899">
+              <Roughly.Circle color="#EC4899" paddingX={1} paddingY={6}>
                 critical insights
               </Roughly.Circle>{" "}
               or mark deprecated features with an organic{" "}
