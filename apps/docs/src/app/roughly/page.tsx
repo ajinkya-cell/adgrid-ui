@@ -30,7 +30,6 @@ import {
   Copy,
   RefreshCw,
   ChevronDown,
-  Terminal,
   BookOpen,
   Layers,
   Underline as UnderlineIcon,
@@ -295,9 +294,6 @@ export default function RoughlyPage() {
               {/* Inner top specular micro-rim */}
               <div className="absolute inset-x-3 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none" />
 
-              {/* Recessed Terminal Icon Socket */}
-             
-
               {/* Command Text */}
               <div className="flex items-center gap-1.5 tracking-tight">
                 <span className="text-neutral-400 select-none">pnpm add</span>
@@ -305,11 +301,12 @@ export default function RoughlyPage() {
               </div>
             </div>
 
-            {/* Default VoidButton */}
+            {/* Default VoidButton (compact reduced height) */}
             <VoidButton
               variant="default"
               onClick={handleCopyInstall}
-              className="  text-xs font-mono flex items-center rounded-full shrink-5 cursor-pointer"
+              style={{ height: "43px" }}
+              className=" px-3.5 text-xs font-mono flex items-center gap-1.5 shrink-0 rounded-full cursor-pointer"
             >
               {copiedInstall ? (
                 <>
