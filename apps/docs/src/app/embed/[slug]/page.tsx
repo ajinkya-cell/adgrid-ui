@@ -33,11 +33,9 @@ export default async function EmbedComponentPage({
       if (s === "anisotropic-knob") return "scale-100 sm:scale-[1.05]";
       if (s === "coverflow-carousel") return "scale-[0.60] sm:scale-[0.75]";
       if (s === "image-parallax") return "scale-[0.55] sm:scale-[0.65]";
-      if (s === "cards-two") return "scale-[0.65] sm:scale-[0.80]";
       if (s === "simple-card") return "scale-[0.95] sm:scale-100";
       if (s === "cards" || s === "sticker-card") return "scale-[0.65] sm:scale-[0.75]";
       if (s === "laser-vault-password") return "scale-[0.65] sm:scale-[0.75]";
-      if (s === "morphing-nav") return "scale-[0.75] sm:scale-[0.85]";
       if (s === "now-playing-card") return "scale-[0.85] sm:scale-100";
       if (s === "dot-matrix") return "scale-[0.85] sm:scale-[0.95]";
       if (s === "github-heatmap") return "scale-[0.80] sm:scale-[0.92] lg:scale-100";
@@ -56,7 +54,6 @@ export default async function EmbedComponentPage({
     if (s === "anisotropic-knob") return "scale-[0.65]";
     if (s === "dot-matrix") return "scale-[0.40]";
     if (s === "laser-vault-password") return "scale-[0.40]";
-    if (s === "morphing-nav") return "scale-[0.42]";
     if (s === "text-shuffle") return "scale-[0.55]";
     if (s === "hero") return "scale-[0.35]";
     if (s === "premium-hero") return "scale-[0.22]";
@@ -70,7 +67,6 @@ export default async function EmbedComponentPage({
     if (s === "cards") return "scale-[0.38]";
     if (s === "simple-card") return "scale-[0.65]";
     if (s === "sticker-card") return "scale-[0.55]";
-    if (s === "bevel-alert-dialog") return "scale-[0.60]";
     if (s.includes("flickering-grid") || s.includes("dot-pattern") || s === "matrix-rain") return "scale-100 w-full h-full";
     if (category === "buttons" || s.includes("button")) return "scale-[0.70]";
     return "scale-[0.5] sm:scale-[0.55]";

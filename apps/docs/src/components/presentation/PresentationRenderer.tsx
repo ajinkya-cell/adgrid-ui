@@ -26,7 +26,6 @@ import {
   LuminaWave,
   MatrixRain,
 
-  MorphingNav,
   NowPlayingCard,
   PixelMeltBackground,
   PremiumHero,
@@ -38,7 +37,6 @@ import {
   StickerCard,
   Datepicker,
   NavBar1,
-  BevelAlertDialog,
   SpotlightGrid,
   FlickeringGrid,
   FlickeringGridPlayground,
@@ -48,7 +46,6 @@ import {
   VoidButton,
   WheelPicker,
   ScrollProgress,
-  CardsTwo,
   WeaponWheel,
   Hero,
   AnimatedIcons1,
@@ -70,12 +67,6 @@ import {
   Meter,
 } from "@adgrid-ui/ui";
 import { Cards } from "../../../../../packages/ui/src/animated/Cards";
-import {
-  ScrollPathContainer,
-  ScrollPathWaves,
-  ScrollPathCircuit,
-  ScrollPathProcess,
-} from "../../../../../packages/ui/src/animated/scrollpath";
 import type { RegistryEntry } from "@/registry";
 import { usePresentationStore } from "@/lib/presentation/store";
 import {
@@ -325,93 +316,6 @@ function ScrollProgressDemo(props: any) {
   );
 }
 
-function ScrollPathDrawDemo(props: any) {
-  const [variant, setVariant] = useState<"waves" | "circuit" | "process">("waves");
-  const [mode, setMode] = useState<"scroll-jack" | "passive">("scroll-jack");
-
-  return (
-    <div className="w-full text-white bg-[#0a0a0a] min-h-screen relative">
-      {/* Top Floating Controls */}
-      <div className="fixed top-4 right-4 z-50 flex items-center gap-3 bg-black/60 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10">
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-mono text-zinc-400">Variant:</span>
-          <select
-            value={variant}
-            onChange={(e) => setVariant(e.target.value as any)}
-            className="bg-zinc-900 border border-white/15 rounded-md px-2 py-1 text-xs text-white outline-none cursor-pointer"
-          >
-            <option value="waves">Waves (Original)</option>
-            <option value="circuit">Cyberpunk Circuit</option>
-            <option value="process">Step Timeline</option>
-          </select>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-mono text-zinc-400">Mode:</span>
-          <select
-            value={mode}
-            onChange={(e) => setMode(e.target.value as any)}
-            className="bg-zinc-900 border border-white/15 rounded-md px-2 py-1 text-xs text-white outline-none cursor-pointer"
-          >
-            <option value="scroll-jack">Scroll Jack</option>
-            <option value="passive">Passive Scroll</option>
-          </select>
-        </div>
-      </div>
-
-      {mode === "scroll-jack" ? (
-        <div className="w-full">
-          <ScrollPathContainer mode="scroll-jack" {...props}>
-            {variant === "waves" && <ScrollPathWaves />}
-            {variant === "circuit" && <ScrollPathCircuit />}
-            {variant === "process" && <ScrollPathProcess />}
-          </ScrollPathContainer>
-
-          <div className="min-h-screen bg-zinc-900/50 border-t border-white/5 flex items-center justify-center">
-            <div className="text-center text-white">
-              <h2 className="text-5xl font-bold mb-4">Continue Scrolling</h2>
-              <p className="text-xl text-zinc-400 font-mono">Scroll locking is now released!</p>
-            </div>
-          </div>
-          <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-            <div className="text-center text-white">
-              <h2 className="text-5xl font-bold mb-4">Additional Section</h2>
-              <p className="text-xl text-zinc-500 font-mono">End of scroll path demo</p>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="py-24 max-w-4xl mx-auto px-6 space-y-12 w-full">
-          <h1 className="text-5xl font-bold uppercase tracking-tight text-white mb-8">
-            Passive Scroll Path
-          </h1>
-          <p className="text-lg leading-8 text-neutral-300">
-            Scroll down to see the SVG drawing animate passively based on its viewport position, without scroll locking.
-          </p>
-          {[...Array(3)].map((_, i) => (
-            <p key={i} className="text-lg leading-8 text-neutral-400">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            </p>
-          ))}
-
-          <div className="border border-white/10 rounded-3xl bg-zinc-950/40 p-4">
-            <ScrollPathContainer mode="passive" {...props}>
-              {variant === "waves" && <ScrollPathWaves />}
-              {variant === "circuit" && <ScrollPathCircuit />}
-              {variant === "process" && <ScrollPathProcess />}
-            </ScrollPathContainer>
-          </div>
-
-          {[...Array(4)].map((_, i) => (
-            <p key={i} className="text-lg leading-8 text-neutral-400">
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
 
 function AnisotropicKnobGalleryDemo(props: Record<string, unknown>) {
   const [val, setVal] = useState(20);
@@ -506,161 +410,10 @@ export function PresentationRenderer({
     }
     case "gravity-card-stack":
       return <GravityCardStack />;
-    case "morphing-nav":
-      return <MorphingNav />;
+
     case "coverflow-carousel":
       return <CoverflowCarousel />;
-    case "cards-two": {
-      const sampleCards = [
-        {
-          id: 1,
-          title: "Spatial Computing",
-          subtitle: "Apple Vision Pro",
-          description: "Digital content blends seamlessly with physical space for infinite screen canvases.",
-          image: "https://images.unsplash.com/photo-1622979135225-d2ba269cf1ac?w=800&q=80",
-          badge: "Spatial",
-        },
-        {
-          id: 2,
-          title: "Glyph Interface",
-          subtitle: "Nothing Phone (2)",
-          description: "A screen-less tech interface communicating through glyph lights and sound patterns.",
-          image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80",
-          badge: "Glyphs",
-        },
-        {
-          id: 3,
-          title: "Linear Cycles",
-          subtitle: "Productivity",
-          description: "Streamline software releases and keep product engineering teams aligned instantly.",
-          image: "https://images.unsplash.com/photo-1618005198143-d528b96f2e47?w=800&q=80",
-          badge: "Linear",
-        },
-        {
-          id: 4,
-          title: "Frosted Glass UI",
-          subtitle: "Design Trend",
-          description: "Frosted glass panels refract light and colors dynamically based on background physics.",
-          image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=80",
-          badge: "Glass",
-        },
-        {
-          id: 5,
-          title: "Bento Boxes",
-          subtitle: "Editorial Grid",
-          description: "Curated grids displaying multiple fields of info in a structured, neat grid layout.",
-          image: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?w=800&q=80",
-          badge: "Bento",
-        },
-        {
-          id: 6,
-          title: "Framer Motion 3D",
-          subtitle: "GPU Animations",
-          description: "Smooth GPU accelerated layout transitions on standard CSS 3D transforms.",
-          image: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&q=80",
-          badge: "Motion",
-        },
-        {
-          id: 7,
-          title: "Monospace Typography",
-          subtitle: "Editorials",
-          description: "Sleek and highly structured type layouts with raw industrial aesthetics.",
-          image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80",
-          badge: "Editorial",
-        },
-        {
-          id: 8,
-          title: "Ray Traced Shadows",
-          subtitle: "Atmospherics",
-          description: "Stunning ray traced lighting computations reflecting off dark metallic panels.",
-          image: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?w=800&q=80",
-          badge: "Shadows",
-        },
-        {
-          id: 9,
-          title: "Micro-interactions",
-          subtitle: "UI Feedback",
-          description: "Tiny micro-animations reacting dynamically to user attention inputs.",
-          image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80",
-          badge: "Inputs",
-        },
-        {
-          id: 10,
-          title: "Generative Grids",
-          subtitle: "Algorithms",
-          description: "Procedural grid layouts calculated on-the-fly to fit responsive screens.",
-          image: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=800&q=80",
-          badge: "Math",
-        },
-        {
-          id: 11,
-          title: "Anisotropic Surfaces",
-          subtitle: "Brushed Metals",
-          description: "Complex lighting reflections computed along custom micro-brushed directions.",
-          image: "https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=800&q=80",
-          badge: "Materials",
-        },
-        {
-          id: 12,
-          title: "Tactile Keypads",
-          subtitle: "Neomorphism",
-          description: "Extremely soft shadows representing a physical, button-like interface.",
-          image: "https://images.unsplash.com/photo-1563089145-599997674d42?w=800&q=80",
-          badge: "Tactile",
-        },
-        {
-          id: 13,
-          title: "Organic Curves",
-          subtitle: "Fluids",
-          description: "Generative fluid physics simulating natural gas/water movements dynamically.",
-          image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&q=80",
-          badge: "Fluids",
-        },
-        {
-          id: 14,
-          title: "Parallax Horizons",
-          subtitle: "Depth Fields",
-          description: "Multi-layered scrolling panels translating independently in spatial space.",
-          image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80",
-          badge: "Depth",
-        },
-        {
-          id: 15,
-          title: "Obsidian Colorways",
-          subtitle: "Palettes",
-          description: "A combination of obsidian black and neon green highlights for spatial devices.",
-          image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80",
-          badge: "Colors",
-        },
-        {
-          id: 16,
-          title: "Dynamic Shaders",
-          subtitle: "Interactive",
-          description: "Real-time noise and wave shaders updating dynamically on GPU draw calls.",
-          image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=80",
-          badge: "Shaders",
-        }
-      ];
 
-      const cardsTwoProps = {
-        cards: sampleCards,
-        radius: 650, // Larger radius to accommodate 16 cards spaced out beautifully
-        gap: 40,
-        cardWidth: 260,
-        cardHeight: 365,
-        background: "gradient" as const,
-        ringTiltX: 18, // 18 degree isometric tilt matches the video description
-        faceCamera: false, // Ensures tangent alignment for narrowing/skewing at the sides
-        ...liveProps,
-        hideBackCards: true, // Force hide back cards to keep the center layout completely clean
-      };
-
-      return (
-        <div className="flex items-center justify-center w-full min-h-[580px] py-16">
-          <CardsTwo {...cardsTwoProps} />
-        </div>
-      );
-    }
     // ── Buttons category ───────────────────────────────────────────────────
     case "void-button": {
       const voidProps = {
@@ -800,8 +553,7 @@ export function PresentationRenderer({
 
     case "scroll-progress":
       return <ScrollProgressDemo {...liveProps} />;
-    case "scroll-path-draw":
-      return <ScrollPathDrawDemo {...liveProps} />;
+
     case "now-playing-card":
       return <NowPlayingCard song={{ isPlaying: true, title: "Main Chala Jaunga", artist: "Fiddlecraft", album: "Hawai Jahaaz", image: "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/41/c7/65/41c765a0-5a1e-3e35-9c22-5d664da2b95e/cover.jpg/600x600bb.jpg", songUrl: "https://open.spotify.com", playedAt: null }} />;
     case "wheel-picker": {
@@ -1085,11 +837,7 @@ export function PresentationRenderer({
         </div>
       );
     }
-    case "bevel-alert-dialog": {
-      return (
-        <BevelAlertDialogDemo liveProps={liveProps} />
-      );
-    }
+
     case "flickering-grid":
       return (
         <div className="relative w-full h-full min-h-[450px] border border-white/5 bg-[#030303] rounded-2xl overflow-hidden">
@@ -1356,41 +1104,6 @@ function StepperDemo() {
 }
 
 
-function BevelAlertDialogDemo({ liveProps }: { liveProps: any }) {
-  const [isOpen, setIsOpen] = useState(false);
-  return (
-    <div className="w-full min-h-screen flex flex-col items-center justify-center p-6 bg-transparent gap-6">
-      {/* Tactile console trigger button */}
-      <button
-        type="button"
-        onClick={() => setIsOpen(true)}
-        style={{
-          backgroundColor: "#171717",
-          boxShadow:
-            "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.40), 0 4px 12px rgba(0, 0, 0, 0.5)",
-        }}
-        className="px-6 h-12 rounded-xl text-[10px] font-mono tracking-widest uppercase font-bold text-neutral-300 border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 hover:text-white cursor-pointer active:scale-95 transition-transform"
-      >
-        Initialize Alarm Console
-      </button>
 
-      {/* The Alert Dialog */}
-      <BevelAlertDialog
-        title="ALARM CONSOLE INITIALIZED"
-        description="The security deck has booted successfully. All perimeter sensor scans are active and operating within nominal parameters."
-        confirmLabel="PROCEED"
-        cancelLabel="DISMISS"
-        {...liveProps}
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        onConfirm={async () => {
-          // Simulate machine override task
-          await new Promise((resolve) => setTimeout(resolve, 2000));
-          setIsOpen(false);
-        }}
-      />
-    </div>
-  );
-}
 
 

@@ -29,7 +29,6 @@ const UI = {
   StickerCard: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.StickerCard }))),
   Datepicker: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.Datepicker }))),
   NavBar1: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.NavBar1 }))),
-  BevelAlertDialog: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.BevelAlertDialog }))),
   CoverflowCarousel: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.CoverflowCarousel }))),
   PixelMeltBackground: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.PixelMeltBackground }))),
   BreathingGrid: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.BreathingGrid }))),
@@ -227,23 +226,7 @@ export function MiniPreviewRenderer({ slug }: { slug: string }) {
         </div>
       );
     }
-    case "bevel-alert-dialog": {
-      return (
-        <div className="flex h-full w-full items-center justify-center p-4 scale-55 origin-center overflow-hidden">
-          <Suspense fallback={null}>
-            <UI.BevelAlertDialog
-              inline
-              isOpen={true}
-              variant="danger"
-              title="SYSTEM OVERHEAD ALARM"
-              description="Core coolant integrity is decreasing. Deploy liquid hydrogen injectors immediately?"
-              onClose={() => {}}
-              onConfirm={() => {}}
-            />
-          </Suspense>
-        </div>
-      );
-    }
+
 
 
     // ── Animated ─────────────────────────────────────────────────────────

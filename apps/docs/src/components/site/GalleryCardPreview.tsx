@@ -110,17 +110,7 @@ function renderPreviewContent(slug: string, category: ComponentCategory, accent:
         </div>
       );
 
-    case "morphing-nav":
-      return (
-        <div className="px-4 py-2 rounded-full border border-white/20 bg-neutral-900/90 shadow-2xl flex items-center gap-3">
-          <div className="w-2.5 h-2.5 rounded-full" style={{ background: accent }} />
-          <div className="flex gap-1.5">
-            <div className="w-8 h-1 rounded bg-white/60" />
-            <div className="w-5 h-1 rounded bg-white/30" />
-            <div className="w-6 h-1 rounded bg-white/30" />
-          </div>
-        </div>
-      );
+
 
     case "infinite-scroll":
       return (

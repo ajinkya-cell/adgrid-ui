@@ -49,7 +49,7 @@ export function SidebarItem({
     };
   }, []);
 
-  const isNew = ["scroll-progress", "scroll-path-draw", "lumina-wave"].includes(entry.slug);
+  const isNew = ["scroll-progress", "lumina-wave"].includes(entry.slug);
 
   return (
     <div

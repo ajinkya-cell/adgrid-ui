@@ -11,7 +11,6 @@ import {
   LayoutGrid,
   Copy,
   Layers,
-  Shield,
   Zap,
   Sparkles,
   Terminal,
@@ -277,14 +276,7 @@ const defaultCommandItems: CommandItem[] = [
     url: "/present/animated/command-palette",
     icon: <Command className="w-4 h-4" />,
   },
-  {
-    id: "comp-bevel-alert",
-    label: "Bevel Alert Dialog",
-    category: "Components",
-    description: "Machined metal 3D tactile debossed modal window",
-    url: "/present/animated/bevel-alert-dialog",
-    icon: <Shield className="w-4 h-4" />,
-  },
+
   {
     id: "comp-pneumatic-button",
     label: "Pneumatic Press Button",

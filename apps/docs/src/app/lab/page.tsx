@@ -4,9 +4,6 @@ import { useState } from "react";
 import {
   DotMatrix,
   AnisotropicKnob,
-  MorphingNav,
-  ScrollPathContainer,
-  ScrollPathProcess,
   ExpandOnHover,
   TextShuffle,
   LivingText,
@@ -229,7 +226,7 @@ export default function LabPage() {
             </p>
           </div>
           <div className="font-mono text-xs text-text-muted uppercase tracking-wider text-right">
-            <div>DISP: 13 / 128 ASSETS</div>
+            <div>DISP: 11 / 128 ASSETS</div>
             <div className="mt-1 text-emerald-500">LATENCY: 4MS // STABLE</div>
           </div>
         </div>
@@ -299,39 +296,7 @@ export default function LabPage() {
             </div>
           </LabCard>
 
-          {/* 03 — MorphingNav (Span 4) */}
-          <LabCard
-            id="SYS_03"
-            label="SVG_MORPH"
-            status="FLOW_ACTIVE"
-            colSpan="md:col-span-4"
-            title="MorphingNav"
-            description="Interactive navigation bar with liquid morphing SVG background shapes."
-            statLeft="Morph: 0.6s"
-            statRight="Borders: Hairline"
-          >
-            <div className="w-full scale-90 flex items-center justify-center">
-              <MorphingNav />
-            </div>
-          </LabCard>
 
-          {/* 04 — ScrollPathProcess (Span 8) */}
-          <LabCard
-            id="SYS_04"
-            label="SCROLL_TIMELINE"
-            status="PASSIVE_MODE"
-            colSpan="md:col-span-8"
-            title="ScrollPathProcess"
-            description="Timelines and roadmaps drawn on-scroll to guide the user's focus through connected steps."
-            statLeft="Steps: 3 Connected"
-            statRight="Aesthetic: Neon"
-          >
-            <div className="w-full h-[220px] overflow-hidden flex items-center justify-center scale-[0.5] origin-center">
-              <ScrollPathContainer mode="passive" className="h-full w-full">
-                <ScrollPathProcess glow={true} strokeWidth={4} />
-              </ScrollPathContainer>
-            </div>
-          </LabCard>
 
           {/* 05 — ExpandOnHover (Span 6) */}
           <LabCard
@@ -532,7 +497,7 @@ export default function LabPage() {
         {/* ─── Footer Telemetry ─── */}
         <div className="mt-20 border-t border-border-hairline pt-8 flex flex-col md:flex-row justify-between items-center gap-4 select-none">
           <div className="font-mono text-[10px] text-text-muted tracking-widest uppercase">
-            TERMINAL_ID: VOID_LAB_V1 // GRID: {13} ACTIVE
+            TERMINAL_ID: VOID_LAB_V1 // GRID: {11} ACTIVE
           </div>
           <div className="font-mono text-[10px] text-text-muted tracking-widest uppercase">
             COORD_X: 144.02 // COORD_Y: 28.00 // LATENCY: 4MS

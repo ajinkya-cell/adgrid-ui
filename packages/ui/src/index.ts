@@ -15,7 +15,6 @@ export type {
   SpotlightGlowColors,
 } from "./animated/spotlight-text";
 export { GravityCardStack } from "./animated/GravityCardStack";
-export { MorphingNav } from "./animated/MorphingNav";
 
 export { VoidButton } from "./animated/VoidButton";
 export { BrushedTitaniumButton } from "./animated/BrushedTitaniumButton";
@@ -91,24 +90,6 @@ export { cn } from "./lib/utils";
 export { Cards } from "./animated/Cards";
 export { SimpleCard } from "./animated/SimpleCard";
 export type { SimpleCardProps } from "./animated/SimpleCard";
-export { CardsTwo } from "./animated/CardsTwo";
-export type { CardsTwoProps, CardsTwoRef, Card } from "./animated/CardsTwo";
-
-// ScrollPath
-export {
-  ScrollPathContext,
-  useScrollPath,
-  ScrollPathContainer,
-  ScrollPathWaves,
-  ScrollPathCircuit,
-  ScrollPathProcess,
-} from "./animated/scrollpath";
-export type {
-  ScrollPathContainerProps,
-  ScrollPathWavesProps,
-  ScrollPathCircuitProps,
-  ScrollPathProcessProps,
-} from "./animated/scrollpath";
 
 // Weapon Wheel Select Component
 export { WeaponWheel } from "./animated/WeaponWheel";
@@ -147,10 +128,6 @@ export type { Marquee2Props, Marquee2Variant } from "./animated/Marquee2";
 
 // NavBar1
 export { default as NavBar1 } from "./animated/NavBar1";
-
-// Bevel Alert Dialog
-export { BevelAlertDialog } from "./animated/BevelAlertDialog";
-export type { BevelAlertDialogProps } from "./animated/BevelAlertDialog";
 
 // ForgeUI Landing
 export { ForgeUILanding } from "./animated/ForgeUILanding";
