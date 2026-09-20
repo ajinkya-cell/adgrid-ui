@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, type ReactNode } from "react";
 import {
   Roughly,
   RoughCircle,
@@ -43,6 +43,300 @@ import {
   Highlighter as HighlightIcon,
   ArrowRight as ArrowIcon,
 } from "lucide-react";
+
+// ── Syntax Highlighting Helpers & Constants ──────────────────
+const KEYWORDS = new Set([
+  "import",
+  "export",
+  "default",
+  "function",
+  "return",
+  "const",
+  "let",
+  "var",
+  "from",
+  "type",
+  "interface",
+  "as",
+]);
+
+const HTML_TAGS = new Set([
+  "div",
+  "span",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "p",
+  "button",
+  "main",
+  "section",
+  "head",
+  "link",
+  "a",
+  "code",
+  "pre",
+  "ul",
+  "li",
+]);
+
+const PROPS = new Set([
+  "type",
+  "color",
+  "strokeWidth",
+  "animationDuration",
+  "duration",
+  "animate",
+  "variant",
+  "style",
+  "placement",
+  "arrowhead",
+  "label",
+  "labelFont",
+  "distance",
+  "flipCurve",
+  "arcCurvature",
+  "headSize",
+  "className",
+  "rel",
+  "href",
+  "side",
+  "paddingX",
+  "paddingY",
+  "iterations",
+  "multiline",
+  "preserveAspectRatio",
+  "crossOrigin",
+  "onClick",
+  "key",
+]);
+
+const importSnippet = `import {
+  Roughly,
+  RoughCircle,
+  RoughUnderline,
+  RoughHighlight,
+  RoughBox,
+  RoughBracket,
+  RoughStrike,
+  RoughCross,
+  RoughArrow,
+} from "@/components/ui/roughly";`;
+
+const articleHeroSnippet = `import {
+  RoughHighlight,
+  RoughCircle,
+  RoughUnderline,
+  RoughBox,
+} from "@/components/ui/roughly";
+
+export default function ArticleHero() {
+  return (
+    <div className="space-y-4">
+      {/* Tactile Marker Highlight */}
+      <h1 className="text-3xl font-bold text-white">
+        Design with <RoughHighlight color="#4338CA">physical friction</RoughHighlight>
+      </h1>
+
+      {/* Hand-drawn Pen Circle */}
+      <p className="text-neutral-300">
+        Focus on <RoughCircle color="#6366F1">critical insights</RoughCircle> inside body copy.
+      </p>
+
+      {/* Wavy Underline */}
+      <p className="text-neutral-300">
+        Add energy with <RoughUnderline variant="wavy" color="#10B981">expressive underlines</RoughUnderline>.
+      </p>
+
+      {/* Sketch Box Frame */}
+      <p className="text-neutral-300">
+        Enclose cards in a <RoughBox color="#F59E0B" variant="double">hand-drawn frame</RoughBox>.
+      </p>
+    </div>
+  );
+}`;
+
+const calloutDemoSnippet = `import { RoughArrow } from "@/components/ui/roughly";
+
+export function CalloutDemo() {
+  return (
+    <div className="p-12 flex justify-center">
+      <RoughArrow
+        placement="top-right"
+        variant="curved"
+        arrowhead="open"
+        color="#F59E0B"
+        label="Interactive Studio ✨"
+        labelFont="caveat"
+        distance={65}
+      >
+        <button className="px-6 py-3 rounded-xl bg-white text-black font-semibold shadow-lg">
+          Launch Console
+        </button>
+      </RoughArrow>
+    </div>
+  );
+}`;
+
+const fontsSnippet = `<head>
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cedarville+Cursive&family=Reenie+Beanie&display=swap"
+  />
+</head>`;
+
+function renderSyntaxLine(line: string) {
+  if (!line.length) {
+    return "\u00A0";
+  }
+
+  const trimmed = line.trim();
+  if (
+    trimmed.startsWith("//") ||
+    trimmed.startsWith("{/*") ||
+    trimmed.startsWith("<!--")
+  ) {
+    return <span className="text-neutral-500 italic">{line}</span>;
+  }
+
+  const TOKEN_REGEX =
+    /("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|<\/|\/>|<|>|[{}()\[\],;=:]|\b\d+(?:\.\d+)?\b|\s+|[a-zA-Z0-9_.-]+|.)/g;
+  const rawTokens = line.match(TOKEN_REGEX) || [line];
+  let lastNonSpace = "";
+
+  return rawTokens.map((token, i) => {
+    if (!token) return null;
+
+    if (/^\s+$/.test(token)) {
+      return <span key={i}>{token}</span>;
+    }
+
+    let nextNonSpace = "";
+    for (let j = i + 1; j < rawTokens.length; j++) {
+      if (!/^\s+$/.test(rawTokens[j])) {
+        nextNonSpace = rawTokens[j];
+        break;
+      }
+    }
+
+    let element: ReactNode = (
+      <span key={i} className="text-neutral-200">
+        {token}
+      </span>
+    );
+
+    if (token.startsWith('"') || token.startsWith("'")) {
+      if (/^["']#[0-9a-fA-F]{3,8}["']$/.test(token)) {
+        const hex = token.replace(/['"]/g, "");
+        element = (
+          <span
+            key={i}
+            className="text-emerald-300 font-mono inline-flex items-center gap-1"
+          >
+            <span
+              className="inline-block w-2.5 h-2.5 rounded-full border border-white/20 shrink-0 align-middle"
+              style={{ backgroundColor: hex }}
+            />
+            {token}
+          </span>
+        );
+      } else {
+        element = (
+          <span key={i} className="text-emerald-300">
+            {token}
+          </span>
+        );
+      }
+    } else if (
+      ["<", "</", ">", "/>", "=", "{", "}", "(", ")", "[", "]", ";", ",", ":"].includes(
+        token
+      )
+    ) {
+      element = (
+        <span key={i} className="text-neutral-400">
+          {token}
+        </span>
+      );
+    } else if (KEYWORDS.has(token)) {
+      element = (
+        <span key={i} className="text-purple-400 font-semibold">
+          {token}
+        </span>
+      );
+    } else if (token === "true" || token === "false") {
+      element = (
+        <span key={i} className="text-cyan-300 font-mono font-semibold">
+          {token}
+        </span>
+      );
+    } else if (/^\d+(\.\d+)?$/.test(token)) {
+      element = (
+        <span key={i} className="text-cyan-300 font-mono">
+          {token}
+        </span>
+      );
+    } else if (lastNonSpace === "<" || lastNonSpace === "</") {
+      if (HTML_TAGS.has(token.toLowerCase())) {
+        element = (
+          <span key={i} className="text-rose-400 font-medium">
+            {token}
+          </span>
+        );
+      } else {
+        element = (
+          <span key={i} className="text-indigo-400 font-semibold">
+            {token}
+          </span>
+        );
+      }
+    } else if (
+      token.startsWith("Rough") ||
+      token === "VoidButton" ||
+      token === "ArticleHero" ||
+      token === "CalloutDemo"
+    ) {
+      element = (
+        <span key={i} className="text-indigo-400 font-semibold">
+          {token}
+        </span>
+      );
+    } else if (nextNonSpace === "=" || PROPS.has(token)) {
+      element = (
+        <span key={i} className="text-amber-300/90 font-mono">
+          {token}
+        </span>
+      );
+    }
+
+    lastNonSpace = token;
+    return element;
+  });
+}
+
+function highlightCode(
+  code: string,
+  _language: "tsx" | "html" = "tsx",
+  showLineNumbers: boolean = false
+) {
+  const lines = code.trimEnd().split("\n");
+
+  return (
+    <div className="table w-full font-mono text-xs sm:text-sm leading-relaxed">
+      {lines.map((line, lineIdx) => (
+        <div key={lineIdx} className="table-row">
+          {showLineNumbers && (
+            <span className="table-cell select-none pr-4 text-right text-neutral-600 text-[11px] w-8 align-top">
+              {lineIdx + 1}
+            </span>
+          )}
+          <span className="table-cell whitespace-pre align-top">
+            {renderSyntaxLine(line)}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function RoughlyPage() {
   // Playground State
@@ -1263,9 +1557,9 @@ export default function RoughlyPage() {
                     )}
                   </button>
                 </div>
-                <pre className="p-4 text-xs font-mono text-neutral-300 overflow-x-auto leading-relaxed">
-                  <code>{generateSnippet()}</code>
-                </pre>
+                <div className="p-4 overflow-x-auto present-scroll">
+                  {highlightCode(generateSnippet(), "tsx", true)}
+                </div>
               </div>
             </div>
           </div>
@@ -1358,12 +1652,6 @@ export default function RoughlyPage() {
           <div className="space-y-6">
             {/* Step 1: Install Dependencies */}
             <div className="p-6 sm:p-7 rounded-2xl bg-[#111114] border border-white/[0.08] space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="px-2.5 py-0.5 rounded-full font-mono text-[11px] font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                  Step 01
-                </span>
-                <span className="text-xs font-mono text-neutral-500">CLI Distribution</span>
-              </div>
               <div className="space-y-1">
                 <h3 className="text-base font-semibold text-white font-sans">
                   Install via Void UI CLI
@@ -1417,12 +1705,6 @@ export default function RoughlyPage() {
 
             {/* Step 2: Import Components */}
             <div className="p-6 sm:p-7 rounded-2xl bg-[#111114] border border-white/[0.08] space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="px-2.5 py-0.5 rounded-full font-mono text-[11px] font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                  Step 02
-                </span>
-                <span className="text-xs font-mono text-neutral-500">Direct Source Ownership</span>
-              </div>
               <div className="space-y-1">
                 <h3 className="text-base font-semibold text-white font-sans">
                   Import Components
@@ -1436,12 +1718,7 @@ export default function RoughlyPage() {
                 <div className="flex items-center justify-between px-3.5 py-2 border-b border-white/[0.06] bg-white/[0.02]">
                   <span className="text-[11px] font-mono text-neutral-400">Named Imports</span>
                   <button
-                    onClick={() =>
-                      handleCopyGuide(
-                        "import",
-                        `import {\n  Roughly,\n  RoughCircle,\n  RoughUnderline,\n  RoughHighlight,\n  RoughBox,\n  RoughBracket,\n  RoughStrike,\n  RoughCross,\n  RoughArrow,\n} from "@/components/ui/roughly";`
-                      )
-                    }
+                    onClick={() => handleCopyGuide("import", importSnippet)}
                     className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-300 hover:text-white transition-colors cursor-pointer"
                   >
                     {copiedGuideKey === "import" ? (
@@ -1457,30 +1734,14 @@ export default function RoughlyPage() {
                     )}
                   </button>
                 </div>
-                <pre className="p-4 font-mono text-xs sm:text-sm text-neutral-200 overflow-x-auto leading-relaxed">
-                  <code>{`import {
-  Roughly,
-  RoughCircle,
-  RoughUnderline,
-  RoughHighlight,
-  RoughBox,
-  RoughBracket,
-  RoughStrike,
-  RoughCross,
-  RoughArrow,
-} from "@/components/ui/roughly";`}</code>
-                </pre>
+                <div className="p-4 overflow-x-auto present-scroll">
+                  {highlightCode(importSnippet, "tsx", true)}
+                </div>
               </div>
             </div>
 
             {/* Step 3: Wrap Words & Elements */}
             <div className="p-6 sm:p-7 rounded-2xl bg-[#111114] border border-white/[0.08] space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="px-2.5 py-0.5 rounded-full font-mono text-[11px] font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                  Step 03
-                </span>
-                <span className="text-xs font-mono text-neutral-500">Zero Layout Shift</span>
-              </div>
               <div className="space-y-1">
                 <h3 className="text-base font-semibold text-white font-sans">
                   Annotate Text &amp; Keywords
@@ -1494,12 +1755,7 @@ export default function RoughlyPage() {
                 <div className="flex items-center justify-between px-3.5 py-2 border-b border-white/[0.06] bg-white/[0.02]">
                   <span className="text-[11px] font-mono text-neutral-400">Example Component</span>
                   <button
-                    onClick={() =>
-                      handleCopyGuide(
-                        "usage",
-                        `import {\n  RoughHighlight,\n  RoughCircle,\n  RoughUnderline,\n  RoughBox,\n} from "@/components/ui/roughly";\n\nexport default function ArticleHero() {\n  return (\n    <div className="space-y-4">\n      {/* Tactile Marker Highlight */}\n      <h1 className="text-3xl font-bold text-white">\n        Design with <RoughHighlight color="#4338CA">physical friction</RoughHighlight>\n      </h1>\n\n      {/* Hand-drawn Pen Circle */}\n      <p className="text-neutral-300">\n        Focus on <RoughCircle color="#6366F1">critical insights</RoughCircle> inside body copy.\n      </p>\n\n      {/* Wavy Underline */}\n      <p className="text-neutral-300">\n        Add energy with <RoughUnderline variant="wavy" color="#10B981">expressive underlines</RoughUnderline>.\n      </p>\n\n      {/* Sketch Box Frame */}\n      <p className="text-neutral-300">\n        Enclose cards in a <RoughBox color="#F59E0B" variant="double">hand-drawn frame</RoughBox>.\n      </p>\n    </div>\n  );\n}`
-                      )
-                    }
+                    onClick={() => handleCopyGuide("usage", articleHeroSnippet)}
                     className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-300 hover:text-white transition-colors cursor-pointer"
                   >
                     {copiedGuideKey === "usage" ? (
@@ -1515,51 +1771,14 @@ export default function RoughlyPage() {
                     )}
                   </button>
                 </div>
-                <pre className="p-4 font-mono text-xs sm:text-sm text-neutral-200 overflow-x-auto leading-relaxed">
-                  <code>{`import {
-  RoughHighlight,
-  RoughCircle,
-  RoughUnderline,
-  RoughBox,
-} from "@/components/ui/roughly";
-
-export default function ArticleHero() {
-  return (
-    <div className="space-y-4">
-      {/* Tactile Marker Highlight */}
-      <h1 className="text-3xl font-bold text-white">
-        Design with <RoughHighlight color="#4338CA">physical friction</RoughHighlight>
-      </h1>
-
-      {/* Hand-drawn Pen Circle */}
-      <p className="text-neutral-300">
-        Focus on <RoughCircle color="#6366F1">critical insights</RoughCircle> inside body copy.
-      </p>
-
-      {/* Wavy Underline */}
-      <p className="text-neutral-300">
-        Add energy with <RoughUnderline variant="wavy" color="#10B981">expressive underlines</RoughUnderline>.
-      </p>
-
-      {/* Sketch Box Frame */}
-      <p className="text-neutral-300">
-        Enclose cards in a <RoughBox color="#F59E0B" variant="double">hand-drawn frame</RoughBox>.
-      </p>
-    </div>
-  );
-}`}</code>
-                </pre>
+                <div className="p-4 overflow-x-auto present-scroll">
+                  {highlightCode(articleHeroSnippet, "tsx", true)}
+                </div>
               </div>
             </div>
 
             {/* Step 4: Directional Callout Arrows */}
             <div className="p-6 sm:p-7 rounded-2xl bg-[#111114] border border-white/[0.08] space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="px-2.5 py-0.5 rounded-full font-mono text-[11px] font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                  Step 04
-                </span>
-                <span className="text-xs font-mono text-neutral-500">Directional Trajectory</span>
-              </div>
               <div className="space-y-1">
                 <h3 className="text-base font-semibold text-white font-sans">
                   Expressive Callout Arrows
@@ -1573,12 +1792,7 @@ export default function ArticleHero() {
                 <div className="flex items-center justify-between px-3.5 py-2 border-b border-white/[0.06] bg-white/[0.02]">
                   <span className="text-[11px] font-mono text-neutral-400">Arrow Callout</span>
                   <button
-                    onClick={() =>
-                      handleCopyGuide(
-                        "arrow",
-                        `import { RoughArrow } from "@/components/ui/roughly";\n\nexport function CalloutDemo() {\n  return (\n    <div className="p-12 flex justify-center">\n      <RoughArrow\n        placement="top-right"\n        variant="curved"\n        arrowhead="open"\n        color="#F59E0B"\n        label="Interactive Studio ✨"\n        labelFont="caveat"\n        distance={65}\n      >\n        <button className="px-6 py-3 rounded-xl bg-white text-black font-semibold shadow-lg">\n          Launch Console\n        </button>\n      </RoughArrow>\n    </div>\n  );\n}`
-                      )
-                    }
+                    onClick={() => handleCopyGuide("arrow", calloutDemoSnippet)}
                     className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-300 hover:text-white transition-colors cursor-pointer"
                   >
                     {copiedGuideKey === "arrow" ? (
@@ -1594,40 +1808,14 @@ export default function ArticleHero() {
                     )}
                   </button>
                 </div>
-                <pre className="p-4 font-mono text-xs sm:text-sm text-neutral-200 overflow-x-auto leading-relaxed">
-                  <code>{`import { RoughArrow } from "@/components/ui/roughly";
-
-export function CalloutDemo() {
-  return (
-    <div className="p-12 flex justify-center">
-      <RoughArrow
-        placement="top-right"
-        variant="curved"
-        arrowhead="open"
-        color="#F59E0B"
-        label="Interactive Studio ✨"
-        labelFont="caveat"
-        distance={65}
-      >
-        <button className="px-6 py-3 rounded-xl bg-white text-black font-semibold shadow-lg">
-          Launch Console
-        </button>
-      </RoughArrow>
-    </div>
-  );
-}`}</code>
-                </pre>
+                <div className="p-4 overflow-x-auto present-scroll">
+                  {highlightCode(calloutDemoSnippet, "tsx", true)}
+                </div>
               </div>
             </div>
 
             {/* Step 5: Handwriting Cursive Fonts */}
             <div className="p-6 sm:p-7 rounded-2xl bg-[#111114] border border-white/[0.08] space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="px-2.5 py-0.5 rounded-full font-mono text-[11px] font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                  Step 05
-                </span>
-                <span className="text-xs font-mono text-neutral-500">Optional Styling</span>
-              </div>
               <div className="space-y-1">
                 <h3 className="text-base font-semibold text-white font-sans">
                   Handwritten Callout Fonts Setup
@@ -1641,12 +1829,7 @@ export function CalloutDemo() {
                 <div className="flex items-center justify-between px-3.5 py-2 border-b border-white/[0.06] bg-white/[0.02]">
                   <span className="text-[11px] font-mono text-neutral-400">app/layout.tsx</span>
                   <button
-                    onClick={() =>
-                      handleCopyGuide(
-                        "fonts",
-                        `<head>\n  <link\n    rel="stylesheet"\n    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cedarville+Cursive&family=Reenie+Beanie&display=swap"\n  />\n</head>`
-                      )
-                    }
+                    onClick={() => handleCopyGuide("fonts", fontsSnippet)}
                     className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-300 hover:text-white transition-colors cursor-pointer"
                   >
                     {copiedGuideKey === "fonts" ? (
@@ -1662,14 +1845,9 @@ export function CalloutDemo() {
                     )}
                   </button>
                 </div>
-                <pre className="p-4 font-mono text-xs sm:text-sm text-neutral-200 overflow-x-auto leading-relaxed">
-                  <code>{`<head>
-  <link
-    rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cedarville+Cursive&family=Reenie+Beanie&display=swap"
-  />
-</head>`}</code>
-                </pre>
+                <div className="p-4 overflow-x-auto present-scroll">
+                  {highlightCode(fontsSnippet, "html", true)}
+                </div>
               </div>
             </div>
           </div>
