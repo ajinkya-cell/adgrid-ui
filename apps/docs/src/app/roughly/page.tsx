@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Image from "next/image";
 import {
   Roughly,
   RoughCircle,
@@ -255,23 +254,17 @@ export default function RoughlyPage() {
   return (
     <main className="min-h-screen bg-[#09090b] text-neutral-300 selection:bg-white selection:text-black flex flex-col items-center">
       {/* ── 1. Hero Header (Full Desktop Screen) ─────────────── */}
-      <section className="relative w-full min-h-screen flex flex-col items-center justify-center px-4 sm:px-8 pt-16 pb-20 overflow-hidden select-none">
-        {/* Background Image & Contrast Overlays */}
-        <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-          <Image
+      <section className="relative isolate w-full min-h-screen flex flex-col items-center justify-center px-4 sm:px-8 pt-16 pb-20 overflow-hidden select-none">
+        {/* Background Image Layer */}
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src="/previews/roughly.png"
             alt="Roughly Hand-drawn Vector Annotations"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-center opacity-75 select-none"
+            className="w-full h-full object-cover object-center pointer-events-none select-none"
           />
-          {/* Subtle radial vignette to emphasize center typography */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(9,9,11,0.35)_0%,rgba(9,9,11,0.85)_100%)]" />
-          {/* Top fade for clean contrast beneath the floating navbar */}
-          <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#09090b]/80 to-transparent" />
-          {/* Bottom fade for seamless transition into the page content */}
-          <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#09090b] via-[#09090b]/80 to-transparent" />
+          {/* Subtle bottom fade for seamless transition into the page content */}
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#09090b] to-transparent pointer-events-none" />
         </div>
 
         {/* Hero Content (Centered in the open void of the illustration) */}
