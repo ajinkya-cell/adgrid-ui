@@ -1,6 +1,8 @@
 import { registry, type DisplayStrategy, type RegistryEntry } from "@/registry";
 
-export const presentationEntries = registry;
+export const presentationEntries = registry.filter(
+  (entry) => entry.slug !== "roughly"
+);
 
 export function getComponentName(entry: RegistryEntry) {
   return entry.name.replace(/\s/g, "");

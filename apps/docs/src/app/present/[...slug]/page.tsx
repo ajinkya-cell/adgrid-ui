@@ -1,7 +1,8 @@
 import fs from "fs";
 import path from "path";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { registry } from "@/registry";
+import { presentationEntries } from "@/components/presentation/presentation-registry";
 import { PresentationLayout } from "@/components/presentation/PresentationLayout";
 import type { PresentationSourceFile } from "@/components/presentation/types";
 import { codeToHtml } from "shiki";
@@ -34,11 +35,21 @@ export default async function PresentCatchAllPage({
   if (slugParts.length >= 2) {
     const category = slugParts[0];
     const itemSlug = slugParts[slugParts.length - 1];
+
+    if (itemSlug === "roughly") {
+      redirect("/roughly");
+    }
+
     entry =
       registry.find((c) => c.slug === itemSlug && c.category === category) ||
       registry.find((c) => c.slug === itemSlug);
   } else {
     const itemSlug = slugParts[0];
+
+    if (itemSlug === "roughly") {
+      redirect("/roughly");
+    }
+
     entry = registry.find((c) => c.slug === itemSlug);
   }
 
@@ -66,7 +77,7 @@ export default async function PresentCatchAllPage({
 
 export function generateStaticParams() {
   const params: { slug: string[] }[] = [];
-  for (const component of registry) {
+  for (const component of presentationEntries) {
     // 2-segment path: /present/category/slug
     params.push({ slug: [component.category, component.slug] });
     // 1-segment path: /present/slug
