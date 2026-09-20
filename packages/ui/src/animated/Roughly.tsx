@@ -17,6 +17,7 @@ import {
   type ArrowPlacement,
   type ArrowVariant,
   type ArrowheadStyle,
+  type ArrowLabelFont,
 } from "./roughly/RoughArrow";
 
 export type RoughlyType =
@@ -31,7 +32,7 @@ export type RoughlyType =
 
 export type { BracketSide, BracketStyle } from "./roughly/RoughBracket";
 export type { BoxVariant } from "./roughly/RoughBox";
-export type { ArrowPlacement, ArrowVariant, ArrowheadStyle };
+export type { ArrowPlacement, ArrowVariant, ArrowheadStyle, ArrowLabelFont };
 
 export type UnderlineVariant = "single" | "double" | "wavy";
 export type { StrikeVariant } from "./roughly/RoughStrike";
@@ -59,10 +60,14 @@ export interface RoughlyProps {
   variant?: UnderlineVariant | StrikeVariant | CrossVariant | BoxVariant;
   /** Placement direction when type is 'arrow' */
   placement?: ArrowPlacement;
-  /** Arrow curve variant ('curved' | 'straight' | 's-curve' | 'loop') */
+  /** Arrow curve variant ('curved' | 'straight' | 's-curve') */
   arrowVariant?: ArrowVariant;
+  /** Arrowhead style ('open' | 'filled') */
+  arrowhead?: ArrowheadStyle;
   /** Callout label for arrow */
   arrowLabel?: React.ReactNode;
+  /** Callout label font family ('caveat' | 'reenie-beanie' | 'cedarville-cursive') */
+  arrowLabelFont?: ArrowLabelFont;
   /** Arc curvature intensity factor for curved arrows (default: 0.38) */
   arrowCurvature?: number;
   /** Custom wrapper class */
@@ -96,7 +101,9 @@ export function Roughly({
   variant = "single",
   placement,
   arrowVariant,
+  arrowhead,
   arrowLabel,
+  arrowLabelFont,
   arrowCurvature,
   className = "",
   textClassName = "",
@@ -217,7 +224,9 @@ export function Roughly({
       <RoughArrow
         placement={placement}
         variant={arrowVariant}
+        arrowhead={arrowhead}
         label={arrowLabel}
+        labelFont={arrowLabelFont}
         curvature={arrowCurvature}
         color={color || DEFAULT_COLORS.arrow}
         strokeWidth={strokeWidth}

@@ -255,5 +255,6 @@ export type {
   ArrowPlacement,
   ArrowVariant,
   ArrowheadStyle,
+  ArrowLabelFont,
 } from "./animated/roughly/RoughArrow";
 

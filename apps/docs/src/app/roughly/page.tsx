@@ -24,6 +24,7 @@ import type {
   ArrowPlacement,
   ArrowVariant,
   ArrowheadStyle,
+  ArrowLabelFont,
 } from "@adgrid-ui/ui";
 import {
   Check,
@@ -62,6 +63,7 @@ export default function RoughlyPage() {
   const [arrowheadStyle, setArrowheadStyle] = useState<ArrowheadStyle>("open");
   const [arrowIterations, setArrowIterations] = useState<number>(2);
   const [arrowLabel, setArrowLabel] = useState<string>("Instant deploy ⚡");
+  const [arrowLabelFont, setArrowLabelFont] = useState<ArrowLabelFont>("caveat");
   const [arrowDistance, setArrowDistance] = useState<number>(65);
   const [arrowOffset, setArrowOffset] = useState<number>(8);
   const [arrowCurvature, setArrowCurvature] = useState<number>(0.38);
@@ -224,8 +226,8 @@ export default function RoughlyPage() {
       if (arrowOffset !== 8) propsList.push(`offset={${arrowOffset}}`);
       if (arrowCurvature !== 0.38) propsList.push(`curvature={${arrowCurvature}}`);
       if (arrowFlip) propsList.push(`flipCurve={true}`);
-      if (duration !== 800) propsList.push(`animationDuration={${duration}}`);
       if (arrowLabel) propsList.push(`label="${arrowLabel}"`);
+      if (arrowLabelFont !== "caveat") propsList.push(`labelFont="${arrowLabelFont}"`);
 
       const propsString = propsList.length > 0 ? ` ${propsList.join(" ")}` : "";
       return `<RoughArrow${propsString}>\n  ${text}\n</RoughArrow>`;
@@ -774,17 +776,64 @@ export default function RoughlyPage() {
               {selectedType === "arrow" && (
                 <div className="space-y-3.5 p-3 rounded-xl bg-black/40 border border-white/10">
                   {/* Callout Label Input */}
-                  <div className="space-y-1">
-                    <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
-                      Callout Label
-                    </label>
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                        Callout Label
+                      </label>
+                      <span className="text-[10px] font-mono text-neutral-500">Handwritten</span>
+                    </div>
                     <input
                       type="text"
                       value={arrowLabel}
                       onChange={(e) => setArrowLabel(e.target.value)}
                       placeholder="e.g. Look here! ⚡"
-                      className="w-full px-3 py-1.5 text-xs rounded-lg bg-white/[0.04] border border-white/10 text-white font-[family-name:var(--font-caveat),cursive] text-base focus:outline-none focus:border-amber-400"
+                      className={`w-full px-3 py-1.5 text-xs rounded-lg bg-white/[0.04] border border-white/10 text-white focus:outline-none focus:border-amber-400 ${
+                        arrowLabelFont === "reenie-beanie"
+                          ? "font-[family-name:'Reenie_Beanie',cursive] text-xl"
+                          : arrowLabelFont === "cedarville-cursive"
+                          ? "font-[family-name:'Cedarville_Cursive',cursive] text-base"
+                          : "font-[family-name:var(--font-caveat),cursive] text-base"
+                      }`}
                     />
+                  </div>
+
+                  {/* Callout Font Picker */}
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                      Callout Font
+                    </label>
+                    <div className="grid grid-cols-3 gap-1">
+                      {[
+                        {
+                          id: "caveat",
+                          name: "Caveat",
+                          fontClass: "font-[family-name:var(--font-caveat),cursive] text-sm",
+                        },
+                        {
+                          id: "reenie-beanie",
+                          name: "Reenie Beanie",
+                          fontClass: "font-[family-name:'Reenie_Beanie',cursive] text-base",
+                        },
+                        {
+                          id: "cedarville-cursive",
+                          name: "Cedarville",
+                          fontClass: "font-[family-name:'Cedarville_Cursive',cursive] text-xs",
+                        },
+                      ].map((f) => (
+                        <button
+                          key={f.id}
+                          onClick={() => setArrowLabelFont(f.id as ArrowLabelFont)}
+                          className={`py-1.5 px-1.5 rounded-lg transition-colors cursor-pointer text-center ${
+                            arrowLabelFont === f.id
+                              ? "bg-white/20 text-white font-medium shadow-sm border border-white/20"
+                              : "bg-white/[0.04] text-neutral-400 hover:text-white border border-transparent"
+                          }`}
+                        >
+                          <span className={`${f.fontClass} block truncate leading-tight`}>{f.name}</span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
                   {/* Placement Grid */}
@@ -825,10 +874,9 @@ export default function RoughlyPage() {
                     <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
                       Curve Trajectory
                     </label>
-                    <div className="grid grid-cols-2 gap-1.5">
+                    <div className="grid grid-cols-3 gap-1.5">
                       {[
                         { id: "curved", label: "Curved" },
-                        { id: "loop", label: "Loop" },
                         { id: "s-curve", label: "S-Curve" },
                         { id: "straight", label: "Straight" },
                       ].map((v) => (
@@ -853,16 +901,15 @@ export default function RoughlyPage() {
                       <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
                         Arrowhead Style
                       </label>
-                      <div className="flex gap-1">
+                      <div className="grid grid-cols-2 gap-1">
                         {[
                           { id: "open", label: "Open" },
                           { id: "filled", label: "Filled" },
-                          { id: "curved", label: "Curved" },
                         ].map((h) => (
                           <button
                             key={h.id}
                             onClick={() => setArrowheadStyle(h.id as ArrowheadStyle)}
-                            className={`flex-1 py-1 text-[11px] rounded transition-colors cursor-pointer ${
+                            className={`py-1 text-[11px] rounded transition-colors cursor-pointer text-center ${
                               arrowheadStyle === h.id
                                 ? "bg-white/20 text-white font-medium"
                                 : "bg-white/[0.04] text-neutral-400 hover:text-white"
@@ -1136,7 +1183,7 @@ export default function RoughlyPage() {
                   ) : selectedType === "arrow" ? (
                     <div className="py-16 px-10 flex items-center justify-center">
                       <RoughArrow
-                        key={`arrow-${replayKey}-${arrowPlacement}-${arrowVariant}-${arrowheadStyle}-${arrowIterations}-${arrowDistance}-${arrowOffset}-${arrowCurvature}-${arrowFlip}-${selectedColor}-${strokeWidth}-${arrowLabel}`}
+                        key={`arrow-${replayKey}-${arrowPlacement}-${arrowVariant}-${arrowheadStyle}-${arrowIterations}-${arrowDistance}-${arrowOffset}-${arrowCurvature}-${arrowFlip}-${selectedColor}-${strokeWidth}-${arrowLabel}-${arrowLabelFont}`}
                         placement={arrowPlacement}
                         variant={arrowVariant}
                         arrowhead={arrowheadStyle}
@@ -1146,6 +1193,7 @@ export default function RoughlyPage() {
                         curvature={arrowCurvature}
                         flipCurve={arrowFlip}
                         label={arrowLabel}
+                        labelFont={arrowLabelFont}
                         color={selectedColor}
                         strokeWidth={strokeWidth}
                         animationDuration={duration}
@@ -1364,7 +1412,7 @@ export default function RoughlyPage() {
                   <td className="p-3 text-indigo-400">ArrowVariant</td>
                   <td className="p-3 text-neutral-500">&quot;curved&quot;</td>
                   <td className="p-3 font-sans text-neutral-400">
-                    Curve trajectory: &quot;curved&quot; (parabolic arc) | &quot;loop&quot; (loop-de-loop) | &quot;s-curve&quot; (double wave) | &quot;straight&quot;
+                    Curve trajectory: &quot;curved&quot; (parabolic arc) | &quot;s-curve&quot; (double wave) | &quot;straight&quot;
                   </td>
                 </tr>
                 <tr>
@@ -1372,7 +1420,7 @@ export default function RoughlyPage() {
                   <td className="p-3 text-indigo-400">ArrowheadStyle</td>
                   <td className="p-3 text-neutral-500">&quot;open&quot;</td>
                   <td className="p-3 font-sans text-neutral-400">
-                    Style of arrow tip: &quot;open&quot; (&gt;) | &quot;filled&quot; (solid triangle) | &quot;curved&quot; (flared barbs)
+                    Style of arrow tip: &quot;open&quot; (&gt;) | &quot;filled&quot; (solid triangle)
                   </td>
                 </tr>
                 <tr>
@@ -1380,7 +1428,15 @@ export default function RoughlyPage() {
                   <td className="p-3 text-indigo-400">ReactNode</td>
                   <td className="p-3 text-neutral-500">undefined</td>
                   <td className="p-3 font-sans text-neutral-400">
-                    Handwritten callout text displayed at the tail of the arrow with cursive Caveat styling
+                    Handwritten callout text displayed at the tail of the arrow
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">labelFont</td>
+                  <td className="p-3 text-indigo-400">ArrowLabelFont</td>
+                  <td className="p-3 text-neutral-500">&quot;caveat&quot;</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Handwriting font family for callout text: &quot;caveat&quot; (default) | &quot;reenie-beanie&quot; | &quot;cedarville-cursive&quot;
                   </td>
                 </tr>
               </tbody>

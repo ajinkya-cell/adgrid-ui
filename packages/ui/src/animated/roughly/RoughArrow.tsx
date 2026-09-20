@@ -14,18 +14,20 @@ export type ArrowPlacement =
   | "left"
   | "right";
 
-export type ArrowVariant = "curved" | "straight" | "s-curve" | "loop";
+export type ArrowVariant = "curved" | "straight" | "s-curve";
 
-export type ArrowheadStyle = "open" | "filled" | "curved";
+export type ArrowheadStyle = "open" | "filled";
+
+export type ArrowLabelFont = "caveat" | "reenie-beanie" | "cedarville-cursive";
 
 export interface RoughArrowProps {
   /** Target element or text to point to (optional; if omitted, renders standalone) */
   children?: React.ReactNode;
   /** Direction from which the arrow points toward the target (default: "top-right") */
   placement?: ArrowPlacement;
-  /** Curve trajectory variation (default: "curved") */
+  /** Curve trajectory variation: 'curved' | 'straight' | 's-curve' (default: "curved") */
   variant?: ArrowVariant;
-  /** Arrowhead style: 'open' (>), 'filled' (solid triangle), or 'curved' (flared barbs) (default: "open") */
+  /** Arrowhead style: 'open' (>) or 'filled' (solid triangle) (default: "open") */
   arrowhead?: ArrowheadStyle;
   /** Stroke color (default: "#F59E0B" Cyber Amber) */
   color?: string;
@@ -39,6 +41,8 @@ export interface RoughArrowProps {
   bowing?: number;
   /** Callout label text placed near the tail of the arrow */
   label?: React.ReactNode;
+  /** Callout label font family: 'caveat' | 'reenie-beanie' | 'cedarville-cursive' (default: "caveat") */
+  labelFont?: ArrowLabelFont;
   /** Distance in pixels between arrow tail origin and target (default: 60) */
   distance?: number;
   /** Gap in pixels between arrow tip and target edge (default: 8) */
@@ -69,6 +73,12 @@ interface Point {
   y: number;
 }
 
+const labelFontClassMap: Record<ArrowLabelFont, string> = {
+  caveat: "font-[family-name:var(--font-caveat),cursive] text-lg",
+  "reenie-beanie": "font-[family-name:'Reenie_Beanie',cursive] text-2xl font-normal tracking-wide",
+  "cedarville-cursive": "font-[family-name:'Cedarville_Cursive',cursive] text-lg font-normal",
+};
+
 export function RoughArrow({
   children,
   placement = "top-right",
@@ -80,6 +90,7 @@ export function RoughArrow({
   roughness = 1.2,
   bowing = 1.5,
   label,
+  labelFont = "caveat",
   distance = 60,
   offset = 8,
   curvature = 0.38,
@@ -320,27 +331,6 @@ export function RoughArrow({
         break;
       }
 
-      case "loop": {
-        const l1X = P_tail.x + dx * 0.35 + nx * (bowDepth * 1.5);
-        const l1Y = P_tail.y + dy * 0.35 + ny * (bowDepth * 1.5);
-        const l2X = P_tail.x + dx * 0.55 + nx * (bowDepth * 2.2);
-        const l2Y = P_tail.y + dy * 0.55 + ny * (bowDepth * 2.2);
-        const l3X = P_tail.x + dx * 0.42 + nx * (bowDepth * 0.3);
-        const l3Y = P_tail.y + dy * 0.42 + ny * (bowDepth * 0.3);
-        points = [
-          [P_tail.x, P_tail.y],
-          [l1X, l1Y],
-          [l2X, l2Y],
-          [l3X, l3Y],
-          [P_tip.x, P_tip.y],
-        ];
-        tipTangent = {
-          x: P_tip.x - l3X,
-          y: P_tip.y - l3Y,
-        };
-        break;
-      }
-
       default:
         points = [
           [P_tail.x, P_tail.y],
@@ -430,30 +420,6 @@ export function RoughArrow({
         }
       );
       hPaths = gen.toPaths(poly);
-    } else if (arrowhead === "curved") {
-      // Calligraphic flared barbs with organic outward scoop
-      const flare = Math.max(2.5, barbLen * 0.16);
-      const mid1: [number, number] = [
-        (endX + b1.x) / 2 - flare * Math.sin(theta),
-        (endY + b1.y) / 2 + flare * Math.cos(theta),
-      ];
-      const mid2: [number, number] = [
-        (endX + b2.x) / 2 + flare * Math.sin(theta),
-        (endY + b2.y) / 2 - flare * Math.cos(theta),
-      ];
-      const c1 = gen.curve([[endX, endY], mid1, [b1.x, b1.y]], {
-        roughness: Math.max(0.5, roughness * 0.6),
-        stroke: color,
-        strokeWidth,
-        disableMultiStroke,
-      });
-      const c2 = gen.curve([[endX, endY], mid2, [b2.x, b2.y]], {
-        roughness: Math.max(0.5, roughness * 0.6),
-        stroke: color,
-        strokeWidth,
-        disableMultiStroke,
-      });
-      hPaths = [...gen.toPaths(c1), ...gen.toPaths(c2)];
     } else {
       // Open barbs
       const l1 = gen.line(endX, endY, b1.x, b1.y, {
@@ -548,7 +514,7 @@ export function RoughArrow({
             delay: (animationDelay + animationDuration * 0.7) / 1000,
             ease: [0.16, 1, 0.3, 1],
           }}
-          className={`absolute pointer-events-none whitespace-nowrap select-none font-[family-name:var(--font-caveat),cursive] text-lg font-medium leading-none z-30 ${labelClassName}`}
+          className={`absolute pointer-events-none whitespace-nowrap select-none ${labelFontClassMap[labelFont] || labelFontClassMap.caveat} font-medium leading-none z-30 ${labelClassName}`}
           style={{
             left: labelPos.x,
             top: labelPos.y,
