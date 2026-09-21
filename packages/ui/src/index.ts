@@ -106,10 +106,6 @@ export { AnimatedIcons1 } from "./animated/Loaders1";
 export { AnimatedIconCard } from "./animated/LoaderCard";
 export type { AnimatedIconCardProps } from "./animated/LoaderCard";
 
-// Dashed Feature Card
-export { DashedFeatureCard } from "./animated/DashedFeatureCard";
-export type { DashedFeatureCardProps } from "./animated/DashedFeatureCard";
-
 // Dashed Marquee
 export { DashedMarquee } from "./animated/DashedMarquee";
 export type { DashedMarqueeProps, MarqueeItem } from "./animated/DashedMarquee";

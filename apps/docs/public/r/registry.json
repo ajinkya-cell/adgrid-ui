@@ -760,22 +760,6 @@
       ]
     },
     {
-      "name": "dashed-feature-card",
-      "type": "registry:ui",
-      "title": "Dashed Feature Card",
-      "description": "A dark-themed editorial feature card with interactive L-shaped crop corner overlays, dashed inner icon frames, and spring-physics animations.",
-      "dependencies": [
-        "framer-motion",
-        "@tabler/icons-react"
-      ],
-      "files": [
-        {
-          "path": "components/ui/DashedFeatureCard.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "dashed-marquee",
       "type": "registry:ui",
       "title": "Dashed Marquee",
@@ -786,11 +770,7 @@
       ],
       "files": [
         {
-          "path": "components/ui/dashed-marquee/DashedMarquee.tsx",
-          "type": "registry:ui"
-        },
-        {
-          "path": "components/ui/dashed-marquee/DashedFeatureCard.tsx",
+          "path": "components/ui/DashedMarquee.tsx",
           "type": "registry:ui"
         }
       ]

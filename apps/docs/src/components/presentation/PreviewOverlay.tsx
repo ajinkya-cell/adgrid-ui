@@ -22,7 +22,6 @@ const UI = {
   TextShuffle: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.TextShuffle }))),
   NowPlayingCard: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.NowPlayingCard }))),
   SimpleCard: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.SimpleCard }))),
-  DashedFeatureCard: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.DashedFeatureCard }))),
   DashedMarquee: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.DashedMarquee }))),
   Marquee2: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.Marquee2 }))),
   Accordion: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.Accordion }))),
@@ -143,18 +142,6 @@ export function MiniPreviewRenderer({ slug }: { slug: string }) {
         <div className="flex h-full w-full items-center justify-center p-2 scale-80">
           <Suspense fallback={null}>
             <UI.SimpleCard imageUrl={imageOne} title="NIGHTPASS" description="St. Moritz / Alps" />
-          </Suspense>
-        </div>
-      );
-    case "dashed-feature-card":
-      return (
-        <div className="flex h-full w-full items-center justify-center p-2 scale-90">
-          <Suspense fallback={null}>
-            <UI.DashedFeatureCard
-              title="My Issues"
-              description="Issue tracker"
-              showCorners={true}
-            />
           </Suspense>
         </div>
       );

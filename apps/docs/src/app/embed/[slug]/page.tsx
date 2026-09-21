@@ -60,7 +60,6 @@ export default async function EmbedComponentPage({
     if (s === "weapon-wheel") return "scale-[0.35]";
     if (s === "wheel-picker") return "scale-[0.55]";
     if (s === "now-playing-card") return "scale-[0.45]";
-    if (s === "dashed-feature-card") return "scale-[0.55]";
     if (s === "dashed-marquee") return "scale-[0.40]";
     if (s === "datepicker") return "scale-[0.50]";
     if (s === "animated-icons-1") return "scale-[0.55]";

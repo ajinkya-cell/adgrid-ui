@@ -32,7 +32,6 @@ import {
   PixelMeltBackground,
   PremiumHero,
   SimpleCard,
-  DashedFeatureCard,
   DashedMarquee,
   Marquee2,
   Accordion,
@@ -715,19 +714,6 @@ export function PresentationRenderer({
           />
         </div>
       );
-    case "dashed-feature-card": {
-      const cardProps = {
-        title: "My Issues",
-        description: "Issue tracker",
-        showCorners: true,
-        ...liveProps,
-      };
-      return (
-        <div className="flex items-center justify-center w-full min-h-[400px]">
-          <DashedFeatureCard {...(cardProps as Parameters<typeof DashedFeatureCard>[0])} />
-        </div>
-      );
-    }
     case "dashed-marquee": {
       const dummyMarqueeItems = [
         { id: 1, title: "Next.js Framework", description: "Production build server", icon: <IconBrandNextjs size={20} /> },

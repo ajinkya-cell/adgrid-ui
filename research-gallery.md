@@ -307,7 +307,6 @@ Below is the definitive reference table showing how each component in the regist
 | 36 | **Simple Card** | `simple-card` | `animated` | `col-span-4` | `row-span-1` | `220px` | Interactive Card |
 | 37 | **Sticker Card** | `sticker-card` | `animated` | `col-span-4` | `row-span-1` | `220px` | Interactive Card |
 | 38 | **Breathing Scale Card** | `breathing-scale-card` | `animated` | `col-span-4` | `row-span-1` | `220px` | Interactive Card |
-| 39 | **Dashed Feature Card** | `dashed-feature-card` | `animated` | `col-span-4` | `row-span-1` | `220px` | Interactive Card |
 | 40 | **Dashed Marquee** | `dashed-marquee` | `animated` | `col-span-4` | `row-span-1` | `220px` | Interactive Card |
 | 41 | **Marquee 2** | `marquee-2` | `animated` | `col-span-4` | `row-span-1` | `220px` | Interactive Card |
 | 42 | **Now Playing Card** | `now-playing-card` | `animated` | `col-span-4` | `row-span-1` | `220px` | Interactive Widget |
