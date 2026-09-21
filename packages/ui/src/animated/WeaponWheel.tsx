@@ -202,7 +202,7 @@ export function WeaponWheel({
   className,
   inline = false,
   variant = "default",
-  hideText = false,
+  hideText: _hideText = false,
 }: WeaponWheelProps) {
   const [localIsOpen, setLocalIsOpen] = useState(false);
   const isControlled = controlledIsOpen !== undefined;
@@ -229,9 +229,6 @@ export function WeaponWheel({
   const displayItem = hoveredSubItem || hoveredItem;
   const displayCategory = hoveredSubItem ? hoveredSubItem.category || hoveredItem?.category : hoveredItem?.category;
 
-  const selectedName =
-    items.flatMap(item => [item, ...(item.subItems || [])]).find(x => x.id === (resolvedActiveSubId || activeId))?.name ||
-    "";
 
   const setOpen = (open: boolean) => {
     if (inline) return;
@@ -333,72 +330,18 @@ export function WeaponWheel({
 
   const innerContent = (
     <div
-      className={cn(
-        "relative flex flex-col items-center justify-center p-4 z-10 select-none",
-        hideText ? "w-auto" : "w-full max-w-5xl"
-      )}
+      className="relative flex items-center justify-center p-4 z-10 select-none"
       onClick={(e) => e.stopPropagation()}
     >
-      {/* Top Section: Side-by-Side Info Panel and Centered SVG Wheel */}
-      <div className="flex flex-col md:flex-row items-center justify-center gap-10 md:gap-14 w-full">
-
-        {/* LEFT PANEL: Selected Primary Tool Info */}
-        {!hideText && (
-          <div className="w-full md:w-80 h-80 flex flex-col justify-center select-none text-left">
-            <AnimatePresence mode="wait">
-              {hoveredItem ? (
-                <motion.div
-                  key={hoveredItem.id}
-                  initial={{ opacity: 0, x: -14 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 14 }}
-                  transition={{ duration: 0.15 }}
-                  className="space-y-4"
-                >
-                  <div>
-                    <span className="font-mono text-xs uppercase tracking-widest text-indigo-400 font-bold">
-                      {hoveredItem.category}
-                    </span>
-                    <h2 className="text-3xl font-black tracking-tight text-white mt-1">
-                      {hoveredItem.name}
-                    </h2>
-                  </div>
-                  <p className="text-zinc-400 text-sm leading-relaxed font-body">
-                    {hoveredItem.description}
-                  </p>
-
-                  {hoveredItem.tips && hoveredItem.tips.length > 0 && (
-                    <div className="pt-2">
-                      <span className="font-mono text-xs uppercase text-zinc-500 tracking-wider">PRO TIP</span>
-                      <ul className="mt-2 space-y-1.5">
-                        {hoveredItem.tips.map((tip, i) => (
-                          <li key={i} className="text-xs text-zinc-300 flex items-start font-body">
-                            <span className="text-indigo-400 mr-2">▪</span>
-                            {tip}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </motion.div>
-              ) : (
-                <div className="text-zinc-500 font-mono text-sm">
-                  HOVER SEGMENT TO SELECT
-                </div>
-              )}
-            </AnimatePresence>
-          </div>
-        )}
-
-        {/* CENTER: The Interactive SVG Wheel (Spacious 560px Canvas) */}
-        <div
-          className="relative flex items-center justify-center shrink-0 aspect-square"
-          style={{ width: svgSize, height: svgSize }}
-          onMouseLeave={() => {
-            setHoveredIndex(null);
-            setHoveredSubIndex(null);
-          }}
-        >
+      {/* CENTER: The Interactive SVG Wheel */}
+      <div
+        className="relative flex items-center justify-center shrink-0 aspect-square"
+        style={{ width: svgSize, height: svgSize }}
+        onMouseLeave={() => {
+          setHoveredIndex(null);
+          setHoveredSubIndex(null);
+        }}
+      >
           {/* BEVELED DISK BACKGROUND (ONLY FOR BEVELED VARIANT) */}
           {isBeveled && (
             <div
@@ -779,45 +722,6 @@ export function WeaponWheel({
             </div>
           )}
         </div>
-      </div>
-
-      {/* Bottom Section: Sub-Item Details and Selection Confirmation */}
-      {!hideText && (
-        <div className="w-full flex flex-col items-center justify-center mt-6 gap-4">
-          <div className="w-full max-w-xl h-20 text-center select-none">
-            <AnimatePresence mode="wait">
-              {hoveredSubItem ? (
-                <motion.div
-                  key={hoveredSubItem.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.15 }}
-                  className="space-y-1"
-                >
-                  <div>
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-emerald-400 font-bold">
-                      {hoveredSubItem.category || hoveredItem?.category}
-                    </span>
-                    <h3 className="text-lg font-black tracking-tight text-white">
-                      {hoveredSubItem.name}
-                    </h3>
-                  </div>
-                  <p className="text-zinc-400 text-xs leading-relaxed max-w-md mx-auto font-body">
-                    {hoveredSubItem.description}
-                  </p>
-                </motion.div>
-              ) : null}
-            </AnimatePresence>
-          </div>
-
-          {selectedName && (
-            <div className="font-mono text-[10px] uppercase tracking-wider text-zinc-500 bg-zinc-900/30 px-3.5 py-1.5 border border-zinc-800/40 rounded-full select-none">
-              Active Selection: <span className="text-indigo-400 font-bold">{selectedName}</span>
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 
