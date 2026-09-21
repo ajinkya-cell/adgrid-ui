@@ -135,10 +135,6 @@ export { default as NavBar1 } from "./animated/NavBar1";
 export { ForgeUILanding } from "./animated/ForgeUILanding";
 export type { ForgeUILandingProps } from "./animated/ForgeUILanding";
 
-// Moon Landing
-export { MoonLanding } from "./animated/MoonLanding";
-export type { MoonLandingProps } from "./animated/MoonLanding";
-
 // Rays Landing
 export { RaysLanding } from "./animated/RaysLanding";
 export type { RaysLandingProps } from "./animated/RaysLanding";

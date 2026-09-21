@@ -100,7 +100,6 @@ packages/ui/
         ├── MechanicalTimer.tsx       # Web Audio ticking mechanical countdown
         ├── MetallicForm.tsx          # Brushed metal form inputs
         ├── Meter.tsx                 # Analog needle & sentiment arc meter
-        ├── MoonLanding.tsx           # Celestial dark landing layout
         ├── MorphingNav.tsx           # Dynamic SVG path morphing navbar
         ├── NavBar1.tsx               # Minimal floating glass navigation bar
         ├── NamesLanding.tsx          # Constellation catalog landing

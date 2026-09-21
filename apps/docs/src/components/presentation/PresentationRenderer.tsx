@@ -52,7 +52,6 @@ import {
   Hero,
   AnimatedIcons1,
   ForgeUILanding,
-  MoonLanding,
   RaysLanding,
   BreathingScaleCard,
   GithubHeatmap,
@@ -634,13 +633,6 @@ export function PresentationRenderer({
           <ForgeUILanding 
             onDocumentation={() => console.log("Documentation clicked")}
           />
-        </div>
-      );
-    }
-    case "moon-landing": {
-      return (
-        <div className="w-full min-h-screen relative">
-          <MoonLanding />
         </div>
       );
     }

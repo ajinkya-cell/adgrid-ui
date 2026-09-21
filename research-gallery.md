@@ -329,7 +329,6 @@ Below is the definitive reference table showing how each component in the regist
 | 58 | **Command Palette** | `command-palette` | `animated` | `col-span-4` | `row-span-1` | `220px` | Navigation |
 | 59 | **Scroll Path Draw** | `scroll-path-draw` | `animated` | `col-span-4` | `row-span-1` | `220px` | Showcase |
 | 60 | **ForgeUI Landing** | `forgeui-landing` | `animated` | `col-span-4` | `row-span-1` | `220px` | Landing Preview |
-| 61 | **Moon Landing** | `moon-landing` | `animated` | `col-span-4` | `row-span-1` | `220px` | Landing Preview |
 | 62 | **Rays Landing** | `rays-landing` | `animated` | `col-span-4` | `row-span-1` | `220px` | Landing Preview |
 
 ---

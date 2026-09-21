@@ -771,16 +771,6 @@ export const registry: RegistryEntry[] = [
   },
 
   {
-    name: "Moon Landing",
-    slug: "moon-landing",
-    category: "animated",
-    description: "A gorgeous, interactive Moon Landing hero section featuring volumetric background glows and a curved planet-horizon casting up a bright glowing shadow.",
-    dependencies: ["framer-motion", "lucide-react"],
-    packagePath: "animated/MoonLanding.tsx",
-    files: ["animated/MoonLanding.tsx"],
-    presentationStrategy: "fullscreen",
-  },
-  {
     name: "Rays Landing",
     slug: "rays-landing",
     category: "animated",

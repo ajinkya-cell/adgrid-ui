@@ -890,22 +890,6 @@
       ]
     },
     {
-      "name": "moon-landing",
-      "type": "registry:ui",
-      "title": "Moon Landing",
-      "description": "A gorgeous, interactive Moon Landing hero section featuring volumetric background glows and a curved planet-horizon casting up a bright glowing shadow.",
-      "dependencies": [
-        "framer-motion",
-        "lucide-react"
-      ],
-      "files": [
-        {
-          "path": "components/ui/MoonLanding.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "rays-landing",
       "type": "registry:ui",
       "title": "Rays Landing",
@@ -1044,22 +1028,6 @@
       ]
     },
     {
-      "name": "stepper",
-      "type": "registry:ui",
-      "title": "Stepper",
-      "description": "Circuit Path Stepper featuring traveling laser light pulses along connecting circuit lines and illuminated 3D debossed milestone node checkpoints.",
-      "dependencies": [
-        "framer-motion",
-        "lucide-react"
-      ],
-      "files": [
-        {
-          "path": "components/ui/Stepper.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "timeline",
       "type": "registry:ui",
       "title": "Timeline",
@@ -1070,7 +1038,7 @@
       ],
       "files": [
         {
-          "path": "components/ui/Stepper.tsx",
+          "path": "components/ui/Timeline.tsx",
           "type": "registry:ui"
         }
       ]
