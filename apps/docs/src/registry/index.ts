@@ -710,13 +710,13 @@ export const registry: RegistryEntry[] = [
     ],
   },
   {
-    name: "Bevel Accordion",
-    slug: "bevel-accordion",
+    name: "Accordion",
+    slug: "accordion",
     category: "animated",
     description: "A tactile 3D beveled accordion stack with smooth sequential close-then-open panel transitions and rotating chevrons.",
     dependencies: ["framer-motion"],
-    packagePath: "animated/BevelAccordion.tsx",
-    files: ["animated/BevelAccordion.tsx"],
+    packagePath: "animated/Accordion.tsx",
+    files: ["animated/Accordion.tsx"],
     presentationStrategy: "fullscreen",
     propDefs: [
       { name: "allowMultiple", type: "boolean", default: false, description: "Allow multiple panels open at once", required: false },

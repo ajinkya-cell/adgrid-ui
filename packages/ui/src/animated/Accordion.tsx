@@ -12,19 +12,21 @@ export interface AccordionItem {
   icon?: React.ReactNode;
 }
 
-export interface BevelAccordionProps {
+export interface AccordionProps {
   items: AccordionItem[];
   className?: string;
   allowMultiple?: boolean;
   defaultExpanded?: string[];
 }
 
-export function BevelAccordion({
+export type BevelAccordionProps = AccordionProps;
+
+export function Accordion({
   items,
   className,
   allowMultiple = false,
   defaultExpanded = [],
-}: BevelAccordionProps) {
+}: AccordionProps) {
   const [expandedIds, setExpandedIds] = useState<string[]>(defaultExpanded);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -175,3 +177,5 @@ export function BevelAccordion({
     </div>
   );
 }
+
+export const BevelAccordion = Accordion;

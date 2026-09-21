@@ -25,7 +25,8 @@ const UI = {
   DashedFeatureCard: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.DashedFeatureCard }))),
   DashedMarquee: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.DashedMarquee }))),
   Marquee2: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.Marquee2 }))),
-  BevelAccordion: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.BevelAccordion }))),
+  Accordion: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.Accordion }))),
+  BevelAccordion: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.Accordion }))),
   StickerCard: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.StickerCard }))),
   Datepicker: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.Datepicker }))),
   NavBar1: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.NavBar1 }))),
@@ -175,6 +176,7 @@ export function MiniPreviewRenderer({ slug }: { slug: string }) {
         </div>
       );
     }
+    case "accordion":
     case "bevel-accordion": {
       const dummyMiniAccordionItems = [
         { id: "1", title: "General", description: "Settings defaults", content: "Short settings configuration content example." },
@@ -183,7 +185,7 @@ export function MiniPreviewRenderer({ slug }: { slug: string }) {
       return (
         <div className="flex h-full w-full items-center justify-center p-4 scale-65 overflow-hidden">
           <Suspense fallback={null}>
-            <UI.BevelAccordion
+            <UI.Accordion
               items={dummyMiniAccordionItems}
             />
           </Suspense>

@@ -323,7 +323,7 @@ Below is the definitive reference table showing how each component in the regist
 | 52 | **NavBar1** | `navbar-1` | `animated` | `col-span-4` | `row-span-1` | `220px` | Navigation |
 | 53 | **Wheel Picker** | `wheel-picker` | `animated` | `col-span-4` | `row-span-1` | `220px` | Control Primitive |
 | 54 | **Weapon Wheel** | `weapon-wheel` | `animated` | `col-span-4` | `row-span-1` | `220px` | Control Primitive |
-| 55 | **Bevel Accordion** | `bevel-accordion` | `animated` | `col-span-4` | `row-span-1` | `220px` | Modular Primitive |
+| 55 | **Accordion** | `accordion` | `animated` | `col-span-4` | `row-span-1` | `220px` | Modular Primitive |
 | 56 | **Bevel Alert Dialog** | `bevel-alert-dialog` | `animated` | `col-span-4` | `row-span-1` | `220px` | Modular Primitive |
 | 57 | **Sidebar** | `sidebar` | `animated` | `col-span-4` | `row-span-1` | `220px` | Navigation |
 | 58 | **Command Palette** | `command-palette` | `animated` | `col-span-4` | `row-span-1` | `220px` | Navigation |

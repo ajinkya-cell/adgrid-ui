@@ -35,7 +35,7 @@ import {
   DashedFeatureCard,
   DashedMarquee,
   Marquee2,
-  BevelAccordion,
+  Accordion,
   StickerCard,
   Datepicker,
   NavBar1,
@@ -753,6 +753,7 @@ export function PresentationRenderer({
         </div>
       );
     }
+    case "accordion":
     case "bevel-accordion": {
       const dummyAccordionItems = [
         {
@@ -784,7 +785,7 @@ export function PresentationRenderer({
       return (
         <div className="w-full min-h-screen flex items-center justify-center p-6 bg-transparent">
           <div className="w-full max-w-xl">
-            <BevelAccordion {...(accordionProps as Parameters<typeof BevelAccordion>[0])} />
+            <Accordion {...(accordionProps as Parameters<typeof Accordion>[0])} />
           </div>
         </div>
       );

@@ -65,7 +65,7 @@ packages/ui/
         ├── text-shuffle/             # Hacker / matrix style character scrambler
         ├── AnisotropicKnob.tsx       # Metallic rotary audio dial
         ├── BentoGrid.tsx             # 3D skeuomorphic bento grid
-        ├── BevelAccordion.tsx        # Beveled edge animated accordion
+        ├── Accordion.tsx             # Tactile 3D beveled animated accordion
         ├── BevelAlertDialog.tsx      # Modal alert dialog with beveled aesthetic
         ├── BreathingScaleCard.tsx    # Card scaling with breathing pulse
         ├── BrushedTitaniumButton.tsx # Machined metal luxury button

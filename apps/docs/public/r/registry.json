@@ -812,16 +812,16 @@
       ]
     },
     {
-      "name": "bevel-accordion",
+      "name": "accordion",
       "type": "registry:ui",
-      "title": "Bevel Accordion",
+      "title": "Accordion",
       "description": "A tactile 3D beveled accordion stack with smooth sequential close-then-open panel transitions and rotating chevrons.",
       "dependencies": [
         "framer-motion"
       ],
       "files": [
         {
-          "path": "components/ui/BevelAccordion.tsx",
+          "path": "components/ui/Accordion.tsx",
           "type": "registry:ui"
         }
       ]
