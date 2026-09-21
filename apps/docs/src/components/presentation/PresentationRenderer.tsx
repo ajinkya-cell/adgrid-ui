@@ -272,16 +272,6 @@ const expandItems = [
   },
 ];
 
-function FullscreenLabel({ title, subtitle }: { title: string; subtitle: string }) {
-  return (
-    <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
-      <div className="rounded-full border border-white/10 bg-black/30 px-4 py-2 text-center shadow-2xl backdrop-blur-md">
-        <div className="font-mono text-[10px] uppercase tracking-[0.28em] text-white/55">{title}</div>
-        <div className="mt-1 font-mono text-[9px] uppercase tracking-[0.18em] text-white/25">{subtitle}</div>
-      </div>
-    </div>
-  );
-}
 
 
 function ScrollProgressDemo(props: any) {
@@ -347,7 +337,7 @@ function AnisotropicKnobGalleryDemo(props: Record<string, unknown>) {
 export function PresentationRenderer({
   entry,
   liveProps = {},
-  hideIntro = false,
+  hideIntro: _hideIntro = false,
   mode = "present",
 }: {
   entry: RegistryEntry;
@@ -498,22 +488,17 @@ export function PresentationRenderer({
     }
 
     case "pixel-melt":
-      return <><PixelMeltBackground />{!hideIntro && <FullscreenLabel title="Pixel Melt" subtitle="Move your cursor" />}</>;
+      return <PixelMeltBackground />;
     case "breathing-grid":
-      return <><BreathingGrid />{!hideIntro && <FullscreenLabel title="Breathing Grid" subtitle="Cursor-responsive field" />}</>;
+      return <BreathingGrid />;
     case "breathing-background":
-      return (
-        <>
-          <BreathingBackground {...(liveProps as any)} />
-          {!hideIntro && <FullscreenLabel title="Breathing Background" subtitle="Ambient Pattern Field" />}
-        </>
-      );
+      return <BreathingBackground {...(liveProps as any)} />;
     case "floating-embers":
-      return <><FloatingEmbers />{!hideIntro && <FullscreenLabel title="Floating Embers" subtitle="Scroll and cursor drift" />}</>;
+      return <FloatingEmbers />;
     case "spotlight-grid":
-      return <SpotlightGrid>{!hideIntro && <FullscreenLabel title="Spotlight Grid" subtitle="Move through the field" />}</SpotlightGrid>;
+      return <SpotlightGrid />;
     case "lumina-wave":
-      return <><LuminaWave />{!hideIntro && <FullscreenLabel title="Lumina Wave" subtitle="Interactive aurora surface" />}</>;
+      return <LuminaWave />;
     case "matrix-rain": {
       const rainProps = {
         speed: 1.0,
