@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import type { PresentationPayload } from "./types";
 import { usePresentationStore } from "@/lib/presentation/store";
@@ -27,6 +28,12 @@ export function PresentationLayout({ payload }: { payload: PresentationPayload }
 
   const componentProps = usePresentationStore((state) => state.componentProps);
   const liveProps = componentProps[entry.slug] ?? {};
+
+  useEffect(() => {
+    if ((settings.backgroundMode as string) === "moonArc") {
+      usePresentationStore.getState().updateSettings({ backgroundMode: "solid" });
+    }
+  }, [settings.backgroundMode]);
 
   return (
     <PresentationProvider entry={entry}>

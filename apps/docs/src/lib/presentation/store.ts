@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export type BackgroundMode = "solid" | "noise" | "grid" | "dotGrid" | "gradient" | "aurora" | "moonArc";
+export type BackgroundMode = "solid" | "noise" | "grid" | "dotGrid" | "gradient" | "aurora";
 export type DisplayStrategy = "center" | "fullscreen" | "cover" | "fit" | "auto";
 
 export interface PresentationSettings {
@@ -259,6 +259,18 @@ export const usePresentationStore = create<PresentationState>()(
     }),
     {
       name: "void-ui-presentation",
+      version: 2,
+      migrate: (persistedState: any) => {
+        if (persistedState?.settings?.backgroundMode === "moonArc") {
+          persistedState.settings.backgroundMode = "solid";
+        }
+        return persistedState;
+      },
+      onRehydrateStorage: () => (state) => {
+        if ((state?.settings?.backgroundMode as string) === "moonArc") {
+          state?.updateSettings({ backgroundMode: "solid" });
+        }
+      },
       partialize: (state) => ({
         favorites: state.favorites,
         recent: state.recent,

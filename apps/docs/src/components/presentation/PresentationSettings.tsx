@@ -11,7 +11,6 @@ const backgrounds: Array<{ value: BackgroundMode; label: string }> = [
   { value: "dotGrid", label: "Dot Grid" },
   { value: "gradient", label: "Gradient" },
   { value: "aurora", label: "Aurora" },
-  { value: "moonArc", label: "Moon Arc" },
 ];
 
 function Toggle({ label, checked, onChange }: { label: string; checked: boolean; onChange: () => void }) {
