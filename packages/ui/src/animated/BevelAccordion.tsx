@@ -76,49 +76,58 @@ export function BevelAccordion({
             key={item.id}
             layout="position"
             className={cn(
-              "relative flex flex-col overflow-hidden text-left select-none rounded-2xl",
-              "border-t border-white/[0.22] border-x border-white/[0.02] border-b border-white/10 backdrop-blur-2xl transition-all duration-200"
+              "group relative flex flex-col overflow-hidden text-left select-none rounded-2xl",
+              "border border-white/[0.08] bg-[#151516] transition-all duration-200",
+              "hover:border-white/[0.13] hover:bg-[#18181a]"
             )}
             style={{
-              backgroundColor: "#171717",
-              boxShadow:
-                "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.45)",
+              boxShadow: isOpen
+                ? "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.12), inset 0 -1px 0 0 rgba(0, 0, 0, 0.6), 0 20px 40px -12px rgba(0, 0, 0, 0.7), 0 2px 8px -2px rgba(0, 0, 0, 0.5)"
+                : "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1px 0 0 rgba(0, 0, 0, 0.5), 0 14px 30px -10px rgba(0, 0, 0, 0.5), 0 1px 4px -1px rgba(0, 0, 0, 0.35)",
             }}
           >
+            {/* Prismatic Top-Border Highlight */}
+            <div
+              className="pointer-events-none absolute inset-x-0 top-0 h-[1.5px] z-20 rounded-t-2xl opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+              style={{
+                background:
+                  "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.12) 20%, rgba(255,255,255,0.38) 50%, rgba(255,255,255,0.12) 80%, transparent 100%)",
+              }}
+            />
+
             {/* Header Trigger */}
             <button
               type="button"
               onClick={() => toggleItem(item.id)}
-              className="flex items-center justify-between w-full p-5 text-left cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-white/25 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-900 border-none bg-transparent"
+              className="flex items-center justify-between w-full px-5 py-4 text-left cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-white/20 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d0d0e] border-none bg-transparent"
             >
-              <div className="flex items-center gap-4 min-w-0">
-                {item.icon && (
-                  <div
-                    className="flex items-center justify-center w-8 h-8 shrink-0 rounded-lg border border-white/5 bg-[#070707] text-neutral-400"
-                    style={{
-                      boxShadow: "inset 0 1.5px 3.5px rgba(0, 0, 0, 0.85)",
-                    }}
-                  >
-                    {item.icon}
-                  </div>
+              <div className="flex flex-col gap-0.5 min-w-0 pr-4">
+                <h4 className="text-[14.5px] font-medium tracking-tight text-neutral-100 group-hover:text-white transition-colors truncate">
+                  {item.title}
+                </h4>
+                {item.description && (
+                  <span className="text-[12.5px] font-normal text-neutral-500 group-hover:text-neutral-400 transition-colors truncate">
+                    {item.description}
+                  </span>
                 )}
-                <div className="flex flex-col gap-0.5 min-w-0">
-                  <h4 className="text-sm font-semibold tracking-wide text-neutral-100 truncate">
-                    {item.title}
-                  </h4>
-                  {item.description && (
-                    <span className="text-xs font-medium text-neutral-500 truncate">
-                      {item.description}
-                    </span>
-                  )}
-                </div>
               </div>
 
-              {/* Dynamic Rotating Arrow */}
-              <div className="text-neutral-400 hover:text-neutral-200 transition-colors p-1">
+              {/* Machined Debossed Chevron Socket */}
+              <div
+                className={cn(
+                  "flex items-center justify-center w-7 h-7 shrink-0 rounded-full bg-[#0d0d0e] border border-white/[0.08] transition-all duration-300",
+                  isOpen
+                    ? "border-white/[0.18] text-white"
+                    : "text-neutral-400 group-hover:text-neutral-200 group-hover:border-white/[0.14]"
+                )}
+                style={{
+                  boxShadow:
+                    "inset 0 1.5px 3px rgba(0, 0, 0, 0.8), 0 1px 0 rgba(255, 255, 255, 0.06)",
+                }}
+              >
                 <motion.svg
-                  width="16"
-                  height="16"
+                  width="13"
+                  height="13"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -126,7 +135,7 @@ export function BevelAccordion({
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   animate={{ rotate: isOpen ? 180 : 0 }}
-                  transition={{ duration: 0.25, ease: [0.32, 0.72, 0, 1] }}
+                  transition={{ duration: 0.26, ease: [0.32, 0.72, 0, 1] }}
                 >
                   <polyline points="6 9 12 15 18 9" />
                 </motion.svg>
@@ -146,8 +155,16 @@ export function BevelAccordion({
                   }}
                   className="overflow-hidden"
                 >
-                  <div className="px-5 pb-5 pt-4 text-sm text-neutral-400 leading-relaxed border-t border-white/[0.06]">
-                    {item.content}
+                  <div className="px-4 pb-4 pt-0.5">
+                    <div
+                      className="rounded-xl p-4 text-[13.5px] leading-relaxed text-neutral-400 border border-white/[0.05] bg-[#0c0c0d]/90"
+                      style={{
+                        boxShadow:
+                          "inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.03)",
+                      }}
+                    >
+                      {item.content}
+                    </div>
                   </div>
                 </motion.div>
               )}
