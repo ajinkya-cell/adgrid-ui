@@ -760,9 +760,9 @@
       ]
     },
     {
-      "name": "dashed-marquee",
+      "name": "marquee",
       "type": "registry:ui",
-      "title": "Dashed Marquee",
+      "title": "Marquee",
       "description": "An infinite scrolling marquee section utilizing custom edit-dashed cards and compact icon tiles with speed, direction, and corner blur settings.",
       "dependencies": [
         "framer-motion",
@@ -770,7 +770,7 @@
       ],
       "files": [
         {
-          "path": "components/ui/DashedMarquee.tsx",
+          "path": "components/ui/Marquee.tsx",
           "type": "registry:ui"
         }
       ]

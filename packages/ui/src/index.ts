@@ -106,9 +106,13 @@ export { AnimatedIcons1 } from "./animated/Loaders1";
 export { AnimatedIconCard } from "./animated/LoaderCard";
 export type { AnimatedIconCardProps } from "./animated/LoaderCard";
 
-// Dashed Marquee
-export { DashedMarquee } from "./animated/DashedMarquee";
-export type { DashedMarqueeProps, MarqueeItem } from "./animated/DashedMarquee";
+// Marquee
+export { Marquee, DashedMarquee } from "./animated/Marquee";
+export type {
+  MarqueeProps,
+  DashedMarqueeProps,
+  MarqueeItem,
+} from "./animated/Marquee";
 
 // Accordion
 export { Accordion, BevelAccordion } from "./animated/Accordion";

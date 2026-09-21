@@ -75,7 +75,7 @@ packages/ui/
         ├── ChromeInput.tsx           # Machined metallic dark input
         ├── ChromeSelect.tsx          # Machined select dropdown
         ├── CommandPalette.tsx        # Holographic command palette (Kbar style)
-        ├── DashedMarquee.tsx         # Infinite scrolling dashed marquee
+        ├── Marquee.tsx               # Infinite scrolling marquee
         ├── DeveloperIdCard.tsx       # Cyberpunk developer badge with QR/socials
         ├── DotPattern.tsx            # SVG dot matrix pattern
         ├── DotPatternPlayground.tsx  # Dot matrix playground controls

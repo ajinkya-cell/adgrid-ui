@@ -22,7 +22,8 @@ const UI = {
   TextShuffle: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.TextShuffle }))),
   NowPlayingCard: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.NowPlayingCard }))),
   SimpleCard: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.SimpleCard }))),
-  DashedMarquee: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.DashedMarquee }))),
+  Marquee: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.Marquee }))),
+  DashedMarquee: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.Marquee }))),
   Marquee2: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.Marquee2 }))),
   Accordion: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.Accordion }))),
   BevelAccordion: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.Accordion }))),
@@ -145,6 +146,7 @@ export function MiniPreviewRenderer({ slug }: { slug: string }) {
           </Suspense>
         </div>
       );
+    case "marquee":
     case "dashed-marquee": {
       const dummyMiniItems = [
         { id: 1, title: "Database Sync", description: "Cloud sync", icon: null },
@@ -154,7 +156,7 @@ export function MiniPreviewRenderer({ slug }: { slug: string }) {
       return (
         <div className="flex h-full w-full items-center justify-center p-2 scale-75 overflow-hidden">
           <Suspense fallback={null}>
-            <UI.DashedMarquee
+            <UI.Marquee
               items={dummyMiniItems}
               speed={15}
               blurCorners={false}

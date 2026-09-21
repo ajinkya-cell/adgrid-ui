@@ -32,7 +32,7 @@ import {
   PixelMeltBackground,
   PremiumHero,
   SimpleCard,
-  DashedMarquee,
+  Marquee,
   Marquee2,
   Accordion,
   StickerCard,
@@ -714,6 +714,7 @@ export function PresentationRenderer({
           />
         </div>
       );
+    case "marquee":
     case "dashed-marquee": {
       const dummyMarqueeItems = [
         { id: 1, title: "Next.js Framework", description: "Production build server", icon: <IconBrandNextjs size={20} /> },
@@ -735,7 +736,7 @@ export function PresentationRenderer({
 
       return (
         <div className="w-full h-screen flex items-center justify-center">
-          <DashedMarquee {...marqueeProps} className="w-full h-full border-none" />
+          <Marquee {...marqueeProps} className="w-full h-full border-none" />
         </div>
       );
     }

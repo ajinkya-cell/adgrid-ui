@@ -310,7 +310,7 @@ function MarqueeCard({
   );
 }
 
-export interface DashedMarqueeProps {
+export interface MarqueeProps {
   items: MarqueeItem[];
   className?: string;
   variant?: "default" | "icon";
@@ -323,7 +323,9 @@ export interface DashedMarqueeProps {
   cardProps?: Partial<MarqueeCardProps>;
 }
 
-export function DashedMarquee({
+export type DashedMarqueeProps = MarqueeProps;
+
+export function Marquee({
   items,
   className,
   variant = "default",
@@ -334,7 +336,7 @@ export function DashedMarquee({
   blurCorners = true,
   fadeColor = "#111111",
   cardProps,
-}: DashedMarqueeProps) {
+}: MarqueeProps) {
   const uniqId = useId().replace(/:/g, "");
   const animName = `marquee-anim-${uniqId}`;
 
@@ -434,3 +436,6 @@ export function DashedMarquee({
     </div>
   );
 }
+
+export const DashedMarquee = Marquee;
+

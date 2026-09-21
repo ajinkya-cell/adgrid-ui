@@ -643,13 +643,13 @@ export const registry: RegistryEntry[] = [
     presentationStrategy: "fullscreen",
   },
   {
-    name: "Dashed Marquee",
-    slug: "dashed-marquee",
+    name: "Marquee",
+    slug: "marquee",
     category: "animated",
     description: "An infinite scrolling marquee section utilizing custom edit-dashed cards and compact icon tiles with speed, direction, and corner blur settings.",
     dependencies: ["framer-motion", "@tabler/icons-react"],
-    packagePath: "animated/DashedMarquee.tsx",
-    files: ["animated/DashedMarquee.tsx"],
+    packagePath: "animated/Marquee.tsx",
+    files: ["animated/Marquee.tsx"],
     presentationStrategy: "fullscreen",
     propDefs: [
       { name: "variant", type: "select", default: "default", description: "Display variant style", options: ["default", "icon"], required: false },
