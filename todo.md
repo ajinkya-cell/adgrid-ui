@@ -54,7 +54,7 @@ These are the immediate, actionable high-impact tasks derived from our current c
 - [ ] 🟡 `[DOCS]` `[MEDIUM]` **Complete `propDefs` for all components in registry**  
   * **Location**: [`apps/docs/src/registry/index.ts`](file:///C:/Users/ajink/OneDrive/Desktop/personal%20-%20coding%20-%20ventures/adgrid-ui/adgrid-ui/apps/docs/src/registry/index.ts)  
   * **Issue**: ~20 components lack `propDefs` objects in the registry, leaving the Props Tweaker panel empty in `/present/[category]/[slug]`.  
-  * **Action**: Add strongly typed `propDefs` (with `name`, `type`, `default`, `min`, `max`, `step`, `options`, `description`) for components such as `Tooltip`, `Stepper`, `Timeline`, `Switch`, `OTPInput`, `DeveloperIdCard`, `GithubHeatmap`, `BevelAccordion`, `BevelAlertDialog`, `StickerCard`, `Datepicker`, `Marquee2`, `NavBar1`, and backgrounds.
+  * **Action**: Add strongly typed `propDefs` (with `name`, `type`, `default`, `min`, `max`, `step`, `options`, `description`) for components such as `Tooltip`, `Timeline`, `Switch`, `OTPInput`, `DeveloperIdCard`, `GithubHeatmap`, `BevelAccordion`, `BevelAlertDialog`, `StickerCard`, `Datepicker`, `Marquee2`, `NavBar1`, and backgrounds.
 
 - [ ] 🟡 `[FEATURE]` `[MEDIUM]` **Add Next.js App Router Error Boundary & Skeleton Loaders**  
   * **Location**: `apps/docs/src/app/`  

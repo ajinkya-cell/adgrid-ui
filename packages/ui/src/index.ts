@@ -188,9 +188,9 @@ export type { OTPInputProps } from "./animated/OTPInput";
 export { Tooltip } from "./animated/Tooltip";
 export type { TooltipProps } from "./animated/Tooltip";
 
-// Circuit Path Stepper / Timeline Component
-export { Stepper, Timeline } from "./animated/Stepper";
-export type { StepperProps, StepItem } from "./animated/Stepper";
+// Circuit Path Timeline Component
+export { Timeline } from "./animated/Timeline";
+export type { TimelineProps, StepItem, TimelineItem } from "./animated/Timeline";
 
 // Minimalist 3D Globe Component
 export { Globe } from "./animated/Globe";

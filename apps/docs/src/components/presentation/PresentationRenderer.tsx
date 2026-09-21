@@ -62,7 +62,7 @@ import {
   Switch,
   OTPInput,
   Tooltip,
-  Stepper,
+  Timeline,
   Globe,
   BentoGrid,
   BentoGridItem,
@@ -881,9 +881,8 @@ export function PresentationRenderer({
       return <OTPInputDemo />;
     case "tooltip":
       return <TooltipDemo />;
-    case "stepper":
     case "timeline":
-      return <StepperDemo />;
+      return <TimelineDemo />;
     case "globe":
       return <Globe />;
     case "meter":
@@ -1108,12 +1107,12 @@ function TooltipDemo() {
   );
 }
 
-function StepperDemo() {
+function TimelineDemo() {
   return (
     <div className="flex flex-col items-center justify-center p-8 gap-8 min-h-[380px] w-full max-w-xl mx-auto font-['DM_Sans',sans-serif] select-none">
       <style dangerouslySetInnerHTML={{ __html: `@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');` }} />
 
-      <Stepper />
+      <Timeline />
     </div>
   );
 }

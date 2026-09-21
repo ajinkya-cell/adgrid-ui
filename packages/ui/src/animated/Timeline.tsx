@@ -13,7 +13,9 @@ export interface StepItem {
   icon?: React.ReactNode;
 }
 
-export interface StepperProps {
+export type TimelineItem = StepItem;
+
+export interface TimelineProps {
   /** Array of step items */
   steps?: StepItem[];
   /** Controlled active step index (0-indexed) */
@@ -33,13 +35,13 @@ const defaultSteps: StepItem[] = [
   { title: "System Ready", description: "All security nodes synchronized and operational. System ready for access." },
 ];
 
-export function Stepper({
+export function Timeline({
   steps = defaultSteps,
   currentStep: controlledStep,
   defaultStep = 0,
   onStepChange,
   className,
-}: StepperProps) {
+}: TimelineProps) {
   const [uncontrolledStep, setUncontrolledStep] = useState(defaultStep);
   const isControlled = controlledStep !== undefined;
   const activeStep = isControlled ? controlledStep : uncontrolledStep;
@@ -58,7 +60,7 @@ export function Stepper({
       {/* DM Sans font loader */}
       <style dangerouslySetInnerHTML={{ __html: `@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');` }} />
 
-      {/* Top Stepper Checkpoint Nodes Row with Dashed Connecting Lines */}
+      {/* Top Timeline Checkpoint Nodes Row with Dashed Connecting Lines */}
       <div className="relative flex items-center justify-between w-full px-2">
         {steps.map((step, index) => {
           const isActive = index === activeStep;
@@ -141,4 +143,3 @@ export function Stepper({
   );
 }
 
-export const Timeline = Stepper;
