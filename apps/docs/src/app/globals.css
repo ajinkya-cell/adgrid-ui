@@ -360,6 +360,46 @@ code::-webkit-scrollbar-thumb:hover,
   font-family: var(--font-caveat, 'Caveat', cursive, sans-serif);
 }
 
+/* Code2 Slash Arrow Animation (leaving arrows static) */
+@keyframes codeSlashGlide {
+  0% {
+    transform: translateY(0) scaleY(1) scaleX(1);
+    opacity: 1;
+  }
+  8% {
+    /* Subtle anticipation drawback */
+    transform: translateY(1.5px) scaleY(0.9) scaleX(1.1);
+    opacity: 1;
+  }
+  36% {
+    /* Rockets straight up like an arrow with velocity stretch */
+    transform: translateY(-34px) scaleY(1.4) scaleX(0.75);
+    opacity: 0;
+  }
+  40% {
+    /* Teleports to bottom while invisible */
+    transform: translateY(34px) scaleY(1.4) scaleX(0.75);
+    opacity: 0;
+  }
+  80% {
+    /* Strikes target from bottom, slight overshoot */
+    transform: translateY(-1.5px) scaleY(0.96) scaleX(1.04);
+    opacity: 1;
+  }
+  92% {
+    transform: translateY(0.6px) scaleY(1.02);
+    opacity: 1;
+  }
+  100% {
+    /* Locks cleanly into place at rest */
+    transform: translateY(0) scaleY(1) scaleX(1);
+    opacity: 1;
+  }
+}
 
-
+.animate-code-slash path:nth-child(3) {
+  animation: codeSlashGlide 0.58s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-box: fill-box;
+  transform-origin: center;
+}
 

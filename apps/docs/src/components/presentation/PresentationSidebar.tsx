@@ -11,7 +11,7 @@ import type { PresentationSourceFile } from "./types";
 import { SidebarItem } from "./SidebarItem";
 import { PreviewOverlay } from "./PreviewOverlay";
 import { CodeStudioGuide } from "./CodeStudioGuide";
-import { Check, Copy, FileCode } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 
 export function PresentationSidebar({
   entry,
@@ -36,7 +36,6 @@ export function PresentationSidebar({
   const open = usePresentationStore((state) => state.sidebarOpen);
   const toggleSidebar = usePresentationStore((state) => state.toggleSidebar);
   const activeTab = usePresentationStore((state) => state.sidebarTab);
-  const setSidebarTab = usePresentationStore((state) => state.setSidebarTab);
   
   const isExpandedCode = activeTab === "code";
   const expandedWidth = Math.min(920, Math.max(300, Math.round(windowWidth * 0.94)));
@@ -69,16 +68,15 @@ export function PresentationSidebar({
   };
 
   // Keyboard navigation & Hover coordinates state
-  const [activeIndex, setActiveIndex] = useState(0);
+  const defaultIndex = useMemo(() => {
+    const idx = flatResults.findIndex((item) => item.slug === entry.slug);
+    return idx !== -1 ? idx : 0;
+  }, [flatResults, entry.slug]);
+
+  const [navIndex, setNavIndex] = useState<number | null>(null);
+  const activeIndex = navIndex !== null && navIndex < flatResults.length ? navIndex : defaultIndex;
   const [hoveredEntry, setHoveredEntry] = useState<RegistryEntry | null>(null);
   const [hoveredRect, setHoveredRect] = useState<DOMRect | null>(null);
-  const [hoveredTab, setHoveredTab] = useState<"code" | null>(null);
-
-  // Set starting index to the active page component
-  useEffect(() => {
-    const idx = flatResults.findIndex((item) => item.slug === entry.slug);
-    if (idx !== -1) setActiveIndex(idx);
-  }, [entry.slug, flatResults]);
 
   // Keyboard listener for navigation inside flat list
   useEffect(() => {
@@ -87,10 +85,16 @@ export function PresentationSidebar({
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowDown") {
         e.preventDefault();
-        setActiveIndex((prev) => (prev + 1) % flatResults.length);
+        setNavIndex((prev) => {
+          const current = prev !== null && prev < flatResults.length ? prev : defaultIndex;
+          return (current + 1) % flatResults.length;
+        });
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
-        setActiveIndex((prev) => (prev - 1 + flatResults.length) % flatResults.length);
+        setNavIndex((prev) => {
+          const current = prev !== null && prev < flatResults.length ? prev : defaultIndex;
+          return (current - 1 + flatResults.length) % flatResults.length;
+        });
       } else if (e.key === "Enter") {
         e.preventDefault();
         if (flatResults[activeIndex]) {
@@ -107,7 +111,7 @@ export function PresentationSidebar({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [open, activeTab, flatResults, activeIndex, toggleSidebar, presentation]);
+  }, [open, activeTab, flatResults, activeIndex, defaultIndex, toggleSidebar, presentation]);
 
   // Smooth scroll item container on active index changes
   useEffect(() => {
@@ -159,92 +163,31 @@ export function PresentationSidebar({
             role="navigation"
             aria-label="Component selector"
           >
-            {/* Header Tabs: Horizontal row of icon buttons to the right of the trigger button */}
-            <div className={`h-[44px] mb-4 mt-6 flex items-center justify-between shrink-0 pl-20 ${isExpandedCode ? "pr-8" : "pr-6"}`}>
-              <div className="flex items-center gap-2.5">
-                <div
-                  className="relative"
-                  onMouseEnter={() => setHoveredTab("code")}
-                  onMouseLeave={() => setHoveredTab(null)}
-                >
-                  <motion.button
-                    onClick={() => setSidebarTab(activeTab === "code" ? "navigator" : "code")}
-                    whileHover={{ scale: 1.08, y: -1 }}
-                    whileTap={{ scale: 0.94 }}
-                    className={`relative flex h-8 w-8 items-center justify-center rounded-full border transition-colors duration-200 cursor-pointer ${
-                      activeTab === "code"
-                        ? "border-violet-400/40 text-violet-300"
-                        : "border-white/25 text-white/50 hover:text-white/90 hover:border-white/35"
-                    }`}
-                    style={{
-                      backgroundColor: "#171717",
-                      boxShadow: activeTab === "code"
-                        ? "inset 0 1.5px 0 0 rgba(167,139,250,0.12), inset 0 -1.5px 0 0 rgba(0,0,0,0.45), 0 0 14px rgba(139,92,246,0.18), 0 8px 24px rgba(0,0,0,0.5)"
-                        : "inset 0 1.5px 0 0 rgba(255,255,255,0.10), inset 0 -1.5px 0 0 rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.5)",
-                    }}
-                    type="button"
-                    aria-label="Code Studio"
-                  >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="16 18 22 12 16 6" />
-                      <polyline points="8 6 2 12 8 18" />
-                    </svg>
-                  </motion.button>
-
-                  <AnimatePresence>
-                    {hoveredTab === "code" && (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.8, y: 5, x: "-50%" }}
-                        animate={{ opacity: 1, scale: 1, y: 0, x: "-50%" }}
-                        exit={{ opacity: 0, scale: 0.8, y: 5, x: "-50%" }}
-                        transition={{ type: "spring", stiffness: 350, damping: 20 }}
-                        className="absolute top-10 left-1/2 z-50 px-2.5 py-1 rounded-lg border border-white/10 bg-neutral-950 text-white/90 font-mono text-[9px] uppercase tracking-wider shadow-[0_5px_15px_rgba(0,0,0,0.6)] pointer-events-none whitespace-nowrap"
-                      >
-                        <div className="absolute -top-[4.5px] left-1/2 -translate-x-1/2 w-2 h-2 rotate-45 border-t border-l border-white/10 bg-neutral-950" />
-                        <span className="relative z-10">Code</span>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </div>
-
-              {/* Sub-tab view toggle & Actions in Code mode */}
-              {isExpandedCode ? (
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center rounded-full border border-white/10 bg-black/50 p-1">
-                    <button
-                      onClick={() => setCodeSubTab("guide")}
-                      className={`flex items-center gap-1.5 rounded-full px-3.5 py-1 font-poppins text-xs font-medium transition-all cursor-pointer ${
-                        codeSubTab === "guide"
-                          ? "bg-violet-500/20 text-violet-200 border border-violet-500/35 shadow-[0_0_12px_rgba(139,92,246,0.25)]"
-                          : "text-white/50 hover:text-white border border-transparent"
-                      }`}
-                    >
-                      <span>Guide</span>
-                    </button>
-                    <button
-                      onClick={() => setCodeSubTab("source")}
-                      className={`flex items-center gap-1.5 rounded-full px-3.5 py-1 font-poppins text-xs font-medium transition-all cursor-pointer ${
-                        codeSubTab === "source"
-                          ? "bg-violet-500/20 text-violet-200 border border-violet-500/35 shadow-[0_0_12px_rgba(139,92,246,0.25)]"
-                          : "text-white/50 hover:text-white border border-transparent"
-                      }`}
-                    >
-                      <span>Code</span>
-                    </button>
-                  </div>
-
+            {/* Header: Clearance for the 2 fixed trigger buttons on the left + Guide/Source toggle on right */}
+            <div className={`h-[48px] mb-4 mt-6 flex items-center justify-end shrink-0 pl-64 ${isExpandedCode ? "pr-8" : "pr-6"}`}>
+              {isExpandedCode && (
+                <div className="flex items-center rounded-full border border-white/10 bg-black/50 p-1">
                   <button
-                    onClick={() => setSidebarTab("navigator")}
-                    className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-poppins text-white/60 hover:bg-white/10 hover:text-white transition-all cursor-pointer active:scale-95"
+                    onClick={() => setCodeSubTab("guide")}
+                    className={`flex items-center gap-1.5 rounded-full px-3.5 py-1 font-poppins text-xs font-medium transition-all cursor-pointer ${
+                      codeSubTab === "guide"
+                        ? "bg-violet-500/20 text-violet-200 border border-violet-500/35 shadow-[0_0_12px_rgba(139,92,246,0.25)]"
+                        : "text-white/50 hover:text-white border border-transparent"
+                    }`}
                   >
-                    <span>Navigator</span>
+                    <span>Guide</span>
+                  </button>
+                  <button
+                    onClick={() => setCodeSubTab("source")}
+                    className={`flex items-center gap-1.5 rounded-full px-3.5 py-1 font-poppins text-xs font-medium transition-all cursor-pointer ${
+                      codeSubTab === "source"
+                        ? "bg-violet-500/20 text-violet-200 border border-violet-500/35 shadow-[0_0_12px_rgba(139,92,246,0.25)]"
+                        : "text-white/50 hover:text-white border border-transparent"
+                    }`}
+                  >
+                    <span>Code</span>
                   </button>
                 </div>
-              ) : (
-                <span className="font-mono text-[9px] uppercase tracking-widest text-white/20 select-none">
-                  {activeTab === "navigator" ? "Explore" : activeTab}
-                </span>
               )}
             </div>
 
@@ -253,12 +196,15 @@ export function PresentationSidebar({
               <div className="flex-1 min-h-0 flex flex-col">
                 <div className="mb-4 pl-9 pr-6">
                   <div className="mb-3">
-                    <div className="font-mono text-[10px] uppercase tracking-wider text-white/40">Navigator</div>
+                   
                     <div className="mt-1 text-xs text-white/60 font-medium">{flatResults.length} components</div>
                   </div>
                   <SidebarSearch
                     value={query}
-                    onChange={setQuery}
+                    onChange={(val) => {
+                      setQuery(val);
+                      setNavIndex(null);
+                    }}
                     onKeyDown={(event) => {
                       if (event.key === "Enter" && flatResults[0]) handleNavigate(flatResults[0]);
                     }}
@@ -325,7 +271,6 @@ export function PresentationSidebar({
                         </div>
                       ) : (
                         <div className="flex items-center gap-2">
-                          <FileCode className="h-4 w-4 text-violet-400" />
                           <span className="font-mono text-xs font-medium text-white/90">
                             {currentFile?.path.split("/").pop()}
                           </span>
@@ -338,26 +283,15 @@ export function PresentationSidebar({
 
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => setCodeSubTab("guide")}
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white rounded-lg text-xs font-mono transition-all cursor-pointer"
-                      >
-                        <span>Guide</span>
-                      </button>
-
-                      <button
                         onClick={handleCopyCode}
-                        className="flex items-center gap-1.5 px-3.5 py-1.5 bg-violet-500/15 hover:bg-violet-500/25 border border-violet-500/30 text-violet-300 hover:text-white rounded-lg text-xs font-mono transition-all cursor-pointer shadow-[0_0_12px_rgba(139,92,246,0.2)] active:scale-95"
+                        title={codeCopied ? "Copied!" : "Copy code"}
+                        aria-label={codeCopied ? "Copied!" : "Copy code"}
+                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-violet-500/30 bg-violet-500/15 hover:bg-violet-500/25 text-violet-300 hover:text-white transition-all cursor-pointer shadow-[0_0_12px_rgba(139,92,246,0.2)] active:scale-95"
                       >
                         {codeCopied ? (
-                          <>
-                            <Check className="h-3.5 w-3.5 text-emerald-400" />
-                            <span className="text-emerald-400 font-medium">Copied!</span>
-                          </>
+                          <Check className="h-3.5 w-3.5 text-emerald-400" />
                         ) : (
-                          <>
-                            <Copy className="h-3.5 w-3.5 text-violet-300" />
-                            <span className="font-medium">Copy Source</span>
-                          </>
+                          <Copy className="h-3.5 w-3.5 text-violet-300" />
                         )}
                       </button>
                     </div>

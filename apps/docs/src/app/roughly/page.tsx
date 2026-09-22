@@ -585,12 +585,9 @@ export default function RoughlyPage() {
         {/* Hero Content (Centered in the open void of the illustration) */}
         <div className="relative z-10 space-y-6 text-center max-w-2xl mx-auto">
           {/* Brand Eyebrow Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono text-neutral-400 bg-white/[0.04] border border-white/10 backdrop-blur-md">
-            <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
-            Void UI / Roughly
-          </div>
+          
 
-          <h1 className="text-5xl sm:text-7xl font-bold tracking-tight text-white font-sans drop-shadow-md">
+          <h1 className="text-5xl sm:text-9xl font-bold tracking-tight text-white font-sans drop-shadow-md">
             <Roughly type="circle" color="#6366F1" strokeWidth={2.5}>
               Roughly
             </Roughly>

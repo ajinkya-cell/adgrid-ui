@@ -6,7 +6,6 @@ import type { RegistryEntry } from "@/registry";
 import type { PresentationSourceFile } from "./types";
 import { getComponentName } from "./presentation-registry";
 import {
-  FileCode,
   Copy,
   Check,
   ChevronDown,
@@ -378,19 +377,14 @@ export function CodeStudioGuide({
         {/* Source Card */}
         <div className="rounded-2xl border border-white/10 bg-[#060606] p-4 shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)] space-y-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-violet-500/10 border border-violet-500/20 text-violet-300 shadow-[0_0_10px_rgba(139,92,246,0.15)] shrink-0">
-                <FileCode className="h-4 w-4" />
+            <div className="flex flex-col">
+              <div className="font-mono text-xs text-white/90 font-medium flex items-center gap-1.5">
+                <span className="text-white/40">components/ui/</span>
+                <span className="text-white">{primaryFileName}</span>
               </div>
-              <div className="flex flex-col">
-                <div className="font-mono text-xs text-white/90 font-medium flex items-center gap-1.5">
-                  <span className="text-white/40">components/ui/</span>
-                  <span className="text-white">{primaryFileName}</span>
-                </div>
-                <span className="font-mono text-[10px] text-white/40">
-                  {currentFile?.code.split("\n").length ?? 0} lines • TypeScript React
-                </span>
-              </div>
+              <span className="font-mono text-[10px] text-white/40">
+                {currentFile?.code.split("\n").length ?? 0} lines • TypeScript React
+              </span>
             </div>
 
             <div className="flex items-center gap-2">
