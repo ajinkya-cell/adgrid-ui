@@ -11,6 +11,7 @@ import {
   RoughHighlight,
   RoughBox,
   RoughArrow,
+  RoughHandwriting,
   VoidButton,
 } from "@adgrid-ui/ui";
 import type {
@@ -25,6 +26,7 @@ import type {
   ArrowVariant,
   ArrowheadStyle,
   ArrowLabelFont,
+  HandwritingFont,
 } from "@adgrid-ui/ui";
 import {
   Check,
@@ -42,6 +44,7 @@ import {
   Square as BoxIcon,
   Highlighter as HighlightIcon,
   ArrowRight as ArrowIcon,
+  PenTool,
 } from "lucide-react";
 
 // ── Syntax Highlighting Helpers & Constants ──────────────────
@@ -181,9 +184,16 @@ export function CalloutDemo() {
 const fontsSnippet = `<head>
   <link
     rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cedarville+Cursive&family=Reenie+Beanie&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Kalam:wght@300;400;700&family=Reenie+Beanie&display=swap"
   />
 </head>`;
+
+const PLAYGROUND_PANEL_CLASS =
+  "bg-[#151515] border-t border-t-white/15 border-x border-x-white/[0.03] border-b border-b-white/[0.08] shadow-[inset_0_1px_0_rgba(255,255,255,0.045),inset_0_-1px_0_rgba(0,0,0,0.3),0_14px_32px_rgba(0,0,0,0.24)]";
+const PLAYGROUND_WELL_CLASS =
+  "bg-[#090909] border border-white/[0.05] shadow-[inset_0_2px_4px_rgba(0,0,0,0.55),0_1px_0_rgba(255,255,255,0.035)]";
+const PLAYGROUND_RAISED_CLASS =
+  "bg-white text-black border border-white/35 shadow-[0_2px_4px_rgba(0,0,0,0.2)]";
 
 function renderSyntaxLine(line: string) {
   if (!line.length) {
@@ -367,6 +377,9 @@ export default function RoughlyPage() {
   const [circlePaddingY, setCirclePaddingY] = useState(10);
   const [circleIterations, setCircleIterations] = useState(2);
   const [highlightIterations, setHighlightIterations] = useState(2);
+  const [handwritingFont, setHandwritingFont] = useState<HandwritingFont>("reenie-beanie");
+  const [handwritingFontSize, setHandwritingFontSize] = useState(44);
+  const [handwritingEditable, setHandwritingEditable] = useState(false);
   const [replayKey, setReplayKey] = useState(0);
   const [copiedCode, setCopiedCode] = useState(false);
   const [copiedInstall, setCopiedInstall] = useState(false);
@@ -404,6 +417,7 @@ export default function RoughlyPage() {
     { id: "box", label: "Box", icon: BoxIcon },
     { id: "highlight", label: "Highlight", icon: HighlightIcon },
     { id: "arrow", label: "Arrow", icon: ArrowIcon },
+    { id: "handwriting", label: "Handwriting", icon: PenTool },
   ];
 
   const colorPresets = [
@@ -528,6 +542,19 @@ export default function RoughlyPage() {
       return `<RoughArrow${propsString}>\n  ${text}\n</RoughArrow>`;
     }
 
+    if (selectedType === "handwriting") {
+      const propsList: string[] = [`type="handwriting"`];
+      if (handwritingFont !== "reenie-beanie") propsList.push(`font="${handwritingFont}"`);
+      propsList.push(`fontSize={${handwritingFontSize}}`);
+      if (selectedColor !== "#6366F1") propsList.push(`color="${selectedColor}"`);
+      if (strokeWidth !== 1.5) propsList.push(`strokeWidth={${strokeWidth}}`);
+      if (duration !== 1200) propsList.push(`animationDuration={${duration}}`);
+      if (handwritingEditable) propsList.push(`editable`);
+
+      const propsString = ` ${propsList.join(" ")}`;
+      return `<Roughly${propsString}>\n  ${text}\n</Roughly>`;
+    }
+
     const propsList: string[] = [];
     if (selectedColor !== "#6366F1") propsList.push(`color="${selectedColor}"`);
     if (strokeWidth !== 2) propsList.push(`strokeWidth={${strokeWidth}}`);
@@ -585,7 +612,7 @@ export default function RoughlyPage() {
         {/* Hero Content (Centered in the open void of the illustration) */}
         <div className="relative z-10 space-y-6 text-center max-w-2xl mx-auto">
           {/* Brand Eyebrow Badge */}
-          
+
 
           <h1 className="text-5xl sm:text-9xl font-bold tracking-tight text-white font-sans drop-shadow-md">
             <Roughly type="circle" color="#6366F1" strokeWidth={2.5}>
@@ -652,7 +679,7 @@ export default function RoughlyPage() {
       {/* ── Main Content (Interactive Studio Playground, Editorial, API) ── */}
       <div className="w-full max-w-7xl px-4 sm:px-8 pb-24 pt-12 space-y-16 sm:space-y-20">
         {/* ── 2. Interactive Studio Playground ────────────────── */}
-        <section ref={playgroundRef} className="space-y-6">
+        <section ref={playgroundRef} className="roughly-playground space-y-6 font-inter">
           <div className="flex items-baseline justify-between border-b border-white/[0.08] pb-3">
             <div className="flex items-center gap-2">
               <Layers className="w-4 h-4 text-indigo-400" />
@@ -671,14 +698,14 @@ export default function RoughlyPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             {/* 1. Left: Annotation Type Selector */}
-            <div className="order-1 lg:order-none lg:col-span-3 space-y-3 p-4 rounded-2xl bg-[#111114] border border-white/[0.08]">
+            <div className={`order-1 lg:order-none lg:col-span-3 space-y-3 p-4 rounded-2xl ${PLAYGROUND_PANEL_CLASS}`}>
               <div className="flex items-center justify-between px-1">
                 <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
                   Annotation Type
                 </label>
-                <span className="text-[10px] font-mono text-neutral-500">8 styles</span>
+                <span className="text-[10px] font-mono text-neutral-500">9 styles</span>
               </div>
-              <div className="rounded-xl border border-white/[0.08] bg-black/40 overflow-hidden divide-y divide-white/[0.04]">
+              <div className={`rounded-xl overflow-hidden divide-y divide-white/[0.04] ${PLAYGROUND_WELL_CLASS}`}>
                 {typePresets.map((t) => {
                   const Icon = t.icon;
                   const isSelected = selectedType === t.id;
@@ -709,21 +736,19 @@ export default function RoughlyPage() {
                       }}
                       className={`w-full px-3 py-2.5 flex items-center justify-between text-left transition-colors cursor-pointer ${
                         isSelected
-                          ? "bg-indigo-600/15 text-white font-medium"
+                          ? `${PLAYGROUND_RAISED_CLASS} font-medium`
                           : "text-neutral-400 hover:text-neutral-200 hover:bg-white/[0.03]"
                       }`}
                     >
                       <div className="flex items-center gap-2.5">
                         <Icon
                           className={`w-3.5 h-3.5 transition-colors ${
-                            isSelected ? "text-indigo-400" : "text-neutral-500"
+                            isSelected ? "text-indigo-700" : "text-neutral-500"
                           }`}
                         />
                         <span className="text-xs">{t.label}</span>
                       </div>
-                      {isSelected && (
-                        <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
-                      )}
+
                     </button>
                   );
                 })}
@@ -731,7 +756,7 @@ export default function RoughlyPage() {
             </div>
 
             {/* 2. Middle: Controls Panel */}
-            <div className="order-3 lg:order-none lg:col-span-4 space-y-5 p-5 rounded-2xl bg-[#111114] border border-white/[0.08]">
+            <div className={`order-3 lg:order-none lg:col-span-4 space-y-5 p-5 rounded-2xl ${PLAYGROUND_PANEL_CLASS}`}>
               {/* Editable Text & Presets */}
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
@@ -803,7 +828,7 @@ export default function RoughlyPage() {
                     rows={3}
                     value={text}
                     onChange={(e) => setText(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-black/50 border border-white/10 text-sm text-white focus:outline-none focus:border-indigo-500 font-sans transition-colors resize-y leading-relaxed"
+                    className={`w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none focus:border-indigo-500 font-inter transition-colors resize-y leading-relaxed ${PLAYGROUND_WELL_CLASS}`}
                     placeholder="Enter multiline text..."
                   />
                 ) : (
@@ -811,7 +836,7 @@ export default function RoughlyPage() {
                     type="text"
                     value={text}
                     onChange={(e) => setText(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-black/50 border border-white/10 text-sm text-white focus:outline-none focus:border-indigo-500 font-sans transition-colors"
+                    className={`w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none focus:border-indigo-500 font-inter transition-colors ${PLAYGROUND_WELL_CLASS}`}
                     placeholder="Enter text to annotate..."
                   />
                 )}
@@ -820,7 +845,7 @@ export default function RoughlyPage() {
 
               {/* Type-Specific Options */}
               {selectedType === "circle" && (
-                <div className="space-y-3.5 p-3 rounded-xl bg-black/40 border border-white/10">
+                <div className={`space-y-3.5 p-3 rounded-xl ${PLAYGROUND_WELL_CLASS}`}>
 
                   <div className="space-y-1">
                     <div className="flex justify-between text-[11px] font-mono text-neutral-400">
@@ -868,7 +893,7 @@ export default function RoughlyPage() {
                           onClick={() => setCircleIterations(item.id)}
                           className={`flex-1 py-1 text-xs rounded-md cursor-pointer transition-colors ${
                             circleIterations === item.id
-                              ? "bg-white/20 text-white font-medium"
+                              ? `${PLAYGROUND_RAISED_CLASS} font-medium`
                               : "bg-white/[0.04] text-neutral-400 hover:text-white"
                           }`}
                         >
@@ -892,7 +917,7 @@ export default function RoughlyPage() {
                         onClick={() => setUnderlineVariant(v)}
                         className={`flex-1 py-1.5 text-xs rounded-lg capitalize cursor-pointer transition-colors ${
                           underlineVariant === v
-                            ? "bg-white/20 text-white font-medium shadow-sm"
+                            ? `${PLAYGROUND_RAISED_CLASS} font-medium`
                             : "bg-white/[0.04] text-neutral-400 hover:text-white"
                         }`}
                       >
@@ -915,7 +940,7 @@ export default function RoughlyPage() {
                         onClick={() => setStrikeVariant(v)}
                         className={`flex-1 py-1.5 text-xs rounded-lg capitalize cursor-pointer transition-colors ${
                           strikeVariant === v
-                            ? "bg-white/20 text-white font-medium shadow-sm"
+                            ? `${PLAYGROUND_RAISED_CLASS} font-medium`
                             : "bg-white/[0.04] text-neutral-400 hover:text-white"
                         }`}
                       >
@@ -941,7 +966,7 @@ export default function RoughlyPage() {
                         onClick={() => setCrossVariant(item.id as CrossVariant)}
                         className={`flex-1 py-1.5 text-xs rounded-lg cursor-pointer transition-colors ${
                           crossVariant === item.id
-                            ? "bg-white/20 text-white font-medium shadow-sm"
+                            ? `${PLAYGROUND_RAISED_CLASS} font-medium`
                             : "bg-white/[0.04] text-neutral-400 hover:text-white"
                         }`}
                       >
@@ -953,7 +978,7 @@ export default function RoughlyPage() {
               )}
 
               {selectedType === "bracket" && (
-                <div className="space-y-3.5 p-3 rounded-xl bg-black/40 border border-white/10">
+                <div className={`space-y-3.5 p-3 rounded-xl ${PLAYGROUND_WELL_CLASS}`}>
                   <div className="space-y-1.5">
                     <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
                       Bracket Style
@@ -968,7 +993,7 @@ export default function RoughlyPage() {
                           onClick={() => setBracketStyle(style.id as BracketStyle)}
                           className={`flex-1 py-1.5 text-xs rounded-lg font-mono transition-colors cursor-pointer ${
                             bracketStyle === style.id
-                              ? "bg-white/20 text-white font-medium shadow-sm"
+                              ? `${PLAYGROUND_RAISED_CLASS} font-medium`
                               : "bg-white/[0.04] text-neutral-400 hover:text-white"
                           }`}
                         >
@@ -989,7 +1014,7 @@ export default function RoughlyPage() {
                           onClick={() => setBracketSide(s)}
                           className={`py-1 text-[11px] font-mono capitalize rounded transition-colors cursor-pointer ${
                             bracketSide === s
-                              ? "bg-white/20 text-white font-medium shadow-sm"
+                              ? `${PLAYGROUND_RAISED_CLASS} font-medium`
                               : "bg-white/[0.04] text-neutral-400 hover:text-white"
                           }`}
                         >
@@ -1002,7 +1027,7 @@ export default function RoughlyPage() {
               )}
 
               {selectedType === "highlight" && (
-                <div className="space-y-3.5 p-3 rounded-xl bg-black/40 border border-white/10">
+                <div className={`space-y-3.5 p-3 rounded-xl ${PLAYGROUND_WELL_CLASS}`}>
                   <div className="space-y-1.5">
                     <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
                       Stroke Passes
@@ -1017,7 +1042,7 @@ export default function RoughlyPage() {
                           onClick={() => setHighlightIterations(item.id)}
                           className={`flex-1 py-1.5 text-xs rounded-lg cursor-pointer transition-colors ${
                             highlightIterations === item.id
-                              ? "bg-white/20 text-white font-medium shadow-sm"
+                              ? `${PLAYGROUND_RAISED_CLASS} font-medium`
                               : "bg-white/[0.04] text-neutral-400 hover:text-white"
                           }`}
                         >
@@ -1030,7 +1055,7 @@ export default function RoughlyPage() {
               )}
 
               {selectedType === "box" && (
-                <div className="space-y-3.5 p-3 rounded-xl bg-black/40 border border-white/10">
+                <div className={`space-y-3.5 p-3 rounded-xl ${PLAYGROUND_WELL_CLASS}`}>
                   <div className="space-y-1.5">
                     <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
                       Frame Passes
@@ -1045,7 +1070,7 @@ export default function RoughlyPage() {
                           onClick={() => setBoxVariant(item.id as BoxVariant)}
                           className={`flex-1 py-1.5 text-xs rounded-lg cursor-pointer transition-colors ${
                             boxVariant === item.id
-                              ? "bg-white/20 text-white font-medium shadow-sm"
+                              ? `${PLAYGROUND_RAISED_CLASS} font-medium`
                               : "bg-white/[0.04] text-neutral-400 hover:text-white"
                           }`}
                         >
@@ -1091,7 +1116,7 @@ export default function RoughlyPage() {
               )}
 
               {selectedType === "arrow" && (
-                <div className="space-y-3.5 p-3 rounded-xl bg-black/40 border border-white/10">
+                <div className={`space-y-3.5 p-3 rounded-xl ${PLAYGROUND_WELL_CLASS}`}>
                   {/* Callout Label Input */}
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between">
@@ -1108,8 +1133,8 @@ export default function RoughlyPage() {
                       className={`w-full px-3 py-1.5 text-xs rounded-lg bg-white/[0.04] border border-white/10 text-white focus:outline-none focus:border-amber-400 ${
                         arrowLabelFont === "reenie-beanie"
                           ? "font-[family-name:'Reenie_Beanie',cursive] text-xl"
-                          : arrowLabelFont === "cedarville-cursive"
-                          ? "font-[family-name:'Cedarville_Cursive',cursive] text-base"
+                          : arrowLabelFont === "kalam"
+                          ? "font-[family-name:'Kalam',cursive] text-base"
                           : "font-[family-name:var(--font-caveat),cursive] text-base"
                       }`}
                     />
@@ -1133,9 +1158,9 @@ export default function RoughlyPage() {
                           fontClass: "font-[family-name:'Reenie_Beanie',cursive] text-base",
                         },
                         {
-                          id: "cedarville-cursive",
-                          name: "Cedarville",
-                          fontClass: "font-[family-name:'Cedarville_Cursive',cursive] text-xs",
+                          id: "kalam",
+                          name: "Kalam",
+                          fontClass: "font-[family-name:'Kalam',cursive] text-xs",
                         },
                       ].map((f) => (
                         <button
@@ -1143,7 +1168,7 @@ export default function RoughlyPage() {
                           onClick={() => setArrowLabelFont(f.id as ArrowLabelFont)}
                           className={`py-1.5 px-1.5 rounded-lg transition-colors cursor-pointer text-center ${
                             arrowLabelFont === f.id
-                              ? "bg-white/20 text-white font-medium shadow-sm border border-white/20"
+                              ? `${PLAYGROUND_RAISED_CLASS} font-medium`
                               : "bg-white/[0.04] text-neutral-400 hover:text-white border border-transparent"
                           }`}
                         >
@@ -1176,7 +1201,7 @@ export default function RoughlyPage() {
                           onClick={() => setArrowPlacement(p)}
                           className={`py-1 text-[10px] font-mono capitalize rounded transition-colors cursor-pointer ${
                             arrowPlacement === p
-                              ? "bg-white/20 text-white font-medium shadow-sm"
+                              ? `${PLAYGROUND_RAISED_CLASS} font-medium`
                               : "bg-white/[0.04] text-neutral-400 hover:text-white"
                           }`}
                         >
@@ -1202,7 +1227,7 @@ export default function RoughlyPage() {
                           onClick={() => setArrowVariant(v.id as ArrowVariant)}
                           className={`py-1.5 text-xs rounded-lg cursor-pointer transition-colors ${
                             arrowVariant === v.id
-                              ? "bg-white/20 text-white font-medium shadow-sm"
+                              ? `${PLAYGROUND_RAISED_CLASS} font-medium`
                               : "bg-white/[0.04] text-neutral-400 hover:text-white"
                           }`}
                         >
@@ -1228,7 +1253,7 @@ export default function RoughlyPage() {
                             onClick={() => setArrowheadStyle(h.id as ArrowheadStyle)}
                             className={`py-1 text-[11px] rounded transition-colors cursor-pointer text-center ${
                               arrowheadStyle === h.id
-                                ? "bg-white/20 text-white font-medium"
+                                ? `${PLAYGROUND_RAISED_CLASS} font-medium`
                                 : "bg-white/[0.04] text-neutral-400 hover:text-white"
                             }`}
                           >
@@ -1252,7 +1277,7 @@ export default function RoughlyPage() {
                             onClick={() => setArrowIterations(item.id)}
                             className={`flex-1 py-1 text-[11px] rounded transition-colors cursor-pointer ${
                               arrowIterations === item.id
-                                ? "bg-white/20 text-white font-medium"
+                                ? `${PLAYGROUND_RAISED_CLASS} font-medium`
                                 : "bg-white/[0.04] text-neutral-400 hover:text-white"
                             }`}
                           >
@@ -1332,6 +1357,103 @@ export default function RoughlyPage() {
                 </div>
               )}
 
+              {selectedType === "handwriting" && (
+                <div className={`space-y-3.5 p-3 rounded-xl ${PLAYGROUND_WELL_CLASS}`}>
+                  {/* Handwriting Font Selector */}
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                      Font Family
+                    </label>
+                    <div className="grid grid-cols-3 gap-1">
+                      {[
+                        {
+                          id: "reenie-beanie",
+                          name: "Reenie",
+                          fontClass: "font-[family-name:'Reenie_Beanie',cursive] text-base",
+                        },
+                        {
+                          id: "caveat",
+                          name: "Caveat",
+                          fontClass: "font-[family-name:var(--font-caveat),cursive] text-sm",
+                        },
+                        {
+                          id: "kalam",
+                          name: "Kalam",
+                          fontClass: "font-[family-name:'Kalam',cursive] text-xs",
+                        },
+                      ].map((f) => (
+                        <button
+                          key={f.id}
+                          onClick={() => setHandwritingFont(f.id as HandwritingFont)}
+                          className={`py-1.5 px-1.5 rounded-lg transition-colors cursor-pointer text-center ${
+                            handwritingFont === f.id
+                              ? `${PLAYGROUND_RAISED_CLASS} font-medium`
+                              : "bg-white/[0.04] text-neutral-400 hover:text-white border border-transparent"
+                          }`}
+                        >
+                          <span className={`${f.fontClass} block truncate leading-tight`}>{f.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Handwriting Font Size */}
+                  <div className="space-y-1.5 pt-1">
+                    <div className="flex items-center justify-between">
+                      <label
+                        htmlFor="handwriting-font-size"
+                        className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono"
+                      >
+                        Font Size
+                      </label>
+                      <span className="text-[11px] text-neutral-500 font-mono">
+                        {handwritingFontSize}px
+                      </span>
+                    </div>
+                    <input
+                      id="handwriting-font-size"
+                      type="range"
+                      min={24}
+                      max={45}
+                      step={1}
+                      value={handwritingFontSize}
+                      onChange={(event) => setHandwritingFontSize(Number(event.target.value))}
+                      className="w-full accent-indigo-400 cursor-pointer"
+                      aria-label="Handwriting font size"
+                    />
+                  </div>
+
+                  {/* Mode: Display vs Live Typing */}
+                  <div className="space-y-1.5 pt-1">
+                    <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                      Interactive Mode
+                    </label>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      <button
+                        onClick={() => setHandwritingEditable(false)}
+                        className={`py-1.5 px-2.5 rounded-lg text-xs font-mono transition-colors cursor-pointer text-center ${
+                          !handwritingEditable
+                          ? `${PLAYGROUND_RAISED_CLASS} font-medium`
+                            : "bg-white/[0.04] text-neutral-400 hover:text-white border border-transparent"
+                        }`}
+                      >
+                        Display
+                      </button>
+                      <button
+                        onClick={() => setHandwritingEditable(true)}
+                        className={`py-1.5 px-2.5 rounded-lg text-xs font-mono transition-colors cursor-pointer text-center ${
+                          handwritingEditable
+                          ? `${PLAYGROUND_RAISED_CLASS} font-medium`
+                            : "bg-white/[0.04] text-neutral-400 hover:text-white border border-transparent"
+                        }`}
+                      >
+                        Live Typing
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Color Palette */}
               <div className="space-y-2">
                 <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
@@ -1398,7 +1520,7 @@ export default function RoughlyPage() {
               </div>
 
               {/* Canvas Preview */}
-              <div className="relative min-h-[220px] sm:min-h-[260px] rounded-2xl border border-[#e4dfd5] bg-[#f5f2eb] p-8 flex flex-col items-center justify-center text-center overflow-hidden shadow-2xl transition-colors duration-300">
+                <div className="relative min-h-[220px] sm:min-h-[260px] rounded-2xl border border-[#e4dfd5] bg-[#f5f2eb] p-8 flex flex-col items-center justify-center text-center overflow-hidden shadow-[0_18px_42px_rgba(0,0,0,0.36),0_2px_6px_rgba(0,0,0,0.24)] transition-colors duration-300">
                 {/* Minimal Grid Pattern */}
                 <div
                   className="absolute inset-0 opacity-[0.03] pointer-events-none"
@@ -1519,6 +1641,27 @@ export default function RoughlyPage() {
                         {text}
                       </RoughArrow>
                     </div>
+                  ) : selectedType === "handwriting" ? (
+                    <div className="py-16 px-10 flex flex-col items-center justify-center gap-3">
+                      <RoughHandwriting
+                        key={`handwriting-${replayKey}-${handwritingFont}-${handwritingFontSize}-${selectedColor}-${strokeWidth}-${duration}-${handwritingEditable}`}
+                        font={handwritingFont}
+                        color={selectedColor}
+                        strokeWidth={strokeWidth}
+                        animationDuration={duration}
+                        editable={handwritingEditable}
+                        animate={true}
+                        fontSize={handwritingFontSize}
+                        placeholder="Click to type..."
+                      >
+                        {text}
+                      </RoughHandwriting>
+                      {handwritingEditable && (
+                        <span className="text-[11px] font-mono text-neutral-500">
+                          Click and type above &bull; live stroke tracing
+                        </span>
+                      )}
+                    </div>
                   ) : (
                     <Roughly
                       type={selectedType}
@@ -1534,7 +1677,7 @@ export default function RoughlyPage() {
               </div>
 
               {/* Dynamic Code Snippet */}
-              <div className="rounded-xl bg-[#0d0d10] border border-white/[0.08] overflow-hidden">
+              <div className={`rounded-xl overflow-hidden ${PLAYGROUND_PANEL_CLASS}`}>
                 <div className="flex items-center justify-between px-4 py-2 border-b border-white/[0.06] bg-white/[0.02]">
                   <span className="text-[11px] font-mono text-neutral-500">React Component Snippet</span>
                   <button
@@ -1554,7 +1697,7 @@ export default function RoughlyPage() {
                     )}
                   </button>
                 </div>
-                <div className="p-4 overflow-x-auto present-scroll">
+                <div className="roughly-code p-4 overflow-x-auto present-scroll">
                   {highlightCode(generateSnippet(), "tsx", true)}
                 </div>
               </div>
@@ -1565,7 +1708,7 @@ export default function RoughlyPage() {
         {/* ── 3. Editorial In-Context Showcase ─────────────────── */}
         <section
           key={`${selectedType}-${editorialRevision}`}
-          className="space-y-6 max-w-5xl mx-auto w-full"
+          className="roughly-playground space-y-6 max-w-5xl mx-auto w-full font-inter"
         >
           <div className="flex items-center gap-2 border-b border-white/[0.08] pb-3">
             <BookOpen className="w-4 h-4 text-indigo-400" />
@@ -1574,7 +1717,7 @@ export default function RoughlyPage() {
             </h2>
           </div>
 
-          <div className="relative p-6 sm:p-10 rounded-2xl bg-[#111114] border border-white/[0.08] space-y-6 leading-relaxed text-sm sm:text-base text-neutral-300 font-normal">
+          <div className={`relative p-6 sm:p-10 rounded-2xl space-y-6 leading-relaxed text-sm sm:text-base text-neutral-300 font-normal ${PLAYGROUND_PANEL_CLASS}`}>
             <p className="relative">
               Void UI components are designed with{" "}
               <Roughly.Highlight color="#4338CA">
@@ -1638,7 +1781,7 @@ export default function RoughlyPage() {
         </section>
 
         {/* ── 4. How to Use / Quickstart Guide ──────────────────── */}
-        <section className="space-y-6 max-w-5xl mx-auto w-full">
+        <section className="roughly-playground space-y-6 max-w-5xl mx-auto w-full font-inter">
           <div className="flex items-center gap-2 border-b border-white/[0.08] pb-3">
             <Terminal className="w-4 h-4 text-indigo-400" />
             <h2 className="text-xs uppercase tracking-widest text-neutral-400 font-medium">
@@ -1648,9 +1791,9 @@ export default function RoughlyPage() {
 
           <div className="space-y-6">
             {/* Step 1: Install Dependencies */}
-            <div className="p-6 sm:p-7 rounded-2xl bg-[#111114] border border-white/[0.08] space-y-4">
+            <div className={`p-6 sm:p-7 rounded-2xl space-y-4 ${PLAYGROUND_PANEL_CLASS}`}>
               <div className="space-y-1">
-                <h3 className="text-base font-semibold text-white font-sans">
+                <h3 className="text-base font-semibold text-white font-inter">
                   Install via Void UI CLI
                 </h3>
                 <p className="text-xs sm:text-sm text-neutral-400 font-normal leading-relaxed">
@@ -1659,7 +1802,7 @@ export default function RoughlyPage() {
               </div>
 
               {/* Package Manager Switcher & Code Box */}
-              <div className="rounded-xl border border-white/10 bg-black/60 overflow-hidden">
+              <div className={`rounded-xl overflow-hidden ${PLAYGROUND_WELL_CLASS}`}>
                 <div className="flex items-center justify-between px-3 py-2 border-b border-white/[0.06] bg-white/[0.02]">
                   <div className="flex items-center gap-1">
                     {(["pnpm", "npm", "yarn", "bun"] as const).map((pm) => (
@@ -1693,7 +1836,7 @@ export default function RoughlyPage() {
                     )}
                   </button>
                 </div>
-                <div className="p-4 font-mono text-xs sm:text-sm text-neutral-200 overflow-x-auto select-all">
+                <div className="roughly-code p-4 font-mono text-xs sm:text-sm text-neutral-200 overflow-x-auto select-all">
                   <span className="text-neutral-500 mr-2">$</span>
                   {installCommands[installPm]}
                 </div>
@@ -1701,9 +1844,9 @@ export default function RoughlyPage() {
             </div>
 
             {/* Step 2: Import Components */}
-            <div className="p-6 sm:p-7 rounded-2xl bg-[#111114] border border-white/[0.08] space-y-4">
+            <div className={`p-6 sm:p-7 rounded-2xl space-y-4 ${PLAYGROUND_PANEL_CLASS}`}>
               <div className="space-y-1">
-                <h3 className="text-base font-semibold text-white font-sans">
+                <h3 className="text-base font-semibold text-white font-inter">
                   Import Components
                 </h3>
                 <p className="text-xs sm:text-sm text-neutral-400 font-normal leading-relaxed">
@@ -1711,7 +1854,7 @@ export default function RoughlyPage() {
                 </p>
               </div>
 
-              <div className="rounded-xl border border-white/10 bg-black/60 overflow-hidden">
+              <div className={`rounded-xl overflow-hidden ${PLAYGROUND_WELL_CLASS}`}>
                 <div className="flex items-center justify-between px-3.5 py-2 border-b border-white/[0.06] bg-white/[0.02]">
                   <span className="text-[11px] font-mono text-neutral-400">Named Imports</span>
                   <button
@@ -1731,16 +1874,16 @@ export default function RoughlyPage() {
                     )}
                   </button>
                 </div>
-                <div className="p-4 overflow-x-auto present-scroll">
+                <div className="roughly-code p-4 overflow-x-auto present-scroll">
                   {highlightCode(importSnippet, "tsx", true)}
                 </div>
               </div>
             </div>
 
             {/* Step 3: Wrap Words & Elements */}
-            <div className="p-6 sm:p-7 rounded-2xl bg-[#111114] border border-white/[0.08] space-y-4">
+            <div className={`p-6 sm:p-7 rounded-2xl space-y-4 ${PLAYGROUND_PANEL_CLASS}`}>
               <div className="space-y-1">
-                <h3 className="text-base font-semibold text-white font-sans">
+                <h3 className="text-base font-semibold text-white font-inter">
                   Annotate Text &amp; Keywords
                 </h3>
                 <p className="text-xs sm:text-sm text-neutral-400 font-normal leading-relaxed">
@@ -1748,7 +1891,7 @@ export default function RoughlyPage() {
                 </p>
               </div>
 
-              <div className="rounded-xl border border-white/10 bg-black/60 overflow-hidden">
+              <div className={`rounded-xl overflow-hidden ${PLAYGROUND_WELL_CLASS}`}>
                 <div className="flex items-center justify-between px-3.5 py-2 border-b border-white/[0.06] bg-white/[0.02]">
                   <span className="text-[11px] font-mono text-neutral-400">Example Component</span>
                   <button
@@ -1768,16 +1911,16 @@ export default function RoughlyPage() {
                     )}
                   </button>
                 </div>
-                <div className="p-4 overflow-x-auto present-scroll">
+                <div className="roughly-code p-4 overflow-x-auto present-scroll">
                   {highlightCode(articleHeroSnippet, "tsx", true)}
                 </div>
               </div>
             </div>
 
             {/* Step 4: Directional Callout Arrows */}
-            <div className="p-6 sm:p-7 rounded-2xl bg-[#111114] border border-white/[0.08] space-y-4">
+            <div className={`p-6 sm:p-7 rounded-2xl space-y-4 ${PLAYGROUND_PANEL_CLASS}`}>
               <div className="space-y-1">
-                <h3 className="text-base font-semibold text-white font-sans">
+                <h3 className="text-base font-semibold text-white font-inter">
                   Expressive Callout Arrows
                 </h3>
                 <p className="text-xs sm:text-sm text-neutral-400 font-normal leading-relaxed">
@@ -1785,7 +1928,7 @@ export default function RoughlyPage() {
                 </p>
               </div>
 
-              <div className="rounded-xl border border-white/10 bg-black/60 overflow-hidden">
+              <div className={`rounded-xl overflow-hidden ${PLAYGROUND_WELL_CLASS}`}>
                 <div className="flex items-center justify-between px-3.5 py-2 border-b border-white/[0.06] bg-white/[0.02]">
                   <span className="text-[11px] font-mono text-neutral-400">Arrow Callout</span>
                   <button
@@ -1805,24 +1948,24 @@ export default function RoughlyPage() {
                     )}
                   </button>
                 </div>
-                <div className="p-4 overflow-x-auto present-scroll">
+                <div className="roughly-code p-4 overflow-x-auto present-scroll">
                   {highlightCode(calloutDemoSnippet, "tsx", true)}
                 </div>
               </div>
             </div>
 
             {/* Step 5: Handwriting Cursive Fonts */}
-            <div className="p-6 sm:p-7 rounded-2xl bg-[#111114] border border-white/[0.08] space-y-4">
+            <div className={`p-6 sm:p-7 rounded-2xl space-y-4 ${PLAYGROUND_PANEL_CLASS}`}>
               <div className="space-y-1">
-                <h3 className="text-base font-semibold text-white font-sans">
+                <h3 className="text-base font-semibold text-white font-inter">
                   Handwritten Callout Fonts Setup
                 </h3>
                 <p className="text-xs sm:text-sm text-neutral-400 font-normal leading-relaxed">
-                  To use handwriting script for callouts (<code className="text-indigo-300 font-mono text-xs">&quot;caveat&quot;</code>, <code className="text-indigo-300 font-mono text-xs">&quot;reenie-beanie&quot;</code>, or <code className="text-indigo-300 font-mono text-xs">&quot;cedarville-cursive&quot;</code>), load Google Fonts in your root layout:
+                  To use handwriting script for callouts (<code className="text-indigo-300 font-mono text-xs">&quot;caveat&quot;</code>, <code className="text-indigo-300 font-mono text-xs">&quot;reenie-beanie&quot;</code>, or <code className="text-indigo-300 font-mono text-xs">&quot;kalam&quot;</code>), load Google Fonts in your root layout:
                 </p>
               </div>
 
-              <div className="rounded-xl border border-white/10 bg-black/60 overflow-hidden">
+              <div className={`rounded-xl overflow-hidden ${PLAYGROUND_WELL_CLASS}`}>
                 <div className="flex items-center justify-between px-3.5 py-2 border-b border-white/[0.06] bg-white/[0.02]">
                   <span className="text-[11px] font-mono text-neutral-400">app/layout.tsx</span>
                   <button
@@ -1842,7 +1985,7 @@ export default function RoughlyPage() {
                     )}
                   </button>
                 </div>
-                <div className="p-4 overflow-x-auto present-scroll">
+                <div className="roughly-code p-4 overflow-x-auto present-scroll">
                   {highlightCode(fontsSnippet, "html", true)}
                 </div>
               </div>
@@ -1874,7 +2017,7 @@ export default function RoughlyPage() {
                   <td className="p-3 text-indigo-400">RoughlyType</td>
                   <td className="p-3 text-neutral-500">&quot;underline&quot;</td>
                   <td className="p-3 font-sans text-neutral-400">
-                    &quot;underline&quot; | &quot;circle&quot; | &quot;strike-through&quot; | &quot;cross-off&quot; | &quot;bracket&quot; | &quot;box&quot; | &quot;highlight&quot; | &quot;arrow&quot;
+                    &quot;underline&quot; | &quot;circle&quot; | &quot;strike-through&quot; | &quot;cross-off&quot; | &quot;bracket&quot; | &quot;box&quot; | &quot;highlight&quot; | &quot;arrow&quot; | &quot;handwriting&quot;
                   </td>
                 </tr>
                 <tr>
@@ -1966,7 +2109,31 @@ export default function RoughlyPage() {
                   <td className="p-3 text-indigo-400">ArrowLabelFont</td>
                   <td className="p-3 text-neutral-500">&quot;caveat&quot;</td>
                   <td className="p-3 font-sans text-neutral-400">
-                    Handwriting font family for callout text: &quot;caveat&quot; (default) | &quot;reenie-beanie&quot; | &quot;cedarville-cursive&quot;
+                    Handwriting font family for callout text: &quot;caveat&quot; (default) | &quot;reenie-beanie&quot; | &quot;kalam&quot;
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">font</td>
+                  <td className="p-3 text-indigo-400">HandwritingFont</td>
+                  <td className="p-3 text-neutral-500">&quot;reenie-beanie&quot;</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Font family for handwriting type: &quot;reenie-beanie&quot; (default) | &quot;caveat&quot; | &quot;kalam&quot;
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">fontSize</td>
+                  <td className="p-3 text-indigo-400">number</td>
+                  <td className="p-3 text-neutral-500">40</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Font size in pixels used to generate handwriting glyph paths
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">editable</td>
+                  <td className="p-3 text-indigo-400">boolean</td>
+                  <td className="p-3 text-neutral-500">false</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Enables interactive live-typing mode for handwriting with real-time SVG stroke tracing
                   </td>
                 </tr>
               </tbody>

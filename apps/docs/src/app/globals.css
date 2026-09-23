@@ -26,7 +26,7 @@
   --font-cinzel: "Cinzel", serif;
   --font-poppins: var(--font-poppins, "Poppins", sans-serif);
   --font-eb-garamond: var(--font-eb-garamond), "EB Garamond", serif;
-  --font-inter: var(--font-inter), "Inter", sans-serif;
+  --font-inter: var(--font-inter-loaded), "Inter", sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -42,7 +42,44 @@ body {
 }
 
 .font-inter {
-  font-family: var(--font-inter), 'Inter', sans-serif !important;
+  font-family: var(--font-inter-loaded), 'Inter', sans-serif !important;
+}
+
+.site-bevel-panel {
+  background-color: #151515;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top-color: rgba(255, 255, 255, 0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.35),
+    0 16px 40px rgba(0, 0, 0, 0.32);
+}
+
+.site-recessed-well {
+  background-color: #090909;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.6),
+    0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.site-raised-action {
+  background-color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  color: #000;
+}
+
+.roughly-playground .font-mono {
+  font-family: var(--font-inter-loaded), 'Inter', sans-serif !important;
+}
+
+.roughly-playground code.font-mono {
+  font-family: var(--font-jetbrains-mono), monospace !important;
+}
+
+.roughly-playground .roughly-code .font-mono {
+  font-family: var(--font-jetbrains-mono), monospace !important;
 }
 
 .font-poppins,
@@ -352,8 +389,8 @@ code::-webkit-scrollbar-thumb:hover,
   font-family: 'Reenie Beanie', cursive, sans-serif;
 }
 
-.font-cedarville-cursive {
-  font-family: 'Cedarville Cursive', cursive, sans-serif;
+.font-kalam {
+  font-family: 'Kalam', cursive, sans-serif;
 }
 
 .font-caveat {
@@ -402,4 +439,3 @@ code::-webkit-scrollbar-thumb:hover,
   transform-box: fill-box;
   transform-origin: center;
 }
-

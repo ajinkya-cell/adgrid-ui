@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   Search,
   Command,
@@ -75,49 +75,37 @@ function CommandRow({
   isSelected: boolean;
   onClick: () => void;
 }) {
-  const [isHovered, setIsHovered] = useState(false);
-  const active = isSelected || isHovered;
+  const active = isSelected;
 
   return (
     <div
       onClick={onClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
       style={
         active
           ? {
-              backgroundColor: "rgba(255, 255, 255, 0.10)",
-              boxShadow:
-                "inset 0 1px 0 0 rgba(255, 255, 255, 0.20), inset 0 -1px 0 0 rgba(0, 0, 0, 0.4), 0 0 20px 0 rgba(255, 255, 255, 0.08), 0 4px 12px rgba(0, 0, 0, 0.4)",
+              backgroundColor: "rgba(255, 255, 255, 0.055)",
             }
           : undefined
       }
       className={cn(
-        "relative flex items-center justify-between px-3.5 py-2.5 rounded-xl cursor-pointer select-none font-['DM_Sans',sans-serif] transition-all duration-150 group",
+        "relative flex items-center justify-between px-3.5 py-2.5 rounded-lg cursor-pointer select-none transition-colors duration-150 group",
         active
-          ? "border border-white/20 text-white font-semibold"
-          : "border border-transparent text-neutral-300 hover:text-white"
+          ? "border border-white/[0.08] text-white"
+          : "border border-transparent text-neutral-300 hover:bg-white/[0.025] hover:text-white"
       )}
     >
       {/* Icon, Label & Description */}
       <div className="flex items-center gap-3 min-w-0">
-        <div
-          className={cn(
-            "p-2 rounded-lg transition-colors flex items-center justify-center shrink-0",
-            active
-              ? "bg-white/15 border border-white/30 text-white shadow-[0_0_12px_rgba(255,255,255,0.15)]"
-              : "bg-[#050505] border border-white/10 text-neutral-400 group-hover:text-white"
-          )}
-        >
+        <span className={cn("flex items-center justify-center shrink-0 [&>svg]:h-4 [&>svg]:w-4", active ? "text-neutral-100" : "text-neutral-500 group-hover:text-neutral-300")}>
           {item.icon || <Terminal className="w-4 h-4" />}
-        </div>
+        </span>
 
         <div className="flex flex-col min-w-0">
           <div className="flex items-center gap-2">
             <span
               className={cn(
-                "text-xs tracking-wide truncate font-['DM_Sans',sans-serif]",
-                active ? "text-white font-bold drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]" : "text-neutral-200 font-medium"
+                "text-xs truncate",
+                active ? "text-white font-medium" : "text-neutral-200"
               )}
             >
               {item.label}
@@ -125,7 +113,7 @@ function CommandRow({
             {item.badge && (
               <span
                 className={cn(
-                  "text-[9px] font-mono tracking-wider px-1.5 py-0.5 rounded uppercase font-semibold shrink-0",
+                  "text-[9px] tracking-wider px-1.5 py-0.5 rounded uppercase font-semibold shrink-0",
                   active
                     ? "bg-white/20 text-white border border-white/30"
                     : "bg-white/10 text-neutral-400 border border-white/10"
@@ -138,7 +126,7 @@ function CommandRow({
           {item.description && (
             <span
               className={cn(
-                "text-[10px] truncate font-['DM_Sans',sans-serif]",
+                "text-[10px] truncate",
                 active ? "text-neutral-300" : "text-neutral-500"
               )}
             >
@@ -153,15 +141,15 @@ function CommandRow({
         {item.isExternal || item.url?.startsWith("http") ? (
           <ArrowUpRight
             className={cn(
-              "w-4 h-4 transition-all",
-              active ? "text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]" : "text-neutral-500 group-hover:text-neutral-300"
+              "w-4 h-4 transition-colors",
+              active ? "text-neutral-200" : "text-neutral-600 group-hover:text-neutral-400"
             )}
           />
         ) : (
           <CornerDownLeft
             className={cn(
-              "w-4 h-4 transition-all",
-              active ? "text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]" : "text-neutral-600 group-hover:text-neutral-400"
+              "w-4 h-4 transition-colors",
+              active ? "text-neutral-200" : "text-neutral-600 group-hover:text-neutral-400"
             )}
           />
         )}
@@ -303,6 +291,7 @@ export function CommandPalette({
   inline = false,
   className,
 }: CommandPaletteProps) {
+  const shouldReduceMotion = useReducedMotion();
   const [uncontrolledIsOpen, setUncontrolledIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -409,27 +398,24 @@ export function CommandPalette({
   const paletteContent = (
     <motion.div
       key="skeuo-command-palette"
-      initial={inline ? undefined : { scale: 0.96, opacity: 0, y: -16 }}
+      initial={inline || shouldReduceMotion ? false : { scale: 0.98, opacity: 0, y: -8 }}
       animate={{ scale: 1, opacity: 1, y: 0 }}
-      exit={inline ? undefined : { scale: 0.96, opacity: 0, y: -10 }}
-      transition={{ type: "spring", stiffness: 350, damping: 28 }}
+      exit={inline || shouldReduceMotion ? undefined : { scale: 0.98, opacity: 0, y: -6 }}
+      transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 350, damping: 28 }}
       onClick={(e) => e.stopPropagation()}
       onKeyDown={handleKeyDown}
       style={{
         backgroundColor: "#171717",
         boxShadow:
           "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.45), 0 4px 6px -1px rgba(0, 0, 0, 0.8), 0 2px 4px -1px rgba(0, 0, 0, 0.9), 0 30px 80px rgba(0, 0, 0, 0.75)",
-        fontFamily: "'DM Sans', sans-serif",
+        fontFamily: "Inter, var(--font-inter-loaded, sans-serif)",
       }}
       className={cn(
-        "relative w-full max-w-xl rounded-2xl border-t border-white/[0.22] border-x border-white/[0.02] border-b border-white/10 overflow-hidden p-4 select-none font-['DM_Sans',sans-serif]",
+        "relative w-full max-w-xl rounded-2xl border-t border-white/[0.22] border-x border-white/[0.02] border-b border-white/10 overflow-hidden p-4 select-none",
         inline ? "mx-auto" : "",
         className
       )}
     >
-      {/* Google DM Sans Font Loader */}
-      <style dangerouslySetInnerHTML={{ __html: `@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');` }} />
-
       {/* Header Search Input Well */}
       <div
         style={{
@@ -445,14 +431,14 @@ export function CommandPalette({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder={placeholder}
-          className="w-full bg-transparent text-xs font-medium text-neutral-100 placeholder-neutral-500 font-['DM_Sans',sans-serif] focus:outline-none"
+          className="w-full bg-transparent text-xs font-medium text-neutral-100 placeholder-neutral-500 focus:outline-none"
         />
         <kbd
           style={{
             backgroundColor: "#121214",
             boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 2px 4px rgba(0, 0, 0, 0.6)",
           }}
-          className="px-2 py-0.5 rounded-md border border-white/10 text-[10px] font-mono font-bold text-neutral-400 uppercase shrink-0 select-none"
+          className="px-2 py-0.5 rounded-md border border-white/10 text-[10px] font-bold text-neutral-400 uppercase shrink-0 select-none"
         >
           ESC
         </kbd>
@@ -467,18 +453,18 @@ export function CommandPalette({
         className="mt-3 p-2 rounded-xl border border-white/[0.05] max-h-[360px] overflow-y-auto space-y-3"
       >
         {filteredItems.length === 0 ? (
-          <div className="py-10 text-center space-y-2 font-['DM_Sans',sans-serif]">
+          <div className="py-10 text-center space-y-2">
             <Command className="w-8 h-8 text-neutral-600 mx-auto" />
-            <p className="text-xs text-neutral-500 font-mono uppercase tracking-wider">
+            <p className="text-xs text-neutral-500 uppercase tracking-wider">
               No matching results found
             </p>
           </div>
         ) : (
           Array.from(groupedItems.entries()).map(([category, catItems]) => (
             <div key={category} className="space-y-1">
-              <div className="px-3 pt-1 pb-1 text-[10px] font-mono tracking-widest text-neutral-500 uppercase font-semibold flex items-center justify-between">
+              <div className="px-3 pt-1 pb-1 text-[10px] tracking-widest text-neutral-500 uppercase font-semibold flex items-center justify-between">
                 <span>{category}</span>
-                <span className="text-[9px] text-neutral-600 font-mono">{catItems.length}</span>
+                <span className="text-[9px] text-neutral-600">{catItems.length}</span>
               </div>
               <div className="space-y-1">
                 {catItems.map((item) => {
@@ -500,21 +486,16 @@ export function CommandPalette({
       </div>
 
       {/* Footer Instructions Bar */}
-      <div className="flex items-center justify-between pt-3 px-1 text-[11px] font-mono text-neutral-500 border-t border-white/5 mt-3">
+      <div className="flex items-center gap-3 pt-3 px-1 text-[11px] text-neutral-500 border-t border-white/5 mt-3">
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1.5">
-            <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[9px] text-neutral-400 font-mono font-bold">↑↓</kbd>
+            <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[9px] text-neutral-400 font-bold">↑↓</kbd>
             Navigate
           </span>
           <span className="flex items-center gap-1.5">
-            <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[9px] text-neutral-400 font-mono font-bold">↵</kbd>
+            <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[9px] text-neutral-400 font-bold">↵</kbd>
             Select
           </span>
-        </div>
-
-        <div className="flex items-center gap-1.5 text-[10px] text-neutral-400 uppercase tracking-widest font-mono">
-          <Command className="w-3 h-3 text-neutral-400" />
-          AdGrid Vault
         </div>
       </div>
     </motion.div>
@@ -531,9 +512,9 @@ export function CommandPalette({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
           onClick={handleClose}
-          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 cursor-default select-none font-['DM_Sans',sans-serif]"
+          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 cursor-default select-none"
         >
           {paletteContent}
         </motion.div>

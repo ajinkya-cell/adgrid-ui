@@ -231,7 +231,7 @@ export function SidebarTrigger() {
               variant="default"
               style="pill"
               onClick={handleCodeClick}
-              className={`h-11 px-5 rounded-full flex items-center gap-2.5 cursor-pointer select-none transition-all ${
+              className={`h-11 px-5 scale-98 rounded-full flex items-center gap-2.5 cursor-pointer select-none transition-all ${
                 isCodeActive
                   ? "border-violet-500/50 text-white shadow-[0_0_24px_rgba(139,92,246,0.35)]"
                   : ""

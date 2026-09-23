@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "../lib/utils";
-import { AJINKYA_CELL_REAL_DATA } from "./ajinkyaCellData";
 
 export type GithubHeatmapPreset =
   | "emerald"
@@ -113,21 +112,15 @@ const MONTH_NAMES = [
 
 const DAY_LABELS = ["Mon", "", "Wed", "", "Fri", ""];
 
-// Filter rolling 365 days ending today
-function getRolling365Days(): ContributionDay[] {
-  const combined = [
-    ...(AJINKYA_CELL_REAL_DATA[2025] || []),
-    ...(AJINKYA_CELL_REAL_DATA[2026] || []),
-  ];
+function isContributionLevel(level: unknown): level is ContributionDay["level"] {
+  return typeof level === "number" && Number.isInteger(level) && level >= 0 && level <= 4;
+}
 
-  const today = new Date();
-  const todayStr = today.toISOString().split("T")[0];
-
-  const startDate = new Date(today);
-  startDate.setDate(startDate.getDate() - 364);
-  const startStr = startDate.toISOString().split("T")[0];
-
-  return combined.filter((d) => d.date >= startStr && d.date <= todayStr);
+function getContributionLevel(count: number): ContributionDay["level"] {
+  if (count > 12) return 4;
+  if (count > 7) return 3;
+  if (count > 3) return 2;
+  return count > 0 ? 1 : 0;
 }
 
 export function GithubHeatmap({
@@ -147,6 +140,7 @@ export function GithubHeatmap({
   const [selectedYear, setSelectedYear] = useState<number | "last-year">(defaultYear);
   const [contributions, setContributions] = useState<ContributionDay[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [hoveredDay, setHoveredDay] = useState<{
     day: ContributionDay;
     x: number;
@@ -158,55 +152,75 @@ export function GithubHeatmap({
   useEffect(() => {
     if (customData && customData.length > 0) {
       setContributions(customData);
+      setLoadError(null);
       setLoading(false);
       return;
     }
 
     let isMounted = true;
     setLoading(true);
+    setLoadError(null);
+    setContributions([]);
 
     async function fetchContributions() {
       try {
-        const queryParam = selectedYear === "last-year" ? "" : `?y=${selectedYear}&flatten=true`;
-        const res = await fetch(
-          `https://github-contributions-api.deno.dev/${username}${queryParam}`
+        const requestUrl = new URL(
+          `https://github-contributions-api.jogruber.de/v4/${encodeURIComponent(username)}`
         );
-        if (res.ok) {
-          const data = await res.json();
-          if (isMounted && Array.isArray(data) && data.length > 0) {
-            const formatted: ContributionDay[] = data.map((item: any) => ({
-              date: item.date,
-              count: item.count ?? 0,
-              level:
-                item.level ??
-                (item.count > 12
-                  ? 4
-                  : item.count > 7
-                  ? 3
-                  : item.count > 3
-                  ? 2
-                  : item.count > 0
-                  ? 1
-                  : 0),
-            }));
-            setContributions(formatted);
-            setLoading(false);
-            return;
-          }
-        }
-      } catch (err) {
-        // Fallthrough to authentic dataset
-      }
+        requestUrl.searchParams.set(
+          "y",
+          selectedYear === "last-year" ? "last" : String(selectedYear)
+        );
 
-      if (isMounted) {
-        if (selectedYear === "last-year") {
-          setContributions(getRolling365Days());
-        } else if (typeof selectedYear === "number" && AJINKYA_CELL_REAL_DATA[selectedYear]) {
-          setContributions(AJINKYA_CELL_REAL_DATA[selectedYear]);
-        } else {
-          setContributions(getRolling365Days());
+        const response = await fetch(requestUrl);
+        if (!response.ok) {
+          throw new Error(`Contribution request failed (${response.status})`);
         }
-        setLoading(false);
+
+        const payload: unknown = await response.json();
+        const data =
+          payload &&
+          typeof payload === "object" &&
+          "contributions" in payload &&
+          Array.isArray(payload.contributions)
+            ? payload.contributions
+            : [];
+        if (data.length === 0) {
+          throw new Error("Contribution response did not contain any days");
+        }
+
+        const formatted = data.flatMap((item): ContributionDay[] => {
+          if (
+            !item ||
+            typeof item.date !== "string" ||
+            typeof item.count !== "number" ||
+            !Number.isFinite(item.count)
+          ) {
+            return [];
+          }
+
+          const level = isContributionLevel(item.level)
+            ? item.level
+            : getContributionLevel(item.count);
+          return [{
+            date: item.date,
+            count: item.count,
+            level,
+          }];
+        });
+
+        if (formatted.length === 0) {
+          throw new Error("Contribution response contained no valid days");
+        }
+
+        if (isMounted) setContributions(formatted);
+      } catch {
+        if (isMounted) {
+          setContributions([]);
+          setLoadError("Live GitHub contributions are currently unavailable.");
+        }
+      } finally {
+        if (isMounted) setLoading(false);
       }
     }
 
@@ -407,7 +421,7 @@ export function GithubHeatmap({
       </div>
 
       {/* 3D Beveled Stats Badges Header */}
-      {showStats && (
+      {showStats && !loadError && (
         <div className="flex items-center gap-3 pt-4 pb-2 overflow-x-auto relative z-10">
           {/* Total Contributions */}
           <div
@@ -461,6 +475,13 @@ export function GithubHeatmap({
         {loading ? (
           <div className="h-32 w-full flex items-center justify-center space-x-2 animate-pulse text-neutral-500 text-sm">
             <span>Loading contribution matrix...</span>
+          </div>
+        ) : loadError ? (
+          <div
+            className="flex h-32 w-full items-center justify-center text-center text-sm text-neutral-400"
+            role="status"
+          >
+            {loadError}
           </div>
         ) : (
           <div className="w-full flex flex-col justify-center">

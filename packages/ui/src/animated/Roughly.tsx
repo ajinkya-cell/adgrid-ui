@@ -19,6 +19,11 @@ import {
   type ArrowheadStyle,
   type ArrowLabelFont,
 } from "./roughly/RoughArrow";
+import {
+  RoughHandwriting,
+  type HandwritingFont,
+  type RoughHandwritingProps,
+} from "./roughly/RoughHandwriting";
 
 export type RoughlyType =
   | "underline"
@@ -28,11 +33,13 @@ export type RoughlyType =
   | "bracket"
   | "box"
   | "highlight"
-  | "arrow";
+  | "arrow"
+  | "handwriting";
 
 export type { BracketSide, BracketStyle } from "./roughly/RoughBracket";
 export type { BoxVariant } from "./roughly/RoughBox";
 export type { ArrowPlacement, ArrowVariant, ArrowheadStyle, ArrowLabelFont };
+export type { HandwritingFont, RoughHandwritingProps };
 
 export type UnderlineVariant = "single" | "double" | "wavy";
 export type { StrikeVariant } from "./roughly/RoughStrike";
@@ -66,10 +73,30 @@ export interface RoughlyProps {
   arrowhead?: ArrowheadStyle;
   /** Callout label for arrow */
   arrowLabel?: React.ReactNode;
-  /** Callout label font family ('caveat' | 'reenie-beanie' | 'cedarville-cursive') */
+  /** Callout label font family ('caveat' | 'reenie-beanie' | 'kalam') */
   arrowLabelFont?: ArrowLabelFont;
   /** Arc curvature intensity factor for curved arrows (default: 0.38) */
   arrowCurvature?: number;
+  /** Handwriting font family: 'reenie-beanie' | 'caveat' | 'kalam' (default: "reenie-beanie") */
+  font?: HandwritingFont;
+  /** Optional custom URL to .ttf font file for handwriting */
+  fontUrl?: string;
+  /** Enable interactive live-typing handwriting input mode (default: false) */
+  editable?: boolean;
+  /** Value for handwriting in controlled mode */
+  value?: string;
+  /** Default value for handwriting in uncontrolled mode */
+  defaultValue?: string;
+  /** Placeholder for handwriting in editable mode */
+  placeholder?: string;
+  /** Change callback for handwriting in editable mode */
+  onChange?: (text: string) => void;
+  /** Font size in px for handwriting glyph rendering (default: 40) */
+  fontSize?: number;
+  /** Maximum words allowed for handwriting (default: 6) */
+  maxWords?: number;
+  /** Maximum characters allowed for handwriting (default: 50) */
+  maxLength?: number;
   /** Custom wrapper class */
   className?: string;
   /** Custom text class */
@@ -86,6 +113,7 @@ const DEFAULT_COLORS: Record<RoughlyType, string> = {
   box: "#10B981", // Emerald Green
   highlight: "#4338CA", // Deep Royal Indigo
   arrow: "#F59E0B", // Cyber Amber
+  handwriting: "#6366F1", // Indigo
 };
 
 export function Roughly({
@@ -105,6 +133,16 @@ export function Roughly({
   arrowLabel,
   arrowLabelFont,
   arrowCurvature,
+  font,
+  fontUrl,
+  editable,
+  value,
+  defaultValue,
+  placeholder,
+  onChange,
+  fontSize,
+  maxWords,
+  maxLength,
   className = "",
   textClassName = "",
 }: RoughlyProps) {
@@ -240,6 +278,31 @@ export function Roughly({
     );
   }
 
+  if (type === "handwriting") {
+    return (
+      <RoughHandwriting
+        font={font}
+        fontUrl={fontUrl}
+        color={color || DEFAULT_COLORS.handwriting}
+        strokeWidth={strokeWidth}
+        animate={animate}
+        animationDuration={animationDuration}
+        fontSize={fontSize}
+        maxWords={maxWords}
+        maxLength={maxLength}
+        editable={editable}
+        value={value}
+        defaultValue={defaultValue}
+        placeholder={placeholder}
+        onChange={onChange}
+        className={className}
+        textClassName={textClassName}
+      >
+        {children}
+      </RoughHandwriting>
+    );
+  }
+
   return (
     <RoughUnderline
       variant="single"
@@ -304,4 +367,8 @@ Roughly.Arrow = function RoughlyArrow(
   return <RoughArrow {...props} />;
 };
 
-
+Roughly.Handwriting = function RoughlyHandwriting(
+  props: React.ComponentProps<typeof RoughHandwriting>
+) {
+  return <RoughHandwriting {...props} />;
+};

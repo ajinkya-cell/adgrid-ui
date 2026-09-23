@@ -2,6 +2,7 @@
 
 import { useMemo, useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import {
   Search,
   Command,
@@ -35,7 +36,14 @@ const XIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
   </svg>
 );
 
-export function CommandPalette({ entry }: { entry: RegistryEntry }) {
+export function CommandPalette({
+  entry,
+  mode = "presentation",
+}: {
+  entry: RegistryEntry;
+  mode?: "presentation" | "site";
+}) {
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const open = usePresentationStore((state) => state.commandPaletteOpen);
@@ -85,7 +93,15 @@ export function CommandPalette({ entry }: { entry: RegistryEntry }) {
     },
   ];
 
-  const actionItems = [
+  const actionItems = mode === "site" ? [
+    {
+      id: "act-issues",
+      name: "Report a bug",
+      category: "Issues",
+      description: "Open the bug report form",
+      action: () => router.push("/issues"),
+    },
+  ] : [
     {
       id: "act-exit",
       name: "Exit Presentation Mode",
@@ -159,7 +175,7 @@ export function CommandPalette({ entry }: { entry: RegistryEntry }) {
 
     const tokens = raw.split(/\s+/);
     return actionItems.filter((item) => {
-      const searchTarget = `${item.name} ${item.description}`.toLowerCase();
+      const searchTarget = `${item.name} ${item.category} ${item.description}`.toLowerCase();
       return tokens.every((token) => searchTarget.includes(token));
     });
   }, [query]);
@@ -252,7 +268,7 @@ export function CommandPalette({ entry }: { entry: RegistryEntry }) {
                     executeItem(allFilteredList[selectedIndex]);
                   }
                 }}
-                placeholder="Search components, actions, social links..."
+                placeholder={mode === "site" ? "Search components, socials, and issues..." : "Search components, actions, social links..."}
                 className="w-full bg-transparent text-xs font-medium text-neutral-100 placeholder-neutral-500 font-['DM_Sans',sans-serif] focus:outline-none"
               />
               <kbd
@@ -348,8 +364,8 @@ export function CommandPalette({ entry }: { entry: RegistryEntry }) {
                   {filteredActions.length > 0 && (
                     <div className="space-y-1">
                       <div className="px-3 pt-1 pb-1 text-[10px] font-mono tracking-widest text-neutral-500 uppercase font-semibold flex items-center justify-between">
-                        <span>Quick Actions</span>
-                        <span className="text-[9px] text-neutral-600 font-mono">{filteredActions.length} ACTIONS</span>
+                        <span>{mode === "site" ? "Issues" : "Quick Actions"}</span>
+                        <span className="text-[9px] text-neutral-600 font-mono">{mode === "site" ? `${filteredActions.length} REPORTS` : `${filteredActions.length} ACTIONS`}</span>
                       </div>
                       {filteredActions.map((item) => {
                         const globalIdx = allFilteredList.findIndex(
@@ -467,7 +483,7 @@ export function CommandPalette({ entry }: { entry: RegistryEntry }) {
                 </span>
                 <span className="flex items-center gap-1.5">
                   <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[9px] text-neutral-400 font-mono font-bold">↵</kbd>
-                  Open Component
+                  {mode === "site" ? "Open selected item" : "Open Component"}
                 </span>
               </div>
 

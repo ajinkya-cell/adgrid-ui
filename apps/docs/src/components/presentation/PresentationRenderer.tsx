@@ -2,7 +2,8 @@
 
 // Note: CoverflowCarousel is imported from "@adgrid-ui/ui" in the imports section below and rendered under the "coverflow-carousel" case in the switch-statement inside the PresentationRenderer component.
 
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
+import { AnimatePresence } from "framer-motion";
 
 import {
   AnisotropicKnob,
@@ -61,6 +62,7 @@ import {
   OTPInput,
   Tooltip,
   Timeline,
+  Toast,
   Globe,
   BentoGrid,
   BentoGridItem,
@@ -656,7 +658,11 @@ export function PresentationRenderer({
     case "github-heatmap": {
       return (
         <div className="flex items-center justify-center w-full min-h-[450px] p-4 md:p-8">
-          <GithubHeatmap className="w-full max-w-4xl" username="ajinkya-cell" {...(liveProps as any)} />
+          <GithubHeatmap
+            {...(liveProps as any)}
+            className="w-full max-w-4xl"
+            username="ajinkya-cell"
+          />
         </div>
       );
     }
@@ -856,6 +862,8 @@ export function PresentationRenderer({
           <Meter value={45} {...liveProps} />
         </div>
       );
+    case "toast":
+      return <ToastDemo />;
     case "bento-grid":
       return <BentoGridDemo liveProps={liveProps} />;
     default:
@@ -919,6 +927,88 @@ function BentoGridDemo({ liveProps }: { liveProps?: Record<string, unknown> }) {
           icon="nodejs"
         />
       </BentoGrid>
+    </div>
+  );
+}
+
+function ToastDemo() {
+  const [toasts, setToasts] = useState<number[]>([]);
+  const [isHovered, setIsHovered] = useState(false);
+  const [hasFocus, setHasFocus] = useState(false);
+  const nextToastId = useRef(0);
+  const activeToasts = useRef<number[]>([]);
+  const toastTimers = useRef(new Map<number, ReturnType<typeof setTimeout>>());
+  const isExpanded = isHovered || hasFocus;
+
+  const clearToastTimer = (id: number) => {
+    const timer = toastTimers.current.get(id);
+    if (timer) clearTimeout(timer);
+    toastTimers.current.delete(id);
+  };
+
+  const dismissToast = (id: number) => {
+    activeToasts.current = activeToasts.current.filter((toastId) => toastId !== id);
+    setToasts(activeToasts.current);
+    clearToastTimer(id);
+  };
+
+  const showToast = () => {
+    const id = nextToastId.current++;
+    const nextToasts = [...activeToasts.current, id];
+    const droppedToast = nextToasts.length > 3 ? nextToasts.shift() : undefined;
+
+    activeToasts.current = nextToasts;
+    if (droppedToast !== undefined) clearToastTimer(droppedToast);
+    setToasts(nextToasts);
+    toastTimers.current.set(
+      id,
+      setTimeout(() => dismissToast(id), 5000)
+    );
+  };
+
+  useEffect(
+    () => () => {
+      toastTimers.current.forEach((timer) => clearTimeout(timer));
+      toastTimers.current.clear();
+    },
+    []
+  );
+
+  return (
+    <div className="relative flex min-h-dvh w-full items-center justify-center">
+      <button
+        type="button"
+        onClick={showToast}
+        className="relative overflow-hidden rounded-xl border border-white/10 bg-[#171717] px-6 py-3.5 text-sm font-medium tracking-wide text-white shadow-[inset_0_1.5px_0_rgba(255,255,255,0.08),inset_0_-1.5px_0_rgba(0,0,0,0.4),0_8px_22px_rgba(0,0,0,0.45)] transition-[background-color,transform,border-color] duration-150 hover:border-white/20 hover:bg-[#1b1b1b] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-4 focus-visible:ring-offset-[#111] motion-reduce:transition-none motion-reduce:transform-none"
+      >
+        Press to get toasts
+      </button>
+
+      <div
+        className="pointer-events-none absolute bottom-0 left-0 mx-2 right-0 h-[190px] sm:left-auto sm:right-0 sm:h-[300px] sm:w-[360px]"
+        style={{ perspective: "1000px" }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onFocusCapture={() => setHasFocus(true)}
+        onBlurCapture={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+            setHasFocus(false);
+          }
+        }}
+      >
+        <AnimatePresence initial={false}>
+          {toasts.map((id, index) => (
+            <Toast
+              key={id}
+              title="Toast created"
+              description="This is the description of the toast."
+              stackDepth={toasts.length - index - 1}
+              isExpanded={isExpanded}
+              onDismiss={() => dismissToast(id)}
+            />
+          ))}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }

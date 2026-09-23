@@ -205,6 +205,10 @@ export type { BentoGridProps, BentoGridItemProps, BentoIconType } from "./animat
 export { Meter } from "./animated/Meter";
 export type { MeterProps } from "./animated/Meter";
 
+// Tactile animated notification toast
+export { Toast } from "./animated/Toast";
+export type { ToastProps } from "./animated/Toast";
+
 // Roughly - Hand-Drawn Text Annotation Suite
 export { Roughly } from "./animated/Roughly";
 export type {
@@ -236,4 +240,8 @@ export type {
   ArrowheadStyle,
   ArrowLabelFont,
 } from "./animated/roughly/RoughArrow";
-
+export { RoughHandwriting } from "./animated/roughly/RoughHandwriting";
+export type {
+  RoughHandwritingProps,
+  HandwritingFont,
+} from "./animated/roughly/RoughHandwriting";

@@ -25,7 +25,6 @@ export interface BentoGridItemProps {
   className?: string;
   icon?: BentoIconType;
   variant?: BentoGridVariant;
-  iconBg?: string;
   children?: React.ReactNode;
 }
 
@@ -49,7 +48,6 @@ export function BentoGridItem({
   className,
   icon = "nextjs",
   variant = "beveled",
-  iconBg,
   children,
 }: BentoGridItemProps) {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -62,118 +60,65 @@ export function BentoGridItem({
     });
   };
 
-  // ─── Variant 2: Radiant Cursor Edge Glow (Minimal, Edge Beam, Spotlight) ───
-  if (variant === "radiant") {
-    return (
-      <div
-        onMouseMove={handleMouseMove}
-        className={cn(
-          "group relative overflow-hidden rounded-xl bg-[#0d0d0d] p-5 flex flex-col justify-between select-none border border-white/10",
-          "transition-all duration-300 hover:-translate-y-1 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.85)] hover:shadow-[0_20px_45px_-10px_rgba(0,0,0,0.95)]",
-          className
-        )}
-        style={{ fontFamily: '"DM Sans", sans-serif' }}
-      >
-        {/* Dynamic Edge Radiance Overlay - Light Beam Tracks Cursor on Card Border */}
-        <div
-          className="pointer-events-none absolute -inset-px rounded-xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-          style={{
-            background: `radial-gradient(220px circle at ${mousePos.x}px ${mousePos.y}px, rgba(167, 139, 250, 0.75), transparent 100%)`,
-            WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-            WebkitMaskComposite: "xor",
-            maskComposite: "exclude",
-            padding: "1px",
-          }}
-        />
-
-        {/* Interior Cursor Spotlight Aura */}
-        <div
-          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-          style={{
-            background: `radial-gradient(450px circle at ${mousePos.x}px ${mousePos.y}px, rgba(167, 139, 250, 0.08), transparent 80%)`,
-          }}
-        />
-
-        {/* Top Header: Inset Socket & Brand Icon */}
-        <div className="flex items-center justify-between mb-5 z-10">
-          <div
-            className={cn(
-              "relative flex items-center justify-center w-11 h-11 rounded-lg bg-[#141414] border border-white/10 shadow-inner transition-all duration-300 group-hover:scale-105 group-hover:border-purple-400/40",
-              iconBg
-            )}
-          >
-            <BentoBrandIcon icon={icon} />
-          </div>
-        </div>
-
-        {/* Optional Custom Preview Slot */}
-        {children && <div className="mb-4 z-10">{children}</div>}
-
-        {/* Minimal Copy Section in DM Sans */}
-        <div className="z-10">
-          <h3
-            className="text-lg font-bold text-white mb-1.5 tracking-tight transition-colors duration-200 group-hover:text-purple-200"
-            style={{ fontFamily: '"DM Sans", sans-serif' }}
-          >
-            {title}
-          </h3>
-          <p
-            className="text-xs text-neutral-400 leading-relaxed font-normal"
-            style={{ fontFamily: '"DM Sans", sans-serif' }}
-          >
-            {description}
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  // ─── Variant 1: 3D Skeuomorphic Bevel ───
   return (
     <div
+      onMouseMove={variant === "beveled" ? undefined : handleMouseMove}
       className={cn(
-        "group relative overflow-hidden rounded-xl bg-[#161616] p-5 flex flex-col justify-between select-none",
-        "transition-all duration-300 hover:-translate-y-1",
-        "border-t border-t-white/20 border-x border-x-white/5 border-b border-b-black/80",
-        "shadow-[inset_0_1.5px_0_0_rgba(255,255,255,0.08),inset_0_-1.5px_0_0_rgba(0,0,0,0.45),0_4px_6px_-1px_rgba(0,0,0,0.8),0_15px_35px_rgba(0,0,0,0.65)]",
-        "hover:shadow-[inset_0_1.5px_0_0_rgba(255,255,255,0.22),0_20px_45px_rgba(0,0,0,0.85)]",
+        "group relative z-10 flex flex-col justify-between overflow-hidden rounded-xl p-5 select-none motion-reduce:transition-none motion-reduce:transform-none",
+        variant === "beveled" &&
+          "bg-[#161616] transition-transform duration-300 hover:-translate-y-1 border-t border-t-white/20 border-x border-x-white/5 border-b border-b-black/80 shadow-[inset_0_1.5px_0_0_rgba(255,255,255,0.08),inset_0_-1.5px_0_0_rgba(0,0,0,0.45),0_4px_6px_-1px_rgba(0,0,0,0.8),0_15px_35px_rgba(0,0,0,0.65)]",
+        variant === "radiant" &&
+          "border border-white/10 bg-[#0d0d0d] shadow-[0_10px_30px_-10px_rgba(0,0,0,0.85)] transition-transform duration-300 hover:-translate-y-1",
         className
       )}
-      style={{ fontFamily: '"DM Sans", sans-serif' }}
+      style={{ fontFamily: "var(--font-inter-loaded, Inter), Inter, sans-serif" }}
     >
-      {/* Top Header: Inset Socket Well & Colorful Brand Icon (No Dot) */}
-      <div className="flex items-center justify-between mb-5 z-10">
-        <div
-          className={cn(
-            "relative flex items-center justify-center w-11 h-11 rounded-lg bg-[#080808] border border-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.85)] transition-all duration-300 group-hover:scale-105",
-            iconBg
-          )}
-        >
-          <BentoBrandIcon icon={icon} />
-        </div>
-      </div>
+      {variant === "radiant" && (
+        <>
+          <div
+            className="pointer-events-none absolute -inset-px rounded-xl opacity-0 transition-opacity duration-300 group-hover:opacity-100 motion-reduce:transition-none"
+            style={{
+              background: `radial-gradient(220px circle at ${mousePos.x}px ${mousePos.y}px, rgba(167, 139, 250, 0.75), transparent 100%)`,
+              WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+              WebkitMaskComposite: "xor",
+              maskComposite: "exclude",
+              padding: "1px",
+            }}
+          />
+          <div
+            className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 motion-reduce:transition-none"
+            style={{
+              background: `radial-gradient(450px circle at ${mousePos.x}px ${mousePos.y}px, rgba(167, 139, 250, 0.08), transparent 80%)`,
+            }}
+          />
+        </>
+      )}
+
+      <header className="relative z-10 mb-5 flex min-h-6 items-center">
+        <BentoBrandIcon icon={icon} />
+      </header>
 
       {/* Optional Custom Preview Slot */}
-      {children && <div className="mb-4 z-10">{children}</div>}
+      {children && <div className="relative z-10 mb-4">{children}</div>}
 
-      {/* Minimal Copy Section: Title & Description explicitly in DM Sans */}
-      <div className="z-10">
+      <div className="relative z-10">
         <h3
-          className="text-lg font-bold text-white mb-1.5 tracking-tight transition-colors duration-200 group-hover:text-white"
-          style={{ fontFamily: '"DM Sans", sans-serif' }}
+          className={cn(
+            "mb-1.5 text-lg font-bold tracking-tight text-white transition-colors duration-200",
+            variant === "radiant" && "group-hover:text-purple-200",
+            "motion-reduce:transition-none"
+          )}
         >
           {title}
         </h3>
-        <p
-          className="text-xs text-neutral-400 leading-relaxed font-normal"
-          style={{ fontFamily: '"DM Sans", sans-serif' }}
-        >
+        <p className="text-xs font-normal leading-relaxed text-neutral-400">
           {description}
         </p>
       </div>
 
-      {/* Subtle Outer Bevel Glow on Hover */}
-      <div className="absolute inset-0 rounded-xl border border-transparent group-hover:border-white/15 transition-colors duration-300 pointer-events-none" />
+      {variant === "beveled" && (
+        <div className="pointer-events-none absolute inset-0 rounded-xl border border-transparent transition-colors duration-300 group-hover:border-white/15 motion-reduce:transition-none" />
+      )}
     </div>
   );
 }
@@ -192,31 +137,31 @@ import {
   GithubOriginal,
 } from "devicons-react";
 
-// ─── Vibrant Official Colorful Brand & Framework SVG Icons ───
+// Official brand and framework SVG icons.
 function BentoBrandIcon({ icon }: { icon: BentoIconType }) {
   switch (icon) {
     case "nextjs":
-      return <NextjsOriginal size={24} className="transition-transform duration-300 group-hover:scale-110" />;
+      return <NextjsOriginal size={24} className="transition-transform duration-300 group-hover:scale-110 motion-reduce:transform-none motion-reduce:transition-none" />;
     case "github":
-      return <GithubOriginal size={24} className="transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6" />;
+      return <GithubOriginal size={24} className="transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6 motion-reduce:transform-none motion-reduce:transition-none" />;
     case "react":
-      return <ReactOriginal size={24} className="transition-transform duration-700 ease-out group-hover:rotate-180" />;
+      return <ReactOriginal size={24} className="transition-transform duration-700 ease-out group-hover:rotate-180 motion-reduce:transform-none motion-reduce:transition-none" />;
     case "typescript":
-      return <TypescriptOriginal size={24} className="transition-transform duration-300 group-hover:scale-110" />;
+      return <TypescriptOriginal size={24} className="transition-transform duration-300 group-hover:scale-110 motion-reduce:transform-none motion-reduce:transition-none" />;
     case "tailwind":
-      return <TailwindcssOriginal size={24} className="transition-transform duration-300 group-hover:scale-110" />;
+      return <TailwindcssOriginal size={24} className="transition-transform duration-300 group-hover:scale-110 motion-reduce:transform-none motion-reduce:transition-none" />;
     case "redis":
-      return <RedisOriginal size={24} className="transition-transform duration-300 group-hover:scale-110" />;
+      return <RedisOriginal size={24} className="transition-transform duration-300 group-hover:scale-110 motion-reduce:transform-none motion-reduce:transition-none" />;
     case "postgres":
-      return <PostgresqlOriginal size={24} className="transition-transform duration-300 group-hover:scale-110" />;
+      return <PostgresqlOriginal size={24} className="transition-transform duration-300 group-hover:scale-110 motion-reduce:transform-none motion-reduce:transition-none" />;
     case "graphql":
-      return <GraphqlPlain size={24} className="transition-transform duration-500 group-hover:scale-110 group-hover:rotate-45" />;
+      return <GraphqlPlain size={24} className="transition-transform duration-500 group-hover:scale-110 group-hover:rotate-45 motion-reduce:transform-none motion-reduce:transition-none" />;
     case "nodejs":
-      return <NodejsOriginal size={24} className="transition-transform duration-300 group-hover:scale-110" />;
+      return <NodejsOriginal size={24} className="transition-transform duration-300 group-hover:scale-110 motion-reduce:transform-none motion-reduce:transition-none" />;
     case "python":
-      return <PythonOriginal size={24} className="transition-transform duration-300 group-hover:scale-110" />;
+      return <PythonOriginal size={24} className="transition-transform duration-300 group-hover:scale-110 motion-reduce:transform-none motion-reduce:transition-none" />;
     case "docker":
     default:
-      return <DockerOriginal size={24} className="transition-transform duration-300 group-hover:scale-110" />;
+      return <DockerOriginal size={24} className="transition-transform duration-300 group-hover:scale-110 motion-reduce:transform-none motion-reduce:transition-none" />;
   }
 }

@@ -1042,7 +1042,7 @@
       "name": "bento-grid",
       "type": "registry:ui",
       "title": "Bento Grid",
-      "description": "3D Skeuomorphic Bento Grid featuring precision-machined bevel edges, DM Sans typography, minimal title and description layout, and interactive SVG hover logo animations.",
+      "description": "A dark Bento Grid with Inter typography, unboxed brand icons, and beveled, radiant, or subtle cursor-following edge-light variants.",
       "dependencies": [
         "framer-motion"
       ],
@@ -1064,6 +1064,21 @@
       "files": [
         {
           "path": "components/ui/Meter.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "toast",
+      "type": "registry:ui",
+      "title": "Toast",
+      "description": "A tactile beveled notification toast with a red dismiss control and reduced-motion-aware entrance and exit animation.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/Toast.tsx",
           "type": "registry:ui"
         }
       ]

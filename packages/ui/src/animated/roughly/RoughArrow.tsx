@@ -18,7 +18,7 @@ export type ArrowVariant = "curved" | "straight" | "s-curve";
 
 export type ArrowheadStyle = "open" | "filled";
 
-export type ArrowLabelFont = "caveat" | "reenie-beanie" | "cedarville-cursive";
+export type ArrowLabelFont = "caveat" | "reenie-beanie" | "kalam";
 
 export interface RoughArrowProps {
   /** Target element or text to point to (optional; if omitted, renders standalone) */
@@ -41,7 +41,7 @@ export interface RoughArrowProps {
   bowing?: number;
   /** Callout label text placed near the tail of the arrow */
   label?: React.ReactNode;
-  /** Callout label font family: 'caveat' | 'reenie-beanie' | 'cedarville-cursive' (default: "caveat") */
+  /** Callout label font family: 'caveat' | 'reenie-beanie' | 'kalam' (default: "caveat") */
   labelFont?: ArrowLabelFont;
   /** Distance in pixels between arrow tail origin and target (default: 60) */
   distance?: number;
@@ -76,7 +76,7 @@ interface Point {
 const labelFontClassMap: Record<ArrowLabelFont, string> = {
   caveat: "font-[family-name:var(--font-caveat),cursive] text-lg",
   "reenie-beanie": "font-[family-name:'Reenie_Beanie',cursive] text-2xl font-normal tracking-wide",
-  "cedarville-cursive": "font-[family-name:'Cedarville_Cursive',cursive] text-lg font-normal",
+  kalam: "font-[family-name:'Kalam',cursive] text-lg font-normal",
 };
 
 export function RoughArrow({
