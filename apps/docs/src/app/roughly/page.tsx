@@ -369,6 +369,8 @@ export default function RoughlyPage() {
   const [arrowIterations, setArrowIterations] = useState<number>(2);
   const [arrowLabel, setArrowLabel] = useState<string>("Instant deploy ⚡");
   const [arrowLabelFont, setArrowLabelFont] = useState<ArrowLabelFont>("caveat");
+  const [arrowLabelFontSize, setArrowLabelFontSize] = useState<number>(24);
+  const [arrowLabelFontWeight, setArrowLabelFontWeight] = useState<number>(450);
   const [arrowDistance, setArrowDistance] = useState<number>(65);
   const [arrowOffset, setArrowOffset] = useState<number>(8);
   const [arrowCurvature, setArrowCurvature] = useState<number>(0.38);
@@ -537,6 +539,8 @@ export default function RoughlyPage() {
       if (arrowFlip) propsList.push(`flipCurve={true}`);
       if (arrowLabel) propsList.push(`label="${arrowLabel}"`);
       if (arrowLabelFont !== "caveat") propsList.push(`labelFont="${arrowLabelFont}"`);
+      if (arrowLabelFontSize !== 24) propsList.push(`labelFontSize={${arrowLabelFontSize}}`);
+      if (arrowLabelFontWeight !== 450) propsList.push(`labelFontWeight={${arrowLabelFontWeight}}`);
 
       const propsString = propsList.length > 0 ? ` ${propsList.join(" ")}` : "";
       return `<RoughArrow${propsString}>\n  ${text}\n</RoughArrow>`;
@@ -1178,6 +1182,46 @@ export default function RoughlyPage() {
                     </div>
                   </div>
 
+                  {/* Callout Font Size Slider */}
+                  <div className="space-y-1.5 pt-1">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                        Callout Font Size
+                      </label>
+                      <span className="text-[11px] text-neutral-500 font-mono">
+                        {arrowLabelFontSize}px
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min={14}
+                      max={48}
+                      step={1}
+                      value={arrowLabelFontSize}
+                      onChange={(e) => setArrowLabelFontSize(Number(e.target.value))}
+                      className="w-full accent-amber-500 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer"
+                      aria-label="Callout font size"
+                    />
+                  </div>
+
+                  {/* Callout Font Thickness */}
+                  <div className="space-y-1.5 pt-1">
+                    <div className="flex justify-between items-center text-[11px] font-mono text-neutral-400">
+                      <span>Font Thickness</span>
+                      <span className="text-white font-medium">{arrowLabelFontWeight}</span>
+                    </div>
+                    <input
+                      type="range"
+                      min={300}
+                      max={650}
+                      step={25}
+                      value={arrowLabelFontWeight}
+                      onChange={(e) => setArrowLabelFontWeight(Number(e.target.value))}
+                      className="w-full accent-amber-500 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer"
+                      aria-label="Callout font thickness"
+                    />
+                  </div>
+
                   {/* Placement Grid */}
                   <div className="space-y-1.5">
                     <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
@@ -1622,7 +1666,7 @@ export default function RoughlyPage() {
                   ) : selectedType === "arrow" ? (
                     <div className="py-16 px-10 flex items-center justify-center">
                       <RoughArrow
-                        key={`arrow-${replayKey}-${arrowPlacement}-${arrowVariant}-${arrowheadStyle}-${arrowIterations}-${arrowDistance}-${arrowOffset}-${arrowCurvature}-${arrowFlip}-${selectedColor}-${strokeWidth}-${arrowLabel}-${arrowLabelFont}`}
+                        key={`arrow-${replayKey}-${arrowPlacement}-${arrowVariant}-${arrowheadStyle}-${arrowIterations}-${arrowDistance}-${arrowOffset}-${arrowCurvature}-${arrowFlip}-${selectedColor}-${strokeWidth}-${arrowLabel}-${arrowLabelFont}-${arrowLabelFontSize}-${arrowLabelFontWeight}`}
                         placement={arrowPlacement}
                         variant={arrowVariant}
                         arrowhead={arrowheadStyle}
@@ -1633,6 +1677,8 @@ export default function RoughlyPage() {
                         flipCurve={arrowFlip}
                         label={arrowLabel}
                         labelFont={arrowLabelFont}
+                        labelFontSize={arrowLabelFontSize}
+                        labelFontWeight={arrowLabelFontWeight}
                         color={selectedColor}
                         strokeWidth={strokeWidth}
                         animationDuration={duration}
@@ -2110,6 +2156,22 @@ export default function RoughlyPage() {
                   <td className="p-3 text-neutral-500">&quot;caveat&quot;</td>
                   <td className="p-3 font-sans text-neutral-400">
                     Handwriting font family for callout text: &quot;caveat&quot; (default) | &quot;reenie-beanie&quot; | &quot;kalam&quot;
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">labelFontSize</td>
+                  <td className="p-3 text-indigo-400">number</td>
+                  <td className="p-3 text-neutral-500">20 | 26</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Font size in pixels for handwritten callout text
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">curveLabel</td>
+                  <td className="p-3 text-indigo-400">boolean</td>
+                  <td className="p-3 text-neutral-500">true</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    When true, renders callout text along a smooth mathematical SVG arc with zero misalignment
                   </td>
                 </tr>
                 <tr>

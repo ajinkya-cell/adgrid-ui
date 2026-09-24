@@ -20,19 +20,19 @@ import {
 import { cn } from "../lib/utils";
 
 // Custom High-Quality Brand SVG Icons
-const GithubIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
+const GithubIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
     <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
   </svg>
 );
 
-const LinkedinIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
+const LinkedinIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
     <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
   </svg>
 );
 
-const XIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
+const XIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
   </svg>
@@ -96,8 +96,8 @@ function CommandRow({
     >
       {/* Icon, Label & Description */}
       <div className="flex items-center gap-3 min-w-0">
-        <span className={cn("flex items-center justify-center shrink-0 [&>svg]:h-4 [&>svg]:w-4", active ? "text-neutral-100" : "text-neutral-500 group-hover:text-neutral-300")}>
-          {item.icon || <Terminal className="w-4 h-4" />}
+        <span className={cn("flex items-center justify-center shrink-0 [&>svg]:h-5 [&>svg]:w-5", active ? "text-neutral-100" : "text-neutral-500 group-hover:text-neutral-300")}>
+          {item.icon || <Terminal className="w-5 h-5" />}
         </span>
 
         <div className="flex flex-col min-w-0">
@@ -168,7 +168,7 @@ const defaultCommandItems: CommandItem[] = [
     description: "github.com/ajinkya-cell",
     url: "https://github.com/ajinkya-cell",
     isExternal: true,
-    icon: <GithubIcon className="w-4 h-4" />,
+    icon: <GithubIcon className="w-5 h-5" />,
     badge: "Official",
   },
   {
@@ -178,7 +178,7 @@ const defaultCommandItems: CommandItem[] = [
     description: "linkedin.com/in/ajinkya",
     url: "https://linkedin.com",
     isExternal: true,
-    icon: <LinkedinIcon className="w-4 h-4" />,
+    icon: <LinkedinIcon className="w-5 h-5" />,
   },
   {
     id: "conn-x",
@@ -187,7 +187,7 @@ const defaultCommandItems: CommandItem[] = [
     description: "x.com / twitter updates",
     url: "https://x.com",
     isExternal: true,
-    icon: <XIcon className="w-4 h-4" />,
+    icon: <XIcon className="w-5 h-5" />,
   },
 
   // 2. QUICK ACTIONS SECTION
@@ -198,7 +198,7 @@ const defaultCommandItems: CommandItem[] = [
     description: "ajinkya.org personal portfolio",
     url: "https://ajinkya.org",
     isExternal: true,
-    icon: <User className="w-4 h-4" />,
+    icon: <User className="w-5 h-5" />,
   },
   {
     id: "act-gallery",
@@ -206,14 +206,14 @@ const defaultCommandItems: CommandItem[] = [
     category: "Quick Actions",
     description: "Explore complete AdGrid UI component library",
     url: "/gallery",
-    icon: <LayoutGrid className="w-4 h-4" />,
+    icon: <LayoutGrid className="w-5 h-5" />,
   },
   {
     id: "act-copy-cli",
     label: "Copy CLI Install Command",
     category: "Quick Actions",
     description: "npx @adgrid-ui/cli add",
-    icon: <Copy className="w-4 h-4" />,
+    icon: <Copy className="w-5 h-5" />,
     onSelect: () => {
       if (typeof navigator !== "undefined" && navigator.clipboard) {
         navigator.clipboard.writeText("npx @adgrid-ui/cli add");
@@ -228,7 +228,7 @@ const defaultCommandItems: CommandItem[] = [
     category: "Components",
     description: "Smooth mouse-move & scroll-driven parallax perspective image",
     url: "/present/animated/image-parallax",
-    icon: <Compass className="w-4 h-4" />,
+    icon: <Compass className="w-5 h-5" />,
     badge: "Popular",
   },
   {
@@ -237,7 +237,7 @@ const defaultCommandItems: CommandItem[] = [
     category: "Components",
     description: "Lenis & GSAP powered smooth parallax scroll engine",
     url: "/present/animated/infinite-scroll",
-    icon: <Maximize2 className="w-4 h-4" />,
+    icon: <Maximize2 className="w-5 h-5" />,
   },
   {
     id: "comp-image-reveal",
@@ -245,7 +245,7 @@ const defaultCommandItems: CommandItem[] = [
     category: "Components",
     description: "Diagonal stripe mask & sliding clip-path image reveal",
     url: "/present/animated/image-reveal",
-    icon: <Sparkles className="w-4 h-4" />,
+    icon: <Sparkles className="w-5 h-5" />,
   },
   {
     id: "comp-sidebar",
@@ -253,7 +253,7 @@ const defaultCommandItems: CommandItem[] = [
     category: "Components",
     description: "Skeuomorphic 3D tactile expandable sidebar navigation",
     url: "/present/animated/sidebar",
-    icon: <Layers className="w-4 h-4" />,
+    icon: <Layers className="w-5 h-5" />,
     badge: "3D",
   },
   {
@@ -262,7 +262,7 @@ const defaultCommandItems: CommandItem[] = [
     category: "Components",
     description: "Tactile Cmd+K quick-search vault modal",
     url: "/present/animated/command-palette",
-    icon: <Command className="w-4 h-4" />,
+    icon: <Command className="w-5 h-5" />,
   },
 
   {
@@ -271,7 +271,7 @@ const defaultCommandItems: CommandItem[] = [
     category: "Components",
     description: "Skeuomorphic spring-loaded tactile push button",
     url: "/present/animated/pneumatic-button",
-    icon: <Zap className="w-4 h-4" />,
+    icon: <Zap className="w-5 h-5" />,
   },
   {
     id: "comp-neon-card",
@@ -279,7 +279,7 @@ const defaultCommandItems: CommandItem[] = [
     category: "Components",
     description: "Vibrant high-contrast glassmorphism card",
     url: "/present/animated/neon-card",
-    icon: <Sparkles className="w-4 h-4" />,
+    icon: <Sparkles className="w-5 h-5" />,
   },
 ];
 
@@ -424,7 +424,7 @@ export function CommandPalette({
         }}
         className="relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl border border-white/[0.08]"
       >
-        <Search className="w-4 h-4 text-neutral-400 shrink-0" />
+        <Search className="w-5 h-5 text-neutral-400 shrink-0" />
         <input
           type="text"
           autoFocus
@@ -433,15 +433,9 @@ export function CommandPalette({
           placeholder={placeholder}
           className="w-full bg-transparent text-xs font-medium text-neutral-100 placeholder-neutral-500 focus:outline-none"
         />
-        <kbd
-          style={{
-            backgroundColor: "#121214",
-            boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 2px 4px rgba(0, 0, 0, 0.6)",
-          }}
-          className="px-2 py-0.5 rounded-md border border-white/10 text-[10px] font-bold text-neutral-400 uppercase shrink-0 select-none"
-        >
+        <span className="text-[10px] font-mono font-medium text-neutral-500 uppercase shrink-0 select-none">
           ESC
-        </kbd>
+        </span>
       </div>
 
       {/* Command Items List / Debossed Recessed Tray */}
@@ -486,17 +480,15 @@ export function CommandPalette({
       </div>
 
       {/* Footer Instructions Bar */}
-      <div className="flex items-center gap-3 pt-3 px-1 text-[11px] text-neutral-500 border-t border-white/5 mt-3">
-        <div className="flex items-center gap-3">
-          <span className="flex items-center gap-1.5">
-            <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[9px] text-neutral-400 font-bold">↑↓</kbd>
-            Navigate
-          </span>
-          <span className="flex items-center gap-1.5">
-            <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[9px] text-neutral-400 font-bold">↵</kbd>
-            Select
-          </span>
-        </div>
+      <div className="flex items-center gap-4 pt-3 px-1 text-[11px] font-mono text-neutral-500 border-t border-white/5 mt-3 select-none">
+        <span className="flex items-center gap-1.5">
+          <span className="text-neutral-400 font-bold">↑↓</span>
+          Navigate
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="text-neutral-400 font-bold">↵</span>
+          Select
+        </span>
       </div>
     </motion.div>
   );

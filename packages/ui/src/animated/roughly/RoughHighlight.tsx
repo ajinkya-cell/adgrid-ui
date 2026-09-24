@@ -30,6 +30,8 @@ export interface RoughHighlightProps {
   textClassName?: string;
 }
 
+const DEFAULT_PADDING: [number, number, number, number] = [2, 6, 2, 6];
+
 export function RoughHighlight({
   children,
   color = "#4338CA",
@@ -38,7 +40,7 @@ export function RoughHighlight({
   animate = true,
   animationDelay = 0,
   multiline = true,
-  padding = [2, 6, 2, 6],
+  padding = DEFAULT_PADDING,
   strokeWidth,
   opacity = 0.85,
   className = "",
@@ -47,7 +49,29 @@ export function RoughHighlight({
   const containerRef = useRef<HTMLSpanElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
   const annotationRef = useRef<RoughAnnotation | null>(null);
+  const hasAnimatedRef = useRef(false);
   const [inView, setInView] = useState(!animate);
+
+  const paddingKey = Array.isArray(padding)
+    ? padding.join(",")
+    : padding !== undefined
+      ? String(padding)
+      : "2,6,2,6";
+
+  const resolvedPadding = React.useMemo(() => {
+    if (padding === undefined) return DEFAULT_PADDING;
+    if (typeof padding === "number") return [padding, padding, padding, padding] as [number, number, number, number];
+    if (Array.isArray(padding)) {
+      if (padding.length === 2) return [padding[0], padding[1], padding[0], padding[1]] as [number, number, number, number];
+      if (padding.length === 4) return [...padding] as [number, number, number, number];
+    }
+    return DEFAULT_PADDING;
+  }, [paddingKey]);
+
+  const childrenKey =
+    typeof children === "string" || typeof children === "number"
+      ? String(children)
+      : undefined;
 
   // Viewport intersection observer to trigger drawing when scrolled into view
   useEffect(() => {
@@ -94,11 +118,13 @@ export function RoughHighlight({
         annotationRef.current = null;
       }
 
+      const shouldAnimate = !hasAnimatedRef.current && animate;
+
       const config: Parameters<typeof annotate>[1] = {
         type: "highlight",
         color,
-        padding,
-        animate,
+        padding: resolvedPadding,
+        animate: shouldAnimate,
         animationDuration,
         iterations,
         multiline,
@@ -124,17 +150,19 @@ export function RoughHighlight({
         }
       };
 
-      if (animationDelay > 0) {
+      if (animationDelay > 0 && shouldAnimate) {
         const timer = setTimeout(() => {
           if (isMounted && annotationRef.current) {
             annotation.show();
             applySvgLayering();
+            hasAnimatedRef.current = true;
           }
         }, animationDelay);
         return () => clearTimeout(timer);
       } else {
         annotation.show();
         applySvgLayering();
+        hasAnimatedRef.current = true;
       }
       return undefined;
     };
@@ -161,13 +189,14 @@ export function RoughHighlight({
     color,
     iterations,
     strokeWidth,
-    padding,
+    paddingKey,
+    resolvedPadding,
     animationDuration,
     animate,
     animationDelay,
     multiline,
     opacity,
-    children,
+    childrenKey,
   ]);
 
   return (

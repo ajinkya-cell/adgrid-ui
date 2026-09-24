@@ -979,7 +979,11 @@ function ToastDemo() {
       <button
         type="button"
         onClick={showToast}
-        className="relative overflow-hidden rounded-xl border border-white/10 bg-[#171717] px-6 py-3.5 text-sm font-medium tracking-wide text-white shadow-[inset_0_1.5px_0_rgba(255,255,255,0.08),inset_0_-1.5px_0_rgba(0,0,0,0.4),0_8px_22px_rgba(0,0,0,0.45)] transition-[background-color,transform,border-color] duration-150 hover:border-white/20 hover:bg-[#1b1b1b] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-4 focus-visible:ring-offset-[#111] motion-reduce:transition-none motion-reduce:transform-none"
+        style={{
+          backgroundColor: "#171717",
+          boxShadow: "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.12), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.45), 0 4px 14px rgba(0, 0, 0, 0.6)",
+        }}
+        className="px-5 h-11 rounded-xl text-xs font-bold text-neutral-200 border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 hover:text-white cursor-pointer active:scale-95 transition-all"
       >
         Press to get toasts
       </button>

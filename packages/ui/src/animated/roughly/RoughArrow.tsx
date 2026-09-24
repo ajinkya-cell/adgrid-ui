@@ -43,6 +43,14 @@ export interface RoughArrowProps {
   label?: React.ReactNode;
   /** Callout label font family: 'caveat' | 'reenie-beanie' | 'kalam' (default: "caveat") */
   labelFont?: ArrowLabelFont;
+  /** Callout label font size in pixels (default: resolved per font family) */
+  labelFontSize?: number;
+  /** Callout label font thickness (weight, e.g. 300 to 650) (default: 400) */
+  labelFontWeight?: number;
+  /** Optional custom horizontal offset in pixels for callout label */
+  labelOffsetX?: number;
+  /** Optional custom vertical offset in pixels for callout label */
+  labelOffsetY?: number;
   /** Distance in pixels between arrow tail origin and target (default: 60) */
   distance?: number;
   /** Gap in pixels between arrow tip and target edge (default: 8) */
@@ -75,8 +83,8 @@ interface Point {
 
 const labelFontClassMap: Record<ArrowLabelFont, string> = {
   caveat: "font-[family-name:var(--font-caveat),cursive] text-lg",
-  "reenie-beanie": "font-[family-name:'Reenie_Beanie',cursive] text-2xl font-normal tracking-wide",
-  kalam: "font-[family-name:'Kalam',cursive] text-lg font-normal",
+  "reenie-beanie": "font-[family-name:'Reenie_Beanie',cursive] text-2xl tracking-wide",
+  kalam: "font-[family-name:'Kalam',cursive] text-lg",
 };
 
 export function RoughArrow({
@@ -91,6 +99,10 @@ export function RoughArrow({
   bowing = 1.5,
   label,
   labelFont = "caveat",
+  labelFontSize,
+  labelFontWeight,
+  labelOffsetX = 0,
+  labelOffsetY = 0,
   distance = 60,
   offset = 8,
   curvature = 0.38,
@@ -180,70 +192,68 @@ export function RoughArrow({
     let lblPos: Point;
     let lblTransform = "";
 
-    // 1. Calculate Tip, Tail, and Label Coordinates based on Placement
+    // 1. Calculate Tip, Tail, and Label Coordinates based on Placement (centered at tail endpoint)
     switch (placement) {
       case "top-right":
-        P_tip = { x: w * 0.85, y: -gap };
-        P_tail = { x: w + D * 0.75, y: -gap - D };
-        lblPos = { x: P_tail.x, y: P_tail.y - 6 };
-        lblTransform = "translate(-20%, -100%)";
-        break;
-
       case "top-left":
-        P_tip = { x: w * 0.15, y: -gap };
-        P_tail = { x: -D * 0.75, y: -gap - D };
-        lblPos = { x: P_tail.x, y: P_tail.y - 6 };
-        lblTransform = "translate(-80%, -100%)";
-        break;
-
-      case "top":
-        P_tip = { x: w * 0.5, y: -gap };
-        P_tail = { x: w * 0.5 + D * 0.35, y: -gap - D };
-        lblPos = { x: P_tail.x, y: P_tail.y - 6 };
+      case "top": {
+        P_tip = {
+          x: placement === "top-right" ? w * 0.85 : placement === "top-left" ? w * 0.15 : w * 0.5,
+          y: -gap,
+        };
+        P_tail = {
+          x: placement === "top-right" ? w + D * 0.75 : placement === "top-left" ? -D * 0.75 : w * 0.5 + D * 0.35,
+          y: -gap - D,
+        };
+        const topYOffset = flipCurve ? -15 : -8;
+        lblPos = { x: P_tail.x + labelOffsetX, y: P_tail.y + topYOffset + labelOffsetY };
         lblTransform = "translate(-50%, -100%)";
         break;
+      }
 
       case "bottom-right":
-        P_tip = { x: w * 0.85, y: h + gap };
-        P_tail = { x: w + D * 0.75, y: h + gap + D };
-        lblPos = { x: P_tail.x, y: P_tail.y + 6 };
-        lblTransform = "translate(-20%, 0)";
-        break;
-
       case "bottom-left":
-        P_tip = { x: w * 0.15, y: h + gap };
-        P_tail = { x: -D * 0.75, y: h + gap + D };
-        lblPos = { x: P_tail.x, y: P_tail.y + 6 };
-        lblTransform = "translate(-80%, 0)";
-        break;
-
-      case "bottom":
-        P_tip = { x: w * 0.5, y: h + gap };
-        P_tail = { x: w * 0.5 + D * 0.35, y: h + gap + D };
-        lblPos = { x: P_tail.x, y: P_tail.y + 6 };
+      case "bottom": {
+        P_tip = {
+          x: placement === "bottom-right" ? w * 0.85 : placement === "bottom-left" ? w * 0.15 : w * 0.5,
+          y: h + gap,
+        };
+        P_tail = {
+          x: placement === "bottom-right" ? w + D * 0.75 : placement === "bottom-left" ? -D * 0.75 : w * 0.5 + D * 0.35,
+          y: h + gap + D,
+        };
+        const bottomYOffset = flipCurve ? -2 : 8;
+        lblPos = { x: P_tail.x + labelOffsetX, y: P_tail.y + bottomYOffset + labelOffsetY };
         lblTransform = "translate(-50%, 0)";
         break;
+      }
 
-      case "left":
+      case "left": {
         P_tip = { x: -gap, y: h * 0.5 };
         P_tail = { x: -gap - D, y: h * 0.5 - D * 0.3 };
-        lblPos = { x: P_tail.x - 6, y: P_tail.y };
+        const leftYOffset = flipCurve ? -6 : 0;
+        lblPos = { x: P_tail.x - 8 + labelOffsetX, y: P_tail.y + leftYOffset + labelOffsetY };
         lblTransform = "translate(-100%, -50%)";
         break;
+      }
 
-      case "right":
+      case "right": {
         P_tip = { x: w + gap, y: h * 0.5 };
         P_tail = { x: w + gap + D, y: h * 0.5 - D * 0.3 };
-        lblPos = { x: P_tail.x + 6, y: P_tail.y };
+        const rightYOffset = flipCurve ? -6 : 0;
+        lblPos = { x: P_tail.x + 8 + labelOffsetX, y: P_tail.y + rightYOffset + labelOffsetY };
         lblTransform = "translate(0, -50%)";
         break;
+      }
 
-      default:
+      default: {
         P_tip = { x: w * 0.85, y: -gap };
         P_tail = { x: w + D * 0.75, y: -gap - D };
-        lblPos = { x: P_tail.x, y: P_tail.y - 6 };
-        lblTransform = "translate(-20%, -100%)";
+        const topYOffset = flipCurve ? -15 : -8;
+        lblPos = { x: P_tail.x + labelOffsetX, y: P_tail.y + topYOffset + labelOffsetY };
+        lblTransform = "translate(-50%, -100%)";
         break;
+      }
     }
 
     // 2. Vector math for curve generation
@@ -348,7 +358,7 @@ export function RoughArrow({
       labelPos: lblPos,
       labelTransform: lblTransform,
     };
-  }, [w, h, D, gap, placement, variant, flipCurve, curvature]);
+  }, [w, h, D, gap, placement, variant, flipCurve, curvature, labelOffsetX, labelOffsetY]);
 
   // Generate rough.js SVG paths for shaft and arrowhead
   const { shaftPaths, headPaths } = useMemo(() => {
@@ -500,7 +510,7 @@ export function RoughArrow({
         ))}
       </svg>
 
-      {/* ── Handwritten Callout Label ────────────────────────────────── */}
+      {/* ── Handwritten Callout Label (Straight at Tail) ───────────── */}
       {label && (
         <motion.span
           initial={{ opacity: 0, scale: 0.9, y: 4 }}
@@ -514,12 +524,14 @@ export function RoughArrow({
             delay: (animationDelay + animationDuration * 0.7) / 1000,
             ease: [0.16, 1, 0.3, 1],
           }}
-          className={`absolute pointer-events-none whitespace-nowrap select-none ${labelFontClassMap[labelFont] || labelFontClassMap.caveat} font-medium leading-none z-30 ${labelClassName}`}
+          className={`absolute pointer-events-none whitespace-nowrap select-none ${labelFontClassMap[labelFont] || labelFontClassMap.caveat} leading-none z-30 ${labelClassName}`}
           style={{
             left: labelPos.x,
             top: labelPos.y,
             transform: labelTransform,
             color,
+            fontSize: labelFontSize ? `${labelFontSize}px` : undefined,
+            fontWeight: labelFontWeight || undefined,
           }}
         >
           {label}

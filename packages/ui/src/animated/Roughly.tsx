@@ -75,6 +75,14 @@ export interface RoughlyProps {
   arrowLabel?: React.ReactNode;
   /** Callout label font family ('caveat' | 'reenie-beanie' | 'kalam') */
   arrowLabelFont?: ArrowLabelFont;
+  /** Font size in pixels for arrow callout text */
+  arrowLabelFontSize?: number;
+  /** Font thickness (weight, e.g. 300 to 650) for arrow callout text */
+  arrowLabelFontWeight?: number;
+  /** Optional custom horizontal offset in pixels for arrow callout text */
+  arrowLabelOffsetX?: number;
+  /** Optional custom vertical offset in pixels for arrow callout text */
+  arrowLabelOffsetY?: number;
   /** Arc curvature intensity factor for curved arrows (default: 0.38) */
   arrowCurvature?: number;
   /** Handwriting font family: 'reenie-beanie' | 'caveat' | 'kalam' (default: "reenie-beanie") */
@@ -132,6 +140,10 @@ export function Roughly({
   arrowhead,
   arrowLabel,
   arrowLabelFont,
+  arrowLabelFontSize,
+  arrowLabelFontWeight,
+  arrowLabelOffsetX,
+  arrowLabelOffsetY,
   arrowCurvature,
   font,
   fontUrl,
@@ -265,6 +277,10 @@ export function Roughly({
         arrowhead={arrowhead}
         label={arrowLabel}
         labelFont={arrowLabelFont}
+        labelFontSize={arrowLabelFontSize}
+        labelFontWeight={arrowLabelFontWeight}
+        labelOffsetX={arrowLabelOffsetX}
+        labelOffsetY={arrowLabelOffsetY}
         curvature={arrowCurvature}
         color={color || DEFAULT_COLORS.arrow}
         strokeWidth={strokeWidth}

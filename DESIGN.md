@@ -146,6 +146,78 @@ These components have a documented presentation scaffold that uses DM Sans:
 
 ---
 
+#### Scaffold Trigger Button — Canonical Spec
+
+Every "present section" trigger button **must** use the following exact styles. This is the standard machined dark button for the presentation scaffold layer. No exceptions.
+
+**Tailwind + Inline Style (canonical form):**
+
+```tsx
+<button
+  style={{
+    backgroundColor: "#171717",
+    boxShadow:
+      "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.12), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.45), 0 4px 14px rgba(0, 0, 0, 0.6)",
+  }}
+  className="px-5 h-11 rounded-xl text-xs font-bold text-neutral-200 border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 hover:text-white cursor-pointer active:scale-95 transition-all"
+>
+  Open Command Palette
+</button>
+```
+
+**Token Breakdown:**
+
+| Property | Value | Purpose |
+|---|---|---|
+| `background` | `#171717` | Charcoal raised surface |
+| `inset 0 1.5px 0 0 rgba(255,255,255,0.12)` | Top inner bevel | Overhead light catch on top lip |
+| `inset 0 -1.5px 0 0 rgba(0,0,0,0.45)` | Bottom inner occlusion | Physical bottom-lip depth shadow |
+| `0 4px 14px rgba(0,0,0,0.6)` | Drop shadow | Elevation above background |
+| `border-t border-white/20` | Top edge `rgba(255,255,255,0.20)` | Strong specular top bevel |
+| `border-x border-white/[0.02]` | Side edges | Near-invisible side definition |
+| `border-b border-white/10` | Bottom edge `rgba(255,255,255,0.10)` | Shadow-side border |
+| `rounded-xl` | 12px radius | Button corner geometry |
+| `h-11 px-5` | 44px height, 20px x-padding | Comfortable tap/click target |
+| `text-xs font-bold` | 12px, 700 weight | DM Sans bold label |
+| `text-neutral-200` / `hover:text-white` | Resting → hover text | Subtle brightness lift on hover |
+| `active:scale-95` | Scale down 95% | Tactile press-down feedback |
+| `transition-all` | All properties | Smooth state transitions |
+
+**Pure CSS equivalent:**
+
+```css
+.scaffold-trigger-button {
+  background-color: #171717;
+  box-shadow:
+    inset 0 1.5px 0 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.45),
+    0 4px 14px rgba(0, 0, 0, 0.6);
+  border-top: 1px solid rgba(255, 255, 255, 0.20);
+  border-left: 1px solid rgba(255, 255, 255, 0.02);
+  border-right: 1px solid rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 12px;          /* rounded-xl */
+  height: 44px;                 /* h-11 */
+  padding: 0 20px;              /* px-5 */
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;              /* text-xs */
+  font-weight: 700;             /* font-bold */
+  color: #e5e5e5;               /* text-neutral-200 */
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.scaffold-trigger-button:hover {
+  color: #ffffff;
+}
+
+.scaffold-trigger-button:active {
+  transform: scale(0.95);
+}
+```
+
+---
+
 ## 4. Elevation & Depth System
 
 > **Full token spec with CSS formulas**: [`docs/props-table-design.md`](docs/props-table-design.md)

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import {
   Search,
@@ -10,6 +10,7 @@ import {
   CornerDownLeft,
   User,
   Layers,
+  Terminal,
 } from "lucide-react";
 import type { RegistryEntry } from "@/registry";
 import { usePresentationStore } from "@/lib/presentation/store";
@@ -17,20 +18,24 @@ import { presentationEntries } from "./presentation-registry";
 import { usePresentation } from "./hooks/usePresentation";
 import { usePresentationSettings } from "./hooks/usePresentationSettings";
 
+function cn(...classes: (string | boolean | undefined | null)[]) {
+  return classes.filter(Boolean).join(" ");
+}
+
 // Custom High-Quality Brand SVG Icons
-const GithubIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
+const GithubIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
     <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
   </svg>
 );
 
-const LinkedinIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
+const LinkedinIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
     <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
   </svg>
 );
 
-const XIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
+const XIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
   </svg>
@@ -46,6 +51,7 @@ export function CommandPalette({
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const shouldReduceMotion = useReducedMotion();
   const open = usePresentationStore((state) => state.commandPaletteOpen);
   const toggleCommandPalette = usePresentationStore((state) => state.toggleCommandPalette);
   const toggleSidebar = usePresentationStore((state) => state.toggleSidebar);
@@ -64,7 +70,7 @@ export function CommandPalette({
       name: "GitHub Profile",
       category: "Connect",
       description: "github.com/ajinkya-cell",
-      icon: <GithubIcon className="w-4 h-4" />,
+      icon: <GithubIcon className="w-5 h-5" />,
       action: () => window.open("https://github.com/ajinkya-cell", "_blank"),
     },
     {
@@ -72,7 +78,7 @@ export function CommandPalette({
       name: "LinkedIn Network",
       category: "Connect",
       description: "linkedin.com/in/ajinkya",
-      icon: <LinkedinIcon className="w-4 h-4" />,
+      icon: <LinkedinIcon className="w-5 h-5" />,
       action: () => window.open("https://linkedin.com", "_blank"),
     },
     {
@@ -80,7 +86,7 @@ export function CommandPalette({
       name: "X (Twitter)",
       category: "Connect",
       description: "x.com updates & announcements",
-      icon: <XIcon className="w-4 h-4" />,
+      icon: <XIcon className="w-5 h-5" />,
       action: () => window.open("https://x.com", "_blank"),
     },
     {
@@ -88,7 +94,7 @@ export function CommandPalette({
       name: "Visit Portfolio",
       category: "Connect",
       description: "ajinkya.org personal portfolio",
-      icon: <User className="w-4 h-4" />,
+      icon: <User className="w-5 h-5" />,
       action: () => window.open("https://ajinkya.org", "_blank"),
     },
   ];
@@ -205,34 +211,30 @@ export function CommandPalette({
   return (
     <AnimatePresence>
       {open && (
-        <motion.div className="fixed inset-0 z-[60] flex items-start justify-center px-4 pt-[12vh] font-['DM_Sans',sans-serif]">
-          {/* DM Sans Font Loader */}
-          <style dangerouslySetInnerHTML={{ __html: `@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');` }} />
-
-          <motion.button
-            type="button"
-            aria-label="Close command palette"
-            className="absolute inset-0 bg-black/70 backdrop-blur-md cursor-default"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={toggleCommandPalette}
-          />
-
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
+          onClick={toggleCommandPalette}
+          className="fixed inset-0 z-[60] bg-black/70 backdrop-blur-md flex items-start justify-center px-4 pt-[12vh] select-none font-inter"
+        >
           <motion.div
             role="dialog"
             aria-modal="true"
             aria-label="Command palette"
+            initial={shouldReduceMotion ? false : { scale: 0.98, opacity: 0, y: -8 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={shouldReduceMotion ? undefined : { scale: 0.98, opacity: 0, y: -6 }}
+            transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 350, damping: 28 }}
+            onClick={(e) => e.stopPropagation()}
             style={{
               backgroundColor: "#171717",
               boxShadow:
                 "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.45), 0 4px 6px -1px rgba(0, 0, 0, 0.8), 0 2px 4px -1px rgba(0, 0, 0, 0.9), 0 30px 80px rgba(0, 0, 0, 0.75)",
+              fontFamily: "Inter, var(--font-inter-loaded, sans-serif)",
             }}
             className="relative w-full max-w-xl overflow-hidden rounded-2xl border-t border-white/[0.22] border-x border-white/[0.02] border-b border-white/10 p-4 select-none backdrop-blur-2xl"
-            initial={{ opacity: 0, scale: 0.96, y: -16 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.96, y: -10 }}
-            transition={{ type: "spring", stiffness: 350, damping: 28 }}
           >
             {/* Header Search Input Well */}
             <div
@@ -242,7 +244,7 @@ export function CommandPalette({
               }}
               className="relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl border border-white/[0.08]"
             >
-              <Search className="w-4 h-4 text-neutral-400 shrink-0" />
+              <Search className="w-5 h-5 text-neutral-400 shrink-0" />
               <input
                 autoFocus
                 value={query}
@@ -269,17 +271,11 @@ export function CommandPalette({
                   }
                 }}
                 placeholder={mode === "site" ? "Search components, socials, and issues..." : "Search components, actions, social links..."}
-                className="w-full bg-transparent text-xs font-medium text-neutral-100 placeholder-neutral-500 font-['DM_Sans',sans-serif] focus:outline-none"
+                className="w-full bg-transparent text-xs font-medium text-neutral-100 placeholder-neutral-500 focus:outline-none"
               />
-              <kbd
-                style={{
-                  backgroundColor: "#121214",
-                  boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 2px 4px rgba(0, 0, 0, 0.6)",
-                }}
-                className="px-2 py-0.5 rounded-md border border-white/10 text-[10px] font-mono font-bold text-neutral-400 uppercase shrink-0 select-none"
-              >
+              <span className="text-[10px] font-mono font-medium text-neutral-500 uppercase shrink-0 select-none">
                 ESC
-              </kbd>
+              </span>
             </div>
 
             {/* Recessed Items Tray */}
@@ -291,7 +287,7 @@ export function CommandPalette({
               className="mt-3 p-2 rounded-xl border border-white/[0.05] max-h-[380px] overflow-y-auto space-y-3"
             >
               {allFilteredList.length === 0 ? (
-                <div className="py-10 text-center space-y-2 font-['DM_Sans',sans-serif]">
+                <div className="py-10 text-center space-y-2">
                   <Command className="w-8 h-8 text-neutral-600 mx-auto" />
                   <p className="text-xs text-neutral-500 font-mono uppercase tracking-wider">
                     No matching items found
@@ -319,40 +315,43 @@ export function CommandPalette({
                             onClick={() => closeThen(item.action)}
                             style={
                               isSelected
-                                ? {
-                                    backgroundColor: "rgba(255, 255, 255, 0.10)",
-                                    boxShadow:
-                                      "inset 0 1px 0 0 rgba(255, 255, 255, 0.20), inset 0 -1px 0 0 rgba(0, 0, 0, 0.4), 0 0 20px 0 rgba(255, 255, 255, 0.08), 0 4px 12px rgba(0, 0, 0, 0.4)",
-                                  }
+                                ? { backgroundColor: "rgba(255, 255, 255, 0.055)" }
                                 : undefined
                             }
-                            className={`group flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-left transition-all ${
+                            className={cn(
+                              "group relative flex w-full items-center justify-between rounded-lg px-3.5 py-2.5 text-left select-none transition-colors duration-150",
                               isSelected
-                                ? "border border-white/20 text-white font-semibold"
-                                : "border border-transparent text-neutral-300 hover:text-white"
-                            }`}
+                                ? "border border-white/[0.08] text-white"
+                                : "border border-transparent text-neutral-300 hover:bg-white/[0.025] hover:text-white"
+                            )}
                           >
                             <div className="flex items-center gap-3 min-w-0">
-                              <div
-                                className={`p-2 rounded-lg transition-colors flex items-center justify-center shrink-0 ${
-                                  isSelected
-                                    ? "bg-white/15 border border-white/30 text-white shadow-[0_0_12px_rgba(255,255,255,0.15)]"
-                                    : "bg-[#050505] border border-white/10 text-neutral-400 group-hover:text-white"
-                                }`}
+                              <span
+                                className={cn(
+                                  "flex items-center justify-center shrink-0 [&>svg]:h-5 [&>svg]:w-5",
+                                  isSelected ? "text-neutral-100" : "text-neutral-500 group-hover:text-neutral-300"
+                                )}
                               >
                                 {item.icon}
-                              </div>
+                              </span>
                               <div className="flex flex-col min-w-0">
-                                <span className={`block text-xs font-['DM_Sans',sans-serif] ${isSelected ? "text-white font-bold drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]" : "text-neutral-200 font-medium"}`}>
+                                <span className={cn("text-xs truncate", isSelected ? "text-white font-medium" : "text-neutral-200")}>
                                   {item.name}
                                 </span>
-                                <span className={`block text-[10px] font-['DM_Sans',sans-serif] truncate ${isSelected ? "text-neutral-300" : "text-neutral-500"}`}>
-                                  {item.description}
-                                </span>
+                                {item.description && (
+                                  <span className={cn("text-[10px] truncate", isSelected ? "text-neutral-300" : "text-neutral-500")}>
+                                    {item.description}
+                                  </span>
+                                )}
                               </div>
                             </div>
                             <div className="shrink-0 ml-3 flex items-center justify-center">
-                              <ArrowUpRight className={`w-4 h-4 transition-all ${isSelected ? "text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]" : "text-neutral-500 group-hover:text-neutral-300"}`} />
+                              <ArrowUpRight
+                                className={cn(
+                                  "w-4 h-4 transition-colors",
+                                  isSelected ? "text-neutral-200" : "text-neutral-600 group-hover:text-neutral-400"
+                                )}
+                              />
                             </div>
                           </button>
                         );
@@ -365,7 +364,9 @@ export function CommandPalette({
                     <div className="space-y-1">
                       <div className="px-3 pt-1 pb-1 text-[10px] font-mono tracking-widest text-neutral-500 uppercase font-semibold flex items-center justify-between">
                         <span>{mode === "site" ? "Issues" : "Quick Actions"}</span>
-                        <span className="text-[9px] text-neutral-600 font-mono">{mode === "site" ? `${filteredActions.length} REPORTS` : `${filteredActions.length} ACTIONS`}</span>
+                        <span className="text-[9px] text-neutral-600 font-mono">
+                          {mode === "site" ? `${filteredActions.length} REPORTS` : `${filteredActions.length} ACTIONS`}
+                        </span>
                       </div>
                       {filteredActions.map((item) => {
                         const globalIdx = allFilteredList.findIndex(
@@ -380,29 +381,43 @@ export function CommandPalette({
                             onClick={() => closeThen(item.action)}
                             style={
                               isSelected
-                                ? {
-                                    backgroundColor: "rgba(255, 255, 255, 0.10)",
-                                    boxShadow:
-                                      "inset 0 1px 0 0 rgba(255, 255, 255, 0.20), inset 0 -1px 0 0 rgba(0, 0, 0, 0.4), 0 0 20px 0 rgba(255, 255, 255, 0.08), 0 4px 12px rgba(0, 0, 0, 0.4)",
-                                  }
+                                ? { backgroundColor: "rgba(255, 255, 255, 0.055)" }
                                 : undefined
                             }
-                            className={`group flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-left transition-all ${
+                            className={cn(
+                              "group relative flex w-full items-center justify-between rounded-lg px-3.5 py-2.5 text-left select-none transition-colors duration-150",
                               isSelected
-                                ? "border border-white/20 text-white font-semibold"
-                                : "border border-transparent text-neutral-300 hover:text-white"
-                            }`}
+                                ? "border border-white/[0.08] text-white"
+                                : "border border-transparent text-neutral-300 hover:bg-white/[0.025] hover:text-white"
+                            )}
                           >
-                            <div className="flex flex-col min-w-0">
-                              <span className={`text-xs font-['DM_Sans',sans-serif] ${isSelected ? "text-white font-bold drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]" : "text-neutral-200 font-medium"}`}>
-                                {item.name}
+                            <div className="flex items-center gap-3 min-w-0">
+                              <span
+                                className={cn(
+                                  "flex items-center justify-center shrink-0 [&>svg]:h-5 [&>svg]:w-5",
+                                  isSelected ? "text-neutral-100" : "text-neutral-500 group-hover:text-neutral-300"
+                                )}
+                              >
+                                <Terminal className="w-5 h-5" />
                               </span>
-                              <span className={`text-[10px] font-['DM_Sans',sans-serif] truncate ${isSelected ? "text-neutral-300" : "text-neutral-500"}`}>
-                                {item.description}
-                              </span>
+                              <div className="flex flex-col min-w-0">
+                                <span className={cn("text-xs truncate", isSelected ? "text-white font-medium" : "text-neutral-200")}>
+                                  {item.name}
+                                </span>
+                                {item.description && (
+                                  <span className={cn("text-[10px] truncate", isSelected ? "text-neutral-300" : "text-neutral-500")}>
+                                    {item.description}
+                                  </span>
+                                )}
+                              </div>
                             </div>
                             <div className="shrink-0 ml-3 flex items-center justify-center">
-                              <CornerDownLeft className={`w-4 h-4 transition-all ${isSelected ? "text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]" : "text-neutral-500 group-hover:text-neutral-300"}`} />
+                              <CornerDownLeft
+                                className={cn(
+                                  "w-4 h-4 transition-colors",
+                                  isSelected ? "text-neutral-200" : "text-neutral-600 group-hover:text-neutral-400"
+                                )}
+                              />
                             </div>
                           </button>
                         );
@@ -410,7 +425,7 @@ export function CommandPalette({
                     </div>
                   )}
 
-                  {/* Components Section (ALL Components from registry) */}
+                  {/* Components Section */}
                   {filteredComponents.length > 0 && (
                     <div className="space-y-1">
                       <div className="px-3 pt-1 pb-1 text-[10px] font-mono tracking-widest text-neutral-500 uppercase font-semibold flex items-center justify-between">
@@ -430,40 +445,41 @@ export function CommandPalette({
                             onClick={() => closeThen(() => presentation.navigateTo(item))}
                             style={
                               isSelected
-                                ? {
-                                    backgroundColor: "rgba(255, 255, 255, 0.10)",
-                                    boxShadow:
-                                      "inset 0 1px 0 0 rgba(255, 255, 255, 0.20), inset 0 -1px 0 0 rgba(0, 0, 0, 0.4), 0 0 20px 0 rgba(255, 255, 255, 0.08), 0 4px 12px rgba(0, 0, 0, 0.4)",
-                                  }
+                                ? { backgroundColor: "rgba(255, 255, 255, 0.055)" }
                                 : undefined
                             }
-                            className={`group flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-left transition-all ${
+                            className={cn(
+                              "group relative flex w-full items-center justify-between rounded-lg px-3.5 py-2.5 text-left select-none transition-colors duration-150",
                               isSelected
-                                ? "border border-white/20 text-white font-semibold"
-                                : "border border-transparent text-neutral-300 hover:text-white"
-                            }`}
+                                ? "border border-white/[0.08] text-white"
+                                : "border border-transparent text-neutral-300 hover:bg-white/[0.025] hover:text-white"
+                            )}
                           >
                             <div className="flex items-center gap-3 min-w-0">
-                              <div
-                                className={`p-2 rounded-lg transition-colors flex items-center justify-center shrink-0 ${
-                                  isSelected
-                                    ? "bg-white/15 border border-white/30 text-white shadow-[0_0_12px_rgba(255,255,255,0.15)]"
-                                    : "bg-[#050505] border border-white/10 text-neutral-400 group-hover:text-white"
-                                }`}
+                              <span
+                                className={cn(
+                                  "flex items-center justify-center shrink-0 [&>svg]:h-5 [&>svg]:w-5",
+                                  isSelected ? "text-neutral-100" : "text-neutral-500 group-hover:text-neutral-300"
+                                )}
                               >
-                                <Layers className="w-4 h-4" />
-                              </div>
+                                <Layers className="w-5 h-5" />
+                              </span>
                               <div className="flex flex-col min-w-0">
-                                <span className={`block text-xs font-['DM_Sans',sans-serif] ${isSelected ? "text-white font-bold drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]" : "text-neutral-200 font-medium"}`}>
+                                <span className={cn("text-xs truncate", isSelected ? "text-white font-medium" : "text-neutral-200")}>
                                   {item.name}
                                 </span>
-                                <span className={`block text-[10px] font-['DM_Sans',sans-serif] truncate ${isSelected ? "text-neutral-300" : "text-neutral-500"}`}>
+                                <span className={cn("text-[10px] truncate", isSelected ? "text-neutral-300" : "text-neutral-500")}>
                                   {item.category} • {item.description}
                                 </span>
                               </div>
                             </div>
                             <div className="shrink-0 ml-3 flex items-center justify-center">
-                              <CornerDownLeft className={`w-4 h-4 transition-all ${isSelected ? "text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]" : "text-neutral-500 group-hover:text-neutral-300"}`} />
+                              <CornerDownLeft
+                                className={cn(
+                                  "w-4 h-4 transition-colors",
+                                  isSelected ? "text-neutral-200" : "text-neutral-600 group-hover:text-neutral-400"
+                                )}
+                              />
                             </div>
                           </button>
                         );
@@ -475,22 +491,15 @@ export function CommandPalette({
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-between pt-3 px-1 text-[11px] font-mono text-neutral-500 border-t border-white/5 mt-3">
-              <div className="flex items-center gap-3">
-                <span className="flex items-center gap-1.5">
-                  <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[9px] text-neutral-400 font-mono font-bold">↑↓</kbd>
-                  Navigate
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[9px] text-neutral-400 font-mono font-bold">↵</kbd>
-                  {mode === "site" ? "Open selected item" : "Open Component"}
-                </span>
-              </div>
-
-              <div className="flex items-center gap-1.5 text-[10px] text-neutral-400 uppercase tracking-widest font-mono">
-                <Command className="w-3 h-3 text-neutral-400" />
-                AdGrid Vault
-              </div>
+            <div className="flex items-center gap-4 pt-3 px-1 text-[11px] font-mono text-neutral-500 border-t border-white/5 mt-3 select-none">
+              <span className="flex items-center gap-1.5">
+                <span className="text-neutral-400 font-bold">↑↓</span>
+                Navigate
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="text-neutral-400 font-bold">↵</span>
+                {mode === "site" ? "Open selected item" : "Open Component"}
+              </span>
             </div>
           </motion.div>
         </motion.div>

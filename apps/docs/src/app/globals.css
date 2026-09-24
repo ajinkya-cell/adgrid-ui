@@ -1,6 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Geist+Mono:wght@300;400;500;600;700&family=Jura:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Share+Tech+Mono&family=Syncopate:wght@400;700&family=Syne:wght@400;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Geist+Mono:wght@300;400;500;600;700&family=Geist+Pixel&family=Jura:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Share+Tech+Mono&family=Syncopate:wght@400;700&family=Syne:wght@400;700;800&display=swap');
 @import "tailwindcss";
 @source "../../../../packages/ui/src/**/*.tsx";
+
+@font-face {
+  font-family: 'Geist Pixel';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/GeistPixel-Regular.woff2') format('woff2'),
+       url('/fonts/GeistPixel-Regular.ttf') format('truetype'),
+       url('https://fonts.gstatic.com/s/geistpixel/v1/CSRs4zxZluGGW3oyI0A_AN0hQBvYDU4hBmqoKzA8XT6i.woff2') format('woff2');
+}
 
 @theme {
   --color-background: #050505;
@@ -27,6 +37,11 @@
   --font-poppins: var(--font-poppins, "Poppins", sans-serif);
   --font-eb-garamond: var(--font-eb-garamond), "EB Garamond", serif;
   --font-inter: var(--font-inter-loaded), "Inter", sans-serif;
+  --font-geist-pixel: var(--font-geist-pixel, "Geist Pixel"), "Geist Pixel", monospace;
+}
+
+.font-geist-pixel {
+  font-family: var(--font-geist-pixel, "Geist Pixel"), "Geist Pixel", monospace !important;
 }
 
 * { box-sizing: border-box; }
