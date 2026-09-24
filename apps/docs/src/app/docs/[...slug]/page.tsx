@@ -157,7 +157,7 @@ function InstallationDoc() {
           You can also fetch component source code directly via the shadcn CLI registry endpoint:
         </p>
         <div className="bg-surface-charcoal p-4 rounded-xl border border-border-hairline font-mono text-sm text-white">
-          <span>npx shadcn@latest add https://void-ui.vercel.app/r/void-button.json</span>
+          <span>npx shadcn@latest add https://void-ui-phi.vercel.app/r/void-button.json</span>
         </div>
       </section>
     </article>

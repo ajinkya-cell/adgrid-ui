@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "voidui",
-  "homepage": "https://void-ui.vercel.app",
+  "homepage": "https://void-ui-phi.vercel.app",
   "items": [
     {
       "name": "infinite-scroll",

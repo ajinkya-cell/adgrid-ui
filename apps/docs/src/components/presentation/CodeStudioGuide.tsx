@@ -36,7 +36,7 @@ function getCliCommand(pm: PackageManager, slug: string): string {
   const baseUrl =
     typeof window !== "undefined" && window.location.origin
       ? window.location.origin
-      : process.env.NEXT_PUBLIC_APP_URL || "https://void-ui.vercel.app";
+      : process.env.NEXT_PUBLIC_APP_URL || "https://void-ui-phi.vercel.app";
   const url = `${baseUrl}/r/${slug}.json`;
   switch (pm) {
     case "pnpm":
