@@ -79,7 +79,10 @@ for (const entry of registry) {
       missing.push(filePath);
       continue;
     }
-    const content = fs.readFileSync(absolutePath, "utf-8");
+    let content = fs.readFileSync(absolutePath, "utf-8");
+    // Normalize relative imports like '../lib/utils' or '../../lib/utils' to '@/lib/utils'
+    // so consumers can consume them seamlessly with shadcn CLI
+    content = content.replace(/from\s+['"][^'"]*\/lib\/utils['"]/g, 'from "@/lib/utils"');
     const target = getTargetPath(slug, filePath, baseDir, isMultiFile);
     files.push({ path: target, content, type: getFileType(filePath) });
   }
@@ -87,10 +90,9 @@ for (const entry of registry) {
   // Include lib/utils.ts when needed
   const needsUtils = files.some(
     (f) =>
-      f.content.includes("from '../lib/utils'") ||
-      f.content.includes('from "../lib/utils"') ||
       f.content.includes("from '@/lib/utils'") ||
-      f.content.includes('from "@/lib/utils"')
+      f.content.includes('from "@/lib/utils"') ||
+      f.content.includes("/lib/utils")
   );
   if (needsUtils) {
     const utilsPath = path.join(UI_SRC, "lib/utils.ts");

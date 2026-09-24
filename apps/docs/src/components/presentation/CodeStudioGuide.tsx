@@ -33,7 +33,11 @@ function getPackageManagerCommand(
 }
 
 function getCliCommand(pm: PackageManager, slug: string): string {
-  const url = `https://void-ui.vercel.app/r/${slug}.json`;
+  const baseUrl =
+    typeof window !== "undefined" && window.location.origin
+      ? window.location.origin
+      : process.env.NEXT_PUBLIC_APP_URL || "https://void-ui.vercel.app";
+  const url = `${baseUrl}/r/${slug}.json`;
   switch (pm) {
     case "pnpm":
       return `pnpm dlx shadcn@latest add ${url}`;

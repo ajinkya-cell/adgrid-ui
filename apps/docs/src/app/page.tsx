@@ -194,7 +194,7 @@ export default function HomePage() {
               <span>
                 I { " "}
               </span>
-              <RoughHighlight color="#F59E0B">
+              <RoughHighlight color="#FF007F">
                    actually don't know what my coding agent just wrote above
               </RoughHighlight>
               , but I have made this UI library which provides a bunch of cool components  , you can {" "}
@@ -204,8 +204,8 @@ export default function HomePage() {
             </p>
 
             {/* ── Socials & Projects Bracket Section ──────────────── */}
-            <div className="pt-2 space-y-2.5">
-              <div className="flex  -translate-x-72  translate-y-12 items-center pl-1">
+            <div className=" ">
+              <div className="flex  items-center pl-1">
                 <RoughHandwriting
                   font="reenie-beanie"
                   color="#ffffff"

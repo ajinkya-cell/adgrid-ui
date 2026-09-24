@@ -26,6 +26,26 @@ const config: NextConfig = {
       },
     ],
   },
+  async headers() {
+    return [
+      {
+        source: "/r/:path*",
+        headers: [
+          { key: "Access-Control-Allow-Origin", value: "*" },
+          { key: "Access-Control-Allow-Methods", value: "GET, OPTIONS" },
+          { key: "Access-Control-Allow-Headers", value: "Content-Type" },
+        ],
+      },
+      {
+        source: "/api/registry/:path*",
+        headers: [
+          { key: "Access-Control-Allow-Origin", value: "*" },
+          { key: "Access-Control-Allow-Methods", value: "GET, OPTIONS" },
+          { key: "Access-Control-Allow-Headers", value: "Content-Type" },
+        ],
+      },
+    ];
+  },
 };
 
 export default withMDX(config);
