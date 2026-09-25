@@ -96,6 +96,12 @@ const PROPS = new Set([
   "arrowhead",
   "label",
   "labelFont",
+  "labelPlacement",
+  "labelDistance",
+  "labelRotate",
+  "labelOffsetX",
+  "labelOffsetY",
+  "labelColor",
   "distance",
   "flipCurve",
   "arcCurvature",
@@ -371,6 +377,8 @@ export default function RoughlyPage() {
   const [arrowLabelFont, setArrowLabelFont] = useState<ArrowLabelFont>("caveat");
   const [arrowLabelFontSize, setArrowLabelFontSize] = useState<number>(24);
   const [arrowLabelFontWeight, setArrowLabelFontWeight] = useState<number>(450);
+  const [arrowLabelOffsetX, setArrowLabelOffsetX] = useState<number>(0);
+  const [arrowLabelOffsetY, setArrowLabelOffsetY] = useState<number>(0);
   const [arrowDistance, setArrowDistance] = useState<number>(65);
   const [arrowOffset, setArrowOffset] = useState<number>(8);
   const [arrowCurvature, setArrowCurvature] = useState<number>(0.38);
@@ -541,6 +549,8 @@ export default function RoughlyPage() {
       if (arrowLabelFont !== "caveat") propsList.push(`labelFont="${arrowLabelFont}"`);
       if (arrowLabelFontSize !== 24) propsList.push(`labelFontSize={${arrowLabelFontSize}}`);
       if (arrowLabelFontWeight !== 450) propsList.push(`labelFontWeight={${arrowLabelFontWeight}}`);
+      if (arrowLabelOffsetX !== 0) propsList.push(`labelOffsetX={${arrowLabelOffsetX}}`);
+      if (arrowLabelOffsetY !== 0) propsList.push(`labelOffsetY={${arrowLabelOffsetY}}`);
 
       const propsString = propsList.length > 0 ? ` ${propsList.join(" ")}` : "";
       return `<RoughArrow${propsString}>\n  ${text}\n</RoughArrow>`;
@@ -1222,36 +1232,126 @@ export default function RoughlyPage() {
                     />
                   </div>
 
-                  {/* Placement Grid */}
-                  <div className="space-y-1.5">
-                    <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
-                      Arrow Placement
-                    </label>
-                    <div className="grid grid-cols-4 gap-1">
-                      {(
-                        [
-                          "top-left",
-                          "top",
-                          "top-right",
-                          "right",
-                          "bottom-right",
-                          "bottom",
-                          "bottom-left",
-                          "left",
-                        ] as ArrowPlacement[]
-                      ).map((p) => (
+                  {/* Callout Position Nudge Pad (Tactile D-Pad) */}
+                  <div className="space-y-1.5 pt-1">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                        Position Nudge (Arrows)
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-mono text-amber-400/90 font-medium">
+                          X: {arrowLabelOffsetX > 0 ? `+${arrowLabelOffsetX}` : arrowLabelOffsetX}px, Y: {arrowLabelOffsetY > 0 ? `+${arrowLabelOffsetY}` : arrowLabelOffsetY}px
+                        </span>
+                        {(arrowLabelOffsetX !== 0 || arrowLabelOffsetY !== 0) && (
+                          <button
+                            onClick={() => {
+                              setArrowLabelOffsetX(0);
+                              setArrowLabelOffsetY(0);
+                            }}
+                            className="text-[10px] font-mono text-neutral-500 hover:text-amber-300 underline cursor-pointer"
+                          >
+                            reset
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-white/[0.06]">
+                      <div className="text-[11px] text-neutral-400 leading-snug">
+                        <span>Click arrows to nudge</span><br />
+                        <span className="text-[10px] text-neutral-500 font-mono">4px increments</span>
+                      </div>
+                      <div className="grid grid-cols-3 gap-1 w-24">
+                        <div />
                         <button
-                          key={p}
-                          onClick={() => setArrowPlacement(p)}
-                          className={`py-1 text-[10px] font-mono capitalize rounded transition-colors cursor-pointer ${
-                            arrowPlacement === p
-                              ? `${PLAYGROUND_RAISED_CLASS} font-medium`
-                              : "bg-white/[0.04] text-neutral-400 hover:text-white"
-                          }`}
+                          type="button"
+                          onClick={() => setArrowLabelOffsetY((prev) => prev - 4)}
+                          className="h-7 rounded bg-white/[0.06] hover:bg-amber-500/20 hover:text-amber-300 text-neutral-300 flex items-center justify-center text-xs font-bold transition-all active:scale-90 cursor-pointer"
+                          title="Nudge Up"
+                          aria-label="Nudge Up"
                         >
-                          {p.replace("-", " ")}
+                          ↑
                         </button>
-                      ))}
+                        <div />
+                        <button
+                          type="button"
+                          onClick={() => setArrowLabelOffsetX((prev) => prev - 4)}
+                          className="h-7 rounded bg-white/[0.06] hover:bg-amber-500/20 hover:text-amber-300 text-neutral-300 flex items-center justify-center text-xs font-bold transition-all active:scale-90 cursor-pointer"
+                          title="Nudge Left"
+                          aria-label="Nudge Left"
+                        >
+                          ←
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setArrowLabelOffsetX(0);
+                            setArrowLabelOffsetY(0);
+                          }}
+                          className="h-7 rounded bg-white/[0.03] hover:bg-white/10 text-neutral-500 hover:text-white flex items-center justify-center text-[10px] font-mono transition-all active:scale-90 cursor-pointer"
+                          title="Reset Offsets"
+                          aria-label="Reset Offsets"
+                        >
+                          0
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setArrowLabelOffsetX((prev) => prev + 4)}
+                          className="h-7 rounded bg-white/[0.06] hover:bg-amber-500/20 hover:text-amber-300 text-neutral-300 flex items-center justify-center text-xs font-bold transition-all active:scale-90 cursor-pointer"
+                          title="Nudge Right"
+                          aria-label="Nudge Right"
+                        >
+                          →
+                        </button>
+                        <div />
+                        <button
+                          type="button"
+                          onClick={() => setArrowLabelOffsetY((prev) => prev + 4)}
+                          className="h-7 rounded bg-white/[0.06] hover:bg-amber-500/20 hover:text-amber-300 text-neutral-300 flex items-center justify-center text-xs font-bold transition-all active:scale-90 cursor-pointer"
+                          title="Nudge Down"
+                          aria-label="Nudge Down"
+                        >
+                          ↓
+                        </button>
+                        <div />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Placement Grid with Visual Directional Arrows */}
+                  <div className="space-y-1.5 pt-1">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                        Arrow Placement
+                      </label>
+                      <span className="text-[10px] font-mono text-neutral-500 capitalize">{arrowPlacement.replace("-", " ")}</span>
+                    </div>
+                    <div className="grid grid-cols-4 gap-1.5">
+                      {[
+                        { id: "top-left", label: "Top-Left", icon: "↖" },
+                        { id: "top", label: "Top", icon: "↑" },
+                        { id: "top-right", label: "Top-Right", icon: "↗" },
+                        { id: "right", label: "Right", icon: "→" },
+                        { id: "bottom-right", label: "Btm-Right", icon: "↘" },
+                        { id: "bottom", label: "Bottom", icon: "↓" },
+                        { id: "bottom-left", label: "Btm-Left", icon: "↙" },
+                        { id: "left", label: "Left", icon: "←" },
+                      ].map((p) => {
+                        const isSelected = arrowPlacement === p.id;
+                        return (
+                          <button
+                            key={p.id}
+                            onClick={() => setArrowPlacement(p.id as ArrowPlacement)}
+                            className={`py-2 px-1 flex flex-col items-center justify-center text-[10px] font-mono rounded-lg transition-all cursor-pointer ${
+                              isSelected
+                                ? `${PLAYGROUND_RAISED_CLASS} text-amber-300 font-semibold ring-1 ring-amber-400/30`
+                                : "bg-white/[0.04] text-neutral-400 hover:text-white hover:bg-white/[0.08]"
+                            }`}
+                          >
+                            <span className="text-sm leading-none mb-0.5">{p.icon}</span>
+                            <span className="truncate">{p.label}</span>
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
 
@@ -1666,7 +1766,7 @@ export default function RoughlyPage() {
                   ) : selectedType === "arrow" ? (
                     <div className="py-16 px-10 flex items-center justify-center">
                       <RoughArrow
-                        key={`arrow-${replayKey}-${arrowPlacement}-${arrowVariant}-${arrowheadStyle}-${arrowIterations}-${arrowDistance}-${arrowOffset}-${arrowCurvature}-${arrowFlip}-${selectedColor}-${strokeWidth}-${arrowLabel}-${arrowLabelFont}-${arrowLabelFontSize}-${arrowLabelFontWeight}`}
+                        key={`arrow-${replayKey}-${arrowPlacement}-${arrowVariant}-${arrowheadStyle}-${arrowIterations}-${arrowDistance}-${arrowOffset}-${arrowCurvature}-${arrowFlip}-${selectedColor}-${strokeWidth}-${arrowLabel}-${arrowLabelFont}-${arrowLabelFontSize}-${arrowLabelFontWeight}-${arrowLabelOffsetX}-${arrowLabelOffsetY}`}
                         placement={arrowPlacement}
                         variant={arrowVariant}
                         arrowhead={arrowheadStyle}
@@ -1679,6 +1779,8 @@ export default function RoughlyPage() {
                         labelFont={arrowLabelFont}
                         labelFontSize={arrowLabelFontSize}
                         labelFontWeight={arrowLabelFontWeight}
+                        labelOffsetX={arrowLabelOffsetX}
+                        labelOffsetY={arrowLabelOffsetY}
                         color={selectedColor}
                         strokeWidth={strokeWidth}
                         animationDuration={duration}
@@ -2164,6 +2266,46 @@ export default function RoughlyPage() {
                   <td className="p-3 text-neutral-500">20 | 26</td>
                   <td className="p-3 font-sans text-neutral-400">
                     Font size in pixels for handwritten callout text
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">labelPlacement</td>
+                  <td className="p-3 text-indigo-400">ArrowLabelPlacement</td>
+                  <td className="p-3 text-neutral-500">&quot;auto&quot;</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Placement relative to arrow tail: &quot;auto&quot; | &quot;top&quot; | &quot;bottom&quot; | &quot;left&quot; | &quot;right&quot;
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">labelDistance</td>
+                  <td className="p-3 text-indigo-400">number</td>
+                  <td className="p-3 text-neutral-500">8</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Gap distance in pixels between arrow tail and label
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">labelRotate</td>
+                  <td className="p-3 text-indigo-400">number</td>
+                  <td className="p-3 text-neutral-500">0</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Custom label rotation angle in degrees
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">labelOffsetX / labelOffsetY</td>
+                  <td className="p-3 text-indigo-400">number</td>
+                  <td className="p-3 text-neutral-500">0</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Fine-tuning pixel nudges along X and Y axes
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">labelColor</td>
+                  <td className="p-3 text-indigo-400">string</td>
+                  <td className="p-3 text-neutral-500">color</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Custom color override for the callout text (defaults to arrow color)
                   </td>
                 </tr>
                 <tr>

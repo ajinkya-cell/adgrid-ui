@@ -20,6 +20,8 @@ export type ArrowheadStyle = "open" | "filled";
 
 export type ArrowLabelFont = "caveat" | "reenie-beanie" | "kalam";
 
+export type ArrowLabelPlacement = "auto" | "top" | "bottom" | "left" | "right";
+
 export interface RoughArrowProps {
   /** Target element or text to point to (optional; if omitted, renders standalone) */
   children?: React.ReactNode;
@@ -47,6 +49,14 @@ export interface RoughArrowProps {
   labelFontSize?: number;
   /** Callout label font thickness (weight, e.g. 300 to 650) (default: 400) */
   labelFontWeight?: number;
+  /** Relative placement of label around arrow tail: 'auto' | 'top' | 'bottom' | 'left' | 'right' (default: "auto") */
+  labelPlacement?: ArrowLabelPlacement;
+  /** Gap distance in pixels between arrow tail and callout label (default: 8) */
+  labelDistance?: number;
+  /** Rotation angle in degrees for playful hand-drawn tilt (default: 0) */
+  labelRotate?: number;
+  /** Optional custom text color for the callout label (defaults to arrow color) */
+  labelColor?: string;
   /** Optional custom horizontal offset in pixels for callout label */
   labelOffsetX?: number;
   /** Optional custom vertical offset in pixels for callout label */
@@ -101,6 +111,10 @@ export function RoughArrow({
   labelFont = "caveat",
   labelFontSize,
   labelFontWeight,
+  labelPlacement = "auto",
+  labelDistance = 8,
+  labelRotate = 0,
+  labelColor,
   labelOffsetX = 0,
   labelOffsetY = 0,
   distance = 60,
@@ -192,7 +206,7 @@ export function RoughArrow({
     let lblPos: Point;
     let lblTransform = "";
 
-    // 1. Calculate Tip, Tail, and Label Coordinates based on Placement (centered at tail endpoint)
+    // 1. Calculate Tip and Tail Coordinates based on Placement
     switch (placement) {
       case "top-right":
       case "top-left":
@@ -205,9 +219,6 @@ export function RoughArrow({
           x: placement === "top-right" ? w + D * 0.75 : placement === "top-left" ? -D * 0.75 : w * 0.5 + D * 0.35,
           y: -gap - D,
         };
-        const topYOffset = flipCurve ? -15 : -8;
-        lblPos = { x: P_tail.x + labelOffsetX, y: P_tail.y + topYOffset + labelOffsetY };
-        lblTransform = "translate(-50%, -100%)";
         break;
       }
 
@@ -222,36 +233,65 @@ export function RoughArrow({
           x: placement === "bottom-right" ? w + D * 0.75 : placement === "bottom-left" ? -D * 0.75 : w * 0.5 + D * 0.35,
           y: h + gap + D,
         };
-        const bottomYOffset = flipCurve ? -2 : 8;
-        lblPos = { x: P_tail.x + labelOffsetX, y: P_tail.y + bottomYOffset + labelOffsetY };
-        lblTransform = "translate(-50%, 0)";
         break;
       }
 
       case "left": {
         P_tip = { x: -gap, y: h * 0.5 };
         P_tail = { x: -gap - D, y: h * 0.5 - D * 0.3 };
-        const leftYOffset = flipCurve ? -6 : 0;
-        lblPos = { x: P_tail.x - 8 + labelOffsetX, y: P_tail.y + leftYOffset + labelOffsetY };
-        lblTransform = "translate(-100%, -50%)";
         break;
       }
 
       case "right": {
         P_tip = { x: w + gap, y: h * 0.5 };
         P_tail = { x: w + gap + D, y: h * 0.5 - D * 0.3 };
-        const rightYOffset = flipCurve ? -6 : 0;
-        lblPos = { x: P_tail.x + 8 + labelOffsetX, y: P_tail.y + rightYOffset + labelOffsetY };
-        lblTransform = "translate(0, -50%)";
         break;
       }
 
       default: {
         P_tip = { x: w * 0.85, y: -gap };
         P_tail = { x: w + D * 0.75, y: -gap - D };
-        const topYOffset = flipCurve ? -15 : -8;
+        break;
+      }
+    }
+
+    // 2. Resolve Directional Placement around Tail
+    const effectivePlacement: "top" | "bottom" | "left" | "right" =
+      labelPlacement === "auto"
+        ? (placement.startsWith("bottom")
+            ? "bottom"
+            : placement === "left"
+            ? "left"
+            : placement === "right"
+            ? "right"
+            : "top")
+        : labelPlacement;
+
+    const rotStr = labelRotate ? ` rotate(${labelRotate}deg)` : "";
+
+    switch (effectivePlacement) {
+      case "top": {
+        const topYOffset = labelPlacement === "auto" ? (flipCurve ? -15 : -labelDistance) : -labelDistance;
         lblPos = { x: P_tail.x + labelOffsetX, y: P_tail.y + topYOffset + labelOffsetY };
-        lblTransform = "translate(-50%, -100%)";
+        lblTransform = `translate(-50%, -100%)${rotStr}`;
+        break;
+      }
+      case "bottom": {
+        const bottomYOffset = labelPlacement === "auto" ? (flipCurve ? -2 : labelDistance) : labelDistance;
+        lblPos = { x: P_tail.x + labelOffsetX, y: P_tail.y + bottomYOffset + labelOffsetY };
+        lblTransform = `translate(-50%, 0)${rotStr}`;
+        break;
+      }
+      case "left": {
+        const leftYOffset = labelPlacement === "auto" ? (flipCurve ? -6 : 0) : 0;
+        lblPos = { x: P_tail.x - labelDistance + labelOffsetX, y: P_tail.y + leftYOffset + labelOffsetY };
+        lblTransform = `translate(-100%, -50%)${rotStr}`;
+        break;
+      }
+      case "right": {
+        const rightYOffset = labelPlacement === "auto" ? (flipCurve ? -6 : 0) : 0;
+        lblPos = { x: P_tail.x + labelDistance + labelOffsetX, y: P_tail.y + rightYOffset + labelOffsetY };
+        lblTransform = `translate(0, -50%)${rotStr}`;
         break;
       }
     }
@@ -358,7 +398,21 @@ export function RoughArrow({
       labelPos: lblPos,
       labelTransform: lblTransform,
     };
-  }, [w, h, D, gap, placement, variant, flipCurve, curvature, labelOffsetX, labelOffsetY]);
+  }, [
+    w,
+    h,
+    D,
+    gap,
+    placement,
+    variant,
+    flipCurve,
+    curvature,
+    labelOffsetX,
+    labelOffsetY,
+    labelPlacement,
+    labelDistance,
+    labelRotate,
+  ]);
 
   // Generate rough.js SVG paths for shaft and arrowhead
   const { shaftPaths, headPaths } = useMemo(() => {
@@ -529,7 +583,8 @@ export function RoughArrow({
             left: labelPos.x,
             top: labelPos.y,
             transform: labelTransform,
-            color,
+            transformOrigin: "center center",
+            color: labelColor || color,
             fontSize: labelFontSize ? `${labelFontSize}px` : undefined,
             fontWeight: labelFontWeight || undefined,
           }}

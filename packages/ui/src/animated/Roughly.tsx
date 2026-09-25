@@ -18,6 +18,7 @@ import {
   type ArrowVariant,
   type ArrowheadStyle,
   type ArrowLabelFont,
+  type ArrowLabelPlacement,
 } from "./roughly/RoughArrow";
 import {
   RoughHandwriting,
@@ -38,7 +39,13 @@ export type RoughlyType =
 
 export type { BracketSide, BracketStyle } from "./roughly/RoughBracket";
 export type { BoxVariant } from "./roughly/RoughBox";
-export type { ArrowPlacement, ArrowVariant, ArrowheadStyle, ArrowLabelFont };
+export type {
+  ArrowPlacement,
+  ArrowVariant,
+  ArrowheadStyle,
+  ArrowLabelFont,
+  ArrowLabelPlacement,
+};
 export type { HandwritingFont, RoughHandwritingProps };
 
 export type UnderlineVariant = "single" | "double" | "wavy";
@@ -83,6 +90,14 @@ export interface RoughlyProps {
   arrowLabelOffsetX?: number;
   /** Optional custom vertical offset in pixels for arrow callout text */
   arrowLabelOffsetY?: number;
+  /** Relative placement of label around arrow tail: 'auto' | 'top' | 'bottom' | 'left' | 'right' (default: "auto") */
+  arrowLabelPlacement?: ArrowLabelPlacement;
+  /** Gap distance in pixels between arrow tail and callout label (default: 8) */
+  arrowLabelDistance?: number;
+  /** Rotation angle in degrees for arrow callout text (default: 0) */
+  arrowLabelRotate?: number;
+  /** Optional custom text color for arrow callout text (defaults to arrow color) */
+  arrowLabelColor?: string;
   /** Arc curvature intensity factor for curved arrows (default: 0.38) */
   arrowCurvature?: number;
   /** Handwriting font family: 'reenie-beanie' | 'caveat' | 'kalam' (default: "reenie-beanie") */
@@ -144,6 +159,10 @@ export function Roughly({
   arrowLabelFontWeight,
   arrowLabelOffsetX,
   arrowLabelOffsetY,
+  arrowLabelPlacement,
+  arrowLabelDistance,
+  arrowLabelRotate,
+  arrowLabelColor,
   arrowCurvature,
   font,
   fontUrl,
@@ -279,6 +298,10 @@ export function Roughly({
         labelFont={arrowLabelFont}
         labelFontSize={arrowLabelFontSize}
         labelFontWeight={arrowLabelFontWeight}
+        labelPlacement={arrowLabelPlacement}
+        labelDistance={arrowLabelDistance}
+        labelRotate={arrowLabelRotate}
+        labelColor={arrowLabelColor}
         labelOffsetX={arrowLabelOffsetX}
         labelOffsetY={arrowLabelOffsetY}
         curvature={arrowCurvature}

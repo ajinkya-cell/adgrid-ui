@@ -49,6 +49,14 @@ const caveat = Caveat({
 export const metadata: Metadata = {
   title: "void/ui — dark-first component library",
   description: "Open source React components built for the void.",
+  icons: {
+    icon: [
+      { url: "/previews/new-fav.png", sizes: "any" },
+      { url: "/icon.png", type: "image/png" },
+    ],
+    shortcut: "/previews/new-fav.png",
+    apple: "/previews/new-fav.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -239,6 +239,7 @@ export type {
   ArrowVariant,
   ArrowheadStyle,
   ArrowLabelFont,
+  ArrowLabelPlacement,
 } from "./animated/roughly/RoughArrow";
 export { RoughHandwriting } from "./animated/roughly/RoughHandwriting";
 export type {
