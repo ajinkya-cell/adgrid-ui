@@ -26,7 +26,8 @@
       "description": "Organic, hand-drawn vector annotations designed for high-friction digital typography. Wobbly underlines, pen circles, editorial strikethroughs, curly brackets, and tactile highlights.",
       "dependencies": [
         "framer-motion",
-        "roughjs"
+        "roughjs",
+        "rough-notation"
       ],
       "files": [
         {
@@ -579,7 +580,8 @@
       "description": "Premium GTA V-inspired selection wheel designed for development tools, featuring interactive SVG slices, Tabler icons, mechanical clicks, and live stats dashboards.",
       "dependencies": [
         "framer-motion",
-        "@tabler/icons-react"
+        "@tabler/icons-react",
+        "devicons-react"
       ],
       "files": [
         {
@@ -813,7 +815,8 @@
       "description": "An interactive card that scatters bouncy physics-based stickers all over the viewport on hover.",
       "dependencies": [
         "framer-motion",
-        "lucide-react"
+        "lucide-react",
+        "@tabler/icons-react"
       ],
       "files": [
         {
@@ -860,7 +863,8 @@
       "title": "ForgeUI Landing",
       "description": "Sleek dark landing page hero section with radial spotlights, customizable calls to action, and interactive social/tech stack footer.",
       "dependencies": [
-        "lucide-react"
+        "lucide-react",
+        "framer-motion"
       ],
       "files": [
         {
@@ -1044,7 +1048,8 @@
       "title": "Bento Grid",
       "description": "A dark Bento Grid with Inter typography, unboxed brand icons, and beveled or radiant card variants.",
       "dependencies": [
-        "framer-motion"
+        "framer-motion",
+        "devicons-react"
       ],
       "files": [
         {

@@ -5,7 +5,8 @@
   "description": "Premium GTA V-inspired selection wheel designed for development tools, featuring interactive SVG slices, Tabler icons, mechanical clicks, and live stats dashboards.",
   "dependencies": [
     "framer-motion",
-    "@tabler/icons-react"
+    "@tabler/icons-react",
+    "devicons-react"
   ],
   "files": [
     {

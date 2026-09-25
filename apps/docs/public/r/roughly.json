@@ -5,7 +5,8 @@
   "description": "Organic, hand-drawn vector annotations designed for high-friction digital typography. Wobbly underlines, pen circles, editorial strikethroughs, curly brackets, and tactile highlights.",
   "dependencies": [
     "framer-motion",
-    "roughjs"
+    "roughjs",
+    "rough-notation"
   ],
   "files": [
     {

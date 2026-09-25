@@ -8,7 +8,7 @@ import React, {
   useCallback,
 } from "react";
 import { motion } from "framer-motion";
-import type { Font } from "opentype.js";
+import type { Font, Path } from "opentype.js";
 import {
   loadHandwritingFont,
   type HandwritingFont,
@@ -80,6 +80,31 @@ function truncateToWordsAndLength(text: string, maxWords: number, maxLength: num
     }
   }
   return trimmed;
+}
+
+function glyphPathToSvgPath(gp: Path, decimalPlaces = 2): string {
+  const factor = 10 ** decimalPlaces;
+  const round = (val: number): string => {
+    if (!Number.isFinite(val)) return "0";
+    return String(Math.round(val * factor) / factor);
+  };
+
+  let d = "";
+  for (let i = 0; i < gp.commands.length; i++) {
+    const cmd = gp.commands[i];
+    if (cmd.type === "M") {
+      d += `M${round(cmd.x)} ${round(cmd.y)}`;
+    } else if (cmd.type === "L") {
+      d += `L${round(cmd.x)} ${round(cmd.y)}`;
+    } else if (cmd.type === "C") {
+      d += `C${round(cmd.x1)} ${round(cmd.y1)} ${round(cmd.x2)} ${round(cmd.y2)} ${round(cmd.x)} ${round(cmd.y)}`;
+    } else if (cmd.type === "Q") {
+      d += `Q${round(cmd.x1)} ${round(cmd.y1)} ${round(cmd.x)} ${round(cmd.y)}`;
+    } else if (cmd.type === "Z") {
+      d += "Z";
+    }
+  }
+  return d;
 }
 
 interface PathItem {
@@ -215,11 +240,23 @@ export function RoughHandwriting({
       const glyphPaths = loadedFont.getPaths(displayText, 0, baseline, fontSize);
       const overallPath = loadedFont.getPath(displayText, 0, baseline, fontSize);
       const bb = overallPath.getBoundingBox();
+      const bounds = glyphPaths.reduce(
+        (current, glyphPath) => {
+          const glyphBounds = glyphPath.getBoundingBox();
+          return {
+            x1: Math.min(current.x1, glyphBounds.x1),
+            y1: Math.min(current.y1, glyphBounds.y1),
+            x2: Math.max(current.x2, glyphBounds.x2),
+            y2: Math.max(current.y2, glyphBounds.y2),
+          };
+        },
+        { x1: bb.x1, y1: bb.y1, x2: bb.x2, y2: bb.y2 }
+      );
 
       glyphPaths.forEach((gp, idx) => {
         const char = displayText[idx] || "";
         const isSpace = char === " ";
-        const pathData = gp.toPathData(2);
+        const pathData = glyphPathToSvgPath(gp, 2);
         items.push({
           id: `${instanceId}-${idx}-${char}`,
           d: pathData,
@@ -229,12 +266,15 @@ export function RoughHandwriting({
         });
       });
 
-      const paddingX = 6;
-      const paddingY = 8;
-      const minX = bb.x1 - paddingX;
-      const minY = bb.y1 - paddingY;
-      const width = Math.max(20, bb.x2 - bb.x1 + paddingX * 2);
-      const height = Math.max(20, bb.y2 - bb.y1 + paddingY * 2);
+      // Keep the viewBox clear of the painted stroke as well as the glyph
+      // outlines. Large stroke widths can extend past the font's path bounds.
+      const strokePadding = Math.max(2, strokeWidth / 2 + 1);
+      const paddingX = 6 + strokePadding;
+      const paddingY = 8 + strokePadding;
+      const minX = bounds.x1 - paddingX;
+      const minY = bounds.y1 - paddingY;
+      const width = Math.max(20, bounds.x2 - bounds.x1 + paddingX * 2);
+      const height = Math.max(20, bounds.y2 - bounds.y1 + paddingY * 2);
 
       return {
         pathItems: items,
@@ -250,7 +290,7 @@ export function RoughHandwriting({
         svgHeight: 40,
       };
     }
-  }, [loadedFont, displayText, fontSize, instanceId, editable, placeholder]);
+  }, [loadedFont, displayText, fontSize, strokeWidth, instanceId, editable, placeholder]);
 
   // Input change handler for editable mode
   const handleInputChange = useCallback(
@@ -298,10 +338,14 @@ export function RoughHandwriting({
       {/* Fallback text shown while font is parsing or in SSR */}
       {!loadedFont ? (
         <span
-          className={`relative inline-block ${fontClass} text-2xl md:text-3xl leading-none transition-opacity ${
+          className={`relative inline-block ${fontClass} transition-opacity ${
             inView ? "opacity-100" : "opacity-0"
           } ${textClassName}`}
-          style={{ color: activeColor }}
+          style={{
+            color: activeColor,
+            fontSize: `${fontSize}px`,
+            lineHeight: `${fontSize * 1.1}px`,
+          }}
         >
           {displayText}
         </span>
@@ -313,7 +357,7 @@ export function RoughHandwriting({
               width: `${svgWidth}px`,
               height: `${svgHeight}px`,
             }}
-            className="overflow-visible select-none pointer-events-none"
+            className="block overflow-visible select-none pointer-events-none"
             fill="none"
           >
             <g>
@@ -337,7 +381,7 @@ export function RoughHandwriting({
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     fill={activeColor}
-                    fillRule="evenodd"
+                    fillRule="nonzero"
                     initial={
                       animate
                         ? { pathLength: 0, strokeOpacity: 0, fillOpacity: 0 }

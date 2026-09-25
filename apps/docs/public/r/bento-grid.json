@@ -4,7 +4,8 @@
   "title": "Bento Grid",
   "description": "A dark Bento Grid with Inter typography, unboxed brand icons, and beveled or radiant card variants.",
   "dependencies": [
-    "framer-motion"
+    "framer-motion",
+    "devicons-react"
   ],
   "files": [
     {

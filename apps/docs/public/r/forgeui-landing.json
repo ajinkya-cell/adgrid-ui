@@ -4,7 +4,8 @@
   "title": "ForgeUI Landing",
   "description": "Sleek dark landing page hero section with radial spotlights, customizable calls to action, and interactive social/tech stack footer.",
   "dependencies": [
-    "lucide-react"
+    "lucide-react",
+    "framer-motion"
   ],
   "files": [
     {
