@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion, useDragControls } from "framer-motion";
-import { ChevronDown, ChevronUp, RotateCcw, SlidersHorizontal } from "lucide-react";
+import { ChevronDown, ChevronUp, RotateCcw, SlidersHorizontal, X } from "lucide-react";
 import type { PropDefinition, RegistryEntry } from "@/registry";
 import { usePresentationStore } from "@/lib/presentation/store";
 
@@ -259,7 +259,7 @@ export function PropsTweaker({ entry }: { entry: RegistryEntry }) {
   const setComponentProp = usePresentationStore((s) => s.setComponentProp);
   const resetComponentProps = usePresentationStore((s) => s.resetComponentProps);
 
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   // Don't render if no propDefs
   if (!propDefs || propDefs.length === 0) return null;
@@ -323,6 +323,15 @@ export function PropsTweaker({ entry }: { entry: RegistryEntry }) {
           ) : (
             <ChevronUp className="h-3.5 w-3.5" strokeWidth={2.5} />
           )}
+        </button>
+        <button
+          type="button"
+          onClick={() => usePresentationStore.getState().setPropsTweakerOpen(false)}
+          title="Close Properties (P)"
+          aria-label="Close Properties panel"
+          className="rounded-md p-1 text-white/30 transition-colors hover:bg-white/8 hover:text-white/70 cursor-pointer"
+        >
+          <X className="h-3.5 w-3.5" strokeWidth={2.5} />
         </button>
       </div>
 

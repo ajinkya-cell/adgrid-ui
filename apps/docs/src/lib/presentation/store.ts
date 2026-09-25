@@ -53,6 +53,7 @@ export interface PresentationState {
   toggleSettings: () => void;
   toggleShortcuts: () => void;
   togglePropsTweaker: () => void;
+  setPropsTweakerOpen: (open: boolean) => void;
   navigateToComponent: (slug: string, category: string) => void;
   toggleFavorite: (slug: string) => void;
   setComponentProp: (slug: string, name: string, value: unknown) => void;
@@ -89,7 +90,7 @@ export const usePresentationStore = create<PresentationState>()(
       commandPaletteOpen: false,
       settingsOpen: false,
       shortcutsOpen: false,
-      propsTweakerOpen: false,
+      propsTweakerOpen: true,
       
       scrollContainer: null,
       
@@ -154,6 +155,10 @@ export const usePresentationStore = create<PresentationState>()(
 
       togglePropsTweaker: () => {
         set({ propsTweakerOpen: !get().propsTweakerOpen });
+      },
+
+      setPropsTweakerOpen: (open) => {
+        set({ propsTweakerOpen: open });
       },
       
       navigateToComponent: (slug, category) => {
