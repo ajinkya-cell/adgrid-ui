@@ -104,7 +104,7 @@ export default function HomePage() {
 
   return (
     <main className="font-inter min-h-screen bg-[#09090b] text-neutral-300 selection:bg-white selection:text-black pt-28 sm:pt-36 pb-5 px-6 sm:px-8 flex justify-center">
-      <div className="w-full max-w-[640px] space-y-16 sm:space-y-20">
+      <div className="w-full max-w-[640px] space-y-16 ">
         {/* ── Header & Intro ────────────────────────────────────── */}
         <div className="space-y-6 sm:space-y-7">
           <header className="space-y-2">
@@ -128,18 +128,15 @@ export default function HomePage() {
           {/* ── About Void UI ─────────────────────────────────────── */}
           <article className="space-y-4 text-sm leading-relaxed text-neutral-300 font-normal">
             <p>
-              <strong className="font-medium text-white">Void UI </strong>
-              is an <span/>
-              <RoughBox paddingX={1} paddingY={2} color={ROUGH_COLOR}>
+              <strong className="font-medium text-white">Void UI</strong>{" "}
+              is an{" "}
+              <RoughBox paddingX={2} paddingY={2} color={ROUGH_COLOR}>
                 open source
-              </RoughBox>
-              <span/> React component ecosystem engineered for tactile friction, dark-first skeuomorphism, and sensory computing
-              
-              .
+              </RoughBox>{" "}
+              React component ecosystem engineered for tactile friction, dark-first skeuomorphism, and sensory computing.
             </p>
             <p>
-              Most modern web applications have flattened into sterile, frictionless planes. Void UI rejects that homogeny by combining physical spring dynamics, custom WebGL shaders, and synthesized Web Audio feedback — creating interfaces with tangible weight, physical resistance, and visceral depth
-              .
+              Most modern web applications have flattened into sterile, frictionless planes. Void UI rejects that homogeny by combining physical spring dynamics, custom WebGL shaders, and synthesized Web Audio feedback — creating interfaces with tangible weight, physical resistance, and visceral depth.
             </p>
             <p>
               Every component is built with Next.js 16, framer-motion, and Tailwind CSS, distributed via copy-paste CLI workflows. You can explore the full collection of interactive components in the{" "}
@@ -194,7 +191,7 @@ export default function HomePage() {
               <span>
                 I { " "}
               </span>
-              <RoughHighlight color="#FF007F">
+              <RoughHighlight color={ROUGH_COLOR}>
                    actually don't know what my coding agent just wrote above
               </RoughHighlight>
               , but I have made this UI library which provides a bunch of cool components  , you can {" "}

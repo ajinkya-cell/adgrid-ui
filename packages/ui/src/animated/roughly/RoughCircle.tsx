@@ -41,7 +41,8 @@ export function RoughCircle({
   className = "",
   textClassName = "",
 }: RoughCircleProps) {
-  const elementRef = useRef<HTMLSpanElement>(null);
+  const containerRef = useRef<HTMLSpanElement>(null);
+  const textRef = useRef<HTMLSpanElement>(null);
   const annotationRef = useRef<RoughAnnotation | null>(null);
   const [inView, setInView] = useState(!animate);
 
@@ -51,7 +52,7 @@ export function RoughCircle({
       setInView(true);
       return undefined;
     }
-    const el = elementRef.current;
+    const el = containerRef.current;
     if (!el || typeof IntersectionObserver === "undefined") {
       setInView(true);
       return undefined;
@@ -73,13 +74,13 @@ export function RoughCircle({
 
   // Rough-notation annotation lifecycle
   useEffect(() => {
-    const el = elementRef.current;
+    const el = textRef.current;
     if (!el || !inView) return undefined;
 
     let isMounted = true;
 
     const createAnnotation = () => {
-      if (!isMounted || !elementRef.current) return;
+      if (!isMounted || !textRef.current) return;
 
       // Clean up previous instance if already present
       if (annotationRef.current) {
@@ -100,7 +101,7 @@ export function RoughCircle({
         paddingX,
       ];
 
-      const annotation = annotate(elementRef.current, {
+      const annotation = annotate(textRef.current, {
         type: "circle",
         color,
         strokeWidth,
@@ -112,15 +113,24 @@ export function RoughCircle({
 
       annotationRef.current = annotation;
 
+      const applySvgLayering = () => {
+        const svg = containerRef.current?.querySelector<SVGSVGElement>("svg.rough-annotation");
+        if (svg) {
+          svg.style.pointerEvents = "none";
+        }
+      };
+
       if (animationDelay > 0) {
         const timer = setTimeout(() => {
           if (isMounted && annotationRef.current) {
             annotation.show();
+            applySvgLayering();
           }
         }, animationDelay);
         return () => clearTimeout(timer);
       } else {
         annotation.show();
+        applySvgLayering();
       }
       return undefined;
     };
@@ -158,10 +168,10 @@ export function RoughCircle({
 
   return (
     <span
-      ref={elementRef}
-      className={`relative inline-block ${className}`}
+      ref={containerRef}
+      className={`relative inline-block [&>.rough-annotation]:pointer-events-none ${className}`}
     >
-      <span className={`relative z-10 ${textClassName}`}>{children}</span>
+      <span ref={textRef} className={`relative z-10 inline ${textClassName}`}>{children}</span>
     </span>
   );
 }

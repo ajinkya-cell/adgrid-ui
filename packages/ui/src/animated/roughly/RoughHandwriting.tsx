@@ -319,7 +319,7 @@ export function RoughHandwriting({
       className={`relative inline-flex items-center align-middle ${
         editable ? "cursor-text select-none group" : ""
       } ${className}`}
-      style={{ minHeight: `${fontSize * 1.1}px` }}
+      style={{ minHeight: `${Math.round(fontSize * 1.35)}px` }}
     >
       {/* Hidden input field for capturing keystrokes in editable mode */}
       {editable && (
@@ -344,7 +344,7 @@ export function RoughHandwriting({
           style={{
             color: activeColor,
             fontSize: `${fontSize}px`,
-            lineHeight: `${fontSize * 1.1}px`,
+            lineHeight: `${Math.round(fontSize * 1.35)}px`,
           }}
         >
           {displayText}

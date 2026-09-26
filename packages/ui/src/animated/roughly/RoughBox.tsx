@@ -52,7 +52,8 @@ export function RoughBox({
   className = "",
   textClassName = "",
 }: RoughBoxProps) {
-  const elementRef = useRef<HTMLSpanElement>(null);
+  const containerRef = useRef<HTMLSpanElement>(null);
+  const textRef = useRef<HTMLSpanElement>(null);
   const annotationRef = useRef<RoughAnnotation | null>(null);
   const [inView, setInView] = useState(!animate);
 
@@ -62,7 +63,7 @@ export function RoughBox({
       setInView(true);
       return undefined;
     }
-    const el = elementRef.current;
+    const el = containerRef.current;
     if (!el || typeof IntersectionObserver === "undefined") {
       setInView(true);
       return undefined;
@@ -84,13 +85,13 @@ export function RoughBox({
 
   // rough-notation lifecycle for RoughBox
   useEffect(() => {
-    const el = elementRef.current;
+    const el = textRef.current;
     if (!el || !inView) return undefined;
 
     let isMounted = true;
 
     const createAnnotation = () => {
-      if (!isMounted || !elementRef.current) return;
+      if (!isMounted || !textRef.current) return;
 
       if (annotationRef.current) {
         try {
@@ -128,7 +129,7 @@ export function RoughBox({
         resolvedPadding[2] = paddingY;
       }
 
-      const annotation = annotate(elementRef.current, {
+      const annotation = annotate(textRef.current, {
         type: "box",
         color,
         strokeWidth,
@@ -141,15 +142,24 @@ export function RoughBox({
 
       annotationRef.current = annotation;
 
+      const applySvgLayering = () => {
+        const svg = containerRef.current?.querySelector<SVGSVGElement>("svg.rough-annotation");
+        if (svg) {
+          svg.style.pointerEvents = "none";
+        }
+      };
+
       if (animationDelay > 0) {
         const timer = setTimeout(() => {
           if (isMounted && annotationRef.current) {
             annotation.show();
+            applySvgLayering();
           }
         }, animationDelay);
         return () => clearTimeout(timer);
       } else {
         annotation.show();
+        applySvgLayering();
       }
       return undefined;
     };
@@ -189,10 +199,10 @@ export function RoughBox({
 
   return (
     <span
-      ref={elementRef}
-      className={`relative inline-block [&>.rough-annotation]:pointer-events-none ${className}`}
+      ref={containerRef}
+      className={`relative ${multiline ? "inline" : "inline-block"} [&>.rough-annotation]:pointer-events-none ${className}`}
     >
-      <span className={`relative z-10 ${textClassName}`}>{children}</span>
+      <span ref={textRef} className={`relative z-10 inline ${textClassName}`}>{children}</span>
     </span>
   );
 }
