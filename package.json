@@ -1,6 +1,7 @@
 {
   "name": "adgrid-ui-monorepo",
   "private": true,
+  "license": "FSL-1.1-MIT",
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",

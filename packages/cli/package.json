@@ -2,6 +2,7 @@
   "name": "void-ui",
   "version": "0.1.0",
   "description": "CLI to add Void UI components to your project",
+  "license": "FSL-1.1-MIT",
   "bin": {
     "void-ui": "./bin/void-ui.js"
   },
