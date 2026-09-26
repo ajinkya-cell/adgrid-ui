@@ -113,6 +113,7 @@ interface PathItem {
   char: string;
   isSpace: boolean;
   index: number;
+  nonSpaceIndex: number;
 }
 
 const fontCssClassMap: Record<HandwritingFont, string> = {
@@ -253,6 +254,7 @@ export function RoughHandwriting({
         { x1: bb.x1, y1: bb.y1, x2: bb.x2, y2: bb.y2 }
       );
 
+      let nonSpaceCounter = 0;
       glyphPaths.forEach((gp, idx) => {
         const char = displayText[idx] || "";
         const isSpace = char === " ";
@@ -263,6 +265,7 @@ export function RoughHandwriting({
           char,
           isSpace,
           index: idx,
+          nonSpaceIndex: isSpace ? -1 : nonSpaceCounter++,
         });
       });
 
@@ -339,7 +342,7 @@ export function RoughHandwriting({
       {!loadedFont ? (
         <span
           className={`relative inline-block ${fontClass} transition-opacity ${
-            inView ? "opacity-100" : "opacity-0"
+            !animate && inView ? "opacity-100" : "opacity-0"
           } ${textClassName}`}
           style={{
             color: activeColor,
@@ -362,15 +365,21 @@ export function RoughHandwriting({
           >
             <g>
               {pathItems.map((item) => {
-                if (item.isSpace || !item.d) {
+                if (item.isSpace || !item.d || item.nonSpaceIndex < 0) {
                   return null;
                 }
 
-                // Calculate stagger timing
+                // Calculate stagger timing so total writing duration matches animationDuration
                 const totalNonSpace = Math.max(1, pathItems.filter((p) => !p.isSpace).length);
-                const charDuration = Math.max(0.12, (animationDuration / 1000) / totalNonSpace);
+                const totalSec = animationDuration / 1000;
+                const overlapFactor = 0.65;
+                const charDuration = Math.max(
+                  0.1,
+                  totalSec / (1 + (totalNonSpace - 1) * overlapFactor)
+                );
+                const step = charDuration * overlapFactor;
                 const charDelay =
-                  animationDelay / 1000 + item.index * (charDuration * 0.75);
+                  animationDelay / 1000 + item.nonSpaceIndex * step;
 
                 return (
                   <motion.path
@@ -399,13 +408,12 @@ export function RoughHandwriting({
                         ease: [0.25, 0.1, 0.25, 1],
                       },
                       strokeOpacity: {
-                        // Snap visible exactly when this character's stroke begins — no pre-render dot
                         duration: 0,
                         delay: charDelay,
                       },
                       fillOpacity: {
-                        duration: charDuration * 0.4,
-                        delay: charDelay + charDuration * 0.7,
+                        duration: charDuration * 0.45,
+                        delay: charDelay + charDuration * 0.55,
                         ease: "easeOut",
                       },
                     }}

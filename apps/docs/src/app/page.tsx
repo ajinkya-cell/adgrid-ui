@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { motion, type Variants } from "framer-motion";
 import {
   RoughHighlight,
   RoughUnderline,
@@ -14,6 +15,29 @@ import { registry } from "@/registry";
 import { LinkedinOriginal } from "devicons-react";
 
 const ROUGH_COLOR = "#7577e6";
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.65,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
 
 function GithubIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
@@ -104,9 +128,14 @@ export default function HomePage() {
 
   return (
     <main className="font-inter min-h-screen bg-[#09090b] text-neutral-300 selection:bg-white selection:text-black pt-28 sm:pt-36 pb-5 px-6 sm:px-8 flex justify-center">
-      <div className="w-full max-w-[640px] space-y-16 ">
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="w-full max-w-[640px] space-y-16"
+      >
         {/* ── Header & Intro ────────────────────────────────────── */}
-        <div className="space-y-6 sm:space-y-7">
+        <motion.div variants={itemVariants} className="space-y-6 sm:space-y-7">
           <header className="space-y-2">
             <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white inline-block">
               Void UI 
@@ -115,6 +144,8 @@ export default function HomePage() {
               <span>Created by</span>
               <RoughHandwriting
                 font="reenie-beanie"
+                animationDuration={2200}
+                animationDelay={250}
                 color="#ffffff"
                 fontSize={28}
                 strokeWidth={1}
@@ -130,7 +161,7 @@ export default function HomePage() {
             <p>
               <strong className="font-medium text-white">Void UI</strong>{" "}
               is an{" "}
-              <RoughBox paddingX={2} paddingY={2} color={ROUGH_COLOR}>
+              <RoughBox paddingX={2} paddingY={2} color={ROUGH_COLOR} animationDelay={500}>
                 open source
               </RoughBox>{" "}
               React component ecosystem engineered for tactile friction, dark-first skeuomorphism, and sensory computing.
@@ -144,7 +175,7 @@ export default function HomePage() {
                 href="/gallery"
                 className="text-white hover:text-white transition-colors"
               >
-                <RoughUnderline color={ROUGH_COLOR} strokeWidth={2.5} variant="double">
+                <RoughUnderline color={ROUGH_COLOR} strokeWidth={2.5} variant="double" animationDelay={700}>
                   component gallery
                 </RoughUnderline>
               </Link>{" "}
@@ -152,6 +183,7 @@ export default function HomePage() {
               <RoughArrow 
                 color="#ffffff"
                 placement="bottom-right" offset={9} strokeWidth={2.1} curvature={0.5} iterations={1} flipCurve={true} label="Leave a star " labelFont="reenie-beanie" labelFontSize={30} labelFontWeight={600}
+                animationDelay={850}
               >
                 <a
                   href="https://github.com/ajinkya-cell/adgrid-ui"
@@ -165,10 +197,10 @@ export default function HomePage() {
               .
             </p>
           </article>
-        </div>
+        </motion.div>
 
         {/* ── About the Creator ─────────────────────────────────── */}
-        <section className="space-y-4">
+        <motion.section variants={itemVariants} className="space-y-4">
           <div className="border-b border-white/[0.08] pb-2">
             <h2 className="text-xs uppercase tracking-widest text-neutral-400">
              
@@ -321,11 +353,11 @@ export default function HomePage() {
               </RoughBracket>
             </div>
           </div>
-        </section>
+        </motion.section>
 
 
         {/* ── Featured Components ───────────────────────────────── */}
-        <section className="space-y-4">
+        <motion.section variants={itemVariants} className="space-y-4">
           <div className="flex items-baseline justify-between border-b border-white/[0.08] pb-2">
             <h2 className="text-xs uppercase tracking-widest text-neutral-400">
               Featured Components
@@ -357,14 +389,14 @@ export default function HomePage() {
               </li>
             ))}
           </ul>
-        </section>
+        </motion.section>
 
         {/* ── Minimal Footer ────────────────────────────────────── */}
-        <footer className="pt-8 border-t border-white/[0.08] flex flex-col sm:flex-row items-baseline justify-between gap-2 text-xs font-mono text-neutral-600">
+        <motion.footer variants={itemVariants} className="pt-8 border-t border-white/[0.08] flex flex-col sm:flex-row items-baseline justify-between gap-2 text-xs font-mono text-neutral-600">
           <span>Void UI </span>
           <FooterTime />
-        </footer>
-      </div>
+        </motion.footer>
+      </motion.div>
     </main>
   );
 }
