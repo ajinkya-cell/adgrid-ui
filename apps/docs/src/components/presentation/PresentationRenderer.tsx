@@ -334,6 +334,87 @@ function AnisotropicKnobGalleryDemo(props: Record<string, unknown>) {
   return <AnisotropicKnob size={132} sound={false} value={val} label="VOLUME" {...props} />;
 }
 
+function WheelPickerDemo({
+  liveProps = {},
+  playTactileSounds = true,
+}: {
+  liveProps?: Record<string, unknown>;
+  playTactileSounds?: boolean;
+}) {
+  const [framework, setFramework] = useState("Next.js");
+
+  const wheelPickerProps = {
+    items: ["React", "Vue", "Angular", "Next.js", "Svelte", "Solid", "Qwik"],
+    value: framework,
+    onChange: setFramework,
+    variant: "glass" as const,
+    loop: false,
+    sound: playTactileSounds,
+    ...liveProps,
+  };
+
+  return (
+    <div className="flex flex-col items-center gap-7">
+      <div className="text-center">
+        <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-white/35">Selected Framework</div>
+        <div className="mt-2 font-display text-3xl font-bold text-white">{framework}</div>
+      </div>
+      <div className="w-[240px]">
+        <WheelPicker {...(wheelPickerProps as Parameters<typeof WheelPicker>[0])} />
+      </div>
+    </div>
+  );
+}
+
+function WeaponWheelDemo({ liveProps = {} }: { liveProps?: Record<string, unknown> }) {
+  const [activeTool, setActiveTool] = useState(weaponWheelDevItems[0]);
+
+  const weaponWheelProps = {
+    items: weaponWheelDevItems,
+    activeId: activeTool.id,
+    onChange: (item: any) => setActiveTool(item),
+    triggerKey: "q",
+    inline: true,
+    variant: "default" as const,
+    ...liveProps,
+  };
+
+  return (
+    <div className="w-full max-w-6xl p-4 flex flex-col items-center justify-center min-h-[700px] select-none">
+      <WeaponWheel
+        {...weaponWheelProps}
+        className="w-full"
+      />
+    </div>
+  );
+}
+
+const dummyMarqueeItems = [
+  { id: 1, title: "Next.js Framework", description: "Production build server", icon: <IconBrandNextjs size={20} /> },
+  { id: 2, title: "Rust Compiler", description: "Systems execution speed", icon: <IconBrandRust size={20} /> },
+  { id: 3, title: "Docker Container", description: "Kubernetes orchestration", icon: <IconBrandDocker size={20} /> },
+  { id: 4, title: "Tailwind Styling", description: "Design tokens layout", icon: <IconBrandTailwind size={20} /> },
+  { id: 5, title: "Go Microservice", description: "Concurrent backend router", icon: <IconBrandGolang size={20} /> },
+  { id: 6, title: "Database Layer", description: "Postgres connection pool", icon: <IconDatabase size={20} /> },
+  { id: 7, title: "Svelte Frontend", description: "Reactive compiler DOM", icon: <IconBrandSvelte size={20} /> },
+];
+
+function MarqueeDemo({ liveProps = {} }: { liveProps?: Record<string, unknown> }) {
+  const canvasColor = usePresentationStore((state) => state.settings.canvasColor ?? "#111111");
+
+  const marqueeProps = {
+    items: dummyMarqueeItems,
+    fadeColor: canvasColor,
+    ...liveProps,
+  };
+
+  return (
+    <div className="w-full h-screen flex items-center justify-center">
+      <Marquee {...marqueeProps} className="w-full h-full border-none" />
+    </div>
+  );
+}
+
 export function PresentationRenderer({
   entry,
   liveProps = {},
@@ -346,7 +427,6 @@ export function PresentationRenderer({
   mode?: "gallery" | "present";
 }) {
   const playTactileSounds = usePresentationStore((state) => state.settings.playTactileSounds !== false);
-  const [framework, setFramework] = useState("Next.js");
 
   switch (entry.slug) {
     case "image-reveal": {
@@ -556,50 +636,10 @@ export function PresentationRenderer({
 
     case "now-playing-card":
       return <NowPlayingCard song={{ isPlaying: true, title: "Main Chala Jaunga", artist: "Fiddlecraft", album: "Hawai Jahaaz", image: "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/41/c7/65/41c765a0-5a1e-3e35-9c22-5d664da2b95e/cover.jpg/600x600bb.jpg", songUrl: "https://open.spotify.com", playedAt: null }} />;
-    case "wheel-picker": {
-      const wheelPickerProps = {
-        items: ["React", "Vue", "Angular", "Next.js", "Svelte", "Solid", "Qwik"],
-        value: framework,
-        onChange: setFramework,
-        variant: "glass" as const,
-        loop: false,
-        sound: playTactileSounds,
-        ...liveProps,
-      };
-      return (
-        <div className="flex flex-col items-center gap-7">
-          <div className="text-center">
-            <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-white/35">Selected Framework</div>
-            <div className="mt-2 font-display text-3xl font-bold text-white">{framework}</div>
-          </div>
-          <div className="w-[240px]">
-            <WheelPicker {...(wheelPickerProps as Parameters<typeof WheelPicker>[0])} />
-          </div>
-        </div>
-      );
-    }
-    case "weapon-wheel": {
-      const [activeTool, setActiveTool] = useState(weaponWheelDevItems[0]);
-
-      const weaponWheelProps = {
-        items: weaponWheelDevItems,
-        activeId: activeTool.id,
-        onChange: (item: any) => setActiveTool(item),
-        triggerKey: "q",
-        inline: true,
-        variant: "default" as const,
-        ...liveProps,
-      };
-
-      return (
-        <div className="w-full max-w-6xl p-4 flex flex-col items-center justify-center min-h-[700px] select-none">
-          <WeaponWheel
-            {...weaponWheelProps}
-            className="w-full"
-          />
-        </div>
-      );
-    }
+    case "wheel-picker":
+      return <WheelPickerDemo liveProps={liveProps} playTactileSounds={playTactileSounds} />;
+    case "weapon-wheel":
+      return <WeaponWheelDemo liveProps={liveProps} />;
 
     case "hero": {
       const heroProps = {
@@ -721,31 +761,8 @@ export function PresentationRenderer({
         </div>
       );
     case "marquee":
-    case "dashed-marquee": {
-      const dummyMarqueeItems = [
-        { id: 1, title: "Next.js Framework", description: "Production build server", icon: <IconBrandNextjs size={20} /> },
-        { id: 2, title: "Rust Compiler", description: "Systems execution speed", icon: <IconBrandRust size={20} /> },
-        { id: 3, title: "Docker Container", description: "Kubernetes orchestration", icon: <IconBrandDocker size={20} /> },
-        { id: 4, title: "Tailwind Styling", description: "Design tokens layout", icon: <IconBrandTailwind size={20} /> },
-        { id: 5, title: "Go Microservice", description: "Concurrent backend router", icon: <IconBrandGolang size={20} /> },
-        { id: 6, title: "Database Layer", description: "Postgres connection pool", icon: <IconDatabase size={20} /> },
-        { id: 7, title: "Svelte Frontend", description: "Reactive compiler DOM", icon: <IconBrandSvelte size={20} /> },
-      ];
-
-      const canvasColor = usePresentationStore((state) => state.settings.canvasColor ?? "#111111");
-
-      const marqueeProps = {
-        items: dummyMarqueeItems,
-        fadeColor: canvasColor,
-        ...liveProps,
-      };
-
-      return (
-        <div className="w-full h-screen flex items-center justify-center">
-          <Marquee {...marqueeProps} className="w-full h-full border-none" />
-        </div>
-      );
-    }
+    case "dashed-marquee":
+      return <MarqueeDemo liveProps={liveProps} />;
     case "accordion":
     case "bevel-accordion": {
       const dummyAccordionItems = [

@@ -13,10 +13,17 @@ export function MouseActivityProvider({ children }: { children: React.ReactNode 
     }
 
     let timer: number;
+    let isVisible = true;
     const showDock = () => {
-      setDockVisible(true);
+      if (!isVisible) {
+        isVisible = true;
+        setDockVisible(true);
+      }
       window.clearTimeout(timer);
-      timer = window.setTimeout(() => setDockVisible(false), 3000);
+      timer = window.setTimeout(() => {
+        isVisible = false;
+        setDockVisible(false);
+      }, 3000);
     };
 
     showDock();

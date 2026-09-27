@@ -104,13 +104,17 @@ export const usePresentationStore = create<PresentationState>()(
       
       // Actions
       enterPresentation: (slug, category) => {
-        const recent = get().recent.filter((item) => item.slug !== slug);
+        const current = get();
+        if (current.componentSlug === slug && current.componentCategory === category && current.isActive) {
+          return;
+        }
+        const recent = current.recent.filter((item) => item.slug !== slug);
         set({
           isActive: true,
           componentSlug: slug,
           componentCategory: category,
-          history: [{ slug, category }],
-          historyIndex: 0,
+          history: current.history.length > 0 ? current.history : [{ slug, category }],
+          historyIndex: current.historyIndex >= 0 ? current.historyIndex : 0,
           recent: [{ slug, category, visitedAt: Date.now() }, ...recent].slice(0, 12),
         });
       },
@@ -130,6 +134,7 @@ export const usePresentationStore = create<PresentationState>()(
       },
       
       setSidebarTab: (tab) => {
+        if (get().sidebarTab === tab) return;
         set({ sidebarTab: tab });
       },
       
@@ -138,6 +143,7 @@ export const usePresentationStore = create<PresentationState>()(
       },
       
       setDockVisible: (visible) => {
+        if (get().dockVisible === visible) return;
         set({ dockVisible: visible });
       },
       
@@ -158,6 +164,7 @@ export const usePresentationStore = create<PresentationState>()(
       },
 
       setPropsTweakerOpen: (open) => {
+        if (get().propsTweakerOpen === open) return;
         set({ propsTweakerOpen: open });
       },
       

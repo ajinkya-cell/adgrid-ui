@@ -18,6 +18,7 @@ import { FPSMonitor } from "./FPSMonitor";
 import { PresentationOverlays } from "./PresentationOverlays";
 import { PropsTweaker } from "./PropsTweaker";
 import { SidebarTrigger } from "./SidebarTrigger";
+import { PresentationErrorBoundary } from "./PresentationErrorBoundary";
 
 export function PresentationLayout({ payload }: { payload: PresentationPayload }) {
   const { entry } = payload;
@@ -80,7 +81,9 @@ export function PresentationLayout({ payload }: { payload: PresentationPayload }
         <SidebarTrigger />
 
         <PresentationCanvas strategy={strategy}>
-          <PresentationRenderer entry={entry} liveProps={liveProps} />
+          <PresentationErrorBoundary key={entry.slug} fallbackSlug={entry.name}>
+            <PresentationRenderer entry={entry} liveProps={liveProps} />
+          </PresentationErrorBoundary>
         </PresentationCanvas>
         <FloatingDock entry={entry} />
         <PresentationSidebar entry={entry} sourceFiles={payload.sourceFiles} />

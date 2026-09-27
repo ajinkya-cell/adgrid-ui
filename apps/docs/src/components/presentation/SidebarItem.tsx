@@ -1,7 +1,4 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState, memo } from "react";
 import type { RegistryEntry } from "@/registry";
 
 interface SidebarItemProps {
@@ -9,32 +6,39 @@ interface SidebarItemProps {
   active: boolean;
   itemNumber: string;
   isFocused: boolean;
-  onNavigate: () => void;
+  onNavigate?: () => void;
+  onSelect?: (entry: RegistryEntry) => void;
   onHoverChange: (entry: RegistryEntry | null, rect: DOMRect | null) => void;
 }
 
-export function SidebarItem({
+function SidebarItemComponent({
   entry,
   active,
   itemNumber,
   isFocused,
   onNavigate,
+  onSelect,
   onHoverChange,
 }: SidebarItemProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [hovered, setHovered] = useState(false);
 
+  const handleClick = () => {
+    if (onSelect) onSelect(entry);
+    else onNavigate?.();
+  };
+
   const handleMouseEnter = () => {
     setHovered(true);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     
-    // 80ms delay to prevent overlay flickering during quick cursor passes
+    // 160ms delay prevents overlay churn during quick cursor passes
     timeoutRef.current = setTimeout(() => {
       if (containerRef.current) {
         onHoverChange(entry, containerRef.current.getBoundingClientRect());
       }
-    }, 80);
+    }, 160);
   };
 
   const handleMouseLeave = () => {
@@ -56,9 +60,9 @@ export function SidebarItem({
       ref={containerRef}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onClick={onNavigate}
+      onClick={handleClick}
       data-active={active}
-      className={`relative group flex items-center h-[36px] pl-12 pr-6 cursor-pointer select-none transition-colors duration-200 outline-none ${
+      className={`relative group flex items-center h-[36px] pl-12 pr-6 cursor-pointer select-none transition-colors duration-150 outline-none ${
         isFocused ? "bg-white/[0.03]" : ""
       }`}
       role="menuitem"
@@ -91,7 +95,7 @@ export function SidebarItem({
           // Set line coordinate: exactly halfway through the 1px stroke height
           const y = i * 6 + 3.5;
           return (
-            <motion.line
+            <line
               key={i}
               x1="0"
               y1={y}
@@ -99,11 +103,9 @@ export function SidebarItem({
               y2={y}
               stroke={targetColor}
               strokeWidth="1"
-              animate={{
-                x2: targetWidth,
-                stroke: targetColor,
+              style={{
+                transition: "x2 0.2s ease-out, stroke 0.2s ease-out",
               }}
-              transition={{ duration: 0.22, ease: "easeOut" }}
             />
           );
         })}
@@ -111,14 +113,14 @@ export function SidebarItem({
 
       <div className="flex items-center gap-3.5 min-w-0">
         {/* Dimmed Number Prefix */}
-        <span className={`font-mono text-[11px] tracking-wider transition-colors duration-200 ${
+        <span className={`font-mono text-[11px] tracking-wider transition-colors duration-150 ${
           active || hovered ? "text-[#a78bfa]/60" : "text-white/20"
         }`}>
           {itemNumber}
         </span>
 
         {/* Component Title */}
-        <span className={`font-plus-jakarta text-[14px] font-normal tracking-wide transition-colors duration-200 truncate ${
+        <span className={`font-plus-jakarta text-[14px] font-normal tracking-wide transition-colors duration-150 truncate ${
           active || hovered ? "text-[#a78bfa]" : "text-white/45 group-hover:text-white/70"
         }`}>
           {entry.name}
@@ -126,15 +128,15 @@ export function SidebarItem({
 
         {/* New Badge */}
         {isNew && (
-          <motion.span
-            animate={{ opacity: [0.4, 1, 0.4] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="px-1.5 py-0.5 rounded-[4px] border border-violet-500/20 bg-violet-950/20 font-mono text-[8px] uppercase tracking-wider text-violet-400 shrink-0 select-none scale-90"
+          <span
+            className="px-1.5 py-0.5 rounded-[4px] border border-violet-500/20 bg-violet-950/20 font-mono text-[8px] uppercase tracking-wider text-violet-400 shrink-0 select-none scale-90 animate-pulse"
           >
             New
-          </motion.span>
+          </span>
         )}
       </div>
     </div>
   );
 }
+
+export const SidebarItem = memo(SidebarItemComponent);

@@ -7,8 +7,19 @@ import { PresentationLayout } from "@/components/presentation/PresentationLayout
 import type { PresentationSourceFile } from "@/components/presentation/types";
 import { codeToHtml } from "shiki";
 
+const highlightCache = new Map<string, string>();
+
+function getSourceDir(): string {
+  const candidates = [
+    path.join(process.cwd(), "../../packages/ui/src"),
+    path.join(process.cwd(), "packages/ui/src"),
+    path.resolve(process.cwd(), "../packages/ui/src"),
+  ];
+  return candidates.find((dir) => fs.existsSync(dir)) ?? candidates[0];
+}
+
 function readSourceFiles(entry: (typeof registry)[number]) {
-  const srcDir = path.join(process.cwd(), "../../packages/ui/src");
+  const srcDir = getSourceDir();
   const files = Array.from(new Set([entry.packagePath, ...entry.files]));
 
   return files.reduce<PresentationSourceFile[]>((sourceFiles, file) => {
@@ -17,6 +28,24 @@ function readSourceFiles(entry: (typeof registry)[number]) {
     sourceFiles.push({ path: file, code: fs.readFileSync(filePath, "utf-8") });
     return sourceFiles;
   }, []);
+}
+
+async function getHighlightedHtml(filePath: string, code: string): Promise<string> {
+  const cacheKey = `${filePath}:${code.length}:${code.slice(0, 40)}`;
+  const cached = highlightCache.get(cacheKey);
+  if (cached) return cached;
+
+  try {
+    const html = await codeToHtml(code, {
+      lang: "tsx",
+      theme: "github-dark-dimmed",
+    });
+    highlightCache.set(cacheKey, html);
+    return html;
+  } catch (err) {
+    console.error(`Failed to highlight ${filePath} with shiki:`, err);
+    return `<pre><code>${code.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</code></pre>`;
+  }
 }
 
 export default async function PresentCatchAllPage({
@@ -59,10 +88,7 @@ export default async function PresentCatchAllPage({
 
   const highlightedFiles = await Promise.all(
     sourceFiles.map(async (file) => {
-      const html = await codeToHtml(file.code, {
-        lang: "tsx",
-        theme: "github-dark-dimmed",
-      });
+      const html = await getHighlightedHtml(file.path, file.code);
       return {
         ...file,
         html,

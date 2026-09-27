@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, Suspense } from "react";
+import React, { useEffect, useState, useMemo, Suspense } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import type { RegistryEntry } from "@/registry";
@@ -360,24 +360,41 @@ interface PreviewOverlayProps {
   anchorRect: DOMRect | null;
 }
 
+class MiniPreviewErrorBoundary extends React.Component<{ slug: string; children: React.ReactNode }, { hasError: boolean }> {
+  state = { hasError: false };
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  componentDidCatch(error: Error) {
+    console.warn(`Mini preview failed for ${this.props.slug}:`, error);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex h-full w-full items-center justify-center p-4 text-[11px] font-mono text-white/40">
+          Preview unavailable
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export function PreviewOverlay({ isVisible, entry, anchorRect }: PreviewOverlayProps) {
   const [mounted, setMounted] = useState(false);
-  const [coords, setCoords] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (!anchorRect) return;
-
+  const coords = useMemo(() => {
+    if (!anchorRect || typeof window === "undefined") return { top: 0, left: 0 };
     const overlayHeight = 220;
     const topOffset = anchorRect.top + anchorRect.height / 2 - overlayHeight / 2;
     // Prevent clipping above or below screen boundaries
     const top = Math.max(16, Math.min(window.innerHeight - overlayHeight - 16, topOffset));
     const left = anchorRect.right + 16;
-
-    setCoords({ top, left });
+    return { top, left };
   }, [anchorRect]);
 
   if (!mounted) return null;
@@ -386,6 +403,7 @@ export function PreviewOverlay({ isVisible, entry, anchorRect }: PreviewOverlayP
     <AnimatePresence>
       {isVisible && entry && (
         <motion.div
+          key={entry.slug}
           style={{
             position: "fixed",
             top: coords.top,
@@ -398,16 +416,18 @@ export function PreviewOverlay({ isVisible, entry, anchorRect }: PreviewOverlayP
           animate={{ opacity: 1, scale: 1, x: 0 }}
           exit={{ opacity: 0, scale: 0.95, x: 10 }}
           transition={{
-            duration: 0.22,
+            duration: 0.18,
             ease: [0.4, 0, 0.2, 1],
           }}
-          className="pointer-events-auto overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0a]/95 p-1 shadow-[0_20px_60px_rgba(0,0,0,0.65),inset_0_1.5px_0_rgba(255,255,255,0.08)] backdrop-blur-xl"
+          className="pointer-events-none overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0a]/95 p-1 shadow-[0_20px_60px_rgba(0,0,0,0.65),inset_0_1.5px_0_rgba(255,255,255,0.08)] backdrop-blur-xl"
         >
           {/* Subtle tech border overlay */}
           <div className="absolute inset-0 border border-violet-500/5 rounded-2xl pointer-events-none z-30" />
           
           <div className="relative h-full w-full overflow-hidden rounded-xl bg-black/40">
-            <MiniPreviewRenderer slug={entry.slug} />
+            <MiniPreviewErrorBoundary slug={entry.slug}>
+              <MiniPreviewRenderer slug={entry.slug} />
+            </MiniPreviewErrorBoundary>
           </div>
         </motion.div>
       )}

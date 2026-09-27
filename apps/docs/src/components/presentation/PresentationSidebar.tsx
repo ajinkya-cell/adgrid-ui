@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { RegistryEntry } from "@/registry";
 import { usePresentationStore } from "@/lib/presentation/store";
@@ -122,10 +122,23 @@ export function PresentationSidebar({
     }
   }, [activeIndex, open]);
 
-  const handleNavigate = (target: RegistryEntry) => {
-    toggleSidebar();
-    presentation.navigateTo(target);
-  };
+  const handleNavigate = useCallback(
+    (target: RegistryEntry) => {
+      setHoveredEntry(null);
+      setHoveredRect(null);
+      toggleSidebar();
+      presentation.navigateTo(target);
+    },
+    [toggleSidebar, presentation]
+  );
+
+  const handleHoverChange = useCallback(
+    (hEntry: RegistryEntry | null, hRect: DOMRect | null) => {
+      setHoveredEntry(hEntry);
+      setHoveredRect(hRect);
+    },
+    []
+  );
 
   // Generate stable numbering prefix based on full registry listing index
   const getStableNumber = (target: RegistryEntry) => {
@@ -220,11 +233,8 @@ export function PresentationSidebar({
                         active={item.slug === entry.slug}
                         itemNumber={getStableNumber(item)}
                         isFocused={idx === activeIndex}
-                        onNavigate={() => handleNavigate(item)}
-                        onHoverChange={(hEntry, hRect) => {
-                          setHoveredEntry(hEntry);
-                          setHoveredRect(hRect);
-                        }}
+                        onSelect={handleNavigate}
+                        onHoverChange={handleHoverChange}
                       />
                     </div>
                   ))}

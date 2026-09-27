@@ -43,32 +43,41 @@ export function SidebarTrigger() {
   useEffect(() => {
     if (sidebarOpen) return;
 
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!buttonRef.current) return;
+    let rafId: number | null = null;
+    let latestEvent: MouseEvent | null = null;
+
+    const processMove = () => {
+      rafId = null;
+      if (!latestEvent || !buttonRef.current) return;
       const rect = buttonRef.current.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
-      const dx = e.clientX - centerX;
-      const dy = e.clientY - centerY;
+      const dx = latestEvent.clientX - centerX;
+      const dy = latestEvent.clientY - centerY;
       const rad = Math.atan2(dy, dx);
       const deg = rad * (180 / Math.PI);
-
-      // Needle dark tip points North (0 deg) initially.
-      // Offset by 90 deg so dark pointer turns directly towards the cursor.
       const targetDeg = deg + 90;
 
-      // Shortest angle unwrapping to prevent 360-degree flip artifacts
       setNeedleAngle((prev) => {
         let diff = (targetDeg - prev) % 360;
         if (diff > 180) diff -= 360;
         if (diff < -180) diff += 360;
+        if (Math.abs(diff) < 1.2) return prev;
         return prev + diff;
       });
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      latestEvent = e;
+      if (rafId === null) {
+        rafId = requestAnimationFrame(processMove);
+      }
     };
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      if (rafId !== null) cancelAnimationFrame(rafId);
     };
   }, [sidebarOpen]);
 
