@@ -138,19 +138,19 @@ export function SidebarTrigger() {
         onMouseEnter={() => setHovered(true)}
         onMouseMove={handleButtonMouseMove}
         onMouseLeave={handleButtonMouseLeave}
-        className="relative flex h-12 w-12 items-center justify-center rounded-full cursor-pointer group"
+        className="relative flex h-[42px] w-[42px] items-center justify-center rounded-full cursor-pointer group"
         style={{
           perspective: 800,
           backgroundColor: "#0a0a0a",
           boxShadow: sidebarOpen && sidebarTab === "navigator"
-            ? "0 0 24px rgba(139,92,246,0.35), 0 10px 25px rgba(0,0,0,0.7), inset 0 1px 1px rgba(255,255,255,0.15)"
+            ? "0 0 22px rgba(139,92,246,0.35), 0 8px 20px rgba(0,0,0,0.7), inset 0 1px 1px rgba(255,255,255,0.15)"
             : hovered
-            ? "0 0 16px rgba(139,92,246,0.25), 0 8px 20px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.12)"
-            : "0 8px 20px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.08)",
+            ? "0 0 15px rgba(139,92,246,0.25), 0 6px 16px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.12)"
+            : "0 6px 16px rgba(0,0,0,0.55), 0 2px 5px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.08)",
         }}
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
-        whileHover={{ scale: 1.03 }}
+        whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.93 }}
         aria-label={sidebarOpen && sidebarTab === "navigator" ? "Close navigator" : "Open navigator"}
         type="button"
@@ -183,8 +183,8 @@ export function SidebarTrigger() {
           <Image
             src="/previews/base3.png"
             alt="Compass base"
-            width={48}
-            height={48}
+            width={42}
+            height={42}
             priority
             draggable={false}
             className="absolute inset-0 h-full w-full object-contain pointer-events-none select-none"
@@ -194,15 +194,15 @@ export function SidebarTrigger() {
           <motion.div
             className="absolute flex items-center justify-center -translate-y-[1px] pointer-events-none select-none"
             style={{
-              width: "24px",
-              height: "36px",
+              width: "21px",
+              height: "32px",
               transformStyle: "preserve-3d",
               transformOrigin: "49% 51.7%",
-              filter: "drop-shadow(0 3px 5px rgba(0,0,0,0.7))",
+              filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.7))",
             }}
             animate={{
               rotate: activeAngle,
-              z: 6,
+              z: 5,
             }}
             transition={{
               type: "spring",
@@ -214,8 +214,8 @@ export function SidebarTrigger() {
             <Image
               src="/previews/needle2.png"
               alt="Compass needle"
-              width={24}
-              height={36}
+              width={21}
+              height={32}
               priority
               draggable={false}
               className="h-full w-full object-contain pointer-events-none select-none"
@@ -240,20 +240,20 @@ export function SidebarTrigger() {
               variant="default"
               style="pill"
               onClick={handleCodeClick}
-              className={`h-11 px-5 scale-98 rounded-full flex items-center gap-2.5 cursor-pointer select-none transition-all ${
+              className={`h-[42px] px-4.5 rounded-full flex items-center gap-2 cursor-pointer select-none transition-all ${
                 isCodeActive
-                  ? "border-violet-500/50 text-white shadow-[0_0_24px_rgba(139,92,246,0.35)]"
+                  ? "border-violet-500/50 text-white shadow-[0_0_22px_rgba(139,92,246,0.35)]"
                   : ""
               }`}
               type="button"
               aria-label={isCodeActive ? "Close Code Studio" : "Visit Code Studio"}
             >
-              <span className="font-poppins text-xs font-semibold tracking-wide">
+              <span className="font-inter text-[14px] font-medium tracking-tight">
                 Visit Code
               </span>
               <Code2
                 key={animKey}
-                className={`h-4 w-4 stroke-[2.2] pointer-events-none shrink-0 ${
+                className={`h-4 w-4 stroke-[2] pointer-events-none shrink-0 ${
                   animKey > 0 ? "animate-code-slash" : ""
                 }`}
               />

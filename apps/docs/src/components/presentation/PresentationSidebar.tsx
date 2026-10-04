@@ -179,23 +179,23 @@ export function PresentationSidebar({
             {/* Header: Clearance for the 2 fixed trigger buttons on the left + Guide/Source toggle on right */}
             <div className={`h-[48px] mb-4 mt-6 flex items-center justify-end shrink-0 pl-64 ${isExpandedCode ? "pr-8" : "pr-6"}`}>
               {isExpandedCode && (
-                <div className="flex items-center rounded-full border border-white/10 bg-black/50 p-1">
+                <div className="relative flex items-center rounded-full border border-white/10 bg-[#0d0d0d] p-1 shadow-[inset_0_1px_3px_rgba(0,0,0,0.8)]">
                   <button
                     onClick={() => setCodeSubTab("guide")}
-                    className={`flex items-center gap-1.5 rounded-full px-3.5 py-1 font-poppins text-xs font-medium transition-all cursor-pointer ${
+                    className={`flex items-center gap-1.5 rounded-full px-4 py-1 text-xs font-medium transition-all cursor-pointer ${
                       codeSubTab === "guide"
-                        ? "bg-violet-500/20 text-violet-200 border border-violet-500/35 shadow-[0_0_12px_rgba(139,92,246,0.25)]"
-                        : "text-white/50 hover:text-white border border-transparent"
+                        ? "bg-white text-black font-semibold shadow-[0_1px_4px_rgba(0,0,0,0.5)]"
+                        : "text-white/45 hover:text-white/80"
                     }`}
                   >
                     <span>Guide</span>
                   </button>
                   <button
                     onClick={() => setCodeSubTab("source")}
-                    className={`flex items-center gap-1.5 rounded-full px-3.5 py-1 font-poppins text-xs font-medium transition-all cursor-pointer ${
+                    className={`flex items-center gap-1.5 rounded-full px-4 py-1 text-xs font-medium transition-all cursor-pointer ${
                       codeSubTab === "source"
-                        ? "bg-violet-500/20 text-violet-200 border border-violet-500/35 shadow-[0_0_12px_rgba(139,92,246,0.25)]"
-                        : "text-white/50 hover:text-white border border-transparent"
+                        ? "bg-white text-black font-semibold shadow-[0_1px_4px_rgba(0,0,0,0.5)]"
+                        : "text-white/45 hover:text-white/80"
                     }`}
                   >
                     <span>Code</span>
@@ -269,10 +269,10 @@ export function PresentationSidebar({
                             <button
                               key={file.path}
                               onClick={() => setActiveFileIndex(i)}
-                              className={`px-3 py-1.5 text-xs font-mono border rounded-lg transition-all cursor-pointer ${
+                              className={`px-3 py-1.5 text-xs font-mono rounded-lg transition-all cursor-pointer ${
                                 activeFileIndex === i
-                                  ? "bg-violet-500/20 border-violet-500/40 text-white font-medium shadow-[0_0_10px_rgba(139,92,246,0.2)]"
-                                  : "border-white/10 bg-black/40 text-white/50 hover:text-white/80 hover:border-white/20"
+                                  ? "bg-white text-black font-semibold shadow-[0_1px_3px_rgba(0,0,0,0.3)] border border-white/40"
+                                  : "border border-white/10 bg-black/40 text-white/50 hover:text-white/80 hover:border-white/20"
                               }`}
                             >
                               {file.path.split("/").pop()}
@@ -296,21 +296,45 @@ export function PresentationSidebar({
                         onClick={handleCopyCode}
                         title={codeCopied ? "Copied!" : "Copy code"}
                         aria-label={codeCopied ? "Copied!" : "Copy code"}
-                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-violet-500/30 bg-violet-500/15 hover:bg-violet-500/25 text-violet-300 hover:text-white transition-all cursor-pointer shadow-[0_0_12px_rgba(139,92,246,0.2)] active:scale-95"
+                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] hover:border-white/20 text-white/60 hover:text-white transition-all cursor-pointer active:scale-95 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]"
                       >
                         {codeCopied ? (
                           <Check className="h-3.5 w-3.5 text-emerald-400" />
                         ) : (
-                          <Copy className="h-3.5 w-3.5 text-violet-300" />
+                          <Copy className="h-3.5 w-3.5 text-white/60" />
                         )}
                       </button>
                     </div>
                   </div>
 
-                  {/* Highlighted code viewport - wide, spacious, clean */}
-                  <div className="relative group/code flex-1 min-h-0 overflow-hidden border border-white/10 rounded-2xl flex flex-col bg-[#050505] shadow-[inset_0_2px_10px_rgba(0,0,0,0.8)]">
+                  {/* Highlighted code viewport - Props chassis styled */}
+                  <div
+                    className="relative group/code flex-1 min-h-0 overflow-hidden rounded-xl border-t border-white/20 border-x border-white/[0.03] border-b border-white/10 flex flex-col"
+                    style={{
+                      backgroundColor: "#171717",
+                      boxShadow:
+                        "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.4), 0 20px 40px -15px rgba(0, 0, 0, 0.7)",
+                    }}
+                  >
+                    {/* Window Header with 3 MacBook dots */}
+                    <div className="flex items-center justify-between border-b border-white/[0.06] bg-white/[0.02] px-4 py-2.5 shrink-0">
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1.5">
+                          <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f56]" />
+                          <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]" />
+                          <span className="h-2.5 w-2.5 rounded-full bg-[#27c93f]" />
+                        </div>
+                        <span className="text-[11px] font-mono text-white/50">
+                          {currentFile?.path.split("/").pop()}
+                        </span>
+                      </div>
+                      <span className="text-[10px] font-mono text-white/30">
+                        {currentFile?.code.split("\n").length ?? 0} lines
+                      </span>
+                    </div>
+
                     <div
-                      className="flex-1 overflow-auto p-6 text-xs font-mono leading-relaxed [&>pre]:bg-transparent! [&>pre]:p-0! [&>pre]:m-0! present-scroll"
+                      className="flex-1 overflow-auto p-5 text-xs font-mono leading-relaxed [&>pre]:bg-transparent! [&>pre]:p-0! [&>pre]:m-0! present-scroll"
                       dangerouslySetInnerHTML={{ __html: currentFile?.html ?? "" }}
                     />
                   </div>

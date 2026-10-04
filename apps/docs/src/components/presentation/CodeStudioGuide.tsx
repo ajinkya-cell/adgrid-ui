@@ -1,36 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import type { RegistryEntry } from "@/registry";
 import type { PresentationSourceFile } from "./types";
 import { getComponentName } from "./presentation-registry";
-import {
-  Copy,
-  Check,
-  ChevronDown,
-  ChevronRight,
-  Code2,
-} from "lucide-react";
+import { Copy, Check } from "lucide-react";
 
-type PackageManager = "pnpm" | "npm" | "yarn" | "bun";
-
-function getPackageManagerCommand(
-  pm: PackageManager,
-  deps: string[]
-): string {
-  const depStr = deps.join(" ");
-  switch (pm) {
-    case "pnpm":
-      return `pnpm add ${depStr}`;
-    case "npm":
-      return `npm install ${depStr}`;
-    case "yarn":
-      return `yarn add ${depStr}`;
-    case "bun":
-      return `bun add ${depStr}`;
-  }
-}
+type PackageManager = "pnpm" | "yarn" | "npm" | "bun";
 
 function getCliCommand(pm: PackageManager, slug: string): string {
   const baseUrl =
@@ -41,12 +17,62 @@ function getCliCommand(pm: PackageManager, slug: string): string {
   switch (pm) {
     case "pnpm":
       return `pnpm dlx shadcn@latest add ${url}`;
-    case "npm":
-      return `npx shadcn@latest add ${url}`;
     case "yarn":
       return `yarn dlx shadcn@latest add ${url}`;
+    case "npm":
+      return `npx shadcn@latest add ${url}`;
     case "bun":
       return `bunx --bun shadcn@latest add ${url}`;
+  }
+}
+
+/**
+ * Authentic brand icons for the package managers (switched dynamically)
+ */
+function renderPackageManagerIcon(pm: PackageManager) {
+  switch (pm) {
+    case "pnpm":
+      return (
+        <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none">
+          <rect x="2" y="2" width="5.5" height="5.5" fill="#F69220" rx="1" />
+          <rect x="9.25" y="2" width="5.5" height="5.5" fill="#F69220" rx="1" />
+          <rect x="16.5" y="2" width="5.5" height="5.5" fill="#F69220" rx="1" />
+          <rect x="9.25" y="9.25" width="5.5" height="5.5" fill="#F69220" rx="1" />
+          <rect x="16.5" y="9.25" width="5.5" height="5.5" fill="#4E4E4E" rx="1" />
+          <rect x="2" y="16.5" width="5.5" height="5.5" fill="#F69220" rx="1" />
+          <rect x="9.25" y="16.5" width="5.5" height="5.5" fill="#F69220" rx="1" />
+          <rect x="16.5" y="16.5" width="5.5" height="5.5" fill="#F69220" rx="1" />
+        </svg>
+      );
+    case "yarn":
+      return (
+        <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none">
+          <circle cx="12" cy="12" r="9.5" fill="#2C8EBB" fillOpacity="0.15" stroke="#2C8EBB" strokeWidth="1.5" />
+          <path
+            d="M7.5 13.5c1.2 1.8 3.5 2.5 5.5 1.5 1.5-.7 2.2-1.8 2.2-3 0-1.8-1.5-2.8-3.2-2.8-1.5 0-2.8.8-3.2 2"
+            stroke="#2C8EBB"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+          />
+        </svg>
+      );
+    case "npm":
+      return (
+        <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none">
+          <rect width="24" height="24" rx="3" fill="#CB3837" />
+          <path d="M4 6h16v12H12v-8H8v8H4V6zm10 4h2v4h-2v-4z" fill="#FFFFFF" />
+        </svg>
+      );
+    case "bun":
+      return (
+        <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none">
+          <circle cx="12" cy="13" r="8.5" fill="#FDF6E2" stroke="#D97736" strokeWidth="1.5" />
+          <ellipse cx="12" cy="9" rx="3.5" ry="1.8" fill="#D97736" />
+          <circle cx="9.5" cy="13" r="1" fill="#262626" />
+          <circle cx="14.5" cy="13" r="1" fill="#262626" />
+          <path d="M11 15.5c.5.5 1.5.5 2 0" stroke="#D97736" strokeWidth="1.2" strokeLinecap="round" />
+        </svg>
+      );
   }
 }
 
@@ -181,23 +207,144 @@ export default function DemoPage() {
 }`;
 }
 
+/**
+ * Colorful authentic brand SVG icons for dependencies (rendered at 24px)
+ */
+function renderDependencyIcon(name: string, className = "h-6 w-6 shrink-0") {
+  const lower = name.toLowerCase();
+
+  if (lower.includes("tailwind")) {
+    return (
+      <svg viewBox="0 0 24 24" className={className} fill="#38BDF8">
+        <path d="M12.001 4.8c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C13.666 10.618 15.027 12 18.001 12c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C16.336 6.182 14.975 4.8 12.001 4.8zm-6 7.2c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624 1.177 1.194 2.538 2.576 5.512 2.576 3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C10.336 13.382 8.975 12 6.001 12z" />
+      </svg>
+    );
+  }
+
+  if (lower.includes("framer-motion")) {
+    return (
+      <svg viewBox="0 0 24 24" className={className} fill="none">
+        <path d="M4 0h16v8h-8z" fill="#0055FF" />
+        <path d="M4 8h8l8 8H4z" fill="#7B2BF9" />
+        <path d="M4 16h8v8z" fill="#00D8FF" />
+      </svg>
+    );
+  }
+
+  if (lower.includes("lucide")) {
+    return (
+      <svg viewBox="0 0 24 24" className={className} fill="none" stroke="#F97316" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="#F97316" fillOpacity="0.3" />
+      </svg>
+    );
+  }
+
+  if (lower.includes("tabler")) {
+    return (
+      <svg viewBox="0 0 24 24" className={className} fill="none" stroke="#0054a6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="4" />
+        <path d="M9 12h6" />
+        <path d="M12 9v6" />
+      </svg>
+    );
+  }
+
+  if (lower.includes("gsap")) {
+    return (
+      <svg viewBox="0 0 24 24" className={className} fill="none">
+        <rect width="24" height="24" rx="4" fill="#0AE448" fillOpacity="0.25" />
+        <path d="M7 16V8h10v2.5H9.5v1h6.5v4.5H7zm4-2h3v.5h-3V14z" fill="#0AE448" />
+      </svg>
+    );
+  }
+
+  if (lower.includes("lenis")) {
+    return (
+      <svg viewBox="0 0 24 24" className={className} fill="none" stroke="#FF3B30" strokeWidth="2.4" strokeLinecap="round">
+        <path d="M3 13c3-6 6-6 9 0s6 6 9 0" />
+      </svg>
+    );
+  }
+
+  if (lower.includes("matter")) {
+    return (
+      <svg viewBox="0 0 24 24" className={className} fill="none">
+        <circle cx="8" cy="8" r="4.5" fill="#F59E0B" />
+        <circle cx="16" cy="14" r="5" fill="#F59E0B" fillOpacity="0.8" />
+        <circle cx="9" cy="18" r="3" fill="#F59E0B" fillOpacity="0.6" />
+      </svg>
+    );
+  }
+
+  if (lower.includes("cobe")) {
+    return (
+      <svg viewBox="0 0 24 24" className={className} fill="none" stroke="#14B8A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M3.6 9h16.8M3.6 15h16.8" />
+        <ellipse cx="12" cy="12" rx="4" ry="9" />
+      </svg>
+    );
+  }
+
+  if (lower.includes("rough")) {
+    return (
+      <svg viewBox="0 0 24 24" className={className} fill="none" stroke="#FACC15" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4 18c4-2 7-1 11-3s3-1 5-2" />
+        <path d="M5 21c3-1 8-2 14-4" />
+      </svg>
+    );
+  }
+
+  if (lower.includes("three")) {
+    return (
+      <svg viewBox="0 0 24 24" className={className} fill="none" stroke="#38BDF8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polygon points="12 3 2 21 22 21" fill="#38BDF8" fillOpacity="0.15" />
+        <line x1="12" y1="3" x2="12" y2="21" />
+      </svg>
+    );
+  }
+
+  if (lower.includes("react-icons") || lower.includes("react")) {
+    return (
+      <svg viewBox="0 0 24 24" className={className} fill="none" stroke="#00D8FF" strokeWidth="1.8">
+        <ellipse cx="12" cy="12" rx="9" ry="3.5" transform="rotate(30 12 12)" />
+        <ellipse cx="12" cy="12" rx="9" ry="3.5" transform="rotate(90 12 12)" />
+        <ellipse cx="12" cy="12" rx="9" ry="3.5" transform="rotate(150 12 12)" />
+        <circle cx="12" cy="12" r="1.5" fill="#00D8FF" />
+      </svg>
+    );
+  }
+
+  if (lower.includes("devicon")) {
+    return (
+      <svg viewBox="0 0 24 24" className={className} fill="none" stroke="#A855F7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="16 18 22 12 16 6" />
+        <polyline points="8 6 2 12 8 18" />
+      </svg>
+    );
+  }
+
+  // Fallback icon for standard libraries (e.g. clsx)
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="#A3A3A3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m7.5 4.27 9 5.15M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+      <path d="m3.3 7 8.7 5 8.7-5M12 22V12" />
+    </svg>
+  );
+}
+
 export function CodeStudioGuide({
   entry,
-  sourceFiles = [],
-  activeFileIndex,
-  onSelectFileIndex,
-  onSwitchToSource,
 }: {
   entry: RegistryEntry;
   sourceFiles?: PresentationSourceFile[];
-  activeFileIndex: number;
-  onSelectFileIndex: (idx: number) => void;
-  onSwitchToSource: () => void;
+  activeFileIndex?: number;
+  onSelectFileIndex?: (idx: number) => void;
+  onSwitchToSource?: () => void;
 }) {
-  const [pm, setPm] = useState<PackageManager>("pnpm");
   const [cliPm, setCliPm] = useState<PackageManager>("pnpm");
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [previewOpen, setPreviewOpen] = useState(false);
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -205,276 +352,150 @@ export function CodeStudioGuide({
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const dependencies = Array.from(
-    new Set(["framer-motion", "clsx", "tailwind-merge", ...(entry.dependencies || [])])
-  );
+  // Dependencies: include tailwindcss + component dependencies
+  const rawDeps =
+    entry.dependencies && entry.dependencies.length > 0
+      ? entry.dependencies
+      : ["framer-motion"];
+  const displayDeps = Array.from(new Set(["tailwindcss", ...rawDeps]));
 
-  const currentFile = sourceFiles[activeFileIndex] || sourceFiles[0];
-  const primaryFileName = currentFile?.path ? currentFile.path.split("/").pop() : `${getComponentName(entry)}.tsx`;
   const usageCode = getDemonstrationSnippet(entry);
 
   return (
-    <div className="space-y-7 pb-12 present-scroll">
-      {/* Top action row */}
-      <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
-        <h2 className="text-base font-poppins font-semibold text-white tracking-tight">{entry.name}</h2>
-        <button
-          onClick={onSwitchToSource}
-          className="flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-xs font-poppins font-medium text-white/80 hover:bg-white/10 hover:text-white hover:border-white/20 transition-all cursor-pointer active:scale-95"
-        >
-          <Code2 className="h-3.5 w-3.5 text-violet-400" />
-          <span>View Source</span>
-          <ChevronRight className="h-3 w-3 text-white/40" />
-        </button>
+    <div className="space-y-6 pb-12 present-scroll">
+      {/* Component Title & Summary */}
+      <div className="pt-1">
+        <h2 className="text-base font-sans font-semibold text-white tracking-tight">
+          {entry.name}
+        </h2>
+        {entry.description && (
+          <p className="mt-1 text-xs text-white/50 leading-relaxed font-sans">
+            {entry.description}
+          </p>
+        )}
       </div>
 
-      {/* Section 1: CLI (Moved to Top) */}
-      <section className="space-y-2.5">
-        <div className="flex items-center justify-between">
-          <h3 className="text-xs font-poppins uppercase tracking-wider text-white/80 font-semibold">CLI</h3>
-          <div className="flex items-center rounded-full border border-white/10 bg-black/40 p-0.5">
-            {(["pnpm", "npm", "yarn", "bun"] as const).map((mgr) => (
-              <button
-                key={mgr}
-                onClick={() => setCliPm(mgr)}
-                className={`rounded-full px-3 py-0.5 font-poppins text-[11px] transition-all cursor-pointer ${
-                  cliPm === mgr
-                    ? "bg-white/15 text-white font-medium shadow-sm"
-                    : "text-white/40 hover:text-white/70"
-                }`}
-              >
-                {mgr}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="group relative rounded-xl border border-white/10 bg-[#060606] p-3 shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)]">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2 overflow-x-auto present-scroll font-mono text-xs text-white/90">
-              <span className="text-violet-400 font-bold select-none">$</span>
-              <span className="select-all whitespace-nowrap">
-                {getCliCommand(cliPm, entry.slug)}
-              </span>
-            </div>
-            <button
-              onClick={() => handleCopy(getCliCommand(cliPm, entry.slug), "cli")}
-              className="flex items-center gap-1.5 rounded-full border border-white/10 bg-[#111111] px-3.5 py-1.5 font-poppins text-xs font-medium text-white/80 transition-all hover:border-white/25 hover:bg-white/10 hover:text-white shrink-0 active:scale-95 cursor-pointer shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]"
-            >
-              {copiedId === "cli" ? (
-                <>
-                  <Check className="h-3 w-3 text-emerald-400" />
-                  <span className="text-emerald-400 font-medium">Copied</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="h-3 w-3 text-white/60" />
-                  <span>Copy</span>
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 2: Dependencies */}
-      <section className="space-y-2.5">
-        <div className="flex items-center justify-between">
-          <h3 className="text-xs font-poppins uppercase tracking-wider text-white/80 font-semibold">Dependencies</h3>
-          <div className="flex items-center rounded-full border border-white/10 bg-black/40 p-0.5">
-            {(["pnpm", "npm", "yarn", "bun"] as const).map((mgr) => (
-              <button
-                key={mgr}
-                onClick={() => setPm(mgr)}
-                className={`rounded-full px-3 py-0.5 font-poppins text-[11px] transition-all cursor-pointer ${
-                  pm === mgr
-                    ? "bg-white/15 text-white font-medium shadow-sm"
-                    : "text-white/40 hover:text-white/70"
-                }`}
-              >
-                {mgr}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="group relative rounded-xl border border-white/10 bg-[#060606] p-3 shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)]">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2 overflow-x-auto present-scroll font-mono text-xs text-white/90">
-              <span className="text-violet-400 font-bold select-none">$</span>
-              <span className="select-all whitespace-nowrap">
-                {getPackageManagerCommand(pm, dependencies)}
-              </span>
-            </div>
-            <button
-              onClick={() => handleCopy(getPackageManagerCommand(pm, dependencies), "deps")}
-              className="flex items-center gap-1.5 rounded-full border border-white/10 bg-[#111111] px-3.5 py-1.5 font-poppins text-xs font-medium text-white/80 transition-all hover:border-white/25 hover:bg-white/10 hover:text-white shrink-0 active:scale-95 cursor-pointer shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]"
-            >
-              {copiedId === "deps" ? (
-                <>
-                  <Check className="h-3 w-3 text-emerald-400" />
-                  <span className="text-emerald-400 font-medium">Copied</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="h-3 w-3 text-white/60" />
-                  <span>Copy</span>
-                </>
-              )}
-            </button>
-          </div>
-
-          <div className="mt-2.5 flex flex-wrap items-center gap-1.5 border-t border-white/[0.06] pt-2">
-            {dependencies.map((dep) => (
-              <span
-                key={dep}
-                className="rounded-full border border-white/5 bg-white/[0.02] px-2.5 py-0.5 font-mono text-[10px] text-white/50"
-              >
-                {dep}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Section 3: Component Source (Redesigned with Premium File Chooser) */}
-      <section className="space-y-2.5">
-        <div className="flex items-center justify-between">
-          <h3 className="text-xs font-poppins uppercase tracking-wider text-white/80 font-semibold">Component Source</h3>
-          <span className="font-mono text-[10px] text-white/40">
-            {sourceFiles.length} {sourceFiles.length === 1 ? "file" : "files"}
-          </span>
-        </div>
-
-        {/* Multi-file selection rail */}
-        {sourceFiles.length > 1 && (
-          <div className="flex items-center gap-2 overflow-x-auto present-scroll pb-1">
-            {sourceFiles.map((file, idx) => {
-              const isSelected = activeFileIndex === idx;
-              const fileName = file.path.split("/").pop();
-              const lineCount = file.code.split("\n").length;
-              return (
-                <button
-                  key={file.path}
-                  onClick={() => onSelectFileIndex(idx)}
-                  className={`group flex items-center gap-2 rounded-full border px-3.5 py-1.5 font-poppins text-xs transition-all cursor-pointer ${
-                    isSelected
-                      ? "border-violet-500/40 bg-violet-500/15 text-white font-medium shadow-[0_0_12px_rgba(139,92,246,0.25)]"
-                      : "border-white/10 bg-black/40 text-white/50 hover:border-white/20 hover:text-white/80"
-                  }`}
-                >
-                  <span
-                    className={`h-1.5 w-1.5 rounded-full transition-colors ${
-                      isSelected
-                        ? "bg-violet-400 shadow-[0_0_6px_rgba(167,139,250,0.8)]"
-                        : "bg-white/30 group-hover:bg-white/60"
-                    }`}
-                  />
-                  <span>{fileName}</span>
-                  <span className="font-mono text-[10px] text-white/40">({lineCount}L)</span>
-                </button>
-              );
-            })}
-          </div>
-        )}
-
-        {/* Source Card */}
-        <div className="rounded-2xl border border-white/10 bg-[#060606] p-4 shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)] space-y-3">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="flex flex-col">
-              <div className="font-mono text-xs text-white/90 font-medium flex items-center gap-1.5">
-                <span className="text-white/40">components/ui/</span>
-                <span className="text-white">{primaryFileName}</span>
-              </div>
-              <span className="font-mono text-[10px] text-white/40">
-                {currentFile?.code.split("\n").length ?? 0} lines • TypeScript React
-              </span>
+      {/* 1. CLI Command Block (Props-Table inspired 3D chassis with dual inset bevel shadows) */}
+      <div
+        className="overflow-hidden rounded-xl border-t border-white/20 border-x border-white/[0.03] border-b border-white/10"
+        style={{
+          backgroundColor: "#171717",
+          boxShadow:
+            "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.4), 0 20px 40px -15px rgba(0, 0, 0, 0.7)",
+        }}
+      >
+        {/* Header Bar */}
+        <div className="flex items-center justify-between border-b border-white/[0.06] bg-white/[0.02] px-4 py-2.5">
+          <div className="flex items-center gap-3">
+            {/* Dynamic Package Manager Icon */}
+            <div className="flex items-center">
+              {renderPackageManagerIcon(cliPm)}
             </div>
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setPreviewOpen(!previewOpen)}
-                className="flex items-center gap-1.5 rounded-full border border-white/10 bg-[#111111] px-3.5 py-1.5 font-poppins text-xs text-white/70 transition-all hover:bg-white/10 hover:text-white cursor-pointer active:scale-95"
-              >
-                {previewOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
-                <span>{previewOpen ? "Hide" : "Preview"}</span>
-              </button>
-
-              <button
-                onClick={() => handleCopy(currentFile?.code ?? "", "source-code")}
-                className="flex items-center gap-1.5 rounded-full border border-violet-500/30 bg-violet-500/10 px-4 py-1.5 font-poppins text-xs font-medium text-violet-200 transition-all hover:bg-violet-500/20 hover:border-violet-400/50 hover:text-white cursor-pointer active:scale-95 shadow-[0_0_12px_rgba(139,92,246,0.15)]"
-              >
-                {copiedId === "source-code" ? (
-                  <>
-                    <Check className="h-3 w-3 text-emerald-400" />
-                    <span className="text-emerald-400 font-medium">Copied</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="h-3 w-3 text-violet-300" />
-                    <span>Copy Code</span>
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-
-          {/* Preview Viewport */}
-          <AnimatePresence>
-            {previewOpen && currentFile && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.2 }}
-                className="overflow-hidden border-t border-white/10 pt-3"
-              >
-                <div className="max-h-[240px] overflow-auto present-scroll rounded-xl bg-black/60 p-3.5 font-mono text-[10.5px] leading-relaxed text-white/80 select-text border border-white/5">
-                  <pre className="whitespace-pre">{currentFile.code.slice(0, 1000)}...</pre>
-                </div>
-                <div className="mt-2.5 flex items-center justify-between text-[10px] font-poppins text-white/40 px-1">
-                  <span>Snippet preview ({currentFile.code.split("\n").length} total lines)</span>
+            {/* Package Manager Tabs with active underline indicator */}
+            <div className="flex items-center gap-4">
+              {(["pnpm", "yarn", "npm", "bun"] as const).map((mgr) => {
+                const isActive = cliPm === mgr;
+                return (
                   <button
-                    onClick={onSwitchToSource}
-                    className="text-violet-400 hover:text-violet-300 underline font-medium cursor-pointer"
+                    key={mgr}
+                    onClick={() => setCliPm(mgr)}
+                    className={`relative py-1 text-xs font-mono transition-colors cursor-pointer ${
+                      isActive
+                        ? "text-white font-medium"
+                        : "text-white/40 hover:text-white/70"
+                    }`}
                   >
-                    View full source &rarr;
+                    <span>{mgr}</span>
+                    {isActive && (
+                      <div className="absolute -bottom-[11px] inset-x-0 h-[2px] bg-white rounded-full" />
+                    )}
                   </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </section>
+                );
+              })}
+            </div>
+          </div>
 
-      {/* Section 4: Usage */}
-      <section className="space-y-2.5">
-        <div className="flex items-center justify-between">
-          <h3 className="text-xs font-poppins uppercase tracking-wider text-white/80 font-semibold">Usage</h3>
-
+          {/* Minimal Copy Button on Right */}
           <button
-            onClick={() => handleCopy(usageCode, "usage")}
-            className="flex items-center gap-1.5 rounded-full border border-white/10 bg-[#111111] px-3.5 py-1 font-poppins text-xs font-medium text-white/80 transition-all hover:border-white/25 hover:bg-white/10 hover:text-white cursor-pointer active:scale-95 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]"
+            onClick={() => handleCopy(getCliCommand(cliPm, entry.slug), "cli")}
+            className="flex items-center justify-center p-1.5 rounded-md text-white/50 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer active:scale-95"
+            title="Copy command"
+            aria-label="Copy CLI command"
           >
-            {copiedId === "usage" ? (
-              <>
-                <Check className="h-3 w-3 text-emerald-400" />
-                <span className="text-emerald-400 font-medium">Copied</span>
-              </>
+            {copiedId === "cli" ? (
+              <Check className="h-3.5 w-3.5 text-emerald-400" />
             ) : (
-              <>
-                <Copy className="h-3 w-3 text-white/60" />
-                <span>Copy</span>
-              </>
+              <Copy className="h-3.5 w-3.5" />
             )}
           </button>
         </div>
 
-        <div className="overflow-hidden rounded-xl border border-white/10 bg-[#050505] shadow-[inset_0_2px_5px_rgba(0,0,0,0.8)]">
-          <div className="flex items-center justify-between border-b border-white/5 bg-white/[0.02] px-4 py-2 text-[10px] font-mono text-white/40">
-            <span className="text-white/60 font-medium">app/page.tsx</span>
+        {/* Command Body */}
+        <div className="p-4 overflow-x-auto present-scroll">
+          <div className="flex items-center gap-2 font-mono text-xs text-white/90">
+            <span className="text-white/30 select-none font-normal">$</span>
+            <span className="select-all whitespace-nowrap">
+              {getCliCommand(cliPm, entry.slug)}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Dependencies (Icon-only, prominent size, no outer box, no text) */}
+      <section className="space-y-2.5">
+        <h3 className="text-xs font-mono uppercase tracking-wider text-white/40 font-semibold">
+          Dependencies
+        </h3>
+        <div className="flex flex-wrap items-center gap-4 py-1">
+          {displayDeps.map((dep) => (
+            <div
+              key={dep}
+              title={dep}
+              className="transition-transform duration-150 hover:scale-110 cursor-default opacity-90 hover:opacity-100"
+            >
+              {renderDependencyIcon(dep, "h-6 w-6 shrink-0")}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 3. Usage Section (Props-Table inspired 3D chassis) */}
+      <section className="space-y-2">
+        <h3 className="text-xs font-mono uppercase tracking-wider text-white/40 font-semibold">Usage</h3>
+
+        <div
+          className="overflow-hidden rounded-xl border-t border-white/20 border-x border-white/[0.03] border-b border-white/10"
+          style={{
+            backgroundColor: "#171717",
+            boxShadow:
+              "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.4), 0 20px 40px -15px rgba(0, 0, 0, 0.7)",
+          }}
+        >
+          {/* Header Bar with 3 MacBook Dots */}
+          <div className="flex items-center justify-between border-b border-white/[0.06] bg-white/[0.02] px-4 py-2.5">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1.5">
+                <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f56]" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[#27c93f]" />
+              </div>
+              <span className="text-[11px] font-mono text-white/50">app/page.tsx</span>
+            </div>
+            <button
+              onClick={() => handleCopy(usageCode, "usage")}
+              className="flex items-center justify-center p-1.5 rounded-md text-white/50 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer active:scale-95"
+              title="Copy usage code"
+            >
+              {copiedId === "usage" ? (
+                <Check className="h-3.5 w-3.5 text-emerald-400" />
+              ) : (
+                <Copy className="h-3.5 w-3.5" />
+              )}
+            </button>
           </div>
 
+          {/* Code Body */}
           <div className="p-4 overflow-x-auto present-scroll font-mono text-[11px] leading-relaxed select-text">
             <pre className="text-neutral-300">
               {usageCode.split("\n").map((line, i) => (
@@ -492,16 +513,23 @@ export function CodeStudioGuide({
         </div>
       </section>
 
-      {/* Section 5: Props */}
+      {/* 4. Props Section (Props-Table inspired 3D chassis) */}
       {entry.propDefs && entry.propDefs.length > 0 && (
-        <section className="space-y-2.5">
-          <h3 className="text-xs font-poppins uppercase tracking-wider text-white/80 font-semibold">Props</h3>
+        <section className="space-y-2">
+          <h3 className="text-xs font-mono uppercase tracking-wider text-white/40 font-semibold">Props</h3>
 
-          <div className="overflow-hidden rounded-xl border border-white/10 bg-[#060606] shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)]">
+          <div
+            className="overflow-hidden rounded-xl border-t border-white/20 border-x border-white/[0.03] border-b border-white/10"
+            style={{
+              backgroundColor: "#171717",
+              boxShadow:
+                "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.4), 0 20px 40px -15px rgba(0, 0, 0, 0.7)",
+            }}
+          >
             <div className="overflow-x-auto present-scroll">
               <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="border-b border-white/10 bg-white/[0.02] font-poppins text-[10px] uppercase tracking-wider text-white/50">
+                  <tr className="border-b border-white/[0.06] bg-white/[0.02] font-mono text-[10px] uppercase tracking-wider text-white/50">
                     <th className="px-4 py-2.5">Prop</th>
                     <th className="px-4 py-2.5">Type</th>
                     <th className="px-4 py-2.5">Default</th>
@@ -510,17 +538,17 @@ export function CodeStudioGuide({
                 </thead>
                 <tbody className="divide-y divide-white/[0.04]">
                   {entry.propDefs.map((prop) => (
-                    <tr key={prop.name} className="hover:bg-white/[0.015] transition-colors">
-                      <td className="px-4 py-3 font-mono text-xs font-medium text-violet-300 whitespace-nowrap">
+                    <tr key={prop.name} className="hover:bg-white/[0.02] transition-colors">
+                      <td className="px-4 py-3 font-mono text-xs font-medium text-white whitespace-nowrap">
                         {prop.name}
                         {prop.required && (
-                          <span className="ml-1.5 rounded-full bg-rose-500/15 px-2 py-0.5 font-mono text-[9px] text-rose-300 border border-rose-500/25">
+                          <span className="ml-1.5 rounded bg-white/10 px-1.5 py-0.5 font-mono text-[9px] text-white/80 border border-white/10">
                             req
                           </span>
                         )}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap">
-                        <span className="rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-0.5 font-mono text-[10px] text-white/70">
+                        <span className="rounded border border-white/10 bg-white/[0.03] px-2 py-0.5 font-mono text-[10px] text-white/70">
                           {prop.type}
                           {prop.options ? ` (${prop.options.length})` : ""}
                         </span>
@@ -535,7 +563,7 @@ export function CodeStudioGuide({
                             {prop.options.map((opt) => (
                               <span
                                 key={opt}
-                                className="rounded-full bg-white/5 px-2 py-0.5 font-mono text-[9px] text-white/40 border border-white/5"
+                                className="rounded bg-white/5 px-1.5 py-0.5 font-mono text-[9px] text-white/40 border border-white/5"
                               >
                                 &quot;{opt}&quot;
                               </span>
@@ -556,7 +584,7 @@ export function CodeStudioGuide({
 }
 
 /**
- * Lightweight syntax colorizer for the client demonstration snippet
+ * Clean syntax colorizer for the demonstration code snippet
  */
 function formatSyntax(line: string) {
   if (line.trim().startsWith("//")) {
@@ -570,10 +598,10 @@ function formatSyntax(line: string) {
   const tokens = line.split(/(\s+|[{}\[\](),:;=<>"])/);
   return tokens.map((token, idx) => {
     if (["import", "export", "default", "function", "return", "const", "let", "from"].includes(token)) {
-      return <span key={idx} className="text-purple-400 font-medium">{token}</span>;
+      return <span key={idx} className="text-neutral-400 font-medium">{token}</span>;
     }
     if (["true", "false"].includes(token)) {
-      return <span key={idx} className="text-amber-400">{token}</span>;
+      return <span key={idx} className="text-amber-300">{token}</span>;
     }
     if (token.startsWith('"') && token.endsWith('"')) {
       return <span key={idx} className="text-emerald-300">{token}</span>;
@@ -582,7 +610,7 @@ function formatSyntax(line: string) {
       return <span key={idx} className="text-cyan-300">{token}</span>;
     }
     if (["onClick", "onChange", "variant", "size", "className", "min", "max", "step", "soundEffect", "glowColor"].includes(token)) {
-      return <span key={idx} className="text-amber-300/90">{token}</span>;
+      return <span key={idx} className="text-neutral-300">{token}</span>;
     }
     return <span key={idx}>{token}</span>;
   });
