@@ -206,6 +206,11 @@ function PropRow({
   value: unknown;
   onChange: (v: unknown) => void;
 }) {
+  // Only render interactive controls in live tweaker
+  if (!["boolean", "number", "string", "select", "color"].includes(def.type)) {
+    return null;
+  }
+
   const resolvedValue = value ?? def.default;
 
   const handlePropChange = (v: unknown) => {

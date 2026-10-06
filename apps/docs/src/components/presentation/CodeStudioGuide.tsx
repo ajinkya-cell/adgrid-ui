@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { RegistryEntry } from "@/registry";
+import type { RegistryEntry, PropDefinition } from "@/registry";
 import type { PresentationSourceFile } from "./types";
 import { getComponentName } from "./presentation-registry";
 import { Copy, Check } from "lucide-react";
@@ -360,6 +360,27 @@ export function CodeStudioGuide({
   const displayDeps = Array.from(new Set(["tailwindcss", ...rawDeps]));
 
   const usageCode = getDemonstrationSnippet(entry);
+  const compName = getComponentName(entry);
+
+  const defaultFallbackProps: PropDefinition[] = [
+    {
+      name: "className",
+      type: "string",
+      description: "Additional CSS classes for custom styling and layout overrides",
+      required: false,
+    },
+    {
+      name: "children",
+      type: "React.ReactNode",
+      description: "Child elements and nested react components",
+      required: false,
+    },
+  ];
+
+  const effectiveProps: PropDefinition[] =
+    entry.propDefs && entry.propDefs.length > 0
+      ? entry.propDefs
+      : defaultFallbackProps;
 
   return (
     <div className="space-y-6 pb-12 present-scroll">
@@ -513,74 +534,141 @@ export function CodeStudioGuide({
         </div>
       </section>
 
-      {/* 4. Props Section (Props-Table inspired 3D chassis) */}
-      {entry.propDefs && entry.propDefs.length > 0 && (
-        <section className="space-y-2">
-          <h3 className="text-xs font-mono uppercase tracking-wider text-white/40 font-semibold">Props</h3>
+      {/* 4. Props Section (Props-Table inspired 3D chassis matching Code Block and Command Component) */}
+      <section className="space-y-2">
+        <h3 className="text-xs font-mono uppercase tracking-wider text-white/40 font-semibold">
+          Props
+        </h3>
 
-          <div
-            className="overflow-hidden rounded-xl border-t border-white/20 border-x border-white/[0.03] border-b border-white/10"
-            style={{
-              backgroundColor: "#171717",
-              boxShadow:
-                "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.4), 0 20px 40px -15px rgba(0, 0, 0, 0.7)",
-            }}
-          >
-            <div className="overflow-x-auto present-scroll">
-              <table className="w-full text-left text-xs">
-                <thead>
-                  <tr className="border-b border-white/[0.06] bg-white/[0.02] font-mono text-[10px] uppercase tracking-wider text-white/50">
-                    <th className="px-4 py-2.5">Prop</th>
-                    <th className="px-4 py-2.5">Type</th>
-                    <th className="px-4 py-2.5">Default</th>
-                    <th className="px-4 py-2.5">Description</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/[0.04]">
-                  {entry.propDefs.map((prop) => (
-                    <tr key={prop.name} className="hover:bg-white/[0.02] transition-colors">
-                      <td className="px-4 py-3 font-mono text-xs font-medium text-white whitespace-nowrap">
-                        {prop.name}
-                        {prop.required && (
-                          <span className="ml-1.5 rounded bg-white/10 px-1.5 py-0.5 font-mono text-[9px] text-white/80 border border-white/10">
-                            req
-                          </span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap">
-                        <span className="rounded border border-white/10 bg-white/[0.03] px-2 py-0.5 font-mono text-[10px] text-white/70">
-                          {prop.type}
-                          {prop.options ? ` (${prop.options.length})` : ""}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 font-mono text-[11px] text-white/50 whitespace-nowrap">
-                        {prop.default !== undefined ? String(prop.default) : "—"}
-                      </td>
-                      <td className="px-4 py-3 text-white/70 leading-relaxed text-[11px] font-sans">
-                        {prop.description}
-                        {prop.options && (
-                          <div className="mt-1 flex flex-wrap gap-1">
-                            {prop.options.map((opt) => (
-                              <span
-                                key={opt}
-                                className="rounded bg-white/5 px-1.5 py-0.5 font-mono text-[9px] text-white/40 border border-white/5"
-                              >
-                                &quot;{opt}&quot;
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+        <div
+          className="overflow-hidden rounded-xl border-t border-white/20 border-x border-white/[0.03] border-b border-white/10"
+          style={{
+            backgroundColor: "#171717",
+            boxShadow:
+              "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.4), 0 20px 40px -15px rgba(0, 0, 0, 0.7)",
+          }}
+        >
+          {/* Header Bar with 3 MacBook Dots & TypeScript Interface Label */}
+          <div className="flex items-center justify-between border-b border-white/[0.06] bg-white/[0.02] px-4 py-2.5">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1.5">
+                <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f56]" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[#27c93f]" />
+              </div>
+              <span className="text-[11px] font-mono text-white/50">
+                interface {compName}Props
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2.5">
+              <span className="text-[10px] font-mono text-white/30 hidden sm:inline">
+                {effectiveProps.length} {effectiveProps.length === 1 ? "prop" : "props"}
+              </span>
+              <button
+                type="button"
+                onClick={() =>
+                  handleCopy(
+                    generatePropsInterface(compName, effectiveProps),
+                    "props-interface"
+                  )
+                }
+                className="flex items-center justify-center p-1.5 rounded-md text-white/50 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer active:scale-95"
+                title="Copy TypeScript Props interface"
+                aria-label="Copy TypeScript Props interface"
+              >
+                {copiedId === "props-interface" ? (
+                  <Check className="h-3.5 w-3.5 text-emerald-400" />
+                ) : (
+                  <Copy className="h-3.5 w-3.5" />
+                )}
+              </button>
             </div>
           </div>
-        </section>
-      )}
+
+          {/* Table Viewport */}
+          <div className="overflow-x-auto present-scroll">
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="border-b border-white/[0.06] bg-white/[0.02] font-mono text-[10px] uppercase tracking-wider text-white/50">
+                  <th className="px-4 py-2.5">Prop</th>
+                  <th className="px-4 py-2.5">Type</th>
+                  <th className="px-4 py-2.5">Default</th>
+                  <th className="px-4 py-2.5">Description</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/[0.04]">
+                {effectiveProps.map((prop) => (
+                  <tr
+                    key={prop.name}
+                    className="hover:bg-white/[0.02] transition-colors"
+                  >
+                    <td className="px-4 py-3 font-mono text-xs font-medium text-white whitespace-nowrap">
+                      {prop.name}
+                      {prop.required && (
+                        <span className="ml-1.5 rounded bg-white/10 px-1.5 py-0.5 font-mono text-[9px] text-white/80 border border-white/10">
+                          req
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <span className="rounded border border-white/10 bg-white/[0.03] px-2 py-0.5 font-mono text-[10px] text-white/70">
+                        {prop.type === "select" && prop.options
+                          ? prop.options.map((opt) => `"${opt}"`).join(" | ")
+                          : prop.type}
+                        {prop.options && prop.type !== "select"
+                          ? ` (${prop.options.length})`
+                          : ""}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 font-mono text-[11px] text-white/50 whitespace-nowrap">
+                      {prop.default !== undefined ? String(prop.default) : "—"}
+                    </td>
+                    <td className="px-4 py-3 text-white/70 leading-relaxed text-[11px] font-sans">
+                      <div>{prop.description}</div>
+                      {prop.options && prop.type !== "select" && (
+                        <div className="mt-1 flex flex-wrap gap-1">
+                          {prop.options.map((opt) => (
+                            <span
+                              key={opt}
+                              className="rounded bg-white/5 px-1.5 py-0.5 font-mono text-[9px] text-white/40 border border-white/5"
+                            >
+                              &quot;{opt}&quot;
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
     </div>
   );
+}
+
+/**
+ * Formats a TypeScript interface snippet representing the component's props
+ */
+function generatePropsInterface(
+  compName: string,
+  props: PropDefinition[]
+): string {
+  if (!props || props.length === 0) {
+    return `export interface ${compName}Props extends React.HTMLAttributes<HTMLElement> {\n  className?: string;\n  children?: React.ReactNode;\n}`;
+  }
+  const lines = props.map((p) => {
+    const typeStr =
+      p.type === "select" && p.options
+        ? p.options.map((o) => `"${o}"`).join(" | ")
+        : p.type;
+    const optMark = p.required ? "" : "?";
+    return `  /** ${p.description} */\n  ${p.name}${optMark}: ${typeStr};`;
+  });
+  return `export interface ${compName}Props {\n${lines.join("\n")}\n}`;
 }
 
 /**

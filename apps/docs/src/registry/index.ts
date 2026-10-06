@@ -10,7 +10,7 @@ export type DisplayStrategy = "center" | "fullscreen" | "cover" | "fit" | "auto"
 
 export interface PropDefinition {
   name: string;
-  type: "string" | "number" | "boolean" | "select" | "color";
+  type: "string" | "number" | "boolean" | "select" | "color" | (string & {});
   default?: string | number | boolean;
   description: string;
   required: boolean;
@@ -75,6 +75,16 @@ export const registry: RegistryEntry[] = [
       "animated/roughly/RoughHighlight.tsx",
       "animated/roughly/RoughStrike.tsx",
       "animated/roughly/RoughUnderline.tsx",
+    ],
+    propDefs: [
+      { name: "children", type: "React.ReactNode", description: "Target typography or elements to annotate with hand-drawn vector sketches", required: false },
+      { name: "type", type: "select", default: "underline", description: "Style of organic hand-drawn annotation sketch", required: false, options: ["underline", "box", "circle", "highlight", "strike-through", "crossed-off", "bracket"] },
+      { name: "color", type: "color", default: "#e11d48", description: "Stroke or highlighter accent tint color", required: false },
+      { name: "strokeWidth", type: "number", default: 2, min: 1, max: 8, step: 0.5, description: "Thickness of the rough vector sketch strokes in pixels", required: false },
+      { name: "animate", type: "boolean", default: true, description: "Whether to animate the organic drawing stroke on mount", required: false },
+      { name: "animationDuration", type: "number", default: 800, min: 200, max: 2000, step: 50, description: "Total duration of drawing stroke animation in milliseconds", required: false },
+      { name: "brackets", type: "select", default: "left", description: "Placement side when type is set to 'bracket'", required: false, options: ["left", "right", "top", "bottom"] },
+      { name: "className", type: "string", description: "Additional wrapper CSS class names", required: false },
     ],
   },
   {
@@ -181,6 +191,12 @@ export const registry: RegistryEntry[] = [
     dependencies: ["matter-js", "gsap"],
     packagePath: "animated/GravityCardStack.tsx",
     files: ["animated/GravityCardStack.tsx"],
+    propDefs: [
+      { name: "className", type: "string", description: "Additional custom class names for the physics canvas container", required: false },
+      { name: "gravity", type: "number", default: 1, min: 0, max: 3, step: 0.1, description: "Downwards 2D gravitational acceleration force in Matter.js world", required: false },
+      { name: "restitution", type: "number", default: 0.7, min: 0, max: 1, step: 0.05, description: "Card bounce coefficient upon ground or wall impact", required: false },
+      { name: "friction", type: "number", default: 0.1, min: 0, max: 0.5, step: 0.01, description: "Surface friction opposing card sliding motion", required: false },
+    ],
   },
 
   {
@@ -197,6 +213,11 @@ export const registry: RegistryEntry[] = [
       "animated/coverflow/types.ts",
       "animated/coverflow/utils.ts",
       "animated/coverflow/useCoverflow.ts",
+    ],
+    propDefs: [
+      { name: "className", type: "string", description: "Additional wrapper CSS classes", required: false },
+      { name: "rotate", type: "number", default: 30, min: 10, max: 60, step: 5, description: "3D Y-axis tilt rotation angle of adjacent album cards in degrees", required: false },
+      { name: "depth", type: "number", default: 150, min: 50, max: 300, step: 10, description: "Perspective Z-translation setback distance in pixels", required: false },
     ],
   },
   {
@@ -276,6 +297,12 @@ export const registry: RegistryEntry[] = [
     packagePath: "backgrounds/PixelMelt.tsx",
     files: ["backgrounds/PixelMelt.tsx"],
     presentationStrategy: "fullscreen",
+    propDefs: [
+      { name: "pixelSize", type: "number", default: 12, min: 4, max: 32, step: 2, description: "Width and height of each digital pixel block in pixels", required: false },
+      { name: "meltSpeed", type: "number", default: 1, min: 0.2, max: 3, step: 0.1, description: "Drip acceleration rate of cascading molten pixels", required: false },
+      { name: "interactive", type: "boolean", default: true, description: "Whether pointer hover activates localized pixel melting", required: false },
+      { name: "className", type: "string", description: "Optional layout container classes", required: false },
+    ],
   },
   {
     name: "Breathing Grid",
@@ -286,6 +313,12 @@ export const registry: RegistryEntry[] = [
     packagePath: "backgrounds/BreathingGrid.tsx",
     files: ["backgrounds/BreathingGrid.tsx"],
     presentationStrategy: "fullscreen",
+    propDefs: [
+      { name: "gridSize", type: "number", default: 40, min: 20, max: 80, step: 5, description: "Spacing between background grid nodes in pixels", required: false },
+      { name: "baseOpacity", type: "number", default: 0.1, min: 0.02, max: 0.5, step: 0.02, description: "Resting ambient opacity of inactive grid intersections", required: false },
+      { name: "cycleDuration", type: "number", default: 8000, min: 2000, max: 15000, step: 500, description: "Full duration of sinusoidal ambient brightness pulse in milliseconds", required: false },
+      { name: "className", type: "string", description: "Additional wrapper CSS classes", required: false },
+    ],
   },
   {
     name: "Breathing Background",
@@ -314,6 +347,12 @@ export const registry: RegistryEntry[] = [
     packagePath: "backgrounds/FloatingEmbers.tsx",
     files: ["backgrounds/FloatingEmbers.tsx"],
     presentationStrategy: "fullscreen",
+    propDefs: [
+      { name: "maxParticles", type: "number", default: 400, min: 50, max: 800, step: 25, description: "Maximum active rising fire ember particles rendered", required: false },
+      { name: "mouseRadius", type: "number", default: 200, min: 50, max: 400, step: 25, description: "Proximity radius for pointer wind deflection in pixels", required: false },
+      { name: "mouseForce", type: "number", default: 0.02, min: 0.005, max: 0.08, step: 0.005, description: "Deflection impulse applied when cursor moves through particles", required: false },
+      { name: "className", type: "string", description: "Additional wrapper CSS classes", required: false },
+    ],
   },
   {
     name: "Spotlight Grid",
@@ -324,6 +363,12 @@ export const registry: RegistryEntry[] = [
     packagePath: "backgrounds/SpotlightGrid.tsx",
     files: ["backgrounds/SpotlightGrid.tsx"],
     presentationStrategy: "fullscreen",
+    propDefs: [
+      { name: "children", type: "React.ReactNode", description: "Foreground content rendered above interactive spotlight grid", required: false },
+      { name: "cellSize", type: "number", default: 64, min: 32, max: 128, step: 8, description: "Dimensions of each 3D grid cell in pixels", required: false },
+      { name: "spotlightColor", type: "color", default: "#ffffff", description: "Accent illumination color of mouse follower spotlight", required: false },
+      { name: "className", type: "string", description: "Additional wrapper CSS classes", required: false },
+    ],
   },
   {
     name: "Lumina Wave",
@@ -334,6 +379,15 @@ export const registry: RegistryEntry[] = [
     packagePath: "backgrounds/LuminaWave.tsx",
     files: ["backgrounds/LuminaWave.tsx"],
     presentationStrategy: "fullscreen",
+    propDefs: [
+      { name: "speed", type: "number", default: 1.0, min: 0.2, max: 3.0, step: 0.1, description: "Animation progression speed multiplier for mathematical wave cycles", required: false },
+      { name: "intensity", type: "number", default: 1.0, min: 0.2, max: 2.5, step: 0.1, description: "Luminance and contrast multiplier of glowing wave lines", required: false },
+      { name: "colorPrimary", type: "color", default: "#2563eb", description: "Hex color code for primary wave frequency", required: false },
+      { name: "colorSecondary", type: "color", default: "#6610f2", description: "Hex color code for secondary wave frequency", required: false },
+      { name: "quality", type: "select", default: "medium", description: "Canvas internal render resolution multiplier", required: false, options: ["high", "medium", "low"] },
+      { name: "mouseReactivity", type: "number", default: 1.0, min: 0, max: 2, step: 0.1, description: "Sensitivity of wave distortion to pointer movement", required: false },
+      { name: "className", type: "string", description: "Additional layout styling classes", required: false },
+    ],
   },
   {
     name: "Matrix Rain",
@@ -385,6 +439,12 @@ export const registry: RegistryEntry[] = [
     dependencies: ["framer-motion", "lucide-react"],
     packagePath: "animated/LaserVaultPassword.tsx",
     files: ["animated/LaserVaultPassword.tsx"],
+    propDefs: [
+      { name: "onUnlock", type: "() => void", description: "Callback fired when safe combination or password unlocks successfully", required: false },
+      { name: "soundEffects", type: "boolean", default: true, description: "Whether to synthesize tactile mechanical vault gear sounds", required: false },
+      { name: "variant", type: "select", default: "cyber-laser", description: "Skeuomorphic chassis material finish", required: false, options: ["ambient", "neon-edge", "metallic-sheen", "glassmorphic", "cyber-laser", "classic-gold"] },
+      { name: "className", type: "string", description: "Custom styling classes for safe dial container", required: false },
+    ],
   },
   {
     name: "Premium Hero",
@@ -395,6 +455,13 @@ export const registry: RegistryEntry[] = [
     packagePath: "animated/PremiumHero.tsx",
     files: ["animated/PremiumHero.tsx"],
     presentationStrategy: "cover",
+    propDefs: [
+      { name: "title", type: "string", default: "Crafted with Precision", description: "Primary editorial headline rendered with serif typography", required: false },
+      { name: "subtitle", type: "string", default: "High-friction UI components designed for high-end web experiences", description: "Secondary description paragraph below main headline", required: false },
+      { name: "ctaText", type: "string", default: "Explore Studio", description: "Label text for primary action CTA button", required: false },
+      { name: "onSearchSubmit", type: "(query: string) => void", description: "Callback fired when hero search bar query is submitted", required: false },
+      { name: "className", type: "string", description: "Custom classes for hero wrapper layout", required: false },
+    ],
   },
   {
     name: "Dot Matrix",
@@ -458,6 +525,10 @@ export const registry: RegistryEntry[] = [
     dependencies: ["react-icons"],
     packagePath: "animated/NowPlayingCard.tsx",
     files: ["animated/NowPlayingCard.tsx"],
+    propDefs: [
+      { name: "song", type: "Song", description: "Currently playing track object containing title, artist, album, image, songUrl, and isPlaying state", required: true },
+      { name: "className", type: "string", description: "Custom classes for card link container", required: false },
+    ],
   },
   {
     name: "Wheel Picker",
@@ -600,6 +671,11 @@ export const registry: RegistryEntry[] = [
     packagePath: "animated/Cards.tsx",
     files: ["animated/Cards.tsx"],
     presentationStrategy: "center",
+    propDefs: [
+      { name: "className", type: "string", description: "Additional layout wrapper classes", required: false },
+      { name: "spacing", type: "number", default: 230, min: 150, max: 350, step: 10, description: "Horizontal offset spacing between overlapping card deck items in pixels", required: false },
+      { name: "perspective", type: "boolean", default: true, description: "Enables 3D perspective depth transforms on card hover", required: false },
+    ],
   },
   {
     name: "Simple Card",
@@ -610,6 +686,14 @@ export const registry: RegistryEntry[] = [
     packagePath: "animated/SimpleCard.tsx",
     files: ["animated/SimpleCard.tsx"],
     presentationStrategy: "center",
+    propDefs: [
+      { name: "title", type: "string", default: "Working Knowledge", description: "Card title heading displayed at the bottom", required: true },
+      { name: "description", type: "string", default: "Practical skills and insights gained through hands-on experience.", description: "Card body explanatory text revealed on expand", required: false },
+      { name: "imageUrl", type: "string", description: "Optional thumbnail or banner image URL", required: false },
+      { name: "accent", type: "string", default: "from-transparent to-transparent", description: "Tailwind gradient string for ambient light glow", required: false },
+      { name: "topBorderColor", type: "string", default: "rgba(255,255,255,0.18)", description: "Top specular catchlight border color", required: false },
+      { name: "className", type: "string", description: "Custom container classes", required: false },
+    ],
   },
   {
     name: "Flickering Grid Playground",
@@ -620,6 +704,14 @@ export const registry: RegistryEntry[] = [
     packagePath: "animated/FlickeringGrid.tsx",
     files: ["animated/FlickeringGrid.tsx"],
     presentationStrategy: "fullscreen",
+    propDefs: [
+      { name: "squareSize", type: "number", default: 4, min: 2, max: 16, step: 1, description: "Size of individual square grid pixels in px", required: false },
+      { name: "gridGap", type: "number", default: 6, min: 2, max: 20, step: 1, description: "Spacing between adjacent square pixels in px", required: false },
+      { name: "flickerChance", type: "number", default: 0.3, min: 0.05, max: 0.9, step: 0.05, description: "Probability per frame that an active pixel modulates opacity", required: false },
+      { name: "color", type: "color", default: "#6b7280", description: "Hex color code for the rendered pixel squares", required: false },
+      { name: "maxOpacity", type: "number", default: 0.4, min: 0.1, max: 1, step: 0.05, description: "Peak brightness opacity value when flickering", required: false },
+      { name: "className", type: "string", description: "Custom wrapper class names", required: false },
+    ],
   },
   {
     name: "Dot Pattern Playground",
@@ -630,6 +722,14 @@ export const registry: RegistryEntry[] = [
     packagePath: "animated/DotPattern.tsx",
     files: ["animated/DotPattern.tsx"],
     presentationStrategy: "fullscreen",
+    propDefs: [
+      { name: "width", type: "number", default: 16, min: 8, max: 48, step: 2, description: "Horizontal pattern repeat tile pitch in pixels", required: false },
+      { name: "height", type: "number", default: 16, min: 8, max: 48, step: 2, description: "Vertical pattern repeat tile pitch in pixels", required: false },
+      { name: "cx", type: "number", default: 1, min: 0.5, max: 4, step: 0.5, description: "Center X coordinate of the circle dot within pattern tile", required: false },
+      { name: "cy", type: "number", default: 1, min: 0.5, max: 4, step: 0.5, description: "Center Y coordinate of the circle dot within pattern tile", required: false },
+      { name: "cr", type: "number", default: 1, min: 0.5, max: 4, step: 0.5, description: "Radius of each individual circular dot in pixels", required: false },
+      { name: "className", type: "string", description: "Custom SVG styling classes", required: false },
+    ],
   },
 
   {
@@ -641,6 +741,11 @@ export const registry: RegistryEntry[] = [
     packagePath: "animated/Loaders1.tsx",
     files: ["animated/Loaders1.tsx", "animated/LoaderCard.tsx"],
     presentationStrategy: "fullscreen",
+    propDefs: [
+      { name: "cardSize", type: "number", default: 160, min: 100, max: 240, step: 10, description: "Outer card width and height dimensions in pixels", required: false },
+      { name: "iconSize", type: "number", default: 48, min: 24, max: 80, step: 4, description: "Vector icon size in pixels", required: false },
+      { name: "className", type: "string", description: "Additional wrapper classes", required: false },
+    ],
   },
   {
     name: "Marquee",
@@ -724,6 +829,10 @@ export const registry: RegistryEntry[] = [
     packagePath: "animated/NavBar1.tsx",
     files: ["animated/NavBar1.tsx"],
     presentationStrategy: "fullscreen",
+    propDefs: [
+      { name: "statusColor", type: "select", default: "emerald", description: "Status pulse dot indicator theme color", required: false, options: ["emerald", "cyan", "rose"] },
+      { name: "className", type: "string", description: "Additional navbar container styling classes", required: false },
+    ],
   },
 
   {
@@ -735,6 +844,11 @@ export const registry: RegistryEntry[] = [
     packagePath: "animated/ForgeUILanding.tsx",
     files: ["animated/ForgeUILanding.tsx"],
     presentationStrategy: "fullscreen",
+    propDefs: [
+      { name: "forgeUiUrl", type: "string", default: "https://forgeui.in", description: "Destination redirect URL for primary link button", required: false },
+      { name: "onDocumentation", type: "() => void", description: "Callback fired when clicking the 'Documentation' action button", required: false },
+      { name: "className", type: "string", description: "Optional layout wrapper classes", required: false },
+    ],
   },
 
   {
@@ -820,7 +934,14 @@ export const registry: RegistryEntry[] = [
     packagePath: "animated/Sidebar.tsx",
     files: ["animated/Sidebar.tsx"],
     presentationStrategy: "center",
-    propDefs: [],
+    propDefs: [
+      { name: "isOpen", type: "boolean", default: true, description: "Controlled visibility open state of the sidebar drawer", required: false },
+      { name: "onClose", type: "() => void", description: "Callback fired when closing sidebar via backdrop or escape key", required: false },
+      { name: "side", type: "select", default: "left", description: "Docking edge placement on screen", required: false, options: ["left", "right"] },
+      { name: "inline", type: "boolean", default: false, description: "Renders inline within container instead of fixed screen drawer", required: false },
+      { name: "children", type: "React.ReactNode", description: "Custom navigation links and sidebar body elements", required: false },
+      { name: "className", type: "string", description: "Additional custom class names for the sidebar container", required: false },
+    ],
   },
 
   {
@@ -832,6 +953,14 @@ export const registry: RegistryEntry[] = [
     packagePath: "animated/CommandPalette.tsx",
     files: ["animated/CommandPalette.tsx"],
     presentationStrategy: "center",
+    propDefs: [
+      { name: "isOpen", type: "boolean", default: true, description: "Controlled open visibility of the quick action modal", required: false },
+      { name: "onClose", type: "() => void", description: "Callback fired when palette closes via escape or backdrop click", required: false },
+      { name: "placeholder", type: "string", default: "Type a command or search...", description: "Search input placeholder text", required: false },
+      { name: "inline", type: "boolean", default: false, description: "Renders inline inside container instead of fixed screen overlay modal", required: false },
+      { name: "items", type: "CommandItem[]", description: "Custom command items array with titles, icons, and keyboard shortcuts", required: false },
+      { name: "className", type: "string", description: "Custom classes for command palette chassis", required: false },
+    ],
   },
   {
     name: "Switch",
@@ -859,6 +988,14 @@ export const registry: RegistryEntry[] = [
     packagePath: "animated/OTPInput.tsx",
     files: ["animated/OTPInput.tsx"],
     presentationStrategy: "center",
+    propDefs: [
+      { name: "length", type: "number", default: 6, min: 4, max: 8, step: 1, description: "Number of verification digit PIN slots", required: false },
+      { name: "correctPin", type: "string", default: "777777", description: "Pre-configured validation passcode", required: false },
+      { name: "value", type: "string", description: "Controlled passcode string value", required: false },
+      { name: "onChange", type: "(val: string) => void", description: "Callback triggered whenever digit input value changes", required: false },
+      { name: "onComplete", type: "(val: string) => void", description: "Callback fired immediately when all PIN digits are filled", required: false },
+      { name: "className", type: "string", description: "Custom container classes", required: false },
+    ],
   },
   {
     name: "Tooltip",
@@ -869,6 +1006,14 @@ export const registry: RegistryEntry[] = [
     packagePath: "animated/Tooltip.tsx",
     files: ["animated/Tooltip.tsx"],
     presentationStrategy: "center",
+    propDefs: [
+      { name: "content", type: "React.ReactNode", description: "Tooltip popover body content or label", required: true },
+      { name: "children", type: "React.ReactNode", description: "Trigger element that reveals the tooltip on pointer hover", required: true },
+      { name: "side", type: "select", default: "top", description: "Anchor positioning side relative to the trigger", required: false, options: ["top", "bottom", "left", "right"] },
+      { name: "align", type: "select", default: "center", description: "Alignment along side axis", required: false, options: ["start", "center", "end"] },
+      { name: "delay", type: "number", default: 150, min: 0, max: 1000, step: 50, description: "Hover reveal delay before appearing in milliseconds", required: false },
+      { name: "className", type: "string", description: "Additional classes for tooltip balloon container", required: false },
+    ],
   },
   {
     name: "Timeline",
@@ -879,6 +1024,12 @@ export const registry: RegistryEntry[] = [
     packagePath: "animated/Timeline.tsx",
     files: ["animated/Timeline.tsx"],
     presentationStrategy: "center",
+    propDefs: [
+      { name: "steps", type: "StepItem[]", description: "Array of step objects containing title, description, timestamp, and status", required: false },
+      { name: "currentStep", type: "number", default: 2, min: 0, max: 6, step: 1, description: "Controlled active step index (0-indexed)", required: false },
+      { name: "onStepChange", type: "(step: number) => void", description: "Callback fired when user clicks a step node", required: false },
+      { name: "className", type: "string", description: "Additional wrapper classes", required: false },
+    ],
   },
   {
     name: "Globe",
@@ -889,6 +1040,9 @@ export const registry: RegistryEntry[] = [
     packagePath: "animated/Globe.tsx",
     files: ["animated/Globe.tsx"],
     presentationStrategy: "center",
+    propDefs: [
+      { name: "className", type: "string", description: "Additional classes for WebGL canvas container", required: false },
+    ],
   },
   {
     name: "Bento Grid",
@@ -919,6 +1073,14 @@ export const registry: RegistryEntry[] = [
     packagePath: "animated/Toast.tsx",
     files: ["animated/Toast.tsx"],
     presentationStrategy: "fullscreen",
+    propDefs: [
+      { name: "title", type: "string", default: "System Notification", description: "Primary toast alert headline text", required: true },
+      { name: "description", type: "string", default: "Component copied to clipboard.", description: "Secondary message text", required: true },
+      { name: "onDismiss", type: "() => void", description: "Callback fired when dismiss button is clicked or timer expires", required: true },
+      { name: "stackDepth", type: "number", default: 0, min: 0, max: 4, step: 1, description: "Z-index stack position layer behind front toast", required: false },
+      { name: "isExpanded", type: "boolean", default: false, description: "Whether notification stack expands on hover or focus", required: false },
+      { name: "className", type: "string", description: "Custom styling classes", required: false },
+    ],
   },
   {
     name: "Meter",
