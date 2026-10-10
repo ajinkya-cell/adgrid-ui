@@ -1663,20 +1663,37 @@ export default function RoughlyPage() {
                 <span className="text-[11px] font-mono text-neutral-500">Live Canvas</span>
               </div>
 
-              {/* Canvas Preview */}
-                <div className="relative min-h-[220px] sm:min-h-[260px] rounded-2xl border border-[#e4dfd5] bg-[#f5f2eb] p-8 flex flex-col items-center justify-center text-center overflow-hidden shadow-[0_18px_42px_rgba(0,0,0,0.36),0_2px_6px_rgba(0,0,0,0.24)] transition-colors duration-300">
-                {/* Minimal Grid Pattern */}
+              {/* Canvas Preview - Architectural Butterpaper & Minimal Grid */}
+              <div
+                className="relative min-h-[220px] sm:min-h-[260px] rounded-2xl p-8 flex flex-col items-center justify-center text-center overflow-hidden transition-colors duration-300"
+                style={{
+                  backgroundColor: "#faf6e4",
+                  backgroundImage:
+                    "radial-gradient(ellipse at 50% 15%, #fffef4 0%, #f6eed0 100%)",
+                  borderColor: "#ede4ca",
+                  borderWidth: "1px",
+                  borderStyle: "solid",
+                  boxShadow:
+                    "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.9), inset 0 0 45px rgba(180, 155, 75, 0.06), inset 0 -1px 0 rgba(0, 0, 0, 0.04), 0 20px 45px -12px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.25)",
+                }}
+              >
+                {/* Architectural Drafting Grid */}
                 <div
-                  className="absolute inset-0 opacity-[0.03] pointer-events-none"
+                  className="absolute inset-0 pointer-events-none"
                   style={{
-                    backgroundImage: `radial-gradient(circle, #000000 1px, transparent 1px)`,
-                    backgroundSize: `16px 16px`,
+                    backgroundImage: `
+                      linear-gradient(to right, rgba(135, 115, 60, 0.025) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(135, 115, 60, 0.025) 1px, transparent 1px),
+                      linear-gradient(to right, rgba(135, 115, 60, 0.012) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(135, 115, 60, 0.012) 1px, transparent 1px)
+                    `,
+                    backgroundSize: "96px 96px, 96px 96px, 24px 24px, 24px 24px",
                   }}
                 />
 
                 <div
                   key={replayKey}
-                  className="relative z-10 text-2xl font-semibold tracking-tight text-neutral-900 transition-colors duration-200"
+                  className="relative z-10 text-2xl font-semibold tracking-tight text-[#1a1714] transition-colors duration-200"
                 >
                   {selectedType === "circle" ? (
                     <RoughCircle
@@ -1805,7 +1822,7 @@ export default function RoughlyPage() {
                         {text}
                       </RoughHandwriting>
                       {handwritingEditable && (
-                        <span className="text-[11px] font-mono text-neutral-500">
+                        <span className="text-[11px] font-mono text-[#8a7d6b]">
                           Click and type above &bull; live stroke tracing
                         </span>
                       )}

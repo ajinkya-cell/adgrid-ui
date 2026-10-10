@@ -48,6 +48,7 @@ import {
   VoidButton,
   WheelPicker,
   ScrollProgress,
+  RulerScrollbar,
   WeaponWheel,
   Hero,
   AnimatedIcons1,
@@ -67,6 +68,8 @@ import {
   BentoGrid,
   BentoGridItem,
   Meter,
+  MatrixRippleBackground,
+  StackedCardFanDemo,
 } from "@adgrid-ui/ui";
 import { Cards } from "../../../../../packages/ui/src/animated/Cards";
 import type { RegistryEntry } from "@/registry";
@@ -273,6 +276,24 @@ const expandItems = [
 ];
 
 
+
+function RulerScrollbarDemo(props: any) {
+  return (
+    <div className="w-full text-white bg-[#111111] p-12">
+      <RulerScrollbar hideNativeScrollbar {...props} />
+      <div className="mx-auto max-w-2xl space-y-12 py-24">
+        <h1 className="text-5xl tracking-tight text-white mb-8">
+          Scroll the <em className="font-serif">page</em>
+        </h1>
+        {[...Array(14)].map((_, i) => (
+          <p key={i} className="text-lg leading-8 text-neutral-300 my-6">
+            Paragraph {i + 1}. Keep an eye on the ruler at the right edge: the ticks around your current position quietly brighten and stretch a little wider, and that soft highlight travels down the ruler as you move through the page. Drag the ruler to jump anywhere.
+          </p>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function ScrollProgressDemo(props: any) {
   return (
@@ -631,6 +652,8 @@ export function PresentationRenderer({
       return <DotMatrix {...(dotMatrixProps as Parameters<typeof DotMatrix>[0])} />;
     }
 
+    case "ruler-scrollbar":
+      return <RulerScrollbarDemo {...liveProps} />;
     case "scroll-progress":
       return <ScrollProgressDemo {...liveProps} />;
 
@@ -883,6 +906,10 @@ export function PresentationRenderer({
       return <ToastDemo />;
     case "bento-grid":
       return <BentoGridDemo liveProps={liveProps} />;
+    case "matrix-ripple-background":
+      return <MatrixRippleBackground {...liveProps} />;
+    case "stacked-card-fan":
+      return <StackedCardFanDemo {...liveProps} />;
     default:
       return <div className="font-mono text-xs uppercase tracking-[0.24em] text-white/45">Preview unavailable</div>;
   }

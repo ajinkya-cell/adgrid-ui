@@ -9,17 +9,25 @@ export type SimpleCardProps = {
   description?: string;
   imageUrl: string;
   className?: string;
+  /** Card width in px. */
+  width?: number;
+  /** Card height in px. */
+  height?: number;
   /** Tailwind gradient classes for the card body, e.g. "from-zinc-800/90 to-zinc-900/95" */
   accent?: string;
   /** CSS color string for the prismatic top-border highlight */
   topBorderColor?: string;
 };
 
+const EASE_OUT = [0.22, 1, 0.36, 1] as const;
+
 export function SimpleCard({
   title,
   description,
   imageUrl,
   className,
+  width = 260,
+  height = 320,
   accent = "from-transparent to-transparent",
   topBorderColor = "rgba(255,255,255,0.18)",
 }: SimpleCardProps) {
@@ -27,14 +35,19 @@ export function SimpleCard({
 
   return (
     <motion.button
+      type="button"
       onClick={() => setExpanded((v) => !v)}
+      aria-expanded={description ? expanded : undefined}
+      whileTap={{ scale: 0.985 }}
+      transition={{ type: "spring", stiffness: 400, damping: 30 }}
       className={cn(
-        "relative flex flex-col overflow-hidden rounded-2xl text-left focus:outline-none cursor-pointer bg-[#151515]",
+        "group relative flex flex-col overflow-hidden rounded-2xl bg-[#151515] text-left cursor-pointer",
+        "focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]",
         className
       )}
       style={{
-        width: 260,
-        height: 320,
+        width,
+        height,
         boxShadow:
           "0 2px 0 0 rgba(255,255,255,0.06) inset, 0 -1px 0 0 rgba(0,0,0,0.5) inset, 0 32px 64px -12px rgba(0,0,0,0.7), 0 4px 24px -4px rgba(0,0,0,0.5)",
         border: "1px solid rgba(255,255,255,0.08)",
@@ -42,29 +55,30 @@ export function SimpleCard({
     >
       {/* Prismatic top-border highlight */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-[1.5px] z-20 rounded-t-2xl"
+        className="pointer-events-none absolute inset-x-0 top-0 z-20 h-[1.5px] rounded-t-2xl"
         style={{
           background: `linear-gradient(90deg, transparent 0%, ${topBorderColor} 25%, rgba(255,255,255,0.32) 50%, ${topBorderColor} 75%, transparent 100%)`,
         }}
       />
 
       {/* Image — padded inside card */}
-      <div className="relative h-[195px] w-full shrink-0 px-3 pt-3">
+      <div className="relative h-[61%] w-full shrink-0 px-3 pt-3">
         <div className="relative h-full w-full overflow-hidden rounded-xl">
           <img
             src={imageUrl}
             alt={title}
-            className="h-full w-full object-cover"
+            className={cn(
+              "h-full w-full object-cover",
+              "grayscale contrast-[1.08] brightness-[0.78]",
+              "transition-[filter,transform] duration-700 ease-out",
+              "group-hover:scale-[1.04] group-hover:grayscale-[0.35] group-hover:brightness-90"
+            )}
             draggable={false}
-            style={{ filter: "grayscale(1) contrast(1.08) brightness(0.78)" }}
           />
           {/* Fade into solid card body */}
           <div
             className="pointer-events-none absolute inset-x-0 bottom-0 h-16"
-            style={{
-              background:
-                "linear-gradient(to bottom, transparent 0%, #151515 100%)",
-            }}
+            style={{ background: "linear-gradient(to bottom, transparent 0%, #151515 100%)" }}
           />
         </div>
       </div>
@@ -76,16 +90,15 @@ export function SimpleCard({
           accent
         )}
       >
-
         <div className="relative z-10">
-          <AnimatePresence>
+          <AnimatePresence initial={false}>
             {expanded && description && (
               <motion.p
                 key="desc"
-                initial={{ opacity: 0, height: 0, marginBottom: 0 }}
-                animate={{ opacity: 1, height: "auto", marginBottom: 8 }}
-                exit={{ opacity: 0, height: 0, marginBottom: 0 }}
-                transition={{ duration: 0.22, ease: "easeInOut" }}
+                initial={{ opacity: 0, height: 0, marginBottom: 0, y: 6 }}
+                animate={{ opacity: 1, height: "auto", marginBottom: 8, y: 0 }}
+                exit={{ opacity: 0, height: 0, marginBottom: 0, y: 6 }}
+                transition={{ duration: 0.32, ease: EASE_OUT }}
                 className="overflow-hidden text-[12px] leading-relaxed"
                 style={{ color: "rgba(255,255,255,0.48)" }}
               >
@@ -94,11 +107,9 @@ export function SimpleCard({
             )}
           </AnimatePresence>
 
-<h2
-            className={cn(
-              "text-[35px] leading-tight tracking-tight pb-2"
-            )}
-style={{ fontFamily: '"Instrument Serif", serif', color: "rgba(255,255,255,0.92)" }}
+          <h2
+            className="pb-2 text-[35px] leading-tight tracking-tight"
+            style={{ fontFamily: '"Instrument Serif", serif', color: "rgba(255,255,255,0.92)" }}
           >
             {title}
           </h2>

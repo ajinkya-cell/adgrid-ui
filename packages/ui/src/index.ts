@@ -48,6 +48,8 @@ export { PremiumHero } from "./animated/PremiumHero";
 export type { PremiumHeroProps, CardData, CardType } from "./animated/PremiumHero";
 export { default as ScrollProgress } from "./animated/scrollprogress/ScrollProgress";
 export type { ScrollProgressProps } from "./animated/scrollprogress/types";
+export { RulerScrollbar } from "./animated/ruler-scrollbar/RulerScrollbar";
+export type { RulerScrollbarProps } from "./animated/ruler-scrollbar/RulerScrollbar";
 export { NowPlayingCard } from "./animated/NowPlayingCard";
 export type { Song } from "./animated/NowPlayingCard";
 export { WheelPicker } from "./animated/WheelPicker";
@@ -246,3 +248,11 @@ export type {
   RoughHandwritingProps,
   HandwritingFont,
 } from "./animated/roughly/RoughHandwriting";
+
+// Matrix Ripple Background
+export { MatrixRippleBackground } from "./animated/matrix-ripple-background";
+export type { MatrixRippleBackgroundProps } from "./animated/matrix-ripple-background";
+
+// Stacked Card Fan
+export { StackedCardFan, StackedCardFanDemo } from "./animated/stacked-card-fan";
+export type { StackedCardFanProps } from "./animated/stacked-card-fan";

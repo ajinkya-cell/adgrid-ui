@@ -518,6 +518,23 @@ export const registry: RegistryEntry[] = [
   },
 
   {
+    name: "Ruler Scrollbar",
+    slug: "ruler-scrollbar",
+    category: "animated",
+    description: "A minimal ruler-style scrollbar on the right edge. Ticks near the current scroll position softly brighten and widen as you move down the page.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/ruler-scrollbar/RulerScrollbar.tsx",
+    files: ["animated/ruler-scrollbar/RulerScrollbar.tsx"],
+    propDefs: [
+      { name: "ticks", type: "number", default: 56, description: "Number of tick marks on the ruler", required: false, min: 20, max: 120, step: 1 },
+      { name: "activeColor", type: "color", default: "#e7e5df", description: "Tick colour at the current scroll position", required: false },
+      { name: "spread", type: "number", default: 0.06, description: "Width of the highlight around the current position", required: false, min: 0.02, max: 0.2, step: 0.01 },
+      { name: "expand", type: "number", default: 0.35, description: "Extra width a tick gains at the current position", required: false, min: 0, max: 1, step: 0.05 },
+      { name: "interactive", type: "boolean", default: true, description: "Click or drag the ruler to scrub the page", required: false },
+    ],
+  },
+
+  {
     name: "Now Playing Card",
     slug: "now-playing-card",
     category: "animated",
@@ -1094,6 +1111,26 @@ export const registry: RegistryEntry[] = [
     propDefs: [
       { name: "value", type: "number", default: 45, description: "Score value (-100 to 100)", required: true, min: -100, max: 100, step: 5 },
     ],
+  },
+  {
+    name: "Matrix Ripple Background",
+    slug: "matrix-ripple-background",
+    category: "backgrounds",
+    description: "A full-screen canvas of faint, slowly mutating characters. Clicking or tapping anywhere sends out a circular wave.",
+    dependencies: [],
+    packagePath: "animated/matrix-ripple-background.tsx",
+    files: ["animated/matrix-ripple-background.tsx"],
+    presentationStrategy: "fullscreen",
+  },
+  {
+    name: "Stacked Card Fan",
+    slug: "stacked-card-fan",
+    category: "animated",
+    description: "Three SimpleCards held like a hand of cards that stay stacked until you scroll, then glide out smoothly with your scroll on spring physics.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/stacked-card-fan.tsx",
+    files: ["animated/stacked-card-fan.tsx", "animated/SimpleCard.tsx"],
+    presentationStrategy: "center",
   },
 ];
 

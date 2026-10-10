@@ -289,7 +289,8 @@ export function PropsTweaker({ entry }: { entry: RegistryEntry }) {
       dragElastic={0.05}
       dragControls={dragControls}
       dragListener={false}
-      className="tweaker-font-inter fixed bottom-4 right-4 z-50 w-[min(320px,calc(100vw-2rem))] rounded-2xl border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 backdrop-blur-2xl select-none"
+      // The ruler scrollbar demo is fixed at z-[9999]; keep the panel above it there.
+      className={`tweaker-font-inter fixed bottom-4 right-4 ${entry.slug === "ruler-scrollbar" ? "z-[10000]" : "z-50"} w-[min(320px,calc(100vw-2rem))] rounded-2xl border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 backdrop-blur-2xl select-none`}
       style={{
         backgroundColor: "#171717",
         boxShadow: "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.4), 0 30px 80px rgba(0,0,0,0.6)"
