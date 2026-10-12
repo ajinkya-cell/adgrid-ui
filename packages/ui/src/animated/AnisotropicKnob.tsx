@@ -3,6 +3,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { cn } from "../lib/utils";
+import { playClickVoice, DETENT_CLICK } from "../lib/click-voices";
 
 export interface AnisotropicKnobProps {
   variant?: "slider" | "infinite";
@@ -34,21 +35,7 @@ function playClickSound() {
       audioCtx.resume();
     }
     
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(2200, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(140, audioCtx.currentTime + 0.006);
-    
-    gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.006);
-    
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.007);
+    playClickVoice(audioCtx, DETENT_CLICK);
   } catch (e) {
     // Fail silently if context is blocked
   }
@@ -76,7 +63,11 @@ export const AnisotropicKnob = React.forwardRef<HTMLDivElement, AnisotropicKnobP
     const activeValue = controlledValue !== undefined ? controlledValue : localValue;
 
     // Track active rotation angle in degrees (centered at 12 o'clock = 0 deg)
-    const [angle, setAngle] = useState(0);
+    const [freeAngle, setAngle] = useState(0);
+    // In slider mode the angle follows the value directly, so a controlled
+    // value (e.g. one driven by a video timeline) renders in the same frame.
+    const angle =
+      variant === "slider" ? -135 + ((activeValue - min) / (max - min)) * 270 : freeAngle;
     const isDragging = useRef(false);
     const prevAngleRef = useRef(0);
     const accumulatedAngleRef = useRef(0);
@@ -100,7 +91,6 @@ export const AnisotropicKnob = React.forwardRef<HTMLDivElement, AnisotropicKnobP
         const progress = (activeValue - min) / (max - min);
         // Map [0, 1] progress to [-135, 135] degrees
         const newAngle = -135 + progress * 270;
-        setAngle(newAngle);
         accumulatedAngleRef.current = newAngle;
       }
     }, [activeValue, min, max, variant]);

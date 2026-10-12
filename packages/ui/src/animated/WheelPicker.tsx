@@ -3,6 +3,7 @@
 import React, { useRef, useState, useEffect, useImperativeHandle, forwardRef } from "react";
 import { motion, useMotionValue, useTransform, animate, SpringOptions, MotionValue } from "framer-motion";
 import { cn } from "../lib/utils";
+import { DETENT_CLICK } from "../lib/click-voices";
 
 // Web Audio API mechanical tick sound synthesizer
 let lastPlayTime = 0;
@@ -29,12 +30,12 @@ function playClickSound(volume = 0.03) {
     const gain = audioCtx.createGain();
 
     // Mechanical crown tick sweep - higher start frequency and shorter decay for clean crisp click
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(2200, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(140, audioCtx.currentTime + 0.006);
+    osc.type = DETENT_CLICK.type;
+    osc.frequency.setValueAtTime(DETENT_CLICK.from, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(DETENT_CLICK.to, audioCtx.currentTime + DETENT_CLICK.sweep);
 
     gain.gain.setValueAtTime(volume, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.006);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + DETENT_CLICK.decay);
 
     osc.connect(gain);
     gain.connect(audioCtx.destination);
@@ -58,6 +59,12 @@ export type WheelPickerProps = {
   duration?: number;
   spring?: SpringOptions;
   className?: string;
+  /**
+   * Drive the wheel from outside as a fractional item index (2.5 = halfway
+   * between items 2 and 3), e.g. from a video timeline. Overrides the
+   * internal spring and makes no sound.
+   */
+  position?: number;
 };
 
 export interface WheelPickerRef {
@@ -82,6 +89,7 @@ export const WheelPicker = forwardRef<WheelPickerRef, WheelPickerProps>(
       perspective = 1000,
       spring,
       className,
+      position,
     },
     ref
   ) => {
@@ -322,6 +330,12 @@ export const WheelPicker = forwardRef<WheelPickerRef, WheelPickerProps>(
     }, [disabled, items, loop]);
 
     const cylinderRadius = itemHeight / 0.342; // R calculation based on 20deg step
+    const activeIdx =
+      position === undefined
+        ? lastIndexRef.current
+        : loop
+        ? ((Math.round(position) % total) + total) % total
+        : Math.max(0, Math.min(total - 1, Math.round(position)));
     const wheelHeight = itemHeight * visibleItems;
 
     return (
@@ -388,7 +402,8 @@ export const WheelPicker = forwardRef<WheelPickerRef, WheelPickerProps>(
                 itemHeight={itemHeight}
                 loop={loop}
                 cylinderRadius={cylinderRadius}
-                activeIdx={lastIndexRef.current}
+                activeIdx={activeIdx}
+                position={position}
               />
             ))}
           </div>
@@ -409,6 +424,7 @@ type WheelItemProps = {
   loop: boolean;
   cylinderRadius: number;
   activeIdx: number;
+  position?: number;
 };
 
 function WheelItem({
@@ -420,8 +436,9 @@ function WheelItem({
   loop,
   cylinderRadius,
   activeIdx,
+  position,
 }: WheelItemProps) {
-  const d = useTransform(y, (latestY) => {
+  const toDiff = (latestY: number) => {
     if (total === 0) return 0;
     let diff = index - latestY;
     if (loop) {
@@ -429,7 +446,8 @@ function WheelItem({
       diff = ((diff + half) % total + total) % total - half;
     }
     return diff;
-  });
+  };
+  const d = useTransform(y, toDiff);
 
   // Math projection formulas for 3D cylinder vertical compression
   const rotateX = useTransform(d, (diff) => -diff * 20);
@@ -451,6 +469,22 @@ function WheelItem({
 
   const isActive = activeIdx === index;
 
+  // A driven position renders as plain numbers so the frame is final on first paint.
+  let driven: Record<string, number | string> | null = null;
+  if (position !== undefined) {
+    const diff = toDiff(position);
+    const angleRad = (diff * 20 * Math.PI) / 180;
+    const b = Math.min(3, Math.abs(diff) * 0.65);
+    driven = {
+      rotateX: -diff * 20,
+      y: cylinderRadius * Math.sin(angleRad),
+      z: cylinderRadius * (Math.cos(angleRad) - 1),
+      scale: 1 - Math.min(0.25, Math.abs(diff) * 0.06),
+      opacity: Math.max(0, 1 - Math.abs(diff) * 0.28),
+      filter: b > 0.1 ? `blur(${b}px)` : "blur(0px)",
+    };
+  }
+
   return (
     <motion.div
       id={`item-${index}`}
@@ -462,12 +496,14 @@ function WheelItem({
       )}
       style={{
         height: `${itemHeight}px`,
-        rotateX,
-        y: translateY,
-        z: translateZ,
-        scale,
-        opacity,
-        filter: blur,
+        ...(driven ?? {
+          rotateX,
+          y: translateY,
+          z: translateZ,
+          scale,
+          opacity,
+          filter: blur,
+        }),
         backfaceVisibility: "hidden",
         WebkitBackfaceVisibility: "hidden",
       }}

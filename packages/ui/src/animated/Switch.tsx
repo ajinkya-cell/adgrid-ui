@@ -21,6 +21,11 @@ export interface SwitchProps {
   size?: "sm" | "md" | "lg";
   /** Additional custom class names */
   className?: string;
+  /**
+   * Drive the thumb's travel from outside (0 = off, 1 = on), e.g. from a
+   * video timeline, instead of the internal spring.
+   */
+  progress?: number;
 }
 
 export function Switch({
@@ -32,6 +37,7 @@ export function Switch({
   description,
   size = "md",
   className,
+  progress,
 }: SwitchProps) {
   const [uncontrolledChecked, setUncontrolledChecked] = useState(defaultChecked);
   const isControlled = controlledChecked !== undefined;
@@ -88,6 +94,9 @@ export function Switch({
         {/* 3D Tactile Rocker Switch Thumb (Raised Beveled Pill) */}
         <motion.div
           style={{
+            ...(progress !== undefined
+              ? { x: dimensions.translate * progress, rotateY: -12 + 24 * progress }
+              : {}),
             backgroundColor: "#171717",
             boxShadow: checked
               ? "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.25), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.6), -2px 0 10px rgba(16, 185, 129, 0.3), 0 4px 10px rgba(0, 0, 0, 0.8)"
@@ -97,10 +106,14 @@ export function Switch({
             "relative rounded-full border-t border-white/[0.25] border-x border-white/[0.04] border-b border-black/80 flex items-center justify-center shrink-0 z-10",
             dimensions.thumb
           )}
-          animate={{
-            x: checked ? dimensions.translate : 0,
-            rotateY: checked ? 12 : -12,
-          }}
+          animate={
+            progress === undefined
+              ? {
+                  x: checked ? dimensions.translate : 0,
+                  rotateY: checked ? 12 : -12,
+                }
+              : undefined
+          }
           transition={{
             type: "spring",
             stiffness: 420,

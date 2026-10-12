@@ -40,3 +40,8 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
+
+# Promo videos (Remotion projects and rendered files, kept local)
+apps/promo/
+apps/promo-2/
+apps/docs/public/promo/

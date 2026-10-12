@@ -49,6 +49,7 @@ import {
   WheelPicker,
   ScrollProgress,
   RulerScrollbar,
+  ScrollWater,
   WeaponWheel,
   Hero,
   AnimatedIcons1,
@@ -288,6 +289,24 @@ function RulerScrollbarDemo(props: any) {
         {[...Array(14)].map((_, i) => (
           <p key={i} className="text-lg leading-8 text-neutral-300 my-6">
             Paragraph {i + 1}. Keep an eye on the ruler at the right edge: the ticks around your current position quietly brighten and stretch a little wider, and that soft highlight travels down the ruler as you move through the page. Drag the ruler to jump anywhere.
+          </p>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ScrollWaterDemo(props: any) {
+  return (
+    <div className="w-full text-white bg-[#111111] p-12">
+      <ScrollWater {...props} />
+      <div className="mx-auto max-w-2xl space-y-12 py-24">
+        <h1 className="text-5xl tracking-tight text-white mb-8">
+          Read to the <em className="font-serif">bottom</em>
+        </h1>
+        {[...Array(14)].map((_, i) => (
+          <p key={i} className="text-lg leading-8 text-neutral-300 my-6">
+            Paragraph {i + 1}. Watch the circle in the corner: the water inside it rises with how much of the page you have read, while two waves drift past each other on the surface. Reach the end and the circle fills completely, an arrow surfaces, and one click carries you back to the top.
           </p>
         ))}
       </div>
@@ -656,6 +675,8 @@ export function PresentationRenderer({
       return <RulerScrollbarDemo {...liveProps} />;
     case "scroll-progress":
       return <ScrollProgressDemo {...liveProps} />;
+    case "scroll-water":
+      return <ScrollWaterDemo {...liveProps} />;
 
     case "now-playing-card":
       return <NowPlayingCard song={{ isPlaying: true, title: "Main Chala Jaunga", artist: "Fiddlecraft", album: "Hawai Jahaaz", image: "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/41/c7/65/41c765a0-5a1e-3e35-9c22-5d664da2b95e/cover.jpg/600x600bb.jpg", songUrl: "https://open.spotify.com", playedAt: null }} />;

@@ -3,6 +3,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { motion, useMotionValue, useSpring, useMotionTemplate } from "framer-motion";
 import { cn } from "../lib/utils";
+import { playClickVoice, VOID_BUTTON_CLICK } from "../lib/click-voices";
 
 export interface VoidButtonProps extends Omit<React.ComponentPropsWithoutRef<"button">, "style"> {
   variant?: "default" | "ambient" | "neon-edge" | "metallic-sheen" | "glassmorphic";
@@ -11,6 +12,11 @@ export interface VoidButtonProps extends Omit<React.ComponentPropsWithoutRef<"bu
   width?: number | string;
   activeGradientClass?: string;
   activeTextClass?: string;
+  /**
+   * Drive hover and press from outside instead of pointer events, e.g. from a
+   * video timeline. `hover` and `press` run 0–1; `x`/`y` place the light in px.
+   */
+  interaction?: { hover: number; press: number; x?: number; y?: number };
 }
 
 let voidAudioCtx: AudioContext | null = null;
@@ -24,6 +30,7 @@ export function VoidButton({
   width,
   activeGradientClass,
   activeTextClass,
+  interaction,
   ...props
 }: VoidButtonProps) {
   const containerRef = useRef<HTMLButtonElement>(null);
@@ -75,20 +82,7 @@ export function VoidButton({
       if (voidAudioCtx.state === "suspended") {
         voidAudioCtx.resume();
       }
-      const osc = voidAudioCtx.createOscillator();
-      const gain = voidAudioCtx.createGain();
-
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(2000, voidAudioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(120, voidAudioCtx.currentTime + 0.008);
-
-      gain.gain.setValueAtTime(0.06, voidAudioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, voidAudioCtx.currentTime + 0.008);
-
-      osc.connect(gain);
-      gain.connect(voidAudioCtx.destination);
-      osc.start();
-      osc.stop(voidAudioCtx.currentTime + 0.009);
+      playClickVoice(voidAudioCtx, VOID_BUTTON_CLICK);
     } catch (e) {}
   };
 
@@ -112,6 +106,11 @@ export function VoidButton({
 
   // Radial mask template for lighting reveal sweeps
   const maskTemplate = useMotionTemplate`radial-gradient(circle 85px at ${springX}px ${springY}px, black 30%, transparent 100%)`;
+
+  const controlled = interaction !== undefined;
+  const hovered = controlled ? interaction.hover > 0.5 : isHovered;
+  const lightAt = controlled && interaction.x !== undefined ? `${interaction.x}px ${interaction.y ?? 0}px` : "50% 50%";
+  const mask = controlled ? `radial-gradient(circle 85px at ${lightAt}, black 30%, transparent 100%)` : maskTemplate;
 
   let baseStyleClass = "bg-[#171717] border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 text-neutral-200 hover:text-white";
   let activeGrad = activeGradientClass || "bg-gradient-to-r from-white/[0.03] via-white/[0.08] to-white/[0.03]";
@@ -191,12 +190,12 @@ export function VoidButton({
       onPointerUp={handlePointerUp}
       onClick={handleClick}
       // 3D dynamic click spring animations (responsive clicky microswitch feel)
-      animate={{
+      animate={controlled ? undefined : {
         scale: isPressed ? 0.93 : 1,
         y: isPressed ? 2.5 : 0,
         boxShadow: isPressed ? shadowTap : (isHovered ? shadowHover : shadowNormal),
       }}
-      whileTap={{
+      whileTap={controlled ? undefined : {
         scale: 0.93,
         y: 2.5,
         boxShadow: shadowTap,
@@ -214,6 +213,13 @@ export function VoidButton({
         ...(variant === "default" ? { backgroundColor: "#171717" } : {}),
         ...customWidthStyle,
         ...customInlineStyle,
+        ...(controlled
+          ? {
+              scale: 1 - 0.07 * interaction.press,
+              y: 2.5 * interaction.press,
+              boxShadow: interaction.press > 0.5 ? shadowTap : hovered ? shadowHover : shadowNormal,
+            }
+          : {}),
       }}
       {...(props as any)}
     >
@@ -223,8 +229,8 @@ export function VoidButton({
           className="absolute inset-0 pointer-events-none opacity-40 mix-blend-overlay rounded-[inherit]"
           style={{
             backgroundImage: "conic-gradient(from 0deg at 50% 50%, #000 0%, #52525b 25%, #000 50%, #52525b 75%, #000 100%)",
-            WebkitMaskImage: maskTemplate,
-            maskImage: maskTemplate,
+            WebkitMaskImage: mask,
+            maskImage: mask,
           }}
         />
       )}
@@ -234,8 +240,8 @@ export function VoidButton({
         <motion.div
           className="absolute inset-0 border border-white/80 rounded-[inherit] pointer-events-none shadow-[0_0_8px_rgba(255,255,255,0.5),inset_0_0_6px_rgba(255,255,255,0.25)] z-10"
           style={{
-            WebkitMaskImage: maskTemplate,
-            maskImage: maskTemplate,
+            WebkitMaskImage: mask,
+            maskImage: mask,
           }}
         />
       )}
@@ -246,19 +252,20 @@ export function VoidButton({
           "absolute inset-0 pointer-events-none rounded-[inherit]",
           activeGrad
         )}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isHovered ? 1 : 0 }}
+        initial={controlled ? false : { opacity: 0 }}
+        animate={controlled ? undefined : { opacity: isHovered ? 1 : 0 }}
         transition={{ duration: 0.25 }}
         style={{
-          WebkitMaskImage: maskTemplate,
-          maskImage: maskTemplate,
+          WebkitMaskImage: mask,
+          maskImage: mask,
+          ...(controlled ? { opacity: interaction.hover } : {}),
         }}
       />
 
       {/* Centered Single Text Label */}
       <span className={cn(
         "relative z-10 transition-colors duration-300 font-bold inline-flex items-center justify-center gap-2",
-        isHovered ? activeText : (variant === "default" ? "text-neutral-200" : "text-white/70")
+        hovered ? activeText : (variant === "default" ? "text-neutral-200" : "text-white/70")
       )}>
         {children || (variant === "default" ? "Default" : "VOID")}
       </span>

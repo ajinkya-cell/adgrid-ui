@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useLayoutEffect, useState } from 'react';
 import { DotMatrixProps, AnimationContext } from './types';
 import { ANIMATION_PLUGINS } from './animations';
 import { useRAF } from './hooks/useRAF';
 import Dot from './Dot';
+
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 /**
  * Production-ready programmable LED Dot Matrix component.
@@ -33,6 +35,7 @@ export const DotMatrix: React.FC<DotMatrixProps> = ({
   pattern,
   patternB,
   morphProgress = 0,
+  time: drivenTime,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const elementsRef = useRef<HTMLDivElement[]>([]);
@@ -137,106 +140,115 @@ export const DotMatrix: React.FC<DotMatrixProps> = ({
     };
   }, []);
 
-  // Global requestAnimationFrame Animation Loop
-  useRAF(
-    (time, deltaTime) => {
-      const elements = elementsRef.current;
-      const totalDots = displayRows * displayCols;
-      if (!elements || elements.length < totalDots) return;
+  // One frame of the animation engine, shared by the internal loop and a driven `time`
+  const renderFrame = (time: number, deltaTime: number) => {
+    const elements = elementsRef.current;
+    const totalDots = displayRows * displayCols;
+    if (!elements || elements.length < totalDots) return;
 
-      const activePlugin = ANIMATION_PLUGINS[animation];
+    const activePlugin = ANIMATION_PLUGINS[animation];
 
-      // Initialize or scale cache to match grid size
-      if (!brightnessCacheRef.current || brightnessCacheRef.current.length !== totalDots) {
-        brightnessCacheRef.current = new Float32Array(totalDots);
+    // Initialize or scale cache to match grid size
+    if (!brightnessCacheRef.current || brightnessCacheRef.current.length !== totalDots) {
+      brightnessCacheRef.current = new Float32Array(totalDots);
+    }
+
+    pluginStateRef.current.noiseScale = noiseScale;
+    pluginStateRef.current.seed = seed;
+    pluginStateRef.current.glow = glow;
+    pluginStateRef.current.blur = blur;
+    pluginStateRef.current.delay = delay;
+    pluginStateRef.current.loop = loop;
+
+    const ctx: AnimationContext = {
+      elements: elements.slice(0, totalDots),
+      rows: displayRows,
+      columns: displayCols,
+      time,
+      deltaTime,
+      color,
+      inactiveColor,
+      speed,
+      text,
+      audioAnalyser: audioAnalyserRef.current,
+      options: pluginStateRef.current,
+      brightnessCache: brightnessCacheRef.current,
+    };
+
+    // ─── 1. Plugin Lifecycle Transition ───
+    if (lastAnimationRef.current !== animation) {
+      const prevPlugin = lastAnimationRef.current ? ANIMATION_PLUGINS[lastAnimationRef.current] : null;
+      if (prevPlugin?.cleanup) {
+        prevPlugin.cleanup(ctx);
       }
 
-      pluginStateRef.current.noiseScale = noiseScale;
-      pluginStateRef.current.seed = seed;
-      pluginStateRef.current.glow = glow;
-      pluginStateRef.current.blur = blur;
-      pluginStateRef.current.delay = delay;
-      pluginStateRef.current.loop = loop;
-
-      const ctx: AnimationContext = {
-        elements: elements.slice(0, totalDots),
-        rows: displayRows,
-        columns: displayCols,
-        time,
-        deltaTime,
-        color,
-        inactiveColor,
-        speed,
-        text,
-        audioAnalyser: audioAnalyserRef.current,
-        options: pluginStateRef.current,
-        brightnessCache: brightnessCacheRef.current,
-      };
-
-      // ─── 1. Plugin Lifecycle Transition ───
-      if (lastAnimationRef.current !== animation) {
-        const prevPlugin = lastAnimationRef.current ? ANIMATION_PLUGINS[lastAnimationRef.current] : null;
-        if (prevPlugin?.cleanup) {
-          prevPlugin.cleanup(ctx);
+      const keysToKeep = ['noiseScale', 'seed', 'glow', 'blur', 'delay', 'loop'];
+      Object.keys(pluginStateRef.current).forEach((key) => {
+        if (!keysToKeep.includes(key)) {
+          delete pluginStateRef.current[key];
         }
+      });
 
-        const keysToKeep = ['noiseScale', 'seed', 'glow', 'blur', 'delay', 'loop'];
-        Object.keys(pluginStateRef.current).forEach((key) => {
-          if (!keysToKeep.includes(key)) {
-            delete pluginStateRef.current[key];
+      // Clear local memory cache
+      if (brightnessCacheRef.current) {
+        brightnessCacheRef.current.fill(0);
+      }
+
+      // Reset element registers
+      for (let i = 0; i < elements.length; i++) {
+        if (elements[i]) {
+          elements[i].style.setProperty('--dot-brightness', '0');
+        }
+      }
+
+      lastAnimationRef.current = animation;
+      if (activePlugin?.init) {
+        activePlugin.init(ctx);
+      }
+    }
+
+    // ─── 2. Execute Animation Engine ───
+    if (activePlugin) {
+      activePlugin.update(ctx);
+    }
+
+    // ─── 3. Apply Custom Pattern Morph Overrides ───
+    if (pattern) {
+      const pRows = pattern.length;
+      const pCols = pattern[0]?.length || 0;
+      const cache = brightnessCacheRef.current;
+
+      for (let i = 0; i < elements.length; i++) {
+        const r = Math.floor(i / displayCols);
+        const c = i % displayCols;
+
+        if (r < pRows && c < pCols) {
+          const valA = pattern[r][c];
+          const valB = patternB && r < patternB.length && c < patternB[r].length ? patternB[r][c] : valA;
+          
+          // Linear morph interpolator
+          const b = valA + (valB - valA) * morphProgress;
+          if (cache) {
+            cache[i] = b;
           }
-        });
-
-        // Clear local memory cache
-        if (brightnessCacheRef.current) {
-          brightnessCacheRef.current.fill(0);
-        }
-
-        // Reset element registers
-        for (let i = 0; i < elements.length; i++) {
-          if (elements[i]) {
-            elements[i].style.setProperty('--dot-brightness', '0');
-          }
-        }
-
-        lastAnimationRef.current = animation;
-        if (activePlugin?.init) {
-          activePlugin.init(ctx);
+          elements[i].style.setProperty('--dot-brightness', b.toFixed(3));
         }
       }
+    }
+  };
 
-      // ─── 2. Execute Animation Engine ───
-      if (activePlugin) {
-        activePlugin.update(ctx);
-      }
+  // Global requestAnimationFrame Animation Loop (paused while `time` drives the matrix)
+  useRAF(renderFrame, isVisible && drivenTime === undefined, fps);
 
-      // ─── 3. Apply Custom Pattern Morph Overrides ───
-      if (pattern) {
-        const pRows = pattern.length;
-        const pCols = pattern[0]?.length || 0;
-        const cache = brightnessCacheRef.current;
-
-        for (let i = 0; i < elements.length; i++) {
-          const r = Math.floor(i / displayCols);
-          const c = i % displayCols;
-
-          if (r < pRows && c < pCols) {
-            const valA = pattern[r][c];
-            const valB = patternB && r < patternB.length && c < patternB[r].length ? patternB[r][c] : valA;
-            
-            // Linear morph interpolator
-            const b = valA + (valB - valA) * morphProgress;
-            if (cache) {
-              cache[i] = b;
-            }
-            elements[i].style.setProperty('--dot-brightness', b.toFixed(3));
-          }
-        }
-      }
-    },
-    isVisible,
-    fps
-  );
+  // Driven mode: draw synchronously after every render, before the browser paints
+  const lastDrivenTimeRef = useRef<number | null>(null);
+  useIsomorphicLayoutEffect(() => {
+    if (drivenTime === undefined) return;
+    const last = lastDrivenTimeRef.current;
+    const deltaTime = last === null ? 1 / fps : Math.max(0, drivenTime - last);
+    lastDrivenTimeRef.current = drivenTime;
+    renderFrame(drivenTime, deltaTime);
+  });
 
   const dotsArray = Array.from({ length: displayRows * displayCols });
 

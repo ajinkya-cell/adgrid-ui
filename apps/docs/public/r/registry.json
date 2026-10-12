@@ -484,6 +484,33 @@
       ]
     },
     {
+      "name": "ruler-scrollbar",
+      "type": "registry:ui",
+      "title": "Ruler Scrollbar",
+      "description": "A minimal ruler-style scrollbar on the right edge. Ticks near the current scroll position softly brighten and widen as you move down the page.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/RulerScrollbar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "scroll-water",
+      "type": "registry:ui",
+      "title": "Scroll Water",
+      "description": "A floating back-to-top button that fills with water as you read. Two waves drift inside the circle while the level rises with scroll progress, and an up-arrow surfaces once the page is fully read.",
+      "files": [
+        {
+          "path": "components/ui/ScrollWater.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "now-playing-card",
       "type": "registry:ui",
       "title": "Now Playing Card",
@@ -1084,6 +1111,37 @@
       "files": [
         {
           "path": "components/ui/Meter.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "matrix-ripple-background",
+      "type": "registry:ui",
+      "title": "Matrix Ripple Background",
+      "description": "A full-screen canvas of faint, slowly mutating characters. Clicking or tapping anywhere sends out a circular wave.",
+      "files": [
+        {
+          "path": "components/ui/matrix-ripple-background.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "stacked-card-fan",
+      "type": "registry:ui",
+      "title": "Stacked Card Fan",
+      "description": "Three SimpleCards held like a hand of cards that stay stacked until you scroll, then glide out smoothly with your scroll on spring physics.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/stacked-card-fan/stacked-card-fan.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/stacked-card-fan/SimpleCard.tsx",
           "type": "registry:ui"
         }
       ]

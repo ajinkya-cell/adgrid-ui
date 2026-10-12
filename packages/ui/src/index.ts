@@ -50,6 +50,8 @@ export { default as ScrollProgress } from "./animated/scrollprogress/ScrollProgr
 export type { ScrollProgressProps } from "./animated/scrollprogress/types";
 export { RulerScrollbar } from "./animated/ruler-scrollbar/RulerScrollbar";
 export type { RulerScrollbarProps } from "./animated/ruler-scrollbar/RulerScrollbar";
+export { ScrollWater } from "./animated/scroll-water/ScrollWater";
+export type { ScrollWaterProps } from "./animated/scroll-water/ScrollWater";
 export { NowPlayingCard } from "./animated/NowPlayingCard";
 export type { Song } from "./animated/NowPlayingCard";
 export { WheelPicker } from "./animated/WheelPicker";

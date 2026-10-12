@@ -535,6 +535,27 @@ export const registry: RegistryEntry[] = [
   },
 
   {
+    name: "Scroll Water",
+    slug: "scroll-water",
+    category: "animated",
+    description: "A floating back-to-top button that fills with water as you read. Two waves drift inside the circle while the level rises with scroll progress, and an up-arrow surfaces once the page is fully read.",
+    dependencies: [],
+    packagePath: "animated/scroll-water/ScrollWater.tsx",
+    files: ["animated/scroll-water/ScrollWater.tsx"],
+    propDefs: [
+      { name: "position", type: "select", default: "bottom-left", description: "Corner the button sits in", required: false, options: ["bottom-left", "bottom-right", "top-left", "top-right"] },
+      { name: "size", type: "number", default: 44, description: "Diameter of the button in pixels", required: false, min: 32, max: 72, step: 2 },
+      { name: "offset", type: "number", default: 24, description: "Distance from the viewport edges in pixels", required: false, min: 8, max: 64, step: 4 },
+      { name: "color", type: "color", default: "#e7e5df", description: "Water colour", required: false },
+      { name: "surfaceColor", type: "color", default: "#151515", description: "Shell colour; the arrow is cut out of the water in this colour", required: false },
+      { name: "waveHeight", type: "number", default: 3.5, description: "Wave amplitude (0 is a flat surface)", required: false, min: 0, max: 10, step: 0.5 },
+      { name: "waveSpeed", type: "number", default: 1, description: "Wave drift speed multiplier", required: false, min: 0.25, max: 3, step: 0.25 },
+      { name: "fullAt", type: "number", default: 0.995, description: "Reading progress at which the circle is full and the arrow appears", required: false, min: 0.8, max: 1, step: 0.005 },
+      { name: "smooth", type: "boolean", default: true, description: "Glide back to the top instead of jumping (always instant with reduced motion)", required: false },
+    ],
+  },
+
+  {
     name: "Now Playing Card",
     slug: "now-playing-card",
     category: "animated",

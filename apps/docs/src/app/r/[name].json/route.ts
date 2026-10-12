@@ -103,6 +103,15 @@ export async function GET(
     }
   }
 
+  // Include lib/click-voices.ts for the components that share its sound recipes
+  if (files.some((f) => f.content.includes("/lib/click-voices"))) {
+    files.push({
+      path: "lib/click-voices.ts",
+      content: fs.readFileSync(path.join(UI_SRC, "lib/click-voices.ts"), "utf-8"),
+      type: "registry:lib",
+    });
+  }
+
   if (missingFiles.length > 0) {
     console.warn(`[registry] Missing files for "${slug}":`, missingFiles);
   }

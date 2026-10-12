@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { annotate } from "rough-notation";
 import type { RoughAnnotation } from "rough-notation/lib/model";
 
@@ -26,7 +26,16 @@ export interface RoughCircleProps {
   className?: string;
   /** Additional CSS class names for the inner text content */
   textClassName?: string;
+  /**
+   * Draw the circle to this fraction (0–1) instead of playing the timed
+   * animation, e.g. to drive it from a video timeline.
+   */
+  progress?: number;
+  /** Fixes the hand-drawn shape when `progress` is used, so every render matches (default: 1) */
+  seed?: number;
 }
+
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 export function RoughCircle({
   children,
@@ -40,15 +49,18 @@ export function RoughCircle({
   animationDelay = 0,
   className = "",
   textClassName = "",
+  progress,
+  seed = 1,
 }: RoughCircleProps) {
   const containerRef = useRef<HTMLSpanElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
   const annotationRef = useRef<RoughAnnotation | null>(null);
-  const [inView, setInView] = useState(!animate);
+  const driven = progress !== undefined;
+  const [inView, setInView] = useState(!animate || driven);
 
   // Viewport intersection observer to ensure animation plays when scrolled into view
   useEffect(() => {
-    if (!animate) {
+    if (!animate || driven) {
       setInView(true);
       return undefined;
     }
@@ -70,12 +82,12 @@ export function RoughCircle({
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [animate]);
+  }, [animate, driven]);
 
   // Rough-notation annotation lifecycle
   useEffect(() => {
     const el = textRef.current;
-    if (!el || !inView) return undefined;
+    if (driven || !el || !inView) return undefined;
 
     let isMounted = true;
 
@@ -164,7 +176,51 @@ export function RoughCircle({
     iterations,
     animationDelay,
     children,
+    driven,
   ]);
+
+  // Driven drawing: build the annotation once without its timed animation,
+  // then reveal the stroke by `progress` on every render, before paint.
+  useIsomorphicLayoutEffect(() => {
+    if (!driven || !textRef.current) return;
+
+    if (!annotationRef.current) {
+      const annotation = annotate(textRef.current, {
+        type: "circle",
+        color,
+        strokeWidth,
+        padding: [paddingY, paddingX, paddingY, paddingX],
+        animate: false,
+        iterations,
+      });
+      // rough-notation picks a random seed per annotation; pin it so every render draws the same shape
+      (annotation as unknown as { _seed: number })._seed = seed;
+      annotation.show();
+      annotationRef.current = annotation;
+      const svg = containerRef.current?.querySelector<SVGSVGElement>("svg.rough-annotation");
+      if (svg) svg.style.pointerEvents = "none";
+    }
+
+    const paths = Array.from(
+      containerRef.current?.querySelectorAll<SVGPathElement>("svg.rough-annotation path") ?? []
+    );
+    const lengths = paths.map((p) => p.getTotalLength());
+    let remaining = Math.min(1, Math.max(0, progress ?? 0)) * lengths.reduce((a, b) => a + b, 0);
+    paths.forEach((path, i) => {
+      const shown = Math.min(lengths[i], Math.max(0, remaining));
+      remaining -= lengths[i];
+      path.style.strokeDasharray = `${lengths[i]}`;
+      path.style.strokeDashoffset = `${lengths[i] - shown}`;
+    });
+  });
+
+  useEffect(() => {
+    if (!driven) return undefined;
+    return () => {
+      annotationRef.current?.remove();
+      annotationRef.current = null;
+    };
+  }, [driven]);
 
   return (
     <span

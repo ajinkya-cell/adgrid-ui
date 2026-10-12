@@ -52,4 +52,10 @@ export interface DotMatrixProps {
   pattern?: number[][];
   patternB?: number[][];
   morphProgress?: number;
+  /**
+   * Render the frame at this time (seconds) instead of running the internal
+   * requestAnimationFrame loop. Use it to drive the matrix from a timeline,
+   * e.g. when rendering video, so every frame is deterministic.
+   */
+  time?: number;
 }

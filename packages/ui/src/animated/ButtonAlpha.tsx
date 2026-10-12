@@ -3,11 +3,17 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { cn } from "../lib/utils";
+import { playClickVoice, BUTTON_ALPHA_CLICK } from "../lib/click-voices";
 
 export interface ButtonAlphaProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   shape?: "pill" | "full" | "square";
   theme?: "charcoal" | "danger" | "tactical";
   children?: React.ReactNode;
+  /**
+   * Drive hover and press from outside instead of pointer events, e.g. from a
+   * video timeline. Both run 0–1.
+   */
+  interaction?: { hover: number; press: number };
 }
 
 export function ButtonAlpha({
@@ -16,6 +22,7 @@ export function ButtonAlpha({
   theme = "charcoal",
   children,
   onClick,
+  interaction,
   ...props
 }: ButtonAlphaProps) {
   const [isHovered, setIsHovered] = useState(false);
@@ -41,20 +48,7 @@ export function ButtonAlpha({
       const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
       if (!AudioContextClass) return;
       const ctx = new AudioContextClass();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(1200, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(140, ctx.currentTime + 0.005);
-
-      gain.gain.setValueAtTime(0.025, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.006);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.007);
+      playClickVoice(ctx, BUTTON_ALPHA_CLICK);
     } catch (e) {}
   };
 
@@ -84,6 +78,7 @@ export function ButtonAlpha({
     charcoal: {
       bgColor: "#151515",
       textColor: "text-neutral-300 group-hover:text-white active:text-white/80",
+      hoverTextColor: "text-white",
       border: "1px solid rgba(255, 255, 255, 0.08)",
       topHighlightGradient:
         "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.2) 25%, rgba(255,255,255,0.45) 50%, rgba(255,255,255,0.2) 75%, transparent 100%)",
@@ -97,6 +92,7 @@ export function ButtonAlpha({
     danger: {
       bgColor: "#1e1010",
       textColor: "text-red-400 group-hover:text-red-300 active:text-red-200",
+      hoverTextColor: "text-red-300",
       border: "1px solid rgba(239, 68, 68, 0.2)",
       topHighlightGradient:
         "linear-gradient(90deg, transparent 0%, rgba(239,68,68,0.25) 25%, rgba(255,255,255,0.4) 50%, rgba(239,68,68,0.25) 75%, transparent 100%)",
@@ -110,6 +106,7 @@ export function ButtonAlpha({
     tactical: {
       bgColor: "#0f1a12",
       textColor: "text-emerald-400 group-hover:text-emerald-300 active:text-emerald-200",
+      hoverTextColor: "text-emerald-300",
       border: "1px solid rgba(34, 197, 94, 0.2)",
       topHighlightGradient:
         "linear-gradient(90deg, transparent 0%, rgba(34,197,94,0.25) 25%, rgba(255,255,255,0.4) 50%, rgba(34,197,94,0.25) 75%, transparent 100%)",
@@ -123,13 +120,15 @@ export function ButtonAlpha({
   };
 
   const styleConfig = themeStyles[theme];
+  const controlled = interaction !== undefined;
+  const hovered = controlled ? interaction.hover > 0.5 : isHovered;
 
   return (
     <motion.button
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={handleClick}
-      whileTap={{
+      whileTap={controlled ? undefined : {
         scale: 0.95,
         y: 3,
         boxShadow: styleConfig.shadowTap,
@@ -143,7 +142,14 @@ export function ButtonAlpha({
       style={{
         backgroundColor: styleConfig.bgColor,
         border: styleConfig.border,
-        boxShadow: isHovered ? styleConfig.shadowHover : styleConfig.shadowNormal,
+        boxShadow: hovered ? styleConfig.shadowHover : styleConfig.shadowNormal,
+        ...(controlled
+          ? {
+              scale: 1 - 0.05 * interaction.press,
+              y: 3 * interaction.press,
+              boxShadow: interaction.press > 0.5 ? styleConfig.shadowTap : hovered ? styleConfig.shadowHover : styleConfig.shadowNormal,
+            }
+          : {}),
       }}
       {...(props as any)}
     >
@@ -159,7 +165,8 @@ export function ButtonAlpha({
       <span
         className={cn(
           "relative z-10 flex items-center justify-center tracking-[0.12em] text-[13px] uppercase pointer-events-none select-none transition-colors duration-200",
-          styleConfig.textColor
+          styleConfig.textColor,
+          controlled && hovered && styleConfig.hoverTextColor
         )}
         style={{
           fontFamily: '"Geist Pixel", monospace',

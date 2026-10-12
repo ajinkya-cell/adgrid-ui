@@ -83,6 +83,7 @@ for (const entry of registry) {
     // Normalize relative imports like '../lib/utils' or '../../lib/utils' to '@/lib/utils'
     // so consumers can consume them seamlessly with shadcn CLI
     content = content.replace(/from\s+['"][^'"]*\/lib\/utils['"]/g, 'from "@/lib/utils"');
+    content = content.replace(/from\s+['"][^'"]*\/lib\/click-voices['"]/g, 'from "@/lib/click-voices"');
     const target = getTargetPath(slug, filePath, baseDir, isMultiFile);
     files.push({ path: target, content, type: getFileType(filePath) });
   }
@@ -103,6 +104,15 @@ for (const entry of registry) {
         type: "registry:lib",
       });
     }
+  }
+
+  // Include lib/click-voices.ts for the components that share its sound recipes
+  if (files.some((f) => f.content.includes('from "@/lib/click-voices"'))) {
+    files.push({
+      path: "lib/click-voices.ts",
+      content: fs.readFileSync(path.join(UI_SRC, "lib/click-voices.ts"), "utf-8"),
+      type: "registry:lib",
+    });
   }
 
   if (missing.length > 0) {
