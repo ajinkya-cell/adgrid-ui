@@ -511,6 +511,66 @@
       ]
     },
     {
+      "name": "moon-pull",
+      "type": "registry:ui",
+      "title": "Moon Pull",
+      "description": "A golden disc hanging on a strand of yarn. Pull it down and the cord stretches, resists and glows, then clicks like a lamp pull, springs back and fires onPull.",
+      "files": [
+        {
+          "path": "components/ui/MoonPull.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "stacked-cards",
+      "type": "registry:ui",
+      "title": "Stacked Cards",
+      "description": "A loose pile of paper prints that deals out into a masonry collage, one sheet after another, and gathers back from a sticky button. The collage is always laid out; the pile is just transforms on top.",
+      "files": [
+        {
+          "path": "components/ui/stacked-cards/StackedCards.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/stacked-cards/PaperTile.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tilted-collage",
+      "type": "registry:ui",
+      "title": "Tilted Collage",
+      "description": "A masonry wall of uncropped images on white paper mounts, each at a slight angle and drop. Wide strips break out of the columns and run across the whole wall.",
+      "files": [
+        {
+          "path": "components/ui/tilted-collage/TiltedCollage.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/tilted-collage/PaperTile.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "taped-marquee",
+      "type": "registry:ui",
+      "title": "Taped Marquee",
+      "description": "An endless row of photos mounted on paper and held down with torn tape, drifting sideways like pages pinned along a line. Pure CSS: pauses on hover, scrolls by hand under reduced motion.",
+      "files": [
+        {
+          "path": "components/ui/taped-marquee/TapedMarquee.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/taped-marquee/PaperTile.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "now-playing-card",
       "type": "registry:ui",
       "title": "Now Playing Card",

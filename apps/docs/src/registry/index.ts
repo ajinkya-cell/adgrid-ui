@@ -556,6 +556,75 @@ export const registry: RegistryEntry[] = [
   },
 
   {
+    name: "Moon Pull",
+    slug: "moon-pull",
+    category: "animated",
+    description: "A golden disc hanging on a strand of yarn. Pull it down and the cord stretches, resists and glows, then clicks like a lamp pull, springs back and fires onPull.",
+    dependencies: [],
+    packagePath: "animated/moon-pull/MoonPull.tsx",
+    files: ["animated/moon-pull/MoonPull.tsx"],
+    presentationStrategy: "fullscreen",
+    propDefs: [
+      { name: "hint", type: "string", default: "pull me", description: "Italic hint that fades in beside the moon until it's first pulled", required: false },
+      { name: "threshold", type: "number", default: 0.1, description: "How far to pull before it clicks (fraction of viewport height)", required: false, min: 0.05, max: 0.25, step: 0.01 },
+      { name: "restLength", type: "number", default: 0.13, description: "Resting string length (fraction of the stage height)", required: false, min: 0.06, max: 0.3, step: 0.01 },
+      { name: "left", type: "number", default: 5, description: "Left edge of the moon box (% of the stage width)", required: false, min: 0, max: 90, step: 1 },
+      { name: "width", type: "number", default: 6, description: "Width of the moon box (% of the stage width)", required: false, min: 3, max: 20, step: 0.5 },
+      { name: "glowColor", type: "color", default: "#f2c04a", description: "Glow that grows as the cord nears the click", required: false },
+      { name: "sway", type: "boolean", default: true, description: "Gentle idle sway (off under reduced motion)", required: false },
+    ],
+  },
+
+  {
+    name: "Stacked Cards",
+    slug: "stacked-cards",
+    category: "animated",
+    description: "A loose pile of paper prints that deals out into a masonry collage, one sheet after another, and gathers back from a sticky button. The collage is always laid out; the pile is just transforms on top.",
+    dependencies: [],
+    packagePath: "animated/paper/StackedCards.tsx",
+    files: ["animated/paper/StackedCards.tsx", "animated/paper/PaperTile.tsx"],
+    propDefs: [
+      { name: "hint", type: "string", default: "Tap to spread", description: "Typewriter caption under the closed pile", required: false },
+      { name: "stagger", type: "number", default: 25, description: "Gap (ms) between one sheet setting off and the next", required: false, min: 0, max: 80, step: 5 },
+      { name: "duration", type: "number", default: 700, description: "Time (ms) each sheet takes to travel", required: false, min: 300, max: 1500, step: 50 },
+      { name: "fan", type: "number", default: 1.8, description: "How much the leans grow while the pile is hovered", required: false, min: 1, max: 3, step: 0.1 },
+      { name: "inkColor", type: "color", default: "#e7e5df", description: "Caption, focus ring and gather-arrow colour", required: false },
+    ],
+  },
+
+  {
+    name: "Tilted Collage",
+    slug: "tilted-collage",
+    category: "animated",
+    description: "A masonry wall of uncropped images on white paper mounts, each at a slight angle and drop. Wide strips break out of the columns and run across the whole wall.",
+    dependencies: [],
+    packagePath: "animated/paper/TiltedCollage.tsx",
+    files: ["animated/paper/TiltedCollage.tsx", "animated/paper/PaperTile.tsx"],
+    propDefs: [
+      { name: "columns", type: "select", default: "3", description: "Most columns on wide screens", required: false, options: ["2", "3", "4"] },
+      { name: "messiness", type: "number", default: 1, description: "Scales every tile's tilt and drop (0 is a clean masonry)", required: false, min: 0, max: 2, step: 0.1 },
+    ],
+  },
+
+  {
+    name: "Taped Marquee",
+    slug: "taped-marquee",
+    category: "animated",
+    description: "An endless row of photos mounted on paper and held down with torn tape, drifting sideways like pages pinned along a line. Pure CSS: pauses on hover, scrolls by hand under reduced motion.",
+    dependencies: [],
+    packagePath: "animated/paper/TapedMarquee.tsx",
+    files: ["animated/paper/TapedMarquee.tsx", "animated/paper/PaperTile.tsx"],
+    propDefs: [
+      { name: "seconds", type: "number", default: 60, description: "Time for one full loop (higher is slower)", required: false, min: 20, max: 150, step: 5 },
+      { name: "reverse", type: "boolean", default: false, description: "Drift left to right instead", required: false },
+      { name: "tiltOffset", type: "number", default: 0, description: "Shifts the tilt pattern so stacked rows don't tilt in step", required: false, min: 0, max: 7, step: 1 },
+      { name: "height", type: "number", default: 240, description: "Page height in px (phones get 80%)", required: false, min: 140, max: 360, step: 10 },
+      { name: "pauseOnHover", type: "boolean", default: true, description: "Freeze the row while it's hovered", required: false },
+      { name: "tapeColor", type: "color", default: "#ebe4d2", description: "Masking tape colour", required: false },
+    ],
+  },
+
+  {
     name: "Now Playing Card",
     slug: "now-playing-card",
     category: "animated",

@@ -50,6 +50,10 @@ import {
   ScrollProgress,
   RulerScrollbar,
   ScrollWater,
+  MoonPull,
+  StackedCards,
+  TiltedCollage,
+  TapedMarquee,
   WeaponWheel,
   Hero,
   AnimatedIcons1,
@@ -280,7 +284,7 @@ const expandItems = [
 
 function RulerScrollbarDemo(props: any) {
   return (
-    <div className="w-full text-white bg-[#111111] p-12">
+    <div className="w-full text-white p-12">
       <RulerScrollbar hideNativeScrollbar {...props} />
       <div className="mx-auto max-w-2xl space-y-12 py-24">
         <h1 className="text-5xl tracking-tight text-white mb-8">
@@ -296,9 +300,144 @@ function RulerScrollbarDemo(props: any) {
   );
 }
 
+// Demo prints for the paper components: patterns and textures, desaturated by Unsplash (sat=-100).
+// Each URL crops to the listed size, so width/height are exact.
+const unsplash = (id: string, width: number, height: number) =>
+  `https://images.unsplash.com/photo-${id}?w=${width}&h=${height}&fit=crop&auto=format&q=80&sat=-100`;
+const print = (id: string, width: number, height: number, alt: string, wide?: boolean) => ({
+  src: unsplash(id, width, height),
+  width,
+  height,
+  alt,
+  wide,
+});
+const PAPER_PRINTS = [
+  print("1497250681960-ef046c08a56e", 800, 1100, "Fern fronds packed edge to edge"),
+  print("1553356084-58ef4a67b2a7", 1000, 800, "Swirls of marbled paint"),
+  print("1605106702734-205df224ecce", 800, 1000, "A geometric quilt of black and white triangles"),
+  print("1558591710-4b4a1ae0f04d", 1200, 800, "Rippled white waves"),
+  print("1511447333015-45b65e60f6d5", 800, 1000, "Nested triangles of light receding into the dark"),
+  print("1550537687-c91072c4792d", 1000, 1000, "A repeating tile of interlocking arcs"),
+  print("1502691876148-a84978e59af8", 800, 1100, "Wooden slats lining a corridor"),
+  print("1557672172-298e090bd0f1", 1200, 800, "Soft bands of marbled paint"),
+  print("1517999144091-3d9dca6d1e43", 1000, 750, "Dark stones piled together"),
+  print("1496096265110-f83ad7f96608", 800, 1100, "Streaks of light falling in lines"),
+  print("1567095761054-7a02e69e5c43", 1100, 800, "Ink spreading through dark water"),
+  print("1520121401995-928cd50d4e27", 800, 1000, "Overlapping leaves on a branch"),
+  print("1541701494587-cb58502866ab", 1000, 800, "Smoke curling in the dark"),
+  print("1574169208507-84376144848b", 900, 900, "Dark marbled ink"),
+];
+const PAPER_STRIP = print("1618005182384-a83a8bd57fbe", 2800, 540, "Layered curves of light and shadow", true);
+
+function MoonPullDemo(props: any) {
+  const [open, setOpen] = useState(false);
+  const curtain = "transition-transform duration-[1100ms] ease-[cubic-bezier(0.76,0,0.24,1)] motion-reduce:transition-none";
+  return (
+    // The whole present page is the stage: the moon hangs from the top of the screen and the
+    // panel drops over all of it.
+    <div className="relative h-dvh w-full">
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 overflow-hidden">
+          {/* The scene: steps back while the panel is down. */}
+          <div
+            className="absolute inset-0 grid place-items-center transition-[scale,opacity,filter] duration-[1100ms] ease-[cubic-bezier(0.76,0,0.24,1)]"
+            style={{ scale: open ? "0.96" : "1", opacity: open ? 0.6 : 1, filter: open ? "blur(2px)" : "none" }}
+          >
+            <div className="text-center">
+              <p className="font-serif text-4xl italic tracking-tight text-white/85 md:text-6xl">Explore more components</p>
+              <p className="mt-3 text-sm text-neutral-500">Pull the circle to see how this one is made.</p>
+            </div>
+          </div>
+          {/* The panel glides down like a title curtain; its content trails behind. */}
+          <div
+            className={`absolute inset-0 grid place-items-center bg-[#151515] ${curtain}`}
+            style={{ translate: open ? "0 0" : "0 -100%" }}
+            aria-hidden={!open}
+          >
+            <div className={`max-w-lg px-8 text-center ${curtain}`} style={{ translate: open ? "0 0" : "0 -35%" }}>
+              <p className="font-serif text-4xl italic text-white/90">About</p>
+              <p className="mt-4 text-base leading-7 text-neutral-400">
+                Made with React and Tailwind CSS, in a single file with no dependencies. The cord is a
+                small spring simulation on requestAnimationFrame, drawn as an SVG curve with a yarn
+                texture; the glow and the hint are plain CSS.
+              </p>
+              <ul className="mt-6 flex flex-wrap justify-center gap-2 text-xs text-neutral-400">
+                {["React", "Tailwind CSS", "SVG", "No animation library", "Keyboard: Enter / Space", "Reduced-motion aware"].map((tag) => (
+                  <li key={tag} className="rounded-full border border-white/10 px-3 py-1">
+                    {tag}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-6 text-sm text-neutral-500">Pull the circle again to go back.</p>
+            </div>
+          </div>
+        </div>
+        <div className="pointer-events-none absolute inset-0 z-10">
+          <MoonPull
+            open={open}
+            onPull={() => setOpen((o) => !o)}
+            closedLabel="Pull the moon to open About"
+            openLabel="Pull the moon to go back home"
+            {...props}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StackedCardsDemo(props: any) {
+  return (
+    <div className="w-full px-4 py-24 text-white sm:px-8">
+      <div className="mx-auto max-w-6xl">
+        <h1 className="text-center text-5xl tracking-tight">
+          A pile of <em className="font-serif">prints</em>
+        </h1>
+        <div className="mt-12">
+          <StackedCards images={PAPER_PRINTS} topSrc={PAPER_PRINTS[2].src} {...props} />
+        </div>
+        <div className="h-[40vh]" />
+      </div>
+    </div>
+  );
+}
+
+function TiltedCollageDemo(props: any) {
+  const prints = [...PAPER_PRINTS.slice(0, 7), PAPER_STRIP, ...PAPER_PRINTS.slice(7)];
+  return (
+    <TiltedCollage
+      images={prints}
+      {...props}
+      columns={Number(props.columns ?? 3) as 2 | 3 | 4}
+      className="mx-auto w-full max-w-6xl py-8"
+    />
+  );
+}
+
+function TapedMarqueeDemo(props: any) {
+  const seconds = Number(props.seconds ?? 60);
+  const tiltOffset = Number(props.tiltOffset ?? 0);
+  return (
+    <div className="flex min-h-dvh w-full flex-col justify-center py-16 text-white">
+      <h1 className="mb-6 px-8 text-center text-5xl tracking-tight">
+        Pinned <em className="font-serif">along a line</em>
+      </h1>
+      <TapedMarquee photos={PAPER_PRINTS.slice(0, 7)} {...props} />
+      {/* A second row: slower, reversed and tilted out of step, so the two never line up. */}
+      <TapedMarquee
+        photos={PAPER_PRINTS.slice(7)}
+        {...props}
+        seconds={Math.round((seconds * 85) / 70)}
+        reverse={!props.reverse}
+        tiltOffset={tiltOffset + 3}
+      />
+    </div>
+  );
+}
+
 function ScrollWaterDemo(props: any) {
   return (
-    <div className="w-full text-white bg-[#111111] p-12">
+    <div className="w-full text-white p-12">
       <ScrollWater {...props} />
       <div className="mx-auto max-w-2xl space-y-12 py-24">
         <h1 className="text-5xl tracking-tight text-white mb-8">
@@ -316,7 +455,7 @@ function ScrollWaterDemo(props: any) {
 
 function ScrollProgressDemo(props: any) {
   return (
-    <div className="w-full text-white bg-[#111111] p-12">
+    <div className="w-full text-white p-12">
       <style dangerouslySetInnerHTML={{ __html: `
         /* Hide browser scrollbar only when scroll-progress demo is active */
         html, body {
@@ -677,6 +816,14 @@ export function PresentationRenderer({
       return <ScrollProgressDemo {...liveProps} />;
     case "scroll-water":
       return <ScrollWaterDemo {...liveProps} />;
+    case "moon-pull":
+      return <MoonPullDemo {...liveProps} />;
+    case "stacked-cards":
+      return <StackedCardsDemo {...liveProps} />;
+    case "tilted-collage":
+      return <TiltedCollageDemo {...liveProps} />;
+    case "taped-marquee":
+      return <TapedMarqueeDemo {...liveProps} />;
 
     case "now-playing-card":
       return <NowPlayingCard song={{ isPlaying: true, title: "Main Chala Jaunga", artist: "Fiddlecraft", album: "Hawai Jahaaz", image: "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/41/c7/65/41c765a0-5a1e-3e35-9c22-5d664da2b95e/cover.jpg/600x600bb.jpg", songUrl: "https://open.spotify.com", playedAt: null }} />;
