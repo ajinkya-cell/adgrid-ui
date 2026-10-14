@@ -1,17 +1,54 @@
 "use client";
 
-import { useMemo, useState, useEffect, useCallback } from "react";
+import { useMemo, useState, useEffect, useCallback, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { RegistryEntry } from "@/registry";
 import { usePresentationStore } from "@/lib/presentation/store";
-import { presentationEntries } from "./presentation-registry";
+import { presentationEntries, groupPresentationEntries, groupForEntry } from "./presentation-registry";
 import { SidebarSearch } from "./SidebarSearch";
 import { usePresentation } from "./hooks/usePresentation";
 import type { PresentationSourceFile } from "./types";
-import { SidebarItem } from "./SidebarItem";
+import { SidebarItem, SidebarGroupHeader } from "./SidebarItem";
 import { PreviewOverlay } from "./PreviewOverlay";
 import { CodeStudioGuide } from "./CodeStudioGuide";
 import { Check, Copy } from "lucide-react";
+
+// While the list scrolls, rows passing under a still pointer shouldn't count as hovers: that
+// re-renders rows and opens live previews mid-scroll. Hover is switched off during a scroll and
+// back on just after it stops.
+function usePauseHoverWhileScrolling(
+  scrollRef: React.RefObject<HTMLDivElement | null>,
+  contentRef: React.RefObject<HTMLDivElement | null>,
+  enabled: boolean,
+  onScrollStart: () => void
+) {
+  const onStart = useRef(onScrollStart);
+  onStart.current = onScrollStart;
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el || !enabled) return;
+    let idle = 0;
+    let scrolling = false;
+    const onScroll = () => {
+      if (!scrolling) {
+        scrolling = true;
+        if (contentRef.current) contentRef.current.style.pointerEvents = "none";
+        onStart.current();
+      }
+      clearTimeout(idle);
+      idle = window.setTimeout(() => {
+        scrolling = false;
+        if (contentRef.current) contentRef.current.style.pointerEvents = "";
+      }, 120);
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      el.removeEventListener("scroll", onScroll);
+      clearTimeout(idle);
+      if (contentRef.current) contentRef.current.style.pointerEvents = "";
+    };
+  }, [scrollRef, contentRef, enabled]);
+}
 
 export function PresentationSidebar({
   entry,
@@ -48,13 +85,14 @@ export function PresentationSidebar({
     return presentationEntries.filter((item) => {
       const q = query.trim().toLowerCase();
       if (!q) return true;
-      return [item.name, item.slug, item.category, item.description].some((value) =>
+      return [item.name, item.slug, groupForEntry(item).label, item.description].some((value) =>
         value.toLowerCase().includes(q)
       );
     });
   }, [query]);
 
   const flatResults = filteredEntries;
+  const groups = useMemo(() => groupPresentationEntries(flatResults), [flatResults]);
 
   const currentFile = sourceFiles[activeFileIndex] || sourceFiles[0];
 
@@ -77,6 +115,10 @@ export function PresentationSidebar({
   const activeIndex = navIndex !== null && navIndex < flatResults.length ? navIndex : defaultIndex;
   const [hoveredEntry, setHoveredEntry] = useState<RegistryEntry | null>(null);
   const [hoveredRect, setHoveredRect] = useState<DOMRect | null>(null);
+  // Only keyboard moves scroll the list; pointer moves already have the row in view.
+  const scrollOnMove = useRef(false);
+  const listRef = useRef<HTMLDivElement>(null);
+  const listContentRef = useRef<HTMLDivElement>(null);
 
   // Keyboard listener for navigation inside flat list
   useEffect(() => {
@@ -85,12 +127,16 @@ export function PresentationSidebar({
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowDown") {
         e.preventDefault();
+        scrollOnMove.current = true;
+        keyboardNav.current = true;
         setNavIndex((prev) => {
           const current = prev !== null && prev < flatResults.length ? prev : defaultIndex;
           return (current + 1) % flatResults.length;
         });
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
+        scrollOnMove.current = true;
+        keyboardNav.current = true;
         setNavIndex((prev) => {
           const current = prev !== null && prev < flatResults.length ? prev : defaultIndex;
           return (current - 1 + flatResults.length) % flatResults.length;
@@ -115,12 +161,23 @@ export function PresentationSidebar({
 
   // Smooth scroll item container on active index changes
   useEffect(() => {
-    if (!open) return;
+    if (!open || !scrollOnMove.current) return;
+    scrollOnMove.current = false;
     const activeEl = document.querySelector(`[data-sidebar-index="${activeIndex}"]`);
     if (activeEl) {
       activeEl.scrollIntoView({ block: "nearest", behavior: "smooth" });
     }
   }, [activeIndex, open]);
+
+  // On open, start with the current component in view.
+  useEffect(() => {
+    if (!open || activeTab !== "navigator") return;
+    const frame = requestAnimationFrame(() => {
+      document.querySelector(`[data-sidebar-index="${defaultIndex}"]`)?.scrollIntoView({ block: "center" });
+    });
+    return () => cancelAnimationFrame(frame);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, activeTab]);
 
   const handleNavigate = useCallback(
     (target: RegistryEntry) => {
@@ -132,6 +189,23 @@ export function PresentationSidebar({
     [toggleSidebar, presentation]
   );
 
+  const navigateRef = useRef(handleNavigate);
+  navigateRef.current = handleNavigate;
+  const selectEntry = useCallback((target: RegistryEntry) => navigateRef.current(target), []);
+  // Which input moved the highlight last: keyboard-driven scrolls keep it, pointer scrolls clear it.
+  const keyboardNav = useRef(false);
+  const pointAt = useCallback((index: number) => {
+    keyboardNav.current = false;
+    setNavIndex(index);
+  }, []);
+
+  usePauseHoverWhileScrolling(listRef, listContentRef, open && activeTab === "navigator", () => {
+    if (keyboardNav.current) return;
+    setNavIndex(null);
+    setHoveredEntry(null);
+    setHoveredRect(null);
+  });
+
   const handleHoverChange = useCallback(
     (hEntry: RegistryEntry | null, hRect: DOMRect | null) => {
       setHoveredEntry(hEntry);
@@ -139,12 +213,6 @@ export function PresentationSidebar({
     },
     []
   );
-
-  // Generate stable numbering prefix based on full registry listing index
-  const getStableNumber = (target: RegistryEntry) => {
-    const idx = presentationEntries.findIndex((item) => item.slug === target.slug);
-    return String(idx + 1).padStart(2, "0");
-  };
 
   return (
     <AnimatePresence>
@@ -162,12 +230,9 @@ export function PresentationSidebar({
           />
           
           <motion.aside
-            className="fixed bottom-0 left-0 z-40 flex h-dvh flex-col border-r border-white/10 p-0 shadow-2xl backdrop-blur-2xl"
+            className="fixed bottom-0 left-0 z-40 flex h-dvh flex-col border-r border-white/[0.06] bg-[#0a0a0a] p-0"
             style={{
-              backgroundColor: "#070707fa",
-              boxShadow: isExpandedCode
-                ? "0 0 100px rgba(0,0,0,0.95), 25px 0 70px rgba(0,0,0,0.75)"
-                : "0 0 80px rgba(0,0,0,0.85)",
+              boxShadow: "inset -1px 0 0 rgba(255,255,255,0.02), 24px 0 60px -20px rgba(0,0,0,0.9)",
             }}
             initial={{ opacity: 0, x: -20, width: currentWidth }}
             animate={{ opacity: 1, x: 0, width: currentWidth }}
@@ -179,27 +244,27 @@ export function PresentationSidebar({
             {/* Header: Clearance for the 2 fixed trigger buttons on the left + Guide/Source toggle on right */}
             <div className={`h-[48px] mb-4 mt-6 flex items-center justify-end shrink-0 pl-64 ${isExpandedCode ? "pr-8" : "pr-6"}`}>
               {isExpandedCode && (
-                <div className="relative flex items-center rounded-full border border-white/10 bg-[#0d0d0d] p-1 shadow-[inset_0_1px_3px_rgba(0,0,0,0.8)]">
-                  <button
-                    onClick={() => setCodeSubTab("guide")}
-                    className={`flex items-center gap-1.5 rounded-full px-4 py-1 text-xs font-medium transition-all cursor-pointer ${
-                      codeSubTab === "guide"
-                        ? "bg-white text-black font-semibold shadow-[0_1px_4px_rgba(0,0,0,0.5)]"
-                        : "text-white/45 hover:text-white/80"
-                    }`}
-                  >
-                    <span>Guide</span>
-                  </button>
-                  <button
-                    onClick={() => setCodeSubTab("source")}
-                    className={`flex items-center gap-1.5 rounded-full px-4 py-1 text-xs font-medium transition-all cursor-pointer ${
-                      codeSubTab === "source"
-                        ? "bg-white text-black font-semibold shadow-[0_1px_4px_rgba(0,0,0,0.5)]"
-                        : "text-white/45 hover:text-white/80"
-                    }`}
-                  >
-                    <span>Code</span>
-                  </button>
+                <div
+                  role="tablist"
+                  aria-label="Code view"
+                  className="flex items-center gap-0.5 rounded-xl border border-white/[0.06] bg-[#070707] p-[3px] shadow-[inset_0_1.5px_3px_rgba(0,0,0,0.85),0_1px_0_rgba(255,255,255,0.05)]"
+                >
+                  {(["guide", "source"] as const).map((tab) => (
+                    <button
+                      key={tab}
+                      type="button"
+                      role="tab"
+                      aria-selected={codeSubTab === tab}
+                      onClick={() => setCodeSubTab(tab)}
+                      className={`h-7 cursor-pointer rounded-[9px] border px-3.5 font-inter text-xs font-medium tracking-tight transition-colors duration-150 ${
+                        codeSubTab === tab
+                          ? "border-white/[0.07] border-t-white/[0.13] bg-[linear-gradient(180deg,#1f1f21_0%,#18181a_100%)] text-neutral-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),inset_0_-1px_0_rgba(0,0,0,0.5),0_1px_3px_rgba(0,0,0,0.5)]"
+                          : "border-transparent text-neutral-500 hover:text-neutral-200"
+                      }`}
+                    >
+                      {tab === "guide" ? "Guide" : "Code"}
+                    </button>
+                  ))}
                 </div>
               )}
             </div>
@@ -207,10 +272,12 @@ export function PresentationSidebar({
             {/* Content area based on selected tab */}
             {activeTab === "navigator" && (
               <div className="flex-1 min-h-0 flex flex-col">
-                <div className="mb-4 pl-9 pr-6">
-                  <div className="mb-3">
-                   
-                    <div className="mt-1 text-xs text-white/60 font-medium">{flatResults.length} components</div>
+                <div className="mb-3 pl-6 pr-6">
+                  <div className="mb-3 flex items-baseline justify-between px-1">
+                    <span className="font-inter text-sm font-medium tracking-tight text-neutral-100">Components</span>
+                    <span className="font-inter text-xs text-neutral-500 tabular-nums">
+                      {query ? `${flatResults.length} of ${presentationEntries.length}` : flatResults.length}
+                    </span>
                   </div>
                   <SidebarSearch
                     value={query}
@@ -223,26 +290,51 @@ export function PresentationSidebar({
                     }}
                   />
                 </div>
-                
-                {/* Numbered components list */}
-                <div className="min-h-0 flex-1 overflow-y-auto present-scroll py-2 space-y-0 select-none" role="menu">
-                  {flatResults.map((item, idx) => (
-                    <div key={item.slug} data-sidebar-index={idx}>
-                      <SidebarItem
-                        entry={item}
-                        active={item.slug === entry.slug}
-                        itemNumber={getStableNumber(item)}
-                        isFocused={idx === activeIndex}
-                        onSelect={handleNavigate}
-                        onHoverChange={handleHoverChange}
-                      />
-                    </div>
-                  ))}
+
+                {/* Grouped list on one continuous ruler. The edge fades are overlays: a mask on the
+                    scroller itself would repaint the whole list on every scroll frame. */}
+                <div className="relative min-h-0 flex-1 flex flex-col">
+                <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-10 h-4 bg-[linear-gradient(180deg,#0a0a0a,transparent)]" />
+                <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-8 bg-[linear-gradient(0deg,#0a0a0a,transparent)]" />
+                <div
+                  ref={listRef}
+                  role="menu"
+                  onMouseLeave={() => setNavIndex(null)}
+                  style={{ "--tick": "rgba(255,255,255,0.22)" } as React.CSSProperties}
+                  className="min-h-0 flex-1 overflow-y-auto overscroll-contain select-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                >
+                  <div ref={listContentRef} className="relative pt-[10px] pb-10">
+                    {groups.map((group, groupIndex) => (
+                      <div key={group.id} role="group" aria-label={group.label}>
+                        <SidebarGroupHeader label={group.label} count={group.entries.length} first={groupIndex === 0} />
+                        {group.entries.map((item, i) => {
+                          const idx = flatResults.indexOf(item);
+                          return (
+                            <div key={item.slug} data-sidebar-index={idx}>
+                              <SidebarItem
+                                entry={item}
+                                active={item.slug === entry.slug}
+                                isFocused={navIndex !== null && idx === activeIndex}
+                                onSelect={selectEntry}
+                                onHoverChange={handleHoverChange}
+                                index={idx}
+                                onPoint={pointAt}
+                                first={i === 0}
+                                last={i === group.entries.length - 1}
+                              />
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ))}
+                  </div>
                   {flatResults.length === 0 && (
-                    <div className="mx-9 mt-4 rounded-xl border border-white/5 bg-white/[0.01] p-5 text-xs font-mono text-white/35">
-                      No matching components.
+                    <div className="mx-6 mt-2 flex flex-col items-center gap-1 rounded-xl border border-white/[0.06] bg-[#0c0c0d] px-4 py-6 text-center">
+                      <span className="font-inter text-[13px] font-medium text-neutral-200">No matches</span>
+                      <span className="font-inter text-xs text-neutral-500">Try a name or a group, like “inputs”.</span>
                     </div>
                   )}
+                </div>
                 </div>
               </div>
             )}
@@ -269,10 +361,10 @@ export function PresentationSidebar({
                             <button
                               key={file.path}
                               onClick={() => setActiveFileIndex(i)}
-                              className={`px-3 py-1.5 text-xs font-mono rounded-lg transition-all cursor-pointer ${
+                              className={`h-7 px-3 text-xs font-mono rounded-lg border transition-colors duration-150 cursor-pointer ${
                                 activeFileIndex === i
-                                  ? "bg-white text-black font-semibold shadow-[0_1px_3px_rgba(0,0,0,0.3)] border border-white/40"
-                                  : "border border-white/10 bg-black/40 text-white/50 hover:text-white/80 hover:border-white/20"
+                                  ? "border-white/[0.07] border-t-white/[0.13] bg-[linear-gradient(180deg,#1f1f21_0%,#18181a_100%)] text-neutral-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.06),inset_0_-1px_0_rgba(0,0,0,0.5),0_1px_3px_rgba(0,0,0,0.5)]"
+                                  : "border-transparent text-neutral-500 hover:text-neutral-200"
                               }`}
                             >
                               {file.path.split("/").pop()}
@@ -299,7 +391,7 @@ export function PresentationSidebar({
                         className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] hover:border-white/20 text-white/60 hover:text-white transition-all cursor-pointer active:scale-95 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]"
                       >
                         {codeCopied ? (
-                          <Check className="h-3.5 w-3.5 text-emerald-400" />
+                          <Check className="h-3.5 w-3.5 text-neutral-100" />
                         ) : (
                           <Copy className="h-3.5 w-3.5 text-white/60" />
                         )}
@@ -320,9 +412,9 @@ export function PresentationSidebar({
                     <div className="flex items-center justify-between border-b border-white/[0.06] bg-white/[0.02] px-4 py-2.5 shrink-0">
                       <div className="flex items-center gap-3">
                         <div className="flex items-center gap-1.5">
-                          <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f56]" />
-                          <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]" />
-                          <span className="h-2.5 w-2.5 rounded-full bg-[#27c93f]" />
+                          <span className="h-2 w-2 rounded-full bg-white/[0.1]" />
+                          <span className="h-2 w-2 rounded-full bg-white/[0.1]" />
+                          <span className="h-2 w-2 rounded-full bg-white/[0.1]" />
                         </div>
                         <span className="text-[11px] font-mono text-white/50">
                           {currentFile?.path.split("/").pop()}

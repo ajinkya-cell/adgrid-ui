@@ -695,7 +695,7 @@ export const registry: RegistryEntry[] = [
     name: "Combobox",
     slug: "combobox",
     category: "primitives",
-    description: "An input that filters a list as you type. The field is a well; the list opens on the browser's top layer so nothing can clip it, flips above the field when there's no room, and its highlight sinks into a tray that glides between rows.",
+    description: "An input that filters a list as you type. The field is a well; the list opens on the browser's top layer so nothing can clip it, flips above the field when there's no room, and a raised highlight glides between rows.",
     dependencies: ["framer-motion"],
     packagePath: "primitives/Combobox.tsx",
     files: ["primitives/Combobox.tsx", "primitives/search.ts"],

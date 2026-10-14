@@ -1,15 +1,94 @@
-import { useEffect, useRef, useState, memo } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useSyncExternalStore, memo } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import type { RegistryEntry } from "@/registry";
+
+// The navigator list hangs off a ruler: every 30px row carries six evenly spaced ticks (5px
+// pitch), one of them level with the name, so the ticks run unbroken down each group. Each
+// group's ruler starts on its first component's name tick and ends on its last one's; group
+// headings stand clear of it. Every plain tick is identical.
+//
+// When the pointer (or keyboard) reaches a row, its name tick stretches out and turns white and
+// the label springs right, overshooting a touch before it settles. Leaving, it eases back on a
+// calmer spring, so moving down the list leaves a soft trail of rows settling behind the pointer.
+// The component being presented keeps its tick extended and its label shifted.
+
+// Entering: a soft spring with a visible bounce. Leaving: no bounce, so the trail reads smooth.
+const ENTER = { type: "spring", stiffness: 260, damping: 14, mass: 0.6 } as const;
+const LEAVE = { type: "spring", stiffness: 220, damping: 26, mass: 0.7 } as const;
+// The name tick (row centre, 15px) and the five around it, on a 5px grid. The first row of a
+// group drops the ones above its name, the last row the ones below.
+const ABOVE = [0, 5, 10];
+const NAME_TICK = 15;
+const BELOW = [20, 25];
+const ROW = 30;
+const TICK = 14;
+// The lit name tick: same left edge as every tick, reaching to ~10px short of the shifted label.
+const LIT_LENGTH = 34;
+const SHIFT = 10;
+
+// Only the latest few, so the dot still means something.
+const NEW = new Set(["spinner", "file-upload", "toast"]);
+
+// A line width in whole device pixels. A 1px line at 125% scaling is 1.25 device pixels, which crispEdges
+// rounds to 1 or 2 depending on where it lands, so every few ticks came out thick. Drawing each
+// line exactly one device pixel tall keeps them identical at any scaling.
+function subscribeToPixelRatio(onChange: () => void) {
+  let query = window.matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`);
+  const listen = () => {
+    onChange();
+    query.removeEventListener("change", listen);
+    query = window.matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`);
+    query.addEventListener("change", listen);
+  };
+  query.addEventListener("change", listen);
+  return () => query.removeEventListener("change", listen);
+}
+function useHairline() {
+  // Whole device pixels, as close to 1 CSS px as fits: 1 at 100–150%, 2 at 200%, and so on.
+  return useSyncExternalStore(
+    subscribeToPixelRatio,
+    () => Math.max(1, Math.floor(window.devicePixelRatio)) / window.devicePixelRatio,
+    () => 1
+  );
+}
+
+/**
+ * A row's ruler ticks, drawn as SVG lines with crispEdges. A 1px box at a fractional position
+ * blurs across two screen pixels and looks fainter than its neighbours; crispEdges snaps every
+ * line to exactly one device pixel wherever the row lands and at any zoom, so all ticks match.
+ */
+function RowTicks({ first, last }: { first: boolean; last: boolean }) {
+  const ticks = [...(first ? [] : ABOVE), NAME_TICK, ...(last ? [] : BELOW)];
+  const hairline = useHairline();
+  return (
+    <svg
+      aria-hidden="true"
+      width={TICK}
+      height={ROW}
+      shapeRendering="crispEdges"
+      className="pointer-events-none absolute top-0 left-6 overflow-visible"
+    >
+      {ticks.map((y) => (
+        <line key={y} x1={0} x2={TICK} y1={y} y2={y} strokeWidth={hairline} style={{ stroke: "var(--tick)" }} />
+      ))}
+    </svg>
+  );
+}
 
 interface SidebarItemProps {
   entry: RegistryEntry;
   active: boolean;
-  itemNumber?: string;
   isFocused: boolean;
   onNavigate?: () => void;
   onSelect?: (entry: RegistryEntry) => void;
   onHoverChange: (entry: RegistryEntry | null, rect: DOMRect | null) => void;
+  /** This row's position in the list. */
+  index?: number;
+  /** Called with `index` on pointer enter, so the keyboard highlight follows the pointer. */
+  onPoint?: (index: number) => void;
+  /** First or last row of its group: the ruler starts or ends on this row's name tick. */
+  first?: boolean;
+  last?: boolean;
 }
 
 function SidebarItemComponent({
@@ -19,10 +98,19 @@ function SidebarItemComponent({
   onNavigate,
   onSelect,
   onHoverChange,
+  index = -1,
+  onPoint,
+  first = false,
+  last = false,
 }: SidebarItemProps) {
+  const reduceMotion = useReducedMotion() ?? false;
   const containerRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [hovered, setHovered] = useState(false);
+  // Only the pointer/keyboard stretches a tick; the current component shows through its label.
+  // Selected or hovered: the name tick extends and the label shifts.
+  const lit = active || isFocused;
+  const hairline = useHairline();
+  const transition = reduceMotion ? { duration: 0 } : lit ? ENTER : LEAVE;
 
   const handleClick = () => {
     if (onSelect) onSelect(entry);
@@ -30,9 +118,8 @@ function SidebarItemComponent({
   };
 
   const handleMouseEnter = () => {
-    setHovered(true);
+    onPoint?.(index);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    
     // 160ms delay prevents overlay churn during quick cursor passes
     timeoutRef.current = setTimeout(() => {
       if (containerRef.current) {
@@ -42,7 +129,6 @@ function SidebarItemComponent({
   };
 
   const handleMouseLeave = () => {
-    setHovered(false);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     onHoverChange(null, null);
   };
@@ -53,131 +139,69 @@ function SidebarItemComponent({
     };
   }, []);
 
-  const isNew = ["scroll-progress", "lumina-wave", "scroll-water", "moon-pull", "stacked-cards", "tilted-collage", "taped-marquee", "choice", "modal", "dialog"].includes(entry.slug);
-  const isHighlighted = hovered || isFocused;
-
   return (
     <div
       ref={containerRef}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
-      data-active={active}
-      className={`relative group flex items-center h-[30px] pl-[62px] pr-6 cursor-pointer select-none transition-colors duration-150 outline-none ${
-        isFocused ? "bg-white/[0.03]" : ""
-      }`}
+      data-active={active || undefined}
+      data-focused={isFocused || undefined}
+      className="relative flex h-[30px] cursor-pointer items-center pr-6 pl-[58px] outline-none select-none"
       role="menuitem"
-      tabIndex={0}
+      tabIndex={-1}
       aria-current={active ? "page" : undefined}
     >
-      {/* Continuous ticks scale using SVG crispEdges: left-anchored vector lines growing rightwards */}
+      <RowTicks first={first} last={last} />
+      {/* The name tick lit: a white line over the resting one, pinned at the same left edge and
+          growing only to the right. Its end point animates (not a scale), so it stays crisp. */}
       <svg
-        className="absolute left-5 top-0 bottom-0 w-[36px] h-[30px] pointer-events-none z-10"
+        aria-hidden="true"
+        width={LIT_LENGTH}
+        height={ROW}
         shapeRendering="crispEdges"
+        className="pointer-events-none absolute top-0 left-6 overflow-visible"
       >
-        {[...Array(6)].map((_, i) => {
-          const isTargetTick = i === 2; // Center indicator tick
-          let targetWidth = 16; // Consistent baseline tick length
-          let targetColor = "rgba(255, 255, 255, 0.12)";
-          let filter = "none";
-
-          if (isTargetTick) {
-            if (isHighlighted) {
-              // Highlighted / Hovered: single tick extends and turns pure white
-              targetWidth = 30;
-              targetColor = "rgba(255, 255, 255, 1)";
-              filter = "drop-shadow(0 0 5px rgba(255, 255, 255, 0.8))";
-            } else if (active) {
-              // Selected / Active: single tick extends and turns lavender
-              targetWidth = 28;
-              targetColor = "rgba(167, 139, 250, 1)";
-              filter = "drop-shadow(0 0 5px rgba(167, 139, 250, 0.7))";
-            }
-          } else {
-            // Other 5 ticks remain consistent in size, subtly illuminating on active/hover
-            if (isHighlighted) {
-              targetColor = "rgba(255, 255, 255, 0.22)";
-            } else if (active) {
-              targetColor = "rgba(255, 255, 255, 0.16)";
-            }
-          }
-
-          // Exactly 5.0px between every tick across the entire list (30px / 6 = 5.0px)
-          const y = i * 5 + 2.5;
-          return (
-            <line
-              key={i}
-              x1="0"
-              y1={y}
-              x2={targetWidth}
-              y2={y}
-              stroke={targetColor}
-              strokeWidth="1.25"
-              style={{
-                filter,
-                transition: "x2 0.25s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.2s ease-out, filter 0.2s ease-out",
-              }}
-            />
-          );
-        })}
+        <motion.line
+          x1={0}
+          y1={NAME_TICK}
+          y2={NAME_TICK}
+          strokeWidth={hairline}
+          stroke="#fafafa"
+          initial={false}
+          animate={{ x2: lit ? LIT_LENGTH : TICK, opacity: lit ? 1 : 0 }}
+          // Length bounces; brightness just eases, so it never flickers through the overshoot.
+          transition={{ ...transition, opacity: { duration: reduceMotion ? 0 : lit ? 0.12 : 0.28, ease: "easeOut" } }}
+        />
       </svg>
 
-      <div className="flex items-center gap-3 min-w-0">
-        {/* Component Title with Inter font, Tasteful Bounce, Rightward Slide & Pure White Illumination */}
-        <motion.span
-          className="font-inter text-[13.5px] font-normal tracking-[-0.01em] truncate origin-left inline-block"
-          animate={
-            isHighlighted
-              ? {
-                  scale: 1.04,
-                  x: 8,
-                  color: "#ffffff",
-                  textShadow: "0 0 12px rgba(255, 255, 255, 0.25)",
-                }
-              : active
-              ? {
-                  scale: 1,
-                  x: 0,
-                  color: "#a78bfa",
-                  textShadow: "0 0 0px rgba(255, 255, 255, 0)",
-                }
-              : {
-                  scale: 1,
-                  x: 0,
-                  color: "rgba(255, 255, 255, 0.45)",
-                  textShadow: "0 0 0px rgba(255, 255, 255, 0)",
-                }
-          }
-          transition={
-            isHighlighted
-              ? {
-                  type: "spring",
-                  stiffness: 400,
-                  damping: 15,
-                  mass: 0.7,
-                }
-              : {
-                  type: "spring",
-                  stiffness: 280,
-                  damping: 24,
-                  mass: 0.9,
-                }
-          }
-        >
-          {entry.name}
-        </motion.span>
-
-        {/* New Badge */}
-        {isNew && (
-          <span
-            className="px-1.5 py-0.5 rounded-[4px] border border-violet-500/20 bg-violet-950/20 font-mono text-[8px] uppercase tracking-wider text-violet-400 shrink-0 select-none scale-90 animate-pulse"
-          >
-            New
-          </span>
-        )}
-      </div>
+      <motion.span
+        initial={false}
+        animate={{ x: lit ? SHIFT : 0 }}
+        transition={transition}
+        className={`flex min-w-0 items-center gap-2 font-inter text-[14px] tracking-[-0.01em] transition-colors duration-200 ${
+          lit || active ? "text-neutral-50" : "text-neutral-400"
+        } ${active ? "font-medium" : ""}`}
+      >
+        <span className="truncate">{entry.name}</span>
+        {NEW.has(entry.slug) && <span aria-label="New" className="size-[5px] shrink-0 rounded-full bg-neutral-300" />}
+      </motion.span>
     </div>
   );
 }
 
 export const SidebarItem = memo(SidebarItemComponent);
+
+/** A group heading: stands clear of the ruler, the label a step brighter and larger. */
+export function SidebarGroupHeader({ label, count, first }: { label: string; count: number; first?: boolean }) {
+  return (
+    <div
+      role="presentation"
+      className={`relative flex h-[40px] items-center gap-3 pr-6 pl-[58px] select-none ${first ? "" : "mt-[10px]"}`}
+    >
+      <span className="font-inter text-[15px] font-medium tracking-[-0.015em] text-neutral-100">{label}</span>
+      <span className="h-px flex-1 bg-[linear-gradient(90deg,rgba(255,255,255,0.07),transparent)]" />
+      <span className="font-inter text-xs text-neutral-600 tabular-nums">{count}</span>
+    </div>
+  );
+}
