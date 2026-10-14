@@ -296,6 +296,10 @@ export { Toaster, toast } from "./primitives/Toast";
 export { Button } from "./primitives/Button";
 export type { ButtonProps, ButtonLinkProps, ButtonVariant, ButtonSize } from "./primitives/Button";
 export { TextField } from "./primitives/TextField";
+export { Select } from "./primitives/Select";
+export { ColorPicker, hexToHsva, hsvaToHex } from "./primitives/ColorPicker";
+export type { ColorPickerProps, ColorPickerSize, Hsva } from "./primitives/ColorPicker";
+export type { SelectProps, SelectOption, SelectSize } from "./primitives/Select";
 export type { TextFieldProps, TextFieldSize } from "./primitives/TextField";
 export {
   Popover,
@@ -305,6 +309,9 @@ export {
   MenuLabel,
   MenuSeparator,
   MenuGroup,
+  MenuSub,
+  MenuRadioGroup,
+  MenuRadioItem,
   usePopoverClose,
 } from "./primitives/Popover";
 export type {
@@ -314,5 +321,12 @@ export type {
   DropdownMenuProps,
   MenuItemProps,
   MenuCheckboxItemProps,
+  MenuSubProps,
+  MenuRadioGroupProps,
+  MenuRadioItemProps,
 } from "./primitives/Popover";
+export { Menubar, MenubarMenu } from "./primitives/Menubar";
+export type { MenubarProps, MenubarMenuProps } from "./primitives/Menubar";
+export { Pagination, pageRange } from "./primitives/Pagination";
+export type { PaginationProps, PaginationVariant, PaginationSize } from "./primitives/Pagination";
 export type { ToasterProps, ToasterPosition, ToastOptions, ToastAction, ToastData, ToastType } from "./primitives/Toast";

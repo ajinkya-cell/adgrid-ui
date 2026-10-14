@@ -64,8 +64,9 @@ const SIZES = {
   lg: { field: "h-12 text-[15px]", lead: "pl-3.5", row: "h-10 text-sm", socket: "size-7 rounded-md [&_svg]:size-4" },
 } as const;
 
+// Bottom layer under every row's content, so it never paints over text while gliding down.
 const HIGHLIGHT = cn(
-  "absolute inset-0 rounded-lg border border-white/[0.07] border-t-white/[0.13]",
+  "absolute inset-0 z-0 rounded-lg border border-white/[0.07] border-t-white/[0.13]",
   "bg-[linear-gradient(180deg,#1f1f21_0%,#18181a_100%)]",
   "shadow-[inset_0_1px_0_rgba(255,255,255,0.06),inset_0_-1px_0_rgba(0,0,0,0.5),0_6px_14px_-6px_rgba(0,0,0,0.8),0_1px_3px_rgba(0,0,0,0.5)]"
 );
@@ -435,7 +436,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(function Com
                   }}
                   onClick={() => choose(option)}
                   className={cn(
-                    "relative flex cursor-pointer items-center gap-2.5 rounded-lg pr-2 pl-1.5 select-none",
+                    "relative flex cursor-pointer items-center gap-2.5 rounded-lg pr-2 pl-1.5 select-none [&>:not([data-highlight])]:z-[1]",
                     s.row,
                     option.disabled && "cursor-not-allowed opacity-40"
                   )}
@@ -444,7 +445,8 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(function Com
                   {isActive && (
                     <motion.span
                       aria-hidden="true"
-                      layoutId="combobox-highlight"
+                      data-highlight=""
+          layoutId="combobox-highlight"
                       transition={reduceMotion ? { duration: 0 } : SPRING}
                       className={HIGHLIGHT}
                     />

@@ -30,7 +30,9 @@ import { cn } from "../lib/utils";
 //
 // Popover holds anything: a form, a note, a picker. DropdownMenu fills the same panel with a list
 // of actions: arrow keys, Home/End and type-ahead move a raised highlight that glides from item
-// to item; Enter or a click runs the item and closes the menu.
+// to item; Enter or a click runs the item and closes the menu. MenuSub opens a second panel to
+// the side (hover, or ArrowRight); MenuRadioGroup holds pick-one items. Menubar (Menubar.tsx)
+// lines several DropdownMenus up in a bar.
 
 export type PopoverSide = "top" | "bottom" | "left" | "right";
 export type PopoverAlign = "start" | "center" | "end";
@@ -49,8 +51,9 @@ const PANEL = cn(
   "outline-none"
 );
 
+// Bottom layer under every item's content, so it never paints over text while gliding down.
 const HIGHLIGHT = cn(
-  "absolute inset-0 rounded-lg border border-white/[0.07] border-t-white/[0.13]",
+  "absolute inset-0 z-0 rounded-lg border border-white/[0.07] border-t-white/[0.13]",
   "bg-[linear-gradient(180deg,#232325_0%,#1c1c1e_100%)]",
   "shadow-[inset_0_1px_0_rgba(255,255,255,0.06),inset_0_-1px_0_rgba(0,0,0,0.5),0_4px_10px_-4px_rgba(0,0,0,0.8),0_1px_2px_rgba(0,0,0,0.5)]"
 );
@@ -88,6 +91,8 @@ function assignRef<T>(ref: Ref<T> | undefined, value: T) {
  * whichever has more room, with the panel capped to that room and scrolling inside. Kept on screen.
  */
 function place(trigger: HTMLElement, panel: HTMLElement, side: PopoverSide, align: PopoverAlign, offset: number) {
+  // Re-measuring drops the height cap for a moment; keep the panel's own scroll where it was.
+  const scrolled = panel.scrollTop;
   panel.style.maxHeight = "";
   const t = trigger.getBoundingClientRect();
   const width = panel.offsetWidth;
@@ -127,6 +132,7 @@ function place(trigger: HTMLElement, panel: HTMLElement, side: PopoverSide, alig
   panel.style.left = `${vertical ? cross : main}px`;
   panel.style.top = `${vertical ? main : cross}px`;
   panel.dataset.side = actual;
+  panel.scrollTop = scrolled;
 }
 
 interface FloatingProps {
@@ -189,13 +195,19 @@ function Floating({
     if (!panel.matches(":popover-open")) panel.showPopover();
     if (matchTriggerWidth) panel.style.minWidth = `${anchor.getBoundingClientRect().width}px`;
     const update = () => place(anchor, panel, side, align, offset);
+    // Follow the trigger when the page (or a scroller around it) scrolls, but not when the
+    // panel scrolls its own content: re-placing it then would fight the user's scroll.
+    const onScroll = (event: Event) => {
+      if (event.target instanceof Node && panel.contains(event.target)) return;
+      update();
+    };
     update();
     focusRef.current(panel);
     window.addEventListener("resize", update);
-    window.addEventListener("scroll", update, true);
+    window.addEventListener("scroll", onScroll, true);
     return () => {
       window.removeEventListener("resize", update);
-      window.removeEventListener("scroll", update, true);
+      window.removeEventListener("scroll", onScroll, true);
     };
   }, [open, side, align, offset, matchTriggerWidth]);
 
@@ -243,6 +255,8 @@ function Floating({
         tabIndex={-1}
         data-state={open ? "open" : "closed"}
         onKeyDown={(event) => {
+          // A submenu's panel sits inside this one in the DOM; its keys are its own business.
+          if ((event.target as HTMLElement).closest("[popover]") !== event.currentTarget) return;
           if (event.key === "Escape") {
             event.preventDefault();
             event.stopPropagation();
@@ -339,9 +353,50 @@ const MenuContext = createContext<{
   reduceMotion: boolean;
 } | null>(null);
 
+/** Items that belong to `panel` itself, not to a submenu nested inside it. */
+const ownItems = (panel: HTMLElement | null) =>
+  Array.from(panel?.querySelectorAll<HTMLElement>(ITEMS) ?? []).filter((item) => item.closest('[role="menu"]') === panel);
+
+/** Arrow keys, Home/End and type-ahead within one menu panel. Returns true if it used the key. */
+function navigateItems(event: KeyboardEvent<HTMLElement>, panel: HTMLElement, ahead: { text: string; timer: number }) {
+  const list = ownItems(panel);
+  if (!list.length) return false;
+  const current = list.indexOf(document.activeElement as HTMLElement);
+  const focusAt = (index: number) => list[(index + list.length) % list.length].focus({ preventScroll: false });
+  switch (event.key) {
+    case "ArrowDown":
+      event.preventDefault();
+      focusAt(current + 1);
+      return true;
+    case "ArrowUp":
+      event.preventDefault();
+      focusAt(current < 0 ? -1 : current - 1);
+      return true;
+    case "Home":
+      event.preventDefault();
+      focusAt(0);
+      return true;
+    case "End":
+      event.preventDefault();
+      focusAt(-1);
+      return true;
+  }
+  // Type-ahead: letters typed within half a second jump to the first match.
+  if (event.key.length === 1 && !event.metaKey && !event.ctrlKey && !event.altKey) {
+    window.clearTimeout(ahead.timer);
+    ahead.text += event.key.toLowerCase();
+    ahead.timer = window.setTimeout(() => (ahead.text = ""), 500);
+    const ordered = [...list.slice(current + 1), ...list.slice(0, current + 1)];
+    const match = ordered.find((item) => (item.dataset.label ?? item.textContent ?? "").trim().toLowerCase().startsWith(ahead.text));
+    match?.focus();
+    return Boolean(match);
+  }
+  return false;
+}
+
 export interface DropdownMenuProps {
   trigger: ReactElement;
-  /** MenuItem, MenuCheckboxItem, MenuLabel and MenuSeparator. */
+  /** MenuItem, MenuCheckboxItem, MenuRadioGroup, MenuSub, MenuGroup, MenuLabel and MenuSeparator. */
   children: ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
@@ -355,6 +410,10 @@ export interface DropdownMenuProps {
   matchTriggerWidth?: boolean;
   "aria-label"?: string;
   className?: string;
+  /** ArrowLeft/ArrowRight inside the menu (when no submenu takes it). Menubar uses this to move between menus. */
+  onEdgeNavigate?: (direction: -1 | 1) => void;
+  /** Land on the first item whenever it opens, however it was opened. */
+  autoFocusFirst?: boolean;
 }
 
 export function DropdownMenu({
@@ -369,6 +428,8 @@ export function DropdownMenu({
   matchTriggerWidth = true,
   "aria-label": ariaLabel,
   className,
+  onEdgeNavigate,
+  autoFocusFirst = false,
 }: DropdownMenuProps) {
   const [open, setOpen] = useOpenState(openProp, defaultOpen, onOpenChange);
   const [highlighted, setHighlighted] = useState<string | null>(null);
@@ -377,14 +438,6 @@ export function DropdownMenu({
   // Keyboard opening lands on the first (or last) item; a click opens with nothing highlighted.
   const startAt = useRef<"panel" | "first" | "last">("panel");
   const typeahead = useRef({ text: "", timer: 0 });
-
-  const items = (panel: HTMLElement | null) => Array.from(panel?.querySelectorAll<HTMLElement>(ITEMS) ?? []);
-
-  const focusAt = (panel: HTMLElement | null, index: number) => {
-    const list = items(panel);
-    if (!list.length) return;
-    list[(index + list.length) % list.length].focus({ preventScroll: false });
-  };
 
   return (
     <MenuContext.Provider
@@ -404,8 +457,9 @@ export function DropdownMenu({
         role="menu"
         ariaLabel={ariaLabel}
         initialFocus={(panel) => {
-          const list = items(panel);
-          const target = startAt.current === "first" ? list[0] : startAt.current === "last" ? list[list.length - 1] : panel;
+          const list = ownItems(panel);
+          const mode = autoFocusFirst ? "first" : startAt.current;
+          const target = mode === "first" ? list[0] : mode === "last" ? list[list.length - 1] : panel;
           (target ?? panel).focus({ preventScroll: true });
           startAt.current = "panel";
         }}
@@ -420,40 +474,18 @@ export function DropdownMenu({
           }
         }}
         onPanelKeyDown={(event) => {
-          const panel = event.currentTarget;
-          const list = items(panel);
-          const current = list.indexOf(document.activeElement as HTMLElement);
-          switch (event.key) {
-            case "ArrowDown":
-              event.preventDefault();
-              focusAt(panel, current + 1);
-              return;
-            case "ArrowUp":
-              event.preventDefault();
-              focusAt(panel, current < 0 ? -1 : current - 1);
-              return;
-            case "Home":
-              event.preventDefault();
-              focusAt(panel, 0);
-              return;
-            case "End":
-              event.preventDefault();
-              focusAt(panel, -1);
-              return;
-            case "Tab":
-              setOpen(false);
-              return;
+          if (event.key === "Tab") {
+            setOpen(false);
+            return;
           }
-          // Type-ahead: letters typed within half a second jump to the first match.
-          if (event.key.length === 1 && !event.metaKey && !event.ctrlKey && !event.altKey) {
-            const ahead = typeahead.current;
-            window.clearTimeout(ahead.timer);
-            ahead.text += event.key.toLowerCase();
-            ahead.timer = window.setTimeout(() => (ahead.text = ""), 500);
-            const ordered = [...list.slice(current + 1), ...list.slice(0, current + 1)];
-            const match = ordered.find((item) => (item.dataset.label ?? item.textContent ?? "").trim().toLowerCase().startsWith(ahead.text));
-            match?.focus();
+          if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+            if (onEdgeNavigate) {
+              event.preventDefault();
+              onEdgeNavigate(event.key === "ArrowLeft" ? -1 : 1);
+            }
+            return;
           }
+          navigateItems(event, event.currentTarget, typeahead.current);
         }}
         className={cn("min-w-[200px] max-w-[min(320px,calc(100vw-16px))] rounded-xl p-1", className)}
       >
@@ -520,6 +552,7 @@ function ItemBody({
       {active && (
         <motion.span
           aria-hidden="true"
+          data-highlight=""
           layoutId={`${menu?.layoutId}-highlight`}
           transition={menu?.reduceMotion ? { duration: 0 } : SPRING}
           className={HIGHLIGHT}
@@ -555,7 +588,7 @@ function ItemBody({
 }
 
 const ITEM = cn(
-  "relative flex h-9 w-full cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-left text-sm tracking-tight select-none outline-none",
+  "relative flex h-9 w-full cursor-pointer items-center gap-2.5 rounded-lg px-2.5 text-left text-sm tracking-tight select-none outline-none [&>:not([data-highlight])]:z-[1]",
   "aria-disabled:cursor-not-allowed aria-disabled:opacity-40"
 );
 
@@ -688,5 +721,229 @@ export function MenuGroup({ label, children }: { label?: ReactNode; children: Re
       )}
       {Children.toArray(children)}
     </div>
+  );
+}
+
+// ─── Submenu ────────────────────────────────────────────────────────────────
+
+export interface MenuSubProps {
+  /** The row that opens it. */
+  label: ReactNode;
+  icon?: ReactNode;
+  disabled?: boolean;
+  textValue?: string;
+  /** Items of the submenu. */
+  children: ReactNode;
+  className?: string;
+}
+
+/**
+ * A row that opens a second menu to its side: on hover (after a beat), ArrowRight, Enter or
+ * Space. ArrowLeft or Escape closes just the submenu and returns to its row. Its panel lives
+ * inside the parent's panel in the DOM (on the top layer visually), so the parent's outside-click
+ * and focus checks count it as inside.
+ */
+export function MenuSub({ label, icon, disabled = false, textValue, children, className }: MenuSubProps) {
+  const { menu, id, active, handlers } = useMenuItem(disabled);
+  const reduceMotion = useReducedMotion() ?? false;
+  const [open, setOpen] = useState(false);
+  const [highlighted, setHighlighted] = useState<string | null>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const focusFirst = useRef(false);
+  const timer = useRef(0);
+  const ahead = useRef({ text: "", timer: 0 });
+  const layoutId = useId();
+  const panelId = useId();
+
+  const show = (withFocus: boolean) => {
+    if (disabled) return;
+    window.clearTimeout(timer.current);
+    focusFirst.current = withFocus;
+    if (open && withFocus) ownItems(panelRef.current)[0]?.focus({ preventScroll: true });
+    setOpen(true);
+  };
+  const hide = (returnFocus: boolean) => {
+    window.clearTimeout(timer.current);
+    setOpen(false);
+    setHighlighted(null);
+    if (returnFocus) triggerRef.current?.focus({ preventScroll: true });
+  };
+
+  // Another row of the parent highlighted: close after a beat, so a diagonal move into the
+  // submenu across a neighbouring row doesn't snap it shut.
+  useEffect(() => {
+    if (!open || !menu?.highlighted || menu.highlighted === id) return;
+    timer.current = window.setTimeout(() => hide(false), 160);
+    return () => window.clearTimeout(timer.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [menu?.highlighted, open, id]);
+
+  useEffect(() => () => window.clearTimeout(timer.current), []);
+
+  useLayoutEffect(() => {
+    const panel = panelRef.current;
+    const trigger = triggerRef.current;
+    if (!panel || !trigger) return;
+    if (!open) {
+      if (panel.matches(":popover-open")) panel.hidePopover();
+      return;
+    }
+    if (!panel.matches(":popover-open")) panel.showPopover();
+    place(trigger, panel, "right", "start", 4);
+    // Line the first item up with the row that opened it (panel padding + border).
+    panel.style.top = `${parseFloat(panel.style.top) - 5}px`;
+    if (focusFirst.current) ownItems(panel)[0]?.focus({ preventScroll: true });
+    focusFirst.current = false;
+  }, [open]);
+
+  return (
+    <>
+      <button
+        ref={triggerRef}
+        type="button"
+        role="menuitem"
+        tabIndex={-1}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-controls={open ? panelId : undefined}
+        aria-disabled={disabled || undefined}
+        data-label={textValue}
+        data-highlighted={active || open ? "" : undefined}
+        data-state={open ? "open" : "closed"}
+        className={cn(ITEM, className)}
+        {...handlers}
+        onPointerMove={(event) => {
+          handlers.onPointerMove(event);
+          if (disabled || open) return;
+          window.clearTimeout(timer.current);
+          timer.current = window.setTimeout(() => show(false), 100);
+        }}
+        onPointerLeave={() => {
+          if (!open) window.clearTimeout(timer.current);
+        }}
+        onClick={() => (open ? ownItems(panelRef.current)[0]?.focus() : show(true))}
+        onKeyDown={(event) => {
+          if (event.key === "ArrowRight" || event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            event.stopPropagation();
+            show(true);
+          }
+        }}
+      >
+        <ItemBody active={active || open} icon={icon} shortcut={<ChevronRight />}>
+          {label}
+        </ItemBody>
+      </button>
+
+      <div
+        ref={panelRef}
+        id={panelId}
+        popover="manual"
+        role="menu"
+        aria-label={typeof label === "string" ? label : undefined}
+        tabIndex={-1}
+        onPointerEnter={() => window.clearTimeout(timer.current)}
+        onKeyDown={(event) => {
+          // Only this panel's own keys; a deeper submenu handles its own.
+          if ((event.target as HTMLElement).closest("[popover]") !== event.currentTarget) return;
+          if (event.key === "ArrowLeft" || event.key === "Escape") {
+            event.preventDefault();
+            event.stopPropagation();
+            hide(true);
+            return;
+          }
+          if (event.key === "Tab") return; // let the root menu close on Tab
+          if (navigateItems(event, event.currentTarget, ahead.current) || event.key === "ArrowRight") event.stopPropagation();
+        }}
+        className={cn(PANEL, "min-w-[200px] max-w-[min(320px,calc(100vw-16px))] rounded-xl p-1")}
+      >
+        {open && (
+          <MenuContext.Provider
+            value={{ highlighted, setHighlighted, close: menu?.close ?? (() => {}), layoutId, reduceMotion }}
+          >
+            <LayoutGroup id={layoutId}>{children}</LayoutGroup>
+          </MenuContext.Provider>
+        )}
+      </div>
+    </>
+  );
+}
+
+function ChevronRight() {
+  return (
+    <svg viewBox="0 0 12 12" width="12" height="12" fill="none" aria-hidden="true">
+      <path d="m4.5 2.75 3.25 3.25-3.25 3.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+// ─── Radio items ────────────────────────────────────────────────────────────
+
+const RadioContext = createContext<{ value: string | undefined; onValueChange?: (value: string) => void } | null>(null);
+
+export interface MenuRadioGroupProps {
+  value?: string;
+  onValueChange?: (value: string) => void;
+  /** Shows a MenuLabel above the items. */
+  label?: ReactNode;
+  children: ReactNode;
+}
+
+/** A pick-one group inside a menu. */
+export function MenuRadioGroup({ value, onValueChange, label, children }: MenuRadioGroupProps) {
+  return (
+    <RadioContext.Provider value={{ value, onValueChange }}>
+      <MenuGroup label={label}>{children}</MenuGroup>
+    </RadioContext.Provider>
+  );
+}
+
+export interface MenuRadioItemProps extends Omit<MenuItemBaseProps, "destructive" | "icon"> {
+  value: string;
+}
+
+/** One choice in a MenuRadioGroup. Stays open on select, so the change can be seen. */
+export function MenuRadioItem({ value, children, shortcut, disabled = false, textValue, className }: MenuRadioItemProps) {
+  const group = useContext(RadioContext);
+  const { active, handlers } = useMenuItem(disabled);
+  const checked = group?.value === value;
+  return (
+    <button
+      type="button"
+      role="menuitemradio"
+      aria-checked={checked}
+      tabIndex={-1}
+      aria-disabled={disabled || undefined}
+      data-label={textValue}
+      data-highlighted={active ? "" : undefined}
+      className={cn(ITEM, className)}
+      {...handlers}
+      onClick={() => {
+        if (!disabled) group?.onValueChange?.(value);
+      }}
+    >
+      <ItemBody
+        active={active}
+        shortcut={shortcut}
+        check={
+          // A round well; chosen, a popout pearl rises in its centre.
+          <span
+            aria-hidden="true"
+            className="relative grid size-4 shrink-0 place-items-center rounded-full border border-white/[0.08] bg-[#070707] shadow-[inset_0_1px_2px_rgba(0,0,0,0.85)]"
+          >
+            <span
+              className={cn(
+                "size-[7px] rounded-full bg-[linear-gradient(180deg,#f5f5f5_0%,#d9d9d9_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_1px_2px_rgba(0,0,0,0.6)]",
+                "transition-transform duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none",
+                checked ? "scale-100" : "scale-0"
+              )}
+            />
+          </span>
+        }
+      >
+        {children}
+      </ItemBody>
+    </button>
   );
 }

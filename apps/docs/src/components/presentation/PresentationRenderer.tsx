@@ -98,12 +98,20 @@ import {
   type FileUploadItem,
   Button,
   TextField,
+  Select,
+  ColorPicker,
   Popover,
   DropdownMenu,
   MenuItem,
   MenuCheckboxItem,
   MenuSeparator,
   MenuGroup,
+  MenuSub,
+  MenuRadioGroup,
+  MenuRadioItem,
+  Menubar,
+  MenubarMenu,
+  Pagination,
   usePopoverClose,
   Globe,
   BentoGrid,
@@ -147,6 +155,20 @@ import {
   IconMail,
   IconChevronDown,
   IconShare,
+  IconWorld,
+  IconCloud,
+  IconServer,
+  IconLink,
+  IconBrandX,
+  IconFileText,
+  IconFolderOpen,
+  IconDeviceFloppy,
+  IconArrowBackUp,
+  IconArrowForwardUp,
+  IconScissors,
+  IconClipboard,
+  IconHelp,
+  IconKeyboard,
 } from "@tabler/icons-react";
 
 const imageParallaxDemo = "/utils/image-parallax.png";
@@ -745,6 +767,101 @@ function ButtonDemo(props: any) {
   );
 }
 
+const REGIONS = [
+  { value: "fra1", label: "Frankfurt", description: "fra1", icon: <IconWorld />, group: "Europe" },
+  { value: "lhr1", label: "London", description: "lhr1", icon: <IconWorld />, group: "Europe" },
+  { value: "cdg1", label: "Paris", description: "cdg1", icon: <IconWorld />, group: "Europe" },
+  { value: "iad1", label: "Washington", description: "iad1", icon: <IconCloud />, group: "Americas" },
+  { value: "sfo1", label: "San Francisco", description: "sfo1", icon: <IconCloud />, group: "Americas" },
+  { value: "gru1", label: "São Paulo", description: "gru1", icon: <IconCloud />, group: "Americas", disabled: true },
+  { value: "hnd1", label: "Tokyo", description: "hnd1", icon: <IconServer />, group: "Asia Pacific" },
+  { value: "syd1", label: "Sydney", description: "syd1", icon: <IconServer />, group: "Asia Pacific" },
+];
+const RUNTIMES = [
+  { value: "node", label: "Node.js 22" },
+  { value: "bun", label: "Bun 1.2" },
+  { value: "deno", label: "Deno 2" },
+  { value: "edge", label: "Edge runtime" },
+];
+
+const COLOUR_PRESETS = [
+  "#FAFAFA", "#A3A3A3", "#525252", "#171717",
+  "#4F7CFF", "#7C6FF0", "#3FA796", "#D6B26A", "#E57373", "#C084FC",
+];
+
+function ColorPickerDemo(props: any) {
+  const [colour, setColour] = useState("#4F7CFF");
+  const alpha = props.alpha ?? true;
+  const presets = (props.presets ?? true) ? COLOUR_PRESETS : undefined;
+  return (
+    <div className="flex w-[min(320px,calc(100vw-32px))] flex-col gap-5">
+      {props.inline ? (
+        <ColorPicker inline value={colour} onValueChange={setColour} alpha={alpha} presets={presets} aria-label="Brand colour" />
+      ) : (
+        <div className="flex flex-col gap-1.5">
+          <span id="brand-colour-label" className="text-sm font-medium tracking-tight text-neutral-100">
+            Brand colour
+          </span>
+          <ColorPicker
+            aria-labelledby="brand-colour-label"
+            value={colour}
+            onValueChange={setColour}
+            alpha={alpha}
+            presets={presets}
+            size={props.size ?? "md"}
+            disabled={Boolean(props.disabled)}
+          />
+        </div>
+      )}
+      {/* The colour at work: a small card using it. */}
+      <div className="flex items-center gap-3 rounded-2xl border border-white/[0.08] bg-[linear-gradient(180deg,#1b1b1d_0%,#151516_100%)] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+        <span className="size-9 shrink-0 rounded-xl border border-white/10" style={{ backgroundColor: colour }} />
+        <div className="flex min-w-0 flex-col">
+          <span className="text-sm font-medium tracking-tight text-neutral-100">Primary accent</span>
+          <span className="truncate text-xs text-neutral-500 tabular-nums">{colour}</span>
+        </div>
+        <span className="ml-auto rounded-lg px-2.5 py-1 text-xs font-medium text-neutral-950" style={{ backgroundColor: colour }}>
+          Button
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function SelectDemo(props: any) {
+  const [region, setRegion] = useState<string | null>("cdg1");
+  const size = props.size ?? "md";
+  const disabled = Boolean(props.disabled);
+  const invalid = Boolean(props.invalid);
+  return (
+    <div className="flex w-[min(360px,calc(100vw-32px))] flex-col gap-5">
+      <div className="flex flex-col gap-1.5">
+        <span id="region-label" className="text-sm font-medium tracking-tight text-neutral-100">
+          Region
+        </span>
+        <Select
+          aria-labelledby="region-label"
+          options={REGIONS}
+          value={region}
+          onValueChange={setRegion}
+          size={size}
+          disabled={disabled}
+          invalid={invalid}
+        />
+        <p className={invalid ? "text-[13px] text-[rgb(229_115_115)]" : "text-[13px] text-neutral-500"}>
+          {invalid ? "This region is at capacity." : "Where your functions run."}
+        </p>
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <span id="runtime-label" className="text-sm font-medium tracking-tight text-neutral-100">
+          Runtime
+        </span>
+        <Select aria-labelledby="runtime-label" options={RUNTIMES} placeholder="Choose a runtime" size={size} disabled={disabled} />
+      </div>
+    </div>
+  );
+}
+
 function TextFieldDemo(props: any) {
   const size = props.size ?? "md";
   const disabled = Boolean(props.disabled);
@@ -782,6 +899,7 @@ function TextFieldDemo(props: any) {
 function PopoverDemo(props: any) {
   const [grid, setGrid] = useState(true);
   const [minimap, setMinimap] = useState(false);
+  const [sort, setSort] = useState("updated");
   const side = props.side ?? "bottom";
   const align = props.align ?? "start";
   return (
@@ -803,7 +921,13 @@ function PopoverDemo(props: any) {
           <MenuItem icon={<IconCopy />} shortcut="⌘D">
             Duplicate
           </MenuItem>
-          <MenuItem icon={<IconShare />}>Share</MenuItem>
+          <MenuSub label="Share" icon={<IconShare />}>
+            <MenuItem icon={<IconLink />} shortcut="⌘L">
+              Copy link
+            </MenuItem>
+            <MenuItem icon={<IconMail />}>Email</MenuItem>
+            <MenuItem icon={<IconBrandX />}>Post</MenuItem>
+          </MenuSub>
         </MenuGroup>
         <MenuSeparator />
         <MenuGroup label="View">
@@ -814,6 +938,12 @@ function PopoverDemo(props: any) {
             Show minimap
           </MenuCheckboxItem>
         </MenuGroup>
+        <MenuSeparator />
+        <MenuRadioGroup label="Sort by" value={sort} onValueChange={setSort}>
+          <MenuRadioItem value="name">Name</MenuRadioItem>
+          <MenuRadioItem value="updated">Last updated</MenuRadioItem>
+          <MenuRadioItem value="size">Size</MenuRadioItem>
+        </MenuRadioGroup>
         <MenuSeparator />
         <MenuItem icon={<IconSettings />} disabled>
           Settings
@@ -878,6 +1008,109 @@ function InviteForm() {
         </Button>
       </div>
     </form>
+  );
+}
+
+// The panel's "checked" seeds the switch; clicking the switch itself still flips it.
+function SwitchDemo(props: any) {
+  const [on, setOn] = useState<boolean>(props.checked ?? true);
+  useEffect(() => {
+    if (props.checked !== undefined) setOn(Boolean(props.checked));
+  }, [props.checked]);
+  return <Switch {...props} checked={on} onCheckedChange={setOn} />;
+}
+
+function PaginationDemo(props: any) {
+  const total = Number(props.totalPages ?? 20);
+  const [page, setPage] = useState(5);
+  const size = props.size ?? "md";
+  return (
+    <div className="flex flex-col items-center gap-8">
+      <Pagination
+        totalPages={total}
+        page={page}
+        onPageChange={setPage}
+        size={size}
+        siblingCount={Number(props.siblingCount ?? 1)}
+        variant={props.variant ?? "numbers"}
+      />
+      {(props.variant ?? "numbers") === "numbers" && (
+        <Pagination totalPages={total} page={page} onPageChange={setPage} size={size} variant="compact" />
+      )}
+    </div>
+  );
+}
+
+function MenubarDemo() {
+  const [wrap, setWrap] = useState(true);
+  const [minimap, setMinimap] = useState(false);
+  const [zoom, setZoom] = useState("100");
+  return (
+    <Menubar aria-label="Editor">
+      <MenubarMenu label="File">
+        <MenuItem icon={<IconFileText />} shortcut="⌘N">
+          New file
+        </MenuItem>
+        <MenuItem icon={<IconFolderOpen />} shortcut="⌘O">
+          Open…
+        </MenuItem>
+        <MenuItem icon={<IconDeviceFloppy />} shortcut="⌘S">
+          Save
+        </MenuItem>
+        <MenuSeparator />
+        <MenuSub label="Share" icon={<IconShare />}>
+          <MenuItem icon={<IconLink />} shortcut="⌘L">
+            Copy link
+          </MenuItem>
+          <MenuItem icon={<IconMail />}>Email</MenuItem>
+          <MenuItem icon={<IconBrandX />}>Post</MenuItem>
+        </MenuSub>
+        <MenuSeparator />
+        <MenuItem icon={<IconTrash />} destructive>
+          Delete file
+        </MenuItem>
+      </MenubarMenu>
+      <MenubarMenu label="Edit">
+        <MenuItem icon={<IconArrowBackUp />} shortcut="⌘Z">
+          Undo
+        </MenuItem>
+        <MenuItem icon={<IconArrowForwardUp />} shortcut="⇧⌘Z">
+          Redo
+        </MenuItem>
+        <MenuSeparator />
+        <MenuItem icon={<IconScissors />} shortcut="⌘X">
+          Cut
+        </MenuItem>
+        <MenuItem icon={<IconCopy />} shortcut="⌘C">
+          Copy
+        </MenuItem>
+        <MenuItem icon={<IconClipboard />} shortcut="⌘V">
+          Paste
+        </MenuItem>
+      </MenubarMenu>
+      <MenubarMenu label="View">
+        <MenuCheckboxItem checked={wrap} onCheckedChange={setWrap}>
+          Word wrap
+        </MenuCheckboxItem>
+        <MenuCheckboxItem checked={minimap} onCheckedChange={setMinimap}>
+          Minimap
+        </MenuCheckboxItem>
+        <MenuSeparator />
+        <MenuRadioGroup label="Zoom" value={zoom} onValueChange={setZoom}>
+          <MenuRadioItem value="75">75%</MenuRadioItem>
+          <MenuRadioItem value="100" shortcut="⌘0">
+            100%
+          </MenuRadioItem>
+          <MenuRadioItem value="125">125%</MenuRadioItem>
+        </MenuRadioGroup>
+      </MenubarMenu>
+      <MenubarMenu label="Help">
+        <MenuItem icon={<IconKeyboard />} shortcut="⌘/">
+          Keyboard shortcuts
+        </MenuItem>
+        <MenuItem icon={<IconHelp />}>Documentation</MenuItem>
+      </MenubarMenu>
+    </Menubar>
   );
 }
 
@@ -1177,21 +1410,22 @@ function WheelPickerDemo({
     items: ["React", "Vue", "Angular", "Next.js", "Svelte", "Solid", "Qwik"],
     value: framework,
     onChange: setFramework,
-    variant: "glass" as const,
+    variant: "raised" as const,
     loop: false,
     sound: playTactileSounds,
+    "aria-labelledby": "wheel-picker-label",
     ...liveProps,
   };
 
   return (
-    <div className="flex flex-col items-center gap-7">
-      <div className="text-center">
-        <div className="font-mono text-[10px] uppercase tracking-[0.24em] text-white/35">Selected Framework</div>
-        <div className="mt-2 font-display text-3xl font-bold text-white">{framework}</div>
+    <div className="flex w-[240px] flex-col gap-3">
+      <div className="flex items-baseline justify-between px-1">
+        <span id="wheel-picker-label" className="text-sm font-medium tracking-tight text-neutral-100">
+          Framework
+        </span>
+        <span className="text-[13px] text-neutral-500">{framework}</span>
       </div>
-      <div className="w-[240px]">
-        <WheelPicker {...(wheelPickerProps as Parameters<typeof WheelPicker>[0])} />
-      </div>
+      <WheelPicker {...(wheelPickerProps as Parameters<typeof WheelPicker>[0])} />
     </div>
   );
 }
@@ -1408,7 +1642,7 @@ export function PresentationRenderer({
     case "spotlight-grid":
       return <SpotlightGrid />;
     case "lumina-wave":
-      return <LuminaWave />;
+      return <LuminaWave {...liveProps} />;
     case "matrix-rain": {
       const rainProps = {
         speed: 1.0,
@@ -1499,8 +1733,16 @@ export function PresentationRenderer({
       return <ButtonDemo {...liveProps} />;
     case "text-field":
       return <TextFieldDemo {...liveProps} />;
+    case "select":
+      return <SelectDemo {...liveProps} />;
+    case "color-picker":
+      return <ColorPickerDemo {...liveProps} />;
     case "popover":
       return <PopoverDemo {...liveProps} />;
+    case "pagination":
+      return <PaginationDemo {...liveProps} />;
+    case "menubar":
+      return <MenubarDemo />;
     case "file-upload":
       return <FileUploadDemo {...liveProps} />;
     case "table":
@@ -1631,6 +1873,7 @@ export function PresentationRenderer({
             title="Working Knowledge"
             description="Practical skills and insights gained through hands-on experience that drive real-world problem solving."
             imageUrl="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=520&h=380&fit=crop&auto=format"
+            {...liveProps}
           />
         </div>
       );
@@ -1667,9 +1910,9 @@ export function PresentationRenderer({
         ...liveProps,
       };
       return (
-        <div className="w-full min-h-screen flex items-center justify-center p-6 bg-transparent">
-          <div className="w-full max-w-xl">
-            <Accordion {...(accordionProps as Parameters<typeof Accordion>[0])} />
+        <div className="flex w-full items-center justify-center p-6">
+          <div className="w-[min(560px,calc(100vw-32px))]">
+            <Accordion defaultExpanded={["1"]} {...(accordionProps as Parameters<typeof Accordion>[0])} />
           </div>
         </div>
       );
@@ -1722,7 +1965,7 @@ export function PresentationRenderer({
         </div>
       );
     case "flickering-grid-playground":
-      return <FlickeringGridPlayground />;
+      return <FlickeringGridPlayground {...liveProps} />;
     case "dot-pattern":
       return (
         <div className="relative w-full h-full min-h-[450px] border border-white/5 bg-[#030303] rounded-2xl overflow-hidden">
@@ -1738,7 +1981,7 @@ export function PresentationRenderer({
     case "command-palette":
       return <CommandPaletteDemo />;
     case "switch":
-      return <Switch {...liveProps} />;
+      return <SwitchDemo {...liveProps} />;
     case "otp-input":
       return <OTPInputDemo />;
     case "tooltip":

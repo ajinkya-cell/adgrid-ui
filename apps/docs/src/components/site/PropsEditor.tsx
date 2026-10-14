@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import { ColorPicker } from "@adgrid-ui/ui";
+import { PROP_COLOUR_PRESETS, propTakesAlpha } from "@/components/presentation/colour-control";
 
 export interface PropDefinition {
   name: string;
@@ -121,21 +123,14 @@ export function PropsEditor({ title, propDefs, values, onChange }: PropsEditorPr
                   )}
 
                   {def.type === "color" && (
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="color"
-                        value={(value as string) ?? "#000000"}
-                        onChange={(e) => onChange(def.name, e.target.value)}
-                        className="w-8 h-8 p-0.5 bg-transparent border border-border-hairline rounded cursor-pointer shrink-0"
-                      />
-                      <input
-                        type="text"
-                        value={(value as string) ?? ""}
-                        onChange={(e) => onChange(def.name, e.target.value)}
-                        className="flex-1 bg-black/40 border border-border-hairline px-2.5 py-1.5 text-xs font-mono text-white outline-none focus:border-white/40 focus:bg-black/60 transition-all"
-                        placeholder="#ffffff"
-                      />
-                    </div>
+                    <ColorPicker
+                      size="sm"
+                      aria-label={def.label}
+                      value={(value as string) ?? (def.defaultValue as string) ?? "#000000"}
+                      alpha={propTakesAlpha(def.defaultValue)}
+                      presets={PROP_COLOUR_PRESETS}
+                      onValueChange={(next) => onChange(def.name, next)}
+                    />
                   )}
                 </div>
               </div>

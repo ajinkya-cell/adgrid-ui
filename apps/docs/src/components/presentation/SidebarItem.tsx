@@ -27,7 +27,7 @@ const LIT_LENGTH = 34;
 const SHIFT = 10;
 
 // Only the latest few, so the dot still means something.
-const NEW = new Set(["button", "text-field", "popover"]);
+const NEW = new Set(["color-picker", "pagination", "menubar"]);
 
 // A line width in whole device pixels. A 1px line at 125% scaling is 1.25 device pixels, which crispEdges
 // rounds to 1 or 2 depending on where it lands, so every few ticks came out thick. Drawing each

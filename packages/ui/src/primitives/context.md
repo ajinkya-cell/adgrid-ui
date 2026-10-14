@@ -159,7 +159,7 @@ Status key: ✅ exists and matches · ⚠️ exists but drifts from §1 · ❌ m
 ### Textarea — ✅ `TextField multiline` (`primitives/TextField.tsx`)
 - Same well as Input, `rounded-xl`, min 3 rows, optional auto-grow and a character count in `text-tertiary`.
 
-### Select — ⚠️ `ChromeSelect`
+### Select — ✅ `primitives/Select.tsx` (the list unfolds out of the field and folds back into the chosen value)
 - **Trigger:** looks like Input, with a chevron in a small socket on the right — the Accordion chevron socket at 22px.
 - **Listbox:** Popover material (below). The selected row gets a check glyph and `text-primary`; others are `text-secondary`. The highlighted row gets the `surface-tray` fill.
 - **Keyboard:** type-ahead, arrows, Home/End.
@@ -216,7 +216,7 @@ Status key: ✅ exists and matches · ⚠️ exists but drifts from §1 · ❌ m
 - **Motion:** `scale 0.97→1` and opacity over 160ms, from the anchor side (`transform-origin`).
 - **Foundation:** this is what Select, Dropdown Menu, Combobox and Datepicker all sit on.
 
-### Dropdown Menu — ✅ `DropdownMenu` + `MenuItem`, `MenuCheckboxItem`, `MenuGroup`, `MenuLabel`, `MenuSeparator` (`primitives/Popover.tsx`)
+### Dropdown Menu — ✅ `DropdownMenu` + `MenuItem`, `MenuSub`, `MenuCheckboxItem`, `MenuRadioGroup`/`MenuRadioItem`, `MenuGroup`, `MenuLabel`, `MenuSeparator` (`primitives/Popover.tsx`)
 - **Material:** Popover material, padding 6.
 - **Items:** h-9 `rounded-lg`. The highlighted item gets `surface-tray` + `text-primary`.
 - **Content:** separators are 1px `rgba(255,255,255,0.06)` with 6px margin; group labels are `text-xs text-tertiary`; right-aligned `Kbd` for shortcuts; check and radio items; submenus.
@@ -306,7 +306,9 @@ Status key: ✅ exists and matches · ⚠️ exists but drifts from §1 · ❌ m
 | Combobox | ✅ `primitives/Combobox.tsx` | Input + Popover listbox with filtering. Shares rows with Select. |
 | Command Palette | ⚠️ `CommandPalette` | Dialog + Combobox. Check against Dialog motion and the restraint rules. |
 | Breadcrumbs | ✅ `primitives/Breadcrumbs.tsx` | `text-tertiary` links, a `/` separator in `text-disabled`, the current page in `text-primary`. |
-| Pagination | ❌ | Ghost buttons; the current page is a raised square. |
+| Pagination | ✅ `primitives/Pagination.tsx` | Ghost buttons; the current page is a raised square that glides between numbers. Compact "Page 5 of 20" variant. |
+| Color Picker | ✅ `primitives/ColorPicker.tsx` | Field + Popover: shade area cut into the panel, recessed hue/opacity tracks, ring thumbs that lift when held, hex field, eyedropper, presets with a gliding ring. |
+| Menubar | ✅ `primitives/Menubar.tsx` | A slim raised bar of DropdownMenus; the open trigger sinks into the bar and the sunken segment glides between menus. |
 | Navbar | ⚠️ `NavBar1` | Floating raised bar, `rounded-2xl`, prismatic edge. |
 | Datepicker | ⚠️ `Datepicker` | Popover + grid; the selected day is popout, today has a 1px ring. |
 | OTP Input | ⚠️ `OTPInput` | A row of 48px wells; the active well gets the focus border; filled digits in `text-primary`. |

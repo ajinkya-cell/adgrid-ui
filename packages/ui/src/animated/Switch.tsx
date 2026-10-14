@@ -1,8 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useId, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "../lib/utils";
+
+// Two variants share one API:
+// - "rocker" (default): the original mechanical rocker with a 3D tilt and an LED in the thumb.
+// - "machined": the design-system switch. A dark raised thumb sits in a recessed track; switched
+//   on, the thumb becomes the light popout surface and the track takes a faint fill. Pressing
+//   stretches the thumb a little towards where it's going, then it springs across. No LED, no
+//   colour, no font of its own. It's a real <button role="switch">, so keys and screen readers work.
 
 export interface SwitchProps {
   /** Controlled checked state */
@@ -19,6 +26,8 @@ export interface SwitchProps {
   description?: string;
   /** Size variant */
   size?: "sm" | "md" | "lg";
+  /** "rocker" (default) is the original; "machined" follows the design system. */
+  variant?: "rocker" | "machined";
   /** Additional custom class names */
   className?: string;
   /**
@@ -36,6 +45,7 @@ export function Switch({
   label,
   description,
   size = "md",
+  variant = "rocker",
   className,
   progress,
 }: SwitchProps) {
@@ -51,6 +61,21 @@ export function Switch({
     }
     onCheckedChange?.(nextChecked);
   };
+
+  if (variant === "machined") {
+    return (
+      <MachinedSwitch
+        checked={checked}
+        onToggle={handleToggle}
+        disabled={disabled}
+        label={label}
+        description={description}
+        size={size}
+        className={className}
+        progress={progress}
+      />
+    );
+  }
 
   // Dimensions based on size
   const dimensions = {
@@ -148,6 +173,116 @@ export function Switch({
             </span>
           )}
         </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Machined (design-system) variant ───────────────────────────────────────
+
+const MACHINED = {
+  // Thumb sits 2px inside the track on every side; travel = inner width − thumb − 4.
+  sm: { track: "h-[18px] w-8", thumb: 12, travel: 14, stretch: 3, label: "text-[13px]", desc: "text-xs" },
+  md: { track: "h-[22px] w-10", thumb: 16, travel: 18, stretch: 4, label: "text-sm", desc: "text-[13px]" },
+  lg: { track: "h-[26px] w-12", thumb: 20, travel: 22, stretch: 5, label: "text-[15px]", desc: "text-sm" },
+} as const;
+
+const SPRING_CONTROL = { type: "spring", stiffness: 500, damping: 32 } as const;
+
+function MachinedSwitch({
+  checked,
+  onToggle,
+  disabled,
+  label,
+  description,
+  size,
+  className,
+  progress,
+}: {
+  checked: boolean;
+  onToggle: () => void;
+  disabled: boolean;
+  label?: string;
+  description?: string;
+  size: "sm" | "md" | "lg";
+  className?: string;
+  progress?: number;
+}) {
+  const d = MACHINED[size];
+  const reduceMotion = useReducedMotion() ?? false;
+  const [pressed, setPressed] = useState(false);
+  const id = useId();
+  const on = progress !== undefined ? progress >= 0.5 : checked;
+  const travel = progress !== undefined ? d.travel * progress : on ? d.travel : 0;
+  // Held down, the thumb widens towards where it will go: right when off, left when on.
+  const stretch = pressed && !disabled && !reduceMotion ? d.stretch : 0;
+
+  return (
+    <div className={cn("inline-flex items-start gap-3", disabled && "cursor-not-allowed opacity-40", className)}>
+      <button
+        type="button"
+        role="switch"
+        id={id}
+        aria-checked={on}
+        aria-labelledby={label ? `${id}-label` : undefined}
+        aria-describedby={description ? `${id}-description` : undefined}
+        disabled={disabled}
+        onClick={onToggle}
+        onPointerDown={() => setPressed(true)}
+        onPointerUp={() => setPressed(false)}
+        onPointerLeave={() => setPressed(false)}
+        onPointerCancel={() => setPressed(false)}
+        data-state={on ? "checked" : "unchecked"}
+        className={cn(
+          "group/switch relative mt-px shrink-0 cursor-pointer rounded-full border",
+          "bg-[#070707] shadow-[inset_0_1.5px_3px_rgba(0,0,0,0.85),0_1px_0_rgba(255,255,255,0.05)]",
+          "transition-[border-color,background-color] duration-200",
+          "outline-white/40 outline-offset-2 focus-visible:outline focus-visible:outline-1",
+          "disabled:cursor-not-allowed",
+          on ? "border-white/[0.14] bg-[#0f0f10]" : "border-white/[0.08] hover:border-white/[0.14]",
+          d.track
+        )}
+      >
+        {/* Switched on, the well takes a faint fill: lit, not coloured. */}
+        <span
+          aria-hidden="true"
+          className={cn(
+            "pointer-events-none absolute inset-0 rounded-full bg-white/[0.06] transition-opacity duration-200",
+            on ? "opacity-100" : "opacity-0"
+          )}
+        />
+        <motion.span
+          aria-hidden="true"
+          initial={false}
+          animate={{ x: on ? travel - stretch : travel, width: d.thumb + stretch }}
+          transition={reduceMotion || progress !== undefined ? { duration: 0 } : SPRING_CONTROL}
+          className={cn(
+            "absolute top-1/2 left-[2px] block -translate-y-1/2 rounded-full border transition-[background,box-shadow,border-color] duration-200",
+            on
+              ? "border-white/40 bg-[linear-gradient(180deg,#f5f5f5_0%,#d9d9d9_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_0_rgba(0,0,0,0.18),0_1px_2px_rgba(0,0,0,0.6),0_2px_6px_-1px_rgba(0,0,0,0.5)]"
+              : "border-white/[0.08] border-t-white/[0.16] bg-[linear-gradient(180deg,#232325_0%,#1a1a1c_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-1px_0_rgba(0,0,0,0.5),0_1px_3px_rgba(0,0,0,0.6)]"
+          )}
+          style={{ height: d.thumb, width: d.thumb }}
+        />
+      </button>
+
+      {(label || description) && (
+        <span className="flex flex-col gap-0.5">
+          {label && (
+            <label
+              id={`${id}-label`}
+              htmlFor={id}
+              className={cn("cursor-pointer font-medium tracking-tight text-neutral-100", disabled && "cursor-not-allowed", d.label)}
+            >
+              {label}
+            </label>
+          )}
+          {description && (
+            <span id={`${id}-description`} className={cn("leading-relaxed text-neutral-400", d.desc)}>
+              {description}
+            </span>
+          )}
+        </span>
       )}
     </div>
   );

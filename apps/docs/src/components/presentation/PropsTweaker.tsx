@@ -5,6 +5,8 @@ import { AnimatePresence, motion, useDragControls } from "framer-motion";
 import { ChevronDown, ChevronUp, RotateCcw, SlidersHorizontal, X } from "lucide-react";
 import type { PropDefinition, RegistryEntry } from "@/registry";
 import { usePresentationStore } from "@/lib/presentation/store";
+import { ColorPicker } from "@adgrid-ui/ui";
+import { PROP_COLOUR_PRESETS, propTakesAlpha } from "./colour-control";
 
 // ── Helpers for Casing ──────────────────────────────────────────
 function formatPropLabel(name: string) {
@@ -140,21 +142,27 @@ function PropSelect({
   );
 }
 
-// ── Color swatch control ─────────────────────────────────────────
-function PropColor({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+// ── Color control: the library's own ColorPicker ─────────────────
+function PropColor({
+  label,
+  value,
+  alpha,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  alpha: boolean;
+  onChange: (v: string) => void;
+}) {
   return (
-    <div className="flex items-center gap-2">
-      <label className="relative h-6 w-6 cursor-pointer overflow-hidden rounded border border-white/20">
-        <span className="absolute inset-0 rounded" style={{ background: value }} />
-        <input
-          type="color"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-        />
-      </label>
-      <span className="font-sans text-[11px] text-white/45">{value}</span>
-    </div>
+    <ColorPicker
+      size="sm"
+      aria-label={label}
+      value={value}
+      alpha={alpha}
+      presets={PROP_COLOUR_PRESETS}
+      onValueChange={onChange}
+    />
   );
 }
 
@@ -249,7 +257,13 @@ function PropRow({
         />
       )}
       {def.type === "color" && (
-        <PropColor value={String(resolvedValue ?? "#ffffff")} onChange={handlePropChange} />
+        // No click sound here: dragging a colour would tick on every move.
+        <PropColor
+          label={formatPropLabel(def.name)}
+          value={String(resolvedValue ?? "#ffffff")}
+          alpha={propTakesAlpha(def.default)}
+          onChange={onChange}
+        />
       )}
     </div>
   );

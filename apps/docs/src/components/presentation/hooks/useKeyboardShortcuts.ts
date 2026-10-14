@@ -24,6 +24,9 @@ export function useKeyboardShortcuts(entry: RegistryEntry) {
     function onKeyDown(event: KeyboardEvent) {
       // A modal dialog in the demo owns the keyboard (Escape closes it, not the presentation).
       if (document.querySelector("dialog[open]")) return;
+      // The demo already used this key (arrows in a menu, tabs, wheel or select; Escape closing a
+      // popover): don't also flip to another component or leave the presentation.
+      if (event.defaultPrevented) return;
 
       const key = event.key.toLowerCase();
       const mod = event.metaKey || event.ctrlKey;

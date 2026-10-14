@@ -1,47 +1,53 @@
 "use client";
 
-import React, { useRef, useState, useEffect, useImperativeHandle, forwardRef } from "react";
-import { motion, useMotionValue, useTransform, animate, SpringOptions, MotionValue } from "framer-motion";
+import React, { forwardRef, useCallback, useEffect, useId, useImperativeHandle, useRef, useState } from "react";
+import { animate, motion, useMotionValue, useReducedMotion, useTransform, type MotionValue, type SpringOptions } from "framer-motion";
 import { cn } from "../lib/utils";
 import { DETENT_CLICK } from "../lib/click-voices";
 
-// Web Audio API mechanical tick sound synthesizer
+// A wheel of values on a 3D drum, picked by dragging, flicking, scrolling, tapping or the keys.
+//
+// Items sit on a cylinder 20° apart; the one facing you sits in a recessed slot (a well behind the
+// text, so it never tints it) and is the value. Drag follows the finger 1:1 with a rubber band at
+// the ends; a flick carries on by its speed and settles on an item with a spring; the wheel and
+// trackpad move it continuously and it settles when you stop; tapping an item brings it to the
+// slot. Each detent can tick. Text colour and fade follow the drum's position directly, so it
+// never re-renders mid-spin and nothing blurs.
+//
+// The mouse wheel turns the drum rather than stepping it: each notch adds a row to a target the
+// drum glides towards on a spring, so quick notches build up speed and it rotates through
+// smoothly. A trackpad drives the same target continuously. With `loop`, rows fade out before
+// they reach the back of the drum, so nothing is ever seen jumping from one end to the other;
+// a list too short to hide that seam scrolls without looping.
+
 let lastPlayTime = 0;
 let audioCtx: AudioContext | null = null;
 
 function playClickSound(volume = 0.03) {
   if (typeof window === "undefined") return;
   const now = Date.now();
-  if (now - lastPlayTime < 35) return; // Prevent sound overlapping
+  if (now - lastPlayTime < 35) return; // Don't stack ticks on a fast spin
   lastPlayTime = now;
-
   try {
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     if (!AudioContextClass) return;
-    
-    if (!audioCtx) {
-      audioCtx = new AudioContextClass();
-    }
-    if (audioCtx.state === "suspended") {
-      audioCtx.resume();
-    }
+    if (!audioCtx) audioCtx = new AudioContextClass();
+    if (audioCtx.state === "suspended") void audioCtx.resume();
 
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
-
-    // Mechanical crown tick sweep - higher start frequency and shorter decay for clean crisp click
     osc.type = DETENT_CLICK.type;
     osc.frequency.setValueAtTime(DETENT_CLICK.from, audioCtx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(DETENT_CLICK.to, audioCtx.currentTime + DETENT_CLICK.sweep);
-
     gain.gain.setValueAtTime(volume, audioCtx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + DETENT_CLICK.decay);
-
     osc.connect(gain);
     gain.connect(audioCtx.destination);
     osc.start();
     osc.stop(audioCtx.currentTime + 0.007);
-  } catch (e) {}
+  } catch {
+    // Audio is a nicety; never let it break the picker.
+  }
 }
 
 export type WheelPickerProps = {
@@ -49,20 +55,27 @@ export type WheelPickerProps = {
   value?: string;
   defaultValue?: string;
   onChange?: (value: string) => void;
-  variant?: "glass" | "minimal";
+  /** "raised" sits on its own card; "minimal" has no surface. "glass" is the old name for "raised". */
+  variant?: "raised" | "minimal" | "glass";
+  /** Wrap around from the last item to the first. */
   loop?: boolean;
+  /** Tick on every detent. */
   sound?: boolean;
   disabled?: boolean;
+  /** Height of one row in px. Default 40. */
   itemHeight?: number;
+  /** Rows in view; odd numbers keep the slot centred. Default 5. */
   visibleItems?: number;
+  /** 3D perspective in px. Default 1000. */
   perspective?: number;
-  duration?: number;
   spring?: SpringOptions;
   className?: string;
+  /** Names the picker for screen readers. */
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
   /**
-   * Drive the wheel from outside as a fractional item index (2.5 = halfway
-   * between items 2 and 3), e.g. from a video timeline. Overrides the
-   * internal spring and makes no sound.
+   * Drive the wheel from outside as a fractional item index (2.5 = halfway between items 2 and
+   * 3), e.g. from a video timeline. Overrides the internal spring and makes no sound.
    */
   position?: number;
 };
@@ -73,442 +86,387 @@ export interface WheelPickerRef {
   scrollTo: (value: string) => void;
 }
 
-export const WheelPicker = forwardRef<WheelPickerRef, WheelPickerProps>(
-  (
-    {
-      items = [],
-      value,
-      defaultValue,
-      onChange,
-      variant = "glass",
-      loop = false,
-      sound = true,
-      disabled = false,
-      itemHeight = 40,
-      visibleItems = 3,
-      perspective = 1000,
-      spring,
-      className,
-      position,
+const STEP_DEG = 20;
+const STEP_RAD = (STEP_DEG * Math.PI) / 180;
+// Just under critically damped: the drum lands on a row with the faintest settle, like a detent.
+const DEFAULT_SPRING: SpringOptions = { stiffness: 240, damping: 26, mass: 0.8 };
+/** The glide a wheel or trackpad drives: quick to follow, no overshoot. */
+const GLIDE: SpringOptions = { stiffness: 320, damping: 36, mass: 0.7 };
+/** How far a flick carries: px/ms of release speed × this, in px. */
+const FLICK_PX_PER_VELOCITY = 240;
+/** A release this long after the last move is a placement, not a flick. */
+const FLICK_STALE_MS = 80;
+/** Trackpad pixels per row. */
+const TRACKPAD_PX_PER_ROW = 50;
+/** A wheel event this big (or in lines/pages) is a mouse notch: exactly one row. */
+const NOTCH_PX = 50;
+const TAP_SLOP = 4;
+
+export const WheelPicker = forwardRef<WheelPickerRef, WheelPickerProps>(function WheelPicker(
+  {
+    items = [],
+    value,
+    defaultValue,
+    onChange,
+    variant = "raised",
+    loop: loopProp = false,
+    sound = true,
+    disabled = false,
+    itemHeight = 40,
+    visibleItems = 5,
+    perspective = 1000,
+    spring,
+    className,
+    "aria-label": ariaLabel,
+    "aria-labelledby": ariaLabelledBy,
+    position,
+  },
+  ref
+) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const total = items.length;
+  // Looping needs a couple of rows out of sight to hide the seam; shorter lists just scroll.
+  const loop = loopProp && total >= visibleItems + 2;
+  const uid = useId();
+  const reduceMotion = useReducedMotion() ?? false;
+  const raised = variant !== "minimal";
+
+  const isControlled = value !== undefined;
+  const [localValue, setLocalValue] = useState(isControlled ? value : defaultValue || items[0] || "");
+  const activeValue = isControlled ? value : localValue;
+  const startIndex = Math.max(items.indexOf(activeValue), 0);
+
+  // The drum's position in items (fractional while moving).
+  const y = useMotionValue(startIndex);
+  const lastIndexRef = useRef(startIndex);
+  const [activeIndex, setActiveIndex] = useState(startIndex);
+  const springConfig = reduceMotion ? { stiffness: 600, damping: 60 } : spring ?? DEFAULT_SPRING;
+
+  const wrap = useCallback((i: number) => (total ? ((i % total) + total) % total : 0), [total]);
+  const clampIndex = useCallback((i: number) => Math.max(0, Math.min(total - 1, i)), [total]);
+
+  const settleTo = useCallback(
+    (target: number) => {
+      const end = loop ? target : clampIndex(target);
+      animate(y, end, {
+        type: "spring",
+        ...springConfig,
+        onComplete: () => {
+          // Fold a looped drum back into range so the numbers never grow without bound.
+          if (loop && total > 0) y.set(wrap(Math.round(end)));
+        },
+      });
     },
-    ref
-  ) => {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const total = items.length;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [loop, total, clampIndex, wrap, y, springConfig.stiffness, springConfig.damping, springConfig.mass]
+  );
 
-    // Controlled vs Uncontrolled state
-    const isControlled = value !== undefined;
-    const [localValue, setLocalValue] = useState(isControlled ? value : (defaultValue || items[0] || ""));
-    const activeValue = isControlled ? value : localValue;
+  /** Go to item `index`, taking the short way round on a looped drum. */
+  const scrollToIndex = useCallback(
+    (index: number) => {
+      if (!loop || total === 0) return settleTo(clampIndex(index));
+      const current = y.get();
+      const base = wrap(index);
+      const cycle = Math.round(current / total) * total;
+      const candidates = [cycle + base - total, cycle + base, cycle + base + total];
+      candidates.sort((a, b) => Math.abs(a - current) - Math.abs(b - current));
+      settleTo(candidates[0]);
+    },
+    [loop, total, settleTo, clampIndex, wrap, y]
+  );
 
-    // Initial offset position
-    const initialIndex = items.indexOf(activeValue);
-    const startIndex = initialIndex !== -1 ? initialIndex : 0;
+  useImperativeHandle(ref, () => ({
+    next: () => !disabled && scrollToIndex(lastIndexRef.current + 1),
+    previous: () => !disabled && scrollToIndex(lastIndexRef.current - 1),
+    scrollTo: (val: string) => {
+      const target = items.indexOf(val);
+      if (!disabled && target !== -1) scrollToIndex(target);
+    },
+  }));
 
-    // Motion value tracking scroll offsets
-    const y = useMotionValue(startIndex);
-    const lastIndexRef = useRef(startIndex);
+  // An outside value change turns the drum.
+  useEffect(() => {
+    if (!isControlled) return;
+    const target = items.indexOf(value);
+    if (target !== -1 && target !== lastIndexRef.current) {
+      lastIndexRef.current = target;
+      setActiveIndex(target);
+      scrollToIndex(target);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value, items, isControlled]);
 
-    // Dynamic spring physics config
-    const springConfig: SpringOptions = spring || {
-      stiffness: 180,
-      damping: 24,
-      mass: 0.8,
+  // Each new item reaching the slot: tick, update, report.
+  useEffect(() => {
+    return y.on("change", (latest) => {
+      const rounded = Math.round(latest);
+      const index = loop ? wrap(rounded) : clampIndex(rounded);
+      if (index === lastIndexRef.current) return;
+      lastIndexRef.current = index;
+      setActiveIndex(index);
+      if (sound && !disabled) playClickSound(0.04);
+      if (!isControlled) setLocalValue(items[index]);
+      onChange?.(items[index]);
+    });
+  }, [y, loop, wrap, clampIndex, sound, disabled, isControlled, items, onChange]);
+
+  // ─── Drag, flick and tap ──────────────────────────────────────────────────
+  const drag = useRef({ active: false, startY: 0, startOffset: 0, moved: false, samples: [] as { t: number; y: number }[] });
+
+  const rubberBand = (offset: number) => {
+    if (loop) return offset;
+    if (offset < 0) return offset * 0.35;
+    if (offset > total - 1) return total - 1 + (offset - (total - 1)) * 0.35;
+    return offset;
+  };
+
+  const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (disabled || event.button !== 0) return;
+    y.stop();
+    try {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    } catch {
+      // Some synthetic or already-released pointers can't be captured; dragging still works.
+    }
+    drag.current = {
+      active: true,
+      startY: event.clientY,
+      startOffset: y.get(),
+      moved: false,
+      samples: [{ t: performance.now(), y: event.clientY }],
     };
+  };
 
-    // Ref API hooks
-    useImperativeHandle(ref, () => ({
-      next: () => {
-        if (disabled) return;
-        scrollToIndex(lastIndexRef.current + 1);
-      },
-      previous: () => {
-        if (disabled) return;
-        scrollToIndex(lastIndexRef.current - 1);
-      },
-      scrollTo: (val: string) => {
-        if (disabled) return;
-        const targetIdx = items.indexOf(val);
-        if (targetIdx !== -1) {
-          scrollToIndex(targetIdx);
-        }
-      },
-    }));
+  const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const d = drag.current;
+    if (!d.active) return;
+    const delta = event.clientY - d.startY;
+    if (Math.abs(delta) > TAP_SLOP) d.moved = true;
+    const now = performance.now();
+    d.samples.push({ t: now, y: event.clientY });
+    // Keep only the last 100ms: release speed should reflect the end of the gesture.
+    while (d.samples.length > 2 && now - d.samples[0].t > 100) d.samples.shift();
+    y.set(rubberBand(d.startOffset - delta / itemHeight));
+  };
 
-    const scrollToIndex = (idx: number) => {
-      let target = idx;
-      if (loop && total > 0) {
-        const currentY = y.get();
-        const baseTarget = ((idx % total) + total) % total;
-        const closestCycle = Math.round(currentY / total) * total;
-        const candidateTarget = closestCycle + baseTarget;
-        const candidates = [candidateTarget - total, candidateTarget, candidateTarget + total];
-        candidates.sort((a, b) => Math.abs(a - currentY) - Math.abs(b - currentY));
-        target = candidates[0];
-      } else {
-        target = Math.max(0, Math.min(total - 1, target));
-      }
-      animate(y, target, {
-        type: "spring",
-        ...springConfig,
-        onComplete: () => {
-          if (loop && total > 0) {
-            const wrapped = ((Math.round(target) % total) + total) % total;
-            y.set(wrapped);
-          }
-        }
-      });
+  const onPointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+    const d = drag.current;
+    if (!d.active) return;
+    d.active = false;
+
+    // A tap: bring the tapped row to the slot.
+    if (!d.moved) {
+      const rect = event.currentTarget.getBoundingClientRect();
+      const rows = Math.round((event.clientY - (rect.top + rect.height / 2)) / itemHeight);
+      return scrollToIndex(Math.round(y.get()) + rows);
+    }
+
+    // A flick: carry on by the release speed, then settle on a row.
+    const now = performance.now();
+    const first = d.samples[0];
+    const last = d.samples[d.samples.length - 1];
+    const stale = now - last.t > FLICK_STALE_MS;
+    const velocity = stale || last.t === first.t ? 0 : (last.y - first.y) / (last.t - first.t); // px/ms
+    const carry = (velocity * FLICK_PX_PER_VELOCITY) / itemHeight;
+    scrollToIndex(Math.round(y.get() - carry));
+  };
+
+  // ─── Keys ─────────────────────────────────────────────────────────────────
+  const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (disabled) return;
+    const current = lastIndexRef.current;
+    const moves: Record<string, number> = {
+      ArrowUp: current - 1,
+      ArrowDown: current + 1,
+      PageUp: current - visibleItems,
+      PageDown: current + visibleItems,
+      Home: 0,
+      End: total - 1,
     };
+    if (!(event.key in moves)) return;
+    event.preventDefault();
+    scrollToIndex(moves[event.key]);
+  };
 
-    // Update position if value prop updates externally
-    useEffect(() => {
-      if (isControlled) {
-        const targetIdx = items.indexOf(value);
-        if (targetIdx !== -1 && targetIdx !== lastIndexRef.current) {
-          lastIndexRef.current = targetIdx;
-          scrollToIndex(targetIdx);
-        }
-      }
-    }, [value, items, isControlled]);
-
-    // Handle index updates and tick triggers
-    useEffect(() => {
-      const unsubscribe = y.on("change", (latest) => {
-        const rounded = Math.round(latest);
-        let activeIdx = rounded;
-        if (loop) {
-          activeIdx = ((rounded % total) + total) % total;
-        } else {
-          activeIdx = Math.max(0, Math.min(total - 1, rounded));
-        }
-
-        if (activeIdx !== lastIndexRef.current) {
-          lastIndexRef.current = activeIdx;
-          if (sound && !disabled) {
-            playClickSound(0.04);
-          }
-          if (!isControlled) {
-            setLocalValue(items[activeIdx]);
-          }
-          if (onChange) {
-            onChange(items[activeIdx]);
-          }
-        }
-      });
-      return unsubscribe;
-    }, [y, total, loop, sound, items, onChange, isControlled, disabled]);
-
-    // Drag gestures tracking
-    const isDragging = useRef(false);
-    const startClientY = useRef(0);
-    const startYOffset = useRef(0);
-    const lastDragTime = useRef(0);
-    const lastDragY = useRef(0);
-    const dragVelocity = useRef(0);
-
-    const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-      if (disabled) return;
-      isDragging.current = true;
-      e.currentTarget.setPointerCapture(e.pointerId);
-      startClientY.current = e.clientY;
-      startYOffset.current = y.get();
-      lastDragTime.current = Date.now();
-      lastDragY.current = e.clientY;
-      dragVelocity.current = 0;
+  // ─── Wheel and trackpad: glide towards a target, settle once input stops ───
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || disabled) return;
+    let target: number | null = null;
+    let settle = 0;
+    // The size of one notch on this mouse, learned from the smallest notch seen. Browsers merge
+    // wheel events that arrive faster than a frame, so one event can carry several notches.
+    let notchUnit = Infinity;
+    const onWheel = (event: WheelEvent) => {
+      event.preventDefault(); // keep the page still while turning the drum
+      const px = event.deltaMode === 1 ? event.deltaY * 16 : event.deltaMode === 2 ? event.deltaY * el.clientHeight : event.deltaY;
+      if (px === 0) return;
+      const notch = event.deltaMode !== 0 || Math.abs(px) >= NOTCH_PX;
+      // A gesture starts from wherever the drum is, so a folded loop can never spin the long way.
+      if (target === null) target = y.get();
+      if (notch) notchUnit = Math.min(notchUnit, Math.abs(px));
+      const rows = notch ? Math.max(1, Math.round(Math.abs(px) / notchUnit)) * Math.sign(px) : 0;
+      target = notch ? Math.round(target) + rows : target + px / TRACKPAD_PX_PER_ROW;
+      if (!loop) target = notch ? clampIndex(target) : Math.max(-0.35, Math.min(total - 1 + 0.35, target));
+      animate(y, target, { type: "spring", ...(reduceMotion ? { stiffness: 600, damping: 60 } : GLIDE) });
+      window.clearTimeout(settle);
+      settle = window.setTimeout(() => {
+        const end = Math.round(target ?? y.get());
+        target = null;
+        scrollToIndex(end);
+      }, notch ? 180 : 120);
     };
-
-    const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-      if (!isDragging.current) return;
-      const deltaY = e.clientY - startClientY.current;
-      const now = Date.now();
-      const dt = now - lastDragTime.current;
-
-      if (dt > 0) {
-        const dy = e.clientY - lastDragY.current;
-        dragVelocity.current = dy / dt;
-      }
-
-      lastDragTime.current = now;
-      lastDragY.current = e.clientY;
-
-      let nextOffset = startYOffset.current - deltaY / itemHeight;
-
-      if (!loop) {
-        if (nextOffset < 0) {
-          nextOffset = nextOffset * 0.35;
-        } else if (nextOffset > total - 1) {
-          nextOffset = total - 1 + (nextOffset - (total - 1)) * 0.35;
-        }
-      }
-
-      y.set(nextOffset);
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => {
+      el.removeEventListener("wheel", onWheel);
+      window.clearTimeout(settle);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [disabled, loop, total, scrollToIndex, reduceMotion]);
 
-    const handlePointerUp = () => {
-      if (!isDragging.current) return;
-      isDragging.current = false;
+  const radius = itemHeight / Math.sin(STEP_RAD); // one step on the drum = one row on screen
+  const shownIndex = position === undefined ? activeIndex : loop ? wrap(Math.round(position)) : clampIndex(Math.round(position));
+  const wheelHeight = itemHeight * visibleItems;
+  const optionId = (index: number) => `${uid}-item-${index}`;
 
-      const currentVal = y.get();
-      const momentumTarget = currentVal - dragVelocity.current * 8.5;
-      let snapTarget = Math.round(momentumTarget);
-
-      if (!loop) {
-        snapTarget = Math.max(0, Math.min(total - 1, snapTarget));
-      }
-
-      animate(y, snapTarget, {
-        type: "spring",
-        ...springConfig,
-        onComplete: () => {
-          if (loop && total > 0) {
-            const wrapped = ((snapTarget % total) + total) % total;
-            y.set(wrapped);
-          }
-        }
-      });
-    };
-
-    // Keyboard navigation handlers
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-      if (disabled) return;
-      let nextIdx = lastIndexRef.current;
-
-      switch (e.key) {
-        case "ArrowUp":
-          e.preventDefault();
-          nextIdx -= 1;
-          break;
-        case "ArrowDown":
-          e.preventDefault();
-          nextIdx += 1;
-          break;
-        case "PageUp":
-          e.preventDefault();
-          nextIdx -= visibleItems;
-          break;
-        case "PageDown":
-          e.preventDefault();
-          nextIdx += visibleItems;
-          break;
-        case "Home":
-          e.preventDefault();
-          nextIdx = 0;
-          break;
-        case "End":
-          e.preventDefault();
-          nextIdx = total - 1;
-          break;
-        default:
-          return;
-      }
-
-      scrollToIndex(nextIdx);
-    };
-
-    // Mouse wheel / trackpad scroll mapping (non-passive to prevent background document scrolling)
-    const lastWheelTime = useRef(0);
-    useEffect(() => {
-      const container = containerRef.current;
-      if (!container || disabled) return;
-
-      const handleNativeWheel = (e: WheelEvent) => {
-        // Prevent background page from scrolling
-        e.preventDefault();
-
-        const now = Date.now();
-        if (now - lastWheelTime.current < 120) return;
-        lastWheelTime.current = now;
-
-        const direction = Math.sign(e.deltaY);
-        scrollToIndex(lastIndexRef.current + direction);
-      };
-
-      container.addEventListener("wheel", handleNativeWheel, { passive: false });
-      return () => {
-        container.removeEventListener("wheel", handleNativeWheel);
-      };
-    }, [disabled, items, loop]);
-
-    const cylinderRadius = itemHeight / 0.342; // R calculation based on 20deg step
-    const activeIdx =
-      position === undefined
-        ? lastIndexRef.current
-        : loop
-        ? ((Math.round(position) % total) + total) % total
-        : Math.max(0, Math.min(total - 1, Math.round(position)));
-    const wheelHeight = itemHeight * visibleItems;
-
-    return (
+  return (
+    <div
+      ref={containerRef}
+      role="listbox"
+      tabIndex={disabled ? -1 : 0}
+      aria-label={ariaLabelledBy ? undefined : ariaLabel ?? "Choose a value"}
+      aria-labelledby={ariaLabelledBy}
+      aria-activedescendant={optionId(shownIndex)}
+      aria-disabled={disabled || undefined}
+      onKeyDown={onKeyDown}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onPointerCancel={onPointerUp}
+      className={cn(
+        "relative w-full cursor-grab touch-none overflow-hidden select-none active:cursor-grabbing",
+        "outline-white/40 outline-offset-2 focus-visible:outline focus-visible:outline-1",
+        raised &&
+          cn(
+            "rounded-2xl border border-white/[0.08] bg-[linear-gradient(180deg,#1b1b1d_0%,#151516_100%)]",
+            "shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),inset_0_-1px_0_0_rgba(0,0,0,0.5),0_14px_30px_-10px_rgba(0,0,0,0.5),0_1px_4px_-1px_rgba(0,0,0,0.35)]"
+          ),
+        disabled && "pointer-events-none cursor-not-allowed opacity-40",
+        className
+      )}
+      style={{ height: wheelHeight }}
+    >
+      {/* The slot: a well behind the text, so the value sits in it rather than under a tint. */}
       <div
-        ref={containerRef}
+        aria-hidden="true"
         className={cn(
-          "relative w-full flex flex-col items-center justify-center overflow-hidden outline-none select-none shadow-md shadow-black/50",
-          variant === "glass" && "bg-neutral-950/70 border border-neutral-900/60 rounded-3xl backdrop-blur-xl shadow-2xl",
-          variant === "minimal" && "bg-transparent",
-          disabled && "opacity-40 cursor-not-allowed pointer-events-none",
-          className
+          "pointer-events-none absolute rounded-xl border border-white/[0.06] bg-[#0c0c0d]",
+          "shadow-[inset_0_1.5px_3px_rgba(0,0,0,0.8),0_1px_0_rgba(255,255,255,0.04)]",
+          raised ? "inset-x-1.5" : "inset-x-0"
         )}
-        style={{
-          height: `${wheelHeight}px`,
-        }}
-        tabIndex={disabled ? -1 : 0}
-        onKeyDown={handleKeyDown}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerUp}
-        role="listbox"
-        aria-label="Wheel Picker Selection"
-        aria-activedescendant={`item-${lastIndexRef.current}`}
-      >
-        {/* Viewport wrapper holding 3D context to prevent overflow-hidden flattening */}
-        <div
-          className="relative w-full h-full flex items-center justify-center overflow-visible"
-          style={{
-            perspective: `${perspective}px`,
-            transformStyle: "preserve-3d",
-            WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)",
-            maskImage: "linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)",
-          }}
-        >
-          {/* Selection Highlight Overlay */}
-          <div
-            className={cn(
-              "absolute left-0 right-0 pointer-events-none rounded-xl z-10 border",
-              variant === "glass" && "bg-white/5 border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05),0_8px_32px_rgba(0,0,0,0.5)]",
-              variant === "minimal" && "bg-white/5 border-white/5"
-            )}
-            style={{
-              height: `${itemHeight}px`,
-              top: `${(visibleItems - 1) * itemHeight / 2}px`,
-            }}
-          />
+        style={{ height: itemHeight, top: (wheelHeight - itemHeight) / 2 }}
+      />
 
-          {/* 3D cylinder layout track */}
-          <div
-            className="relative w-full flex items-center justify-center"
-            style={{
-              height: `${itemHeight}px`,
-              transformStyle: "preserve-3d",
-            }}
-          >
-            {items.map((item, idx) => (
-              <WheelItem
-                key={`${item}-${idx}`}
-                item={item}
-                index={idx}
-                total={total}
-                y={y}
-                itemHeight={itemHeight}
-                loop={loop}
-                cylinderRadius={cylinderRadius}
-                activeIdx={activeIdx}
-                position={position}
-              />
-            ))}
-          </div>
+      {/* The drum. The mask fades the rows as they turn away. */}
+      <div
+        className="absolute inset-0 flex items-center justify-center"
+        style={{
+          perspective: `${perspective}px`,
+          transformStyle: "preserve-3d",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 22%, black 78%, transparent 100%)",
+          maskImage: "linear-gradient(to bottom, transparent 0%, black 22%, black 78%, transparent 100%)",
+        }}
+      >
+        <div className="relative w-full" style={{ height: itemHeight, transformStyle: "preserve-3d" }}>
+          {items.map((item, index) => (
+            <WheelItem
+              key={`${item}-${index}`}
+              id={optionId(index)}
+              item={item}
+              index={index}
+              total={total}
+              y={y}
+              itemHeight={itemHeight}
+              loop={loop}
+              radius={radius}
+              reach={visibleItems / 2 + 0.5}
+              selected={shownIndex === index}
+              position={position}
+            />
+          ))}
         </div>
       </div>
-    );
-  }
-);
-
-WheelPicker.displayName = "WheelPicker";
+    </div>
+  );
+});
 
 type WheelItemProps = {
+  id: string;
   item: string;
   index: number;
   total: number;
   y: MotionValue<number>;
   itemHeight: number;
   loop: boolean;
-  cylinderRadius: number;
-  activeIdx: number;
+  radius: number;
+  /** Rows this far from the slot (or further) are fully faded. */
+  reach: number;
+  selected: boolean;
   position?: number;
 };
 
-function WheelItem({
-  item,
-  index,
-  total,
-  y,
-  itemHeight,
-  loop,
-  cylinderRadius,
-  activeIdx,
-  position,
-}: WheelItemProps) {
-  const toDiff = (latestY: number) => {
+// Text colour runs from #fafafa in the slot to #737373 a row away, following the drum directly.
+const mix = (t: number) => {
+  const c = Math.round(250 - (250 - 115) * Math.min(Math.abs(t), 1));
+  return `rgb(${c} ${c} ${c})`;
+};
+
+const WheelItem = React.memo(function WheelItem({ id, item, index, total, y, itemHeight, loop, radius, reach, selected, position }: WheelItemProps) {
+  const toDiff = (latest: number) => {
     if (total === 0) return 0;
-    let diff = index - latestY;
+    let diff = index - latest;
     if (loop) {
       const half = total / 2;
-      diff = ((diff + half) % total + total) % total - half;
+      diff = ((((diff + half) % total) + total) % total) - half;
     }
     return diff;
   };
+  // Positions are rounded to 0.01px: the server prints 6 significant digits while the browser
+  // keeps full precision, and the two strings must match for hydration. 0.01px is invisible.
+  const round = (v: number) => Math.round(v * 100) / 100;
+  const frame = (diff: number) => {
+    const angle = diff * STEP_RAD;
+    return {
+      rotateX: round(-diff * STEP_DEG),
+      y: round(radius * Math.sin(angle)),
+      z: round(radius * (Math.cos(angle) - 1)),
+      // Rows fade as they turn away and are gone just past the window, well before the loop's seam.
+      opacity: Math.abs(diff) >= reach ? 0 : round(1 - (Math.abs(diff) / reach) * 0.8),
+      visibility: (Math.abs(diff) >= reach ? "hidden" : "visible") as "hidden" | "visible",
+      color: mix(diff),
+    };
+  };
+
   const d = useTransform(y, toDiff);
-
-  // Math projection formulas for 3D cylinder vertical compression
-  const rotateX = useTransform(d, (diff) => -diff * 20);
-  const translateY = useTransform(d, (diff) => {
-    const angleRad = (diff * 20 * Math.PI) / 180;
-    return cylinderRadius * Math.sin(angleRad);
-  });
-  const translateZ = useTransform(d, (diff) => {
-    const angleRad = (diff * 20 * Math.PI) / 180;
-    return cylinderRadius * (Math.cos(angleRad) - 1);
-  });
-  const scale = useTransform(d, (diff) => 1 - Math.min(0.25, Math.abs(diff) * 0.06));
-  const opacity = useTransform(d, (diff) => Math.max(0, 1 - Math.abs(diff) * 0.28));
-  
-  const blur = useTransform(d, (diff) => {
-    const b = Math.min(3, Math.abs(diff) * 0.65);
-    return b > 0.1 ? `blur(${b}px)` : "blur(0px)";
-  });
-
-  const isActive = activeIdx === index;
+  const rotateX = useTransform(d, (v) => frame(v).rotateX);
+  const translateY = useTransform(d, (v) => frame(v).y);
+  const translateZ = useTransform(d, (v) => frame(v).z);
+  const opacity = useTransform(d, (v) => frame(v).opacity);
+  const color = useTransform(d, (v) => frame(v).color);
+  const visibility = useTransform(d, (v) => frame(v).visibility);
 
   // A driven position renders as plain numbers so the frame is final on first paint.
-  let driven: Record<string, number | string> | null = null;
-  if (position !== undefined) {
-    const diff = toDiff(position);
-    const angleRad = (diff * 20 * Math.PI) / 180;
-    const b = Math.min(3, Math.abs(diff) * 0.65);
-    driven = {
-      rotateX: -diff * 20,
-      y: cylinderRadius * Math.sin(angleRad),
-      z: cylinderRadius * (Math.cos(angleRad) - 1),
-      scale: 1 - Math.min(0.25, Math.abs(diff) * 0.06),
-      opacity: Math.max(0, 1 - Math.abs(diff) * 0.28),
-      filter: b > 0.1 ? `blur(${b}px)` : "blur(0px)",
-    };
-  }
+  const style = position !== undefined ? frame(toDiff(position)) : { rotateX, y: translateY, z: translateZ, opacity, color, visibility };
 
   return (
     <motion.div
-      id={`item-${index}`}
+      id={id}
       role="option"
-      aria-selected={isActive}
-      className={cn(
-        "absolute inset-x-0 flex items-center justify-center font-body select-none text-center cursor-grab active:cursor-grabbing transform-gpu will-change-transform font-medium transition-colors duration-300",
-        isActive ? "text-white text-sm" : "text-neutral-400 text-xs"
-      )}
-      style={{
-        height: `${itemHeight}px`,
-        ...(driven ?? {
-          rotateX,
-          y: translateY,
-          z: translateZ,
-          scale,
-          opacity,
-          filter: blur,
-        }),
-        backfaceVisibility: "hidden",
-        WebkitBackfaceVisibility: "hidden",
-      }}
+      aria-selected={selected}
+      className="absolute inset-x-0 flex items-center justify-center text-center text-sm font-medium tracking-tight [backface-visibility:hidden] will-change-transform"
+      style={{ height: itemHeight, ...style }}
     >
-      <span className="truncate max-w-[85%] px-4">{item}</span>
+      <span className="max-w-[85%] truncate px-4">{item}</span>
     </motion.div>
   );
-}
+});

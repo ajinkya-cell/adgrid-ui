@@ -695,16 +695,88 @@
       ]
     },
     {
+      "name": "select",
+      "type": "registry:ui",
+      "title": "Select",
+      "description": "Pick one value. The list unfolds out of the field: it opens with your choice sitting exactly on the field and widens from that line, then folds back into whatever you pick. Type-ahead, groups, press-drag-release, and a value that rolls when changed from the keyboard.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/Select.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "color-picker",
+      "type": "registry:ui",
+      "title": "Color Picker",
+      "description": "A well with the colour in a round socket; open it for a shade area cut into the panel, recessed hue and opacity tracks with rings that lift when held, a hex field, the screen eyedropper, and preset chips with a gliding ring.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/color-picker/ColorPicker.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/color-picker/Popover.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/color-picker/TextField.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "popover",
       "type": "registry:ui",
       "title": "Popover",
-      "description": "Popover and Dropdown Menu on one floating panel: top layer so nothing clips it, flips at the edge, closes on Escape or a click outside. The menu adds a gliding raised highlight, arrow keys, type-ahead, check items, groups and shortcuts.",
+      "description": "Popover and Dropdown Menu on one floating panel: top layer so nothing clips it, flips at the edge, closes on Escape or a click outside. The menu adds a gliding raised highlight, arrow keys, type-ahead, submenus, radio and check items, groups and shortcuts.",
       "dependencies": [
         "framer-motion"
       ],
       "files": [
         {
           "path": "components/ui/Popover.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "pagination",
+      "type": "registry:ui",
+      "title": "Pagination",
+      "description": "Page through a long list. Quiet ghost numbers with a raised current page that glides between them; the row keeps the same slots so nothing shifts. A compact \"Page 5 of 20\" variant rolls its number the way you moved.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/Pagination.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "menubar",
+      "type": "registry:ui",
+      "title": "Menubar",
+      "description": "A slim raised bar of menus — File, Edit, View. The open menu's trigger sinks into the bar and the sunken segment glides as you move between menus; hover or the arrow keys carry you across. Menus bring submenus, radio and check items, and shortcuts.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/menubar/Menubar.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/menubar/Popover.tsx",
           "type": "registry:ui"
         }
       ]
@@ -838,74 +910,14 @@
       "name": "wheel-picker",
       "type": "registry:ui",
       "title": "Wheel Picker",
-      "description": "Premium physical-feeling 3D wheel picker with momentum dragging, spring snapping, and mechanical Web Audio crown clicks.",
+      "description": "A drum of values in 3D: drag it, flick it, scroll it, tap a row or use the keys, and it settles on a value in a recessed slot with a soft detent tick. Text tone follows the drum directly, so it never blurs or re-renders mid-spin.",
       "dependencies": [
         "framer-motion"
       ],
       "files": [
         {
-          "path": "components/ui/wheel-picker/WheelPicker.tsx",
+          "path": "components/ui/WheelPicker.tsx",
           "type": "registry:ui"
-        },
-        {
-          "path": "components/ui/wheel-picker/react-wheel-picker/index.ts",
-          "type": "registry:lib"
-        },
-        {
-          "path": "components/ui/wheel-picker/react-wheel-picker/types.ts",
-          "type": "registry:lib"
-        },
-        {
-          "path": "components/ui/wheel-picker/react-wheel-picker/components/WheelPicker.tsx",
-          "type": "registry:ui"
-        },
-        {
-          "path": "components/ui/wheel-picker/react-wheel-picker/components/Cylinder.tsx",
-          "type": "registry:ui"
-        },
-        {
-          "path": "components/ui/wheel-picker/react-wheel-picker/components/WheelItem.tsx",
-          "type": "registry:ui"
-        },
-        {
-          "path": "components/ui/wheel-picker/react-wheel-picker/components/SelectionOverlay.tsx",
-          "type": "registry:ui"
-        },
-        {
-          "path": "components/ui/wheel-picker/react-wheel-picker/hooks/useCylinderTransform.ts",
-          "type": "registry:hook"
-        },
-        {
-          "path": "components/ui/wheel-picker/react-wheel-picker/hooks/useInfiniteLoop.ts",
-          "type": "registry:hook"
-        },
-        {
-          "path": "components/ui/wheel-picker/react-wheel-picker/hooks/useAudio.ts",
-          "type": "registry:hook"
-        },
-        {
-          "path": "components/ui/wheel-picker/react-wheel-picker/hooks/useWheel.ts",
-          "type": "registry:hook"
-        },
-        {
-          "path": "components/ui/wheel-picker/react-wheel-picker/hooks/useMomentum.ts",
-          "type": "registry:hook"
-        },
-        {
-          "path": "components/ui/wheel-picker/react-wheel-picker/hooks/useSnap.ts",
-          "type": "registry:hook"
-        },
-        {
-          "path": "components/ui/wheel-picker/react-wheel-picker/utils/physics.ts",
-          "type": "registry:lib"
-        },
-        {
-          "path": "components/ui/wheel-picker/react-wheel-picker/utils/audio.ts",
-          "type": "registry:lib"
-        },
-        {
-          "path": "components/ui/wheel-picker/react-wheel-picker/utils/math.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -1133,7 +1145,7 @@
       "name": "accordion",
       "type": "registry:ui",
       "title": "Accordion",
-      "description": "A tactile 3D beveled accordion stack with smooth sequential close-then-open panel transitions and rotating chevrons.",
+      "description": "Sections that open in place. Switching is one movement: one section folds as the next opens; the open card lifts a touch, its chevron socket sinks, and the content settles in a beat behind. Separated cards or one joined card; full keyboard support.",
       "dependencies": [
         "framer-motion"
       ],
@@ -1321,7 +1333,7 @@
       "name": "switch",
       "type": "registry:ui",
       "title": "Switch",
-      "description": "Mechanical 3D rocker switch with realistic light/shadow elevation flips, integrated glowing LED indicator dot, and rebound spring physics.",
+      "description": "Two switches in one: the original mechanical 3D rocker with its LED, and a machined variant from the design system, where the thumb rises into the light popout surface when on and stretches towards its travel as you press.",
       "dependencies": [
         "framer-motion"
       ],

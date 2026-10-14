@@ -6,7 +6,7 @@ export const PRESENTATION_GROUPS: { id: string; label: string; slugs: string[] }
   {
     id: "inputs",
     label: "Inputs",
-    slugs: ["text-field", "choice", "switch", "segmented-control", "combobox", "otp-input", "datepicker", "wheel-picker", "anisotropic-knob", "file-upload", "laser-vault-password"],
+    slugs: ["text-field", "select", "color-picker", "choice", "switch", "segmented-control", "combobox", "otp-input", "datepicker", "wheel-picker", "anisotropic-knob", "file-upload", "laser-vault-password"],
   },
   {
     id: "buttons",
@@ -21,7 +21,7 @@ export const PRESENTATION_GROUPS: { id: string; label: string; slugs: string[] }
   {
     id: "navigation",
     label: "Navigation",
-    slugs: ["nav", "sidebar", "navbar-1", "tabs", "breadcrumbs", "weapon-wheel", "scroll-progress", "ruler-scrollbar", "scroll-water"],
+    slugs: ["nav", "sidebar", "navbar-1", "menubar", "tabs", "breadcrumbs", "pagination", "weapon-wheel", "scroll-progress", "ruler-scrollbar", "scroll-water"],
   },
   {
     id: "data",

@@ -126,16 +126,17 @@ function CommandRow({
       // Keep focus in the search field.
       onMouseDown={(event) => event.preventDefault()}
       onClick={onChoose}
-      className="group/row relative flex h-12 cursor-pointer items-center gap-3 rounded-xl px-2.5 select-none"
+      className="group/row relative flex h-12 cursor-pointer items-center gap-3 rounded-xl px-2.5 select-none [&>:not([data-highlight])]:z-[1]"
     >
       {/* The highlight: one raised segment that glides from row to row. */}
       {active && (
         <motion.span
           aria-hidden="true"
+          data-highlight=""
           layoutId={highlightId}
           transition={reduceMotion ? { duration: 0 } : SPRING}
           className={cn(
-            "absolute inset-0 rounded-xl border border-white/[0.07] border-t-white/[0.13]",
+            "absolute inset-0 z-0 rounded-xl border border-white/[0.07] border-t-white/[0.13]",
             "bg-[linear-gradient(180deg,#1f1f21_0%,#18181a_100%)]",
             "shadow-[inset_0_1px_0_rgba(255,255,255,0.06),inset_0_-1px_0_rgba(0,0,0,0.5),0_6px_14px_-6px_rgba(0,0,0,0.8),0_1px_3px_rgba(0,0,0,0.5)]"
           )}
