@@ -740,6 +740,53 @@ export const registry: RegistryEntry[] = [
   },
 
   {
+    name: "Button",
+    slug: "button",
+    category: "primitives",
+    description: "The everyday button. Primary rises out of the surface as the lightest object on screen; secondary is a raised key; ghost appears on hover; danger carries a warning edge. Loading keeps the width; pass href for a real link.",
+    dependencies: [],
+    packagePath: "primitives/Button.tsx",
+    files: ["primitives/Button.tsx", "primitives/Spinner.tsx"],
+    presentationStrategy: "center",
+    propDefs: [
+      { name: "size", type: "select", default: "md", description: "Height: 32, 40 or 48px", required: false, options: ["sm", "md", "lg"] },
+      { name: "loading", type: "boolean", default: false, description: "Spinner in place of the label, width kept", required: false },
+      { name: "disabled", type: "boolean", default: false, description: "Disable the buttons", required: false },
+    ],
+  },
+
+  {
+    name: "Text Field",
+    slug: "text-field",
+    category: "primitives",
+    description: "Input, textarea and field in one: a well with its label above and a hint or error below, all wired for screen readers. Leading and trailing slots, a show-password toggle, an auto-growing multiline mode and a quiet character count.",
+    dependencies: [],
+    packagePath: "primitives/TextField.tsx",
+    files: ["primitives/TextField.tsx"],
+    presentationStrategy: "center",
+    propDefs: [
+      { name: "size", type: "select", default: "md", description: "Height: 32, 40 or 48px", required: false, options: ["sm", "md", "lg"] },
+      { name: "invalid", type: "boolean", default: false, description: "Demo only: force the email error", required: false },
+      { name: "disabled", type: "boolean", default: false, description: "Disable the fields", required: false },
+    ],
+  },
+
+  {
+    name: "Popover",
+    slug: "popover",
+    category: "primitives",
+    description: "Popover and Dropdown Menu on one floating panel: top layer so nothing clips it, flips at the edge, closes on Escape or a click outside. The menu adds a gliding raised highlight, arrow keys, type-ahead, check items, groups and shortcuts.",
+    dependencies: ["framer-motion"],
+    packagePath: "primitives/Popover.tsx",
+    files: ["primitives/Popover.tsx"],
+    presentationStrategy: "center",
+    propDefs: [
+      { name: "side", type: "select", default: "bottom", description: "Preferred side; flips when there's no room", required: false, options: ["bottom", "top", "left", "right"] },
+      { name: "align", type: "select", default: "start", description: "Alignment against the trigger", required: false, options: ["start", "center", "end"] },
+    ],
+  },
+
+  {
     name: "Spinner",
     slug: "spinner",
     category: "primitives",

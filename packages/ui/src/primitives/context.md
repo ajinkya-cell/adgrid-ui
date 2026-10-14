@@ -137,7 +137,7 @@ Every animation has a `prefers-reduced-motion` path that keeps opacity changes a
 
 Status key: ✅ exists and matches · ⚠️ exists but drifts from §1 · ❌ missing
 
-### Button — ❌ (five showpiece buttons, no base)
+### Button — ✅ `primitives/Button.tsx`
 - **Variants:**
   - `primary`: popout surface, `text-on-popout`.
   - `secondary`: raised surface with prismatic edge — this is the `DESIGN.md` scaffold trigger, made canonical.
@@ -148,7 +148,7 @@ Status key: ✅ exists and matches · ⚠️ exists but drifts from §1 · ❌ m
 - **Extras:** `leadingIcon` and `trailingIcon` slots; `asChild`-style rendering as a link.
 - **Icon-only:** square, requires `aria-label`.
 
-### Input — ⚠️ `ChromeInput`
+### Input — ✅ `TextField` (`primitives/TextField.tsx`)
 - **Material:** well surface, `shadow-well`, `rounded-xl`, h-10.
 - **States:**
   - Focus: border goes to `rgba(255,255,255,0.18)` and the well darkens slightly. No glow.
@@ -156,7 +156,7 @@ Status key: ✅ exists and matches · ⚠️ exists but drifts from §1 · ❌ m
 - **Slots:** leading icon, trailing action (clear, show password), suffix text.
 - **Drift:** `ChromeInput`'s placeholder uses Jura, 10px uppercase — hard to read. Its brushed-line texture and cursor spotlight can stay as an opt-in `texture` prop.
 
-### Textarea — ❌
+### Textarea — ✅ `TextField multiline` (`primitives/TextField.tsx`)
 - Same well as Input, `rounded-xl`, min 3 rows, optional auto-grow and a character count in `text-tertiary`.
 
 ### Select — ⚠️ `ChromeSelect`
@@ -186,7 +186,7 @@ Status key: ✅ exists and matches · ⚠️ exists but drifts from §1 · ❌ m
   - On: the thumb becomes popout (light) and the track gets a faint `rgba(255,255,255,0.06)` fill.
   - Drop `rotateY` and the LED; keep `whileTap`.
 
-### Field — ❌
+### Field — ✅ built into `TextField` (`primitives/TextField.tsx`)
 - Wraps any control: `label` (`text-primary`), optional `description` (`text-secondary`), the control, then an `error` (`danger`, with an icon).
 - Wires `htmlFor`/`id`, `aria-describedby` and `aria-invalid` automatically.
 - Stack gap: 6px label→control, 6px control→message.
@@ -210,13 +210,13 @@ Status key: ✅ exists and matches · ⚠️ exists but drifts from §1 · ❌ m
   - `alert`: no close socket; must choose an action; `role="alertdialog"`.
   - `destructive`: the primary becomes `danger`.
 
-### Popover — ❌
+### Popover — ✅ `Popover` (`primitives/Popover.tsx`)
 - **Panel:** raised surface, `rounded-2xl`, `shadow-overlay`, prismatic edge, padding 12.
 - **Placement:** anchored with an 8px gap, flips at the viewport edge. Closes on outside click and `Esc`.
 - **Motion:** `scale 0.97→1` and opacity over 160ms, from the anchor side (`transform-origin`).
 - **Foundation:** this is what Select, Dropdown Menu, Combobox and Datepicker all sit on.
 
-### Dropdown Menu — ❌
+### Dropdown Menu — ✅ `DropdownMenu` + `MenuItem`, `MenuCheckboxItem`, `MenuGroup`, `MenuLabel`, `MenuSeparator` (`primitives/Popover.tsx`)
 - **Material:** Popover material, padding 6.
 - **Items:** h-9 `rounded-lg`. The highlighted item gets `surface-tray` + `text-primary`.
 - **Content:** separators are 1px `rgba(255,255,255,0.06)` with 6px margin; group labels are `text-xs text-tertiary`; right-aligned `Kbd` for shortcuts; check and radio items; submenus.

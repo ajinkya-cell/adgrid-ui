@@ -6,17 +6,17 @@ export const PRESENTATION_GROUPS: { id: string; label: string; slugs: string[] }
   {
     id: "inputs",
     label: "Inputs",
-    slugs: ["choice", "switch", "segmented-control", "combobox", "otp-input", "datepicker", "wheel-picker", "anisotropic-knob", "file-upload", "laser-vault-password"],
+    slugs: ["text-field", "choice", "switch", "segmented-control", "combobox", "otp-input", "datepicker", "wheel-picker", "anisotropic-knob", "file-upload", "laser-vault-password"],
   },
   {
     id: "buttons",
     label: "Buttons",
-    slugs: ["button-alpha", "void-button", "brushed-titanium-button", "liquid-gold-button", "guilloche-button"],
+    slugs: ["button", "button-alpha", "void-button", "brushed-titanium-button", "liquid-gold-button", "guilloche-button"],
   },
   {
     id: "feedback",
     label: "Feedback & Overlays",
-    slugs: ["toast", "progress", "spinner", "meter", "tooltip", "modal", "dialog", "drawer", "command-palette"],
+    slugs: ["toast", "progress", "spinner", "meter", "tooltip", "popover", "modal", "dialog", "drawer", "command-palette"],
   },
   {
     id: "navigation",

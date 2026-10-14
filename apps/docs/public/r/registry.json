@@ -667,6 +667,49 @@
       ]
     },
     {
+      "name": "button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "The everyday button. Primary rises out of the surface as the lightest object on screen; secondary is a raised key; ghost appears on hover; danger carries a warning edge. Loading keeps the width; pass href for a real link.",
+      "files": [
+        {
+          "path": "components/ui/button/Button.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/button/Spinner.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "text-field",
+      "type": "registry:ui",
+      "title": "Text Field",
+      "description": "Input, textarea and field in one: a well with its label above and a hint or error below, all wired for screen readers. Leading and trailing slots, a show-password toggle, an auto-growing multiline mode and a quiet character count.",
+      "files": [
+        {
+          "path": "components/ui/TextField.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "popover",
+      "type": "registry:ui",
+      "title": "Popover",
+      "description": "Popover and Dropdown Menu on one floating panel: top layer so nothing clips it, flips at the edge, closes on Escape or a click outside. The menu adds a gliding raised highlight, arrow keys, type-ahead, check items, groups and shortcuts.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/Popover.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "spinner",
       "type": "registry:ui",
       "title": "Spinner",

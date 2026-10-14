@@ -96,6 +96,15 @@ import {
   Spinner,
   FileUpload,
   type FileUploadItem,
+  Button,
+  TextField,
+  Popover,
+  DropdownMenu,
+  MenuItem,
+  MenuCheckboxItem,
+  MenuSeparator,
+  MenuGroup,
+  usePopoverClose,
   Globe,
   BentoGrid,
   BentoGridItem,
@@ -126,6 +135,18 @@ import {
   IconLayoutGrid,
   IconList,
   IconLayoutKanban,
+  IconPlus,
+  IconArrowRight,
+  IconDotsVertical,
+  IconUser,
+  IconSettings,
+  IconLogout,
+  IconCopy,
+  IconPencil,
+  IconSearch,
+  IconMail,
+  IconChevronDown,
+  IconShare,
 } from "@tabler/icons-react";
 
 const imageParallaxDemo = "/utils/image-parallax.png";
@@ -688,6 +709,177 @@ const FRAMEWORKS = [
   { value: "docker", label: "Custom image", description: "Docker", icon: <IconBrandDocker /> },
   { value: "legacy", label: "Gatsby", description: "Deprecated", icon: <IconDatabase />, disabled: true },
 ];
+
+function ButtonDemo(props: any) {
+  const size = props.size ?? "md";
+  const loading = Boolean(props.loading);
+  const disabled = Boolean(props.disabled);
+  return (
+    <div className="flex flex-col items-center gap-6">
+      <div className="flex flex-wrap items-center justify-center gap-3">
+        <Button size={size} loading={loading} disabled={disabled} trailingIcon={<IconArrowRight />}>
+          Deploy
+        </Button>
+        <Button variant="secondary" size={size} loading={loading} disabled={disabled} leadingIcon={<IconPlus />}>
+          New project
+        </Button>
+        <Button variant="ghost" size={size} loading={loading} disabled={disabled}>
+          Cancel
+        </Button>
+        <Button variant="danger" size={size} loading={loading} disabled={disabled} leadingIcon={<IconTrash />}>
+          Delete
+        </Button>
+      </div>
+      <div className="flex items-center gap-3">
+        <Button variant="secondary" size={size} iconOnly aria-label="Copy" disabled={disabled}>
+          <IconCopy />
+        </Button>
+        <Button variant="ghost" size={size} iconOnly aria-label="Edit" disabled={disabled}>
+          <IconPencil />
+        </Button>
+        <Button variant="primary" size={size} iconOnly aria-label="Add" disabled={disabled}>
+          <IconPlus />
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function TextFieldDemo(props: any) {
+  const size = props.size ?? "md";
+  const disabled = Boolean(props.disabled);
+  const [email, setEmail] = useState("ada@");
+  const invalid = Boolean(props.invalid) || (email.length > 0 && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email));
+  return (
+    <div className="flex w-[min(400px,calc(100vw-32px))] flex-col gap-5">
+      <TextField
+        label="Email"
+        type="email"
+        size={size}
+        disabled={disabled}
+        leading={<IconMail />}
+        placeholder="you@company.com"
+        value={email}
+        onChange={(event) => setEmail(event.target.value)}
+        description="We'll send the invite here."
+        error={invalid ? "Enter a full email address, like ada@lovelace.dev." : undefined}
+      />
+      <TextField label="Password" type="password" size={size} disabled={disabled} defaultValue="correct horse" required />
+      <TextField label="Subdomain" size={size} disabled={disabled} defaultValue="acme" trailing=".adgrid.app" />
+      <TextField
+        label="Bio"
+        multiline
+        autoResize
+        disabled={disabled}
+        maxLength={160}
+        placeholder="A line or two about you"
+        description="Shown on your public profile."
+      />
+    </div>
+  );
+}
+
+function PopoverDemo(props: any) {
+  const [grid, setGrid] = useState(true);
+  const [minimap, setMinimap] = useState(false);
+  const side = props.side ?? "bottom";
+  const align = props.align ?? "start";
+  return (
+    <div className="flex flex-wrap items-center justify-center gap-4">
+      <DropdownMenu
+        side={side}
+        align={align}
+        aria-label="Project actions"
+        trigger={
+          <Button variant="secondary" trailingIcon={<IconChevronDown />}>
+            Actions
+          </Button>
+        }
+      >
+        <MenuGroup label="Project">
+          <MenuItem icon={<IconPencil />} shortcut="R">
+            Rename
+          </MenuItem>
+          <MenuItem icon={<IconCopy />} shortcut="⌘D">
+            Duplicate
+          </MenuItem>
+          <MenuItem icon={<IconShare />}>Share</MenuItem>
+        </MenuGroup>
+        <MenuSeparator />
+        <MenuGroup label="View">
+          <MenuCheckboxItem checked={grid} onCheckedChange={setGrid}>
+            Show grid
+          </MenuCheckboxItem>
+          <MenuCheckboxItem checked={minimap} onCheckedChange={setMinimap}>
+            Show minimap
+          </MenuCheckboxItem>
+        </MenuGroup>
+        <MenuSeparator />
+        <MenuItem icon={<IconSettings />} disabled>
+          Settings
+        </MenuItem>
+        <MenuItem icon={<IconTrash />} destructive shortcut="⌫">
+          Delete project
+        </MenuItem>
+      </DropdownMenu>
+
+      <DropdownMenu
+        side={side}
+        align="end"
+        matchTriggerWidth={false}
+        aria-label="Account"
+        trigger={
+          <Button variant="ghost" iconOnly aria-label="Account menu">
+            <IconDotsVertical />
+          </Button>
+        }
+      >
+        <MenuItem icon={<IconUser />}>Profile</MenuItem>
+        <MenuItem icon={<IconSettings />} shortcut="⌘,">
+          Preferences
+        </MenuItem>
+        <MenuSeparator />
+        <MenuItem icon={<IconLogout />}>Log out</MenuItem>
+      </DropdownMenu>
+
+      <Popover
+        side={side}
+        align={align}
+        aria-label="Invite a teammate"
+        trigger={<Button leadingIcon={<IconPlus />}>Invite</Button>}
+      >
+        <InviteForm />
+      </Popover>
+    </div>
+  );
+}
+
+function InviteForm() {
+  const close = usePopoverClose();
+  return (
+    <form
+      className="flex w-[280px] flex-col gap-3"
+      onSubmit={(event) => {
+        event.preventDefault();
+        close();
+      }}
+    >
+      <div className="flex flex-col gap-0.5">
+        <span className="text-sm font-medium tracking-tight text-neutral-100">Invite a teammate</span>
+        <span className="text-[13px] text-neutral-500">They'll get access to this project.</span>
+      </div>
+      <TextField size="sm" type="email" placeholder="name@company.com" leading={<IconSearch />} aria-label="Email" />
+      <div className="flex justify-end gap-2">
+        <Button size="sm" variant="ghost" onClick={close}>
+          Cancel
+        </Button>
+        <Button size="sm" type="submit">
+          Send invite
+        </Button>
+      </div>
+    </form>
+  );
+}
 
 function SpinnerDemo(props: any) {
   const size = props.size ?? "md";
@@ -1303,6 +1495,12 @@ export function PresentationRenderer({
       return <ComboboxDemo {...liveProps} />;
     case "spinner":
       return <SpinnerDemo {...liveProps} />;
+    case "button":
+      return <ButtonDemo {...liveProps} />;
+    case "text-field":
+      return <TextFieldDemo {...liveProps} />;
+    case "popover":
+      return <PopoverDemo {...liveProps} />;
     case "file-upload":
       return <FileUploadDemo {...liveProps} />;
     case "table":

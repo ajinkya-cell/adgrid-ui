@@ -293,4 +293,26 @@ export type { SpinnerProps, SpinnerSize } from "./primitives/Spinner";
 export { FileUpload, formatBytes } from "./primitives/FileUpload";
 export type { FileUploadProps, FileUploadItem, FileUploadStatus } from "./primitives/FileUpload";
 export { Toaster, toast } from "./primitives/Toast";
+export { Button } from "./primitives/Button";
+export type { ButtonProps, ButtonLinkProps, ButtonVariant, ButtonSize } from "./primitives/Button";
+export { TextField } from "./primitives/TextField";
+export type { TextFieldProps, TextFieldSize } from "./primitives/TextField";
+export {
+  Popover,
+  DropdownMenu,
+  MenuItem,
+  MenuCheckboxItem,
+  MenuLabel,
+  MenuSeparator,
+  MenuGroup,
+  usePopoverClose,
+} from "./primitives/Popover";
+export type {
+  PopoverProps,
+  PopoverSide,
+  PopoverAlign,
+  DropdownMenuProps,
+  MenuItemProps,
+  MenuCheckboxItemProps,
+} from "./primitives/Popover";
 export type { ToasterProps, ToasterPosition, ToastOptions, ToastAction, ToastData, ToastType } from "./primitives/Toast";
