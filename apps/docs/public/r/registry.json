@@ -511,6 +511,42 @@
       ]
     },
     {
+      "name": "choice",
+      "type": "registry:ui",
+      "title": "Choice",
+      "description": "One control for checkboxes and radios. Unchecked, it's a socket cut into the surface; checked, the box rises out of it, or a pearl rises in the middle. ChoiceGroup holds the value; the card variant lifts the chosen option and lights its edge.",
+      "files": [
+        {
+          "path": "components/ui/Choice.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "modal",
+      "type": "registry:ui",
+      "title": "Modal",
+      "description": "A window of content on the native <dialog>: focus trap, Escape and focus return built in. A raised panel with a prismatic edge, a close socket, and actions in a darker footer tray.",
+      "files": [
+        {
+          "path": "components/ui/Dialog.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "dialog",
+      "type": "registry:ui",
+      "title": "Dialog",
+      "description": "A decision before carrying on: an alert dialog with a cancel and a confirm action. No backdrop dismiss, Escape cancels, and a promise from onConfirm holds it open with a spinner until it settles.",
+      "files": [
+        {
+          "path": "components/ui/Dialog.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "moon-pull",
       "type": "registry:ui",
       "title": "Moon Pull",

@@ -268,3 +268,9 @@ export type { MatrixRippleBackgroundProps } from "./animated/matrix-ripple-backg
 // Stacked Card Fan
 export { StackedCardFan, StackedCardFanDemo } from "./animated/stacked-card-fan";
 export type { StackedCardFanProps } from "./animated/stacked-card-fan";
+
+// primitives
+export { Choice, ChoiceGroup } from "./primitives/Choice";
+export type { ChoiceProps, ChoiceGroupProps, ChoiceType, ChoiceSize, ChoiceVariant } from "./primitives/Choice";
+export { Modal, Dialog, DialogButton } from "./primitives/Dialog";
+export type { ModalProps, DialogProps, DialogButtonProps } from "./primitives/Dialog";

@@ -53,7 +53,7 @@ function SidebarItemComponent({
     };
   }, []);
 
-  const isNew = ["scroll-progress", "lumina-wave", "scroll-water", "moon-pull", "stacked-cards", "tilted-collage", "taped-marquee"].includes(entry.slug);
+  const isNew = ["scroll-progress", "lumina-wave", "scroll-water", "moon-pull", "stacked-cards", "tilted-collage", "taped-marquee", "choice", "modal", "dialog"].includes(entry.slug);
   const isHighlighted = hovered || isFocused;
 
   return (

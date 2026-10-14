@@ -54,6 +54,11 @@ import {
   StackedCards,
   TiltedCollage,
   TapedMarquee,
+  Choice,
+  ChoiceGroup,
+  Modal,
+  Dialog,
+  DialogButton,
   WeaponWheel,
   Hero,
   AnimatedIcons1,
@@ -95,6 +100,7 @@ import {
   IconBrandSvelte,
   IconTerminal2,
   IconBolt,
+  IconTrash,
 } from "@tabler/icons-react";
 
 const imageParallaxDemo = "/utils/image-parallax.png";
@@ -432,6 +438,119 @@ function TapedMarqueeDemo(props: any) {
         tiltOffset={tiltOffset + 3}
       />
     </div>
+  );
+}
+
+const NOTIFICATION_OPTIONS = [
+  { value: "digest", label: "Weekly digest", description: "A summary of activity across your projects, every Monday." },
+  { value: "deploys", label: "Deployments", description: "When a production deploy succeeds or fails." },
+  { value: "security", label: "Security alerts", description: "New sign-ins and changes to access keys." },
+];
+const PLAN_OPTIONS = [
+  { value: "hobby", label: "Hobby", description: "Free for personal projects and experiments." },
+  { value: "pro", label: "Pro", description: "$20 a month. Unlimited projects and team previews." },
+  { value: "enterprise", label: "Enterprise", description: "Custom limits, SSO and a dedicated contact." },
+];
+
+function ChoiceDemo(props: any) {
+  const variant = props.variant === "card" ? "card" : "default";
+  const size = props.size ?? "md";
+  const disabled = Boolean(props.disabled);
+  const invalid = Boolean(props.invalid);
+  const [selected, setSelected] = useState<string[]>(["digest", "security"]);
+  const [plan, setPlan] = useState("pro");
+  const all = selected.length === NOTIFICATION_OPTIONS.length;
+
+  return (
+    <div className="w-[min(420px,calc(100vw-32px))]">
+      {props.type === "radio" ? (
+        <ChoiceGroup
+          label="Plan"
+          description="You can change this at any time."
+          value={plan}
+          onValueChange={setPlan}
+          variant={variant}
+          size={size}
+          disabled={disabled}
+          invalid={invalid}
+        >
+          {PLAN_OPTIONS.map((option) => (
+            <Choice key={option.value} {...option} />
+          ))}
+        </ChoiceGroup>
+      ) : (
+        <div className="flex flex-col gap-5">
+          {/* A parent that goes indeterminate while only some of its children are on. */}
+          <Choice
+            label="All notifications"
+            checked={all}
+            indeterminate={selected.length > 0 && !all}
+            onCheckedChange={(checked) => setSelected(checked ? NOTIFICATION_OPTIONS.map((o) => o.value) : [])}
+            size={size}
+            disabled={disabled}
+          />
+          <div className="h-px bg-black/50 shadow-[0_1px_0_rgba(255,255,255,0.05)]" />
+          <ChoiceGroup
+            type="checkbox"
+            value={selected}
+            onValueChange={setSelected}
+            variant={variant}
+            size={size}
+            disabled={disabled}
+            invalid={invalid}
+          >
+            {NOTIFICATION_OPTIONS.map((option) => (
+              <Choice key={option.value} {...option} />
+            ))}
+          </ChoiceGroup>
+        </div>
+      )}
+      {invalid && <p className="mt-4 text-[13px] text-[rgb(229_115_115)]">Choose at least one option to continue.</p>}
+    </div>
+  );
+}
+
+function ModalDemo(props: any) {
+  const [selected, setSelected] = useState<string[]>(["deploys", "security"]);
+  return (
+    <Modal
+      size={props.size ?? "md"}
+      dismissible={props.dismissible ?? true}
+      title={props.title ?? "Notification settings"}
+      description={props.description ?? "Choose what reaches your inbox. Changes apply to every workspace you belong to."}
+      trigger={<DialogButton>Notification settings</DialogButton>}
+      footer={
+        <>
+          <DialogButton close>Cancel</DialogButton>
+          <DialogButton tone="primary" close>
+            Save changes
+          </DialogButton>
+        </>
+      }
+    >
+      <ChoiceGroup type="checkbox" value={selected} onValueChange={setSelected}>
+        {NOTIFICATION_OPTIONS.map((option) => (
+          <Choice key={option.value} {...option} />
+        ))}
+      </ChoiceGroup>
+    </Modal>
+  );
+}
+
+function DialogDemo(props: any) {
+  const danger = (props.tone ?? "danger") === "danger";
+  return (
+    <Dialog
+      tone={danger ? "danger" : "default"}
+      icon={danger ? <IconTrash size={18} stroke={1.75} /> : <IconShieldCheck size={18} stroke={1.75} />}
+      title={props.title ?? "Delete this project?"}
+      description={props.description ?? "This permanently removes Aurora and its 24 deployments. It can't be undone."}
+      confirmLabel={props.confirmLabel ?? "Delete project"}
+      cancelLabel={props.cancelLabel ?? "Cancel"}
+      // A slow request, so the confirm button shows its spinner.
+      onConfirm={() => new Promise((resolve) => setTimeout(resolve, 1200))}
+      trigger={<DialogButton tone={danger ? "danger" : "secondary"}>{props.confirmLabel ?? "Delete project"}</DialogButton>}
+    />
   );
 }
 
@@ -824,6 +943,12 @@ export function PresentationRenderer({
       return <TiltedCollageDemo {...liveProps} />;
     case "taped-marquee":
       return <TapedMarqueeDemo {...liveProps} />;
+    case "choice":
+      return <ChoiceDemo {...liveProps} />;
+    case "modal":
+      return <ModalDemo {...liveProps} />;
+    case "dialog":
+      return <DialogDemo {...liveProps} />;
 
     case "now-playing-card":
       return <NowPlayingCard song={{ isPlaying: true, title: "Main Chala Jaunga", artist: "Fiddlecraft", album: "Hawai Jahaaz", image: "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/41/c7/65/41c765a0-5a1e-3e35-9c22-5d664da2b95e/cover.jpg/600x600bb.jpg", songUrl: "https://open.spotify.com", playedAt: null }} />;

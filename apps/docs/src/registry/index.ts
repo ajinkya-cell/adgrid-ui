@@ -556,6 +556,59 @@ export const registry: RegistryEntry[] = [
   },
 
   {
+    name: "Choice",
+    slug: "choice",
+    category: "primitives",
+    description: "One control for checkboxes and radios. Unchecked, it's a socket cut into the surface; checked, the box rises out of it, or a pearl rises in the middle. ChoiceGroup holds the value; the card variant lifts the chosen option and lights its edge.",
+    dependencies: [],
+    packagePath: "primitives/Choice.tsx",
+    files: ["primitives/Choice.tsx"],
+    presentationStrategy: "center",
+    propDefs: [
+      { name: "type", type: "select", default: "checkbox", description: "Checkbox (many) or radio (one)", required: false, options: ["checkbox", "radio"] },
+      { name: "variant", type: "select", default: "default", description: "Plain row, or a raised card that lifts when chosen", required: false, options: ["default", "card"] },
+      { name: "size", type: "select", default: "md", description: "Control and label size", required: false, options: ["sm", "md", "lg"] },
+      { name: "disabled", type: "boolean", default: false, description: "Disable every option", required: false },
+      { name: "invalid", type: "boolean", default: false, description: "Tint the edges to flag an error", required: false },
+    ],
+  },
+
+  {
+    name: "Modal",
+    slug: "modal",
+    category: "primitives",
+    description: "A window of content on the native <dialog>: focus trap, Escape and focus return built in. A raised panel with a prismatic edge, a close socket, and actions in a darker footer tray.",
+    dependencies: [],
+    packagePath: "primitives/Dialog.tsx",
+    files: ["primitives/Dialog.tsx"],
+    presentationStrategy: "center",
+    propDefs: [
+      { name: "size", type: "select", default: "md", description: "Panel width: 440, 560 or 720px", required: false, options: ["sm", "md", "lg"] },
+      { name: "dismissible", type: "boolean", default: true, description: "Close on backdrop click and show the close socket", required: false },
+      { name: "title", type: "string", default: "Notification settings", description: "Heading", required: false },
+      { name: "description", type: "string", default: "Choose what reaches your inbox. Changes apply to every workspace you belong to.", description: "Line under the heading", required: false },
+    ],
+  },
+
+  {
+    name: "Dialog",
+    slug: "dialog",
+    category: "primitives",
+    description: "A decision before carrying on: an alert dialog with a cancel and a confirm action. No backdrop dismiss, Escape cancels, and a promise from onConfirm holds it open with a spinner until it settles.",
+    dependencies: [],
+    packagePath: "primitives/Dialog.tsx",
+    files: ["primitives/Dialog.tsx"],
+    presentationStrategy: "center",
+    propDefs: [
+      { name: "tone", type: "select", default: "danger", description: "Marks the confirm action as destructive", required: false, options: ["default", "danger"] },
+      { name: "title", type: "string", default: "Delete this project?", description: "The question being asked", required: false },
+      { name: "description", type: "string", default: "This permanently removes Aurora and its 24 deployments. It can't be undone.", description: "What happens if they confirm", required: false },
+      { name: "confirmLabel", type: "string", default: "Delete project", description: "Confirm button label", required: false },
+      { name: "cancelLabel", type: "string", default: "Cancel", description: "Cancel button label", required: false },
+    ],
+  },
+
+  {
     name: "Moon Pull",
     slug: "moon-pull",
     category: "animated",

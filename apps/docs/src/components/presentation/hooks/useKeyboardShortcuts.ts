@@ -22,6 +22,9 @@ export function useKeyboardShortcuts(entry: RegistryEntry) {
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
+      // A modal dialog in the demo owns the keyboard (Escape closes it, not the presentation).
+      if (document.querySelector("dialog[open]")) return;
+
       const key = event.key.toLowerCase();
       const mod = event.metaKey || event.ctrlKey;
 
