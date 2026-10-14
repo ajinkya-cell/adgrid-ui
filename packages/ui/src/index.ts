@@ -219,9 +219,6 @@ export type { BentoGridProps, BentoGridItemProps, BentoIconType } from "./animat
 export { Meter } from "./animated/Meter";
 export type { MeterProps } from "./animated/Meter";
 
-// Tactile animated notification toast
-export { Toast } from "./animated/Toast";
-export type { ToastProps } from "./animated/Toast";
 
 // Roughly - Hand-Drawn Text Annotation Suite
 export { Roughly } from "./animated/Roughly";
@@ -274,3 +271,26 @@ export { Choice, ChoiceGroup } from "./primitives/Choice";
 export type { ChoiceProps, ChoiceGroupProps, ChoiceType, ChoiceSize, ChoiceVariant } from "./primitives/Choice";
 export { Modal, Dialog, DialogButton } from "./primitives/Dialog";
 export type { ModalProps, DialogProps, DialogButtonProps } from "./primitives/Dialog";
+export { Tabs, TabsList, Tab, TabsPanel } from "./primitives/Tabs";
+export type { TabsProps, TabsListProps, TabProps, TabsPanelProps, TabsVariant, TabsSize } from "./primitives/Tabs";
+export { SegmentedControl } from "./primitives/SegmentedControl";
+export type { SegmentedControlProps, SegmentedOption, SegmentedControlSize } from "./primitives/SegmentedControl";
+export { Drawer, CloseSocket, useDrawerClose, DRAWER_PANEL_CLASS } from "./primitives/Drawer";
+export type { DrawerProps, DrawerSide, DrawerSize } from "./primitives/Drawer";
+export { Nav, NavGroup, NavItem, NavSection } from "./primitives/Nav";
+export type { NavProps, NavGroupProps, NavItemProps, NavSectionProps } from "./primitives/Nav";
+export { Progress } from "./primitives/Progress";
+export type { ProgressProps, ProgressSize } from "./primitives/Progress";
+export { Combobox } from "./primitives/Combobox";
+export type { ComboboxProps, ComboboxOption, ComboboxSize } from "./primitives/Combobox";
+export { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "./primitives/Table";
+export type { TableProps, TableRowProps, TableHeadProps, TableCellProps } from "./primitives/Table";
+export { Breadcrumbs } from "./primitives/Breadcrumbs";
+export type { BreadcrumbsProps, BreadcrumbItem } from "./primitives/Breadcrumbs";
+export { rankMatches } from "./primitives/search";
+export { Spinner } from "./primitives/Spinner";
+export type { SpinnerProps, SpinnerSize } from "./primitives/Spinner";
+export { FileUpload, formatBytes } from "./primitives/FileUpload";
+export type { FileUploadProps, FileUploadItem, FileUploadStatus } from "./primitives/FileUpload";
+export { Toaster, toast } from "./primitives/Toast";
+export type { ToasterProps, ToasterPosition, ToastOptions, ToastAction, ToastData, ToastType } from "./primitives/Toast";

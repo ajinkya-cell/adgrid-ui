@@ -1,0 +1,18 @@
+{
+  "name": "spinner",
+  "type": "registry:ui",
+  "title": "Spinner",
+  "description": "A faint ring cut into the surface with a quarter arc running round it, trailed by a softer half-arc so the turn reads as motion. Takes its colour from the text around it, so it works on popout and raised surfaces alike.",
+  "files": [
+    {
+      "path": "components/ui/Spinner.tsx",
+      "content": "\"use client\";\n\nimport { forwardRef, type HTMLAttributes } from \"react\";\nimport { cn } from \"@/lib/utils\";\n\n// A faint ring cut into the surface with a quarter arc running round it. The arc trails a softer\n// half-arc behind it, so the turn reads as motion rather than a ticking wedge. It takes its colour\n// from `currentColor`, so it sits on a popout button (dark) or a raised surface (light) unchanged.\n// Linear 0.8s rotation: the one place linear easing is right. Under reduced motion it slows down\n// rather than stopping, since a frozen spinner reads as a hang.\n\nexport type SpinnerSize = \"sm\" | \"md\" | \"lg\";\n\nexport interface SpinnerProps extends Omit<HTMLAttributes<HTMLSpanElement>, \"children\"> {\n  /** 12, 16 or 20px. */\n  size?: SpinnerSize;\n  /** Read to screen readers. Pass `null` when the spinner sits inside something that already says it's busy. */\n  label?: string | null;\n}\n\nconst PX = { sm: 12, md: 16, lg: 20 };\nconst RADIUS = 9;\nconst CIRCUMFERENCE = 2 * Math.PI * RADIUS;\n\nexport const Spinner = forwardRef<HTMLSpanElement, SpinnerProps>(function Spinner(\n  { size = \"md\", label = \"Loading\", className, ...rest },\n  ref\n) {\n  const px = PX[size];\n  const stroke = size === \"sm\" ? 2.6 : 2.2;\n  return (\n    <span\n      {...rest}\n      ref={ref}\n      role={label ? \"status\" : undefined}\n      aria-hidden={label ? undefined : true}\n      className={cn(\"inline-flex shrink-0 text-neutral-100\", className)}\n    >\n      <svg\n        viewBox=\"0 0 24 24\"\n        width={px}\n        height={px}\n        fill=\"none\"\n        aria-hidden=\"true\"\n        className=\"animate-spin [animation-duration:800ms] motion-reduce:[animation-duration:1600ms]\"\n      >\n        <circle cx=\"12\" cy=\"12\" r={RADIUS} stroke=\"currentColor\" strokeOpacity={0.14} strokeWidth={stroke} />\n        {/* Strokes start at 3 o'clock and run clockwise, the way it turns. The trail covers 12 → 6;\n            the arc covers 3 → 6, so it rides the trail's leading end. */}\n        <circle\n          cx=\"12\"\n          cy=\"12\"\n          r={RADIUS}\n          stroke=\"currentColor\"\n          strokeOpacity={0.28}\n          strokeWidth={stroke}\n          strokeLinecap=\"round\"\n          strokeDasharray={`${CIRCUMFERENCE * 0.5} ${CIRCUMFERENCE}`}\n          transform=\"rotate(-90 12 12)\"\n        />\n        <circle\n          cx=\"12\"\n          cy=\"12\"\n          r={RADIUS}\n          stroke=\"currentColor\"\n          strokeWidth={stroke}\n          strokeLinecap=\"round\"\n          strokeDasharray={`${CIRCUMFERENCE * 0.25} ${CIRCUMFERENCE}`}\n        />\n      </svg>\n      {label && <span className=\"sr-only\">{label}</span>}\n    </span>\n  );\n});\n",
+      "type": "registry:ui"
+    },
+    {
+      "path": "lib/utils.ts",
+      "content": "import { clsx, type ClassValue } from \"clsx\";\r\nimport { twMerge } from \"tailwind-merge\";\r\n\r\nexport function cn(...inputs: ClassValue[]) {\r\n  return twMerge(clsx(inputs));\r\n}",
+      "type": "registry:lib"
+    }
+  ]
+}

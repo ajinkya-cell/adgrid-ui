@@ -3,7 +3,6 @@
 // Note: CoverflowCarousel is imported from "@adgrid-ui/ui" in the imports section below and rendered under the "coverflow-carousel" case in the switch-statement inside the PresentationRenderer component.
 
 import { useRef, useState, useEffect } from "react";
-import { AnimatePresence } from "framer-motion";
 
 import {
   AnisotropicKnob,
@@ -59,6 +58,25 @@ import {
   Modal,
   Dialog,
   DialogButton,
+  Tabs,
+  TabsList,
+  Tab,
+  TabsPanel,
+  SegmentedControl,
+  Drawer,
+  Nav,
+  NavGroup,
+  NavItem,
+  NavSection,
+  Progress,
+  Combobox,
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+  Breadcrumbs,
   WeaponWheel,
   Hero,
   AnimatedIcons1,
@@ -73,7 +91,11 @@ import {
   OTPInput,
   Tooltip,
   Timeline,
-  Toast,
+  Toaster,
+  toast,
+  Spinner,
+  FileUpload,
+  type FileUploadItem,
   Globe,
   BentoGrid,
   BentoGridItem,
@@ -101,6 +123,9 @@ import {
   IconTerminal2,
   IconBolt,
   IconTrash,
+  IconLayoutGrid,
+  IconList,
+  IconLayoutKanban,
 } from "@tabler/icons-react";
 
 const imageParallaxDemo = "/utils/image-parallax.png";
@@ -537,6 +562,321 @@ function ModalDemo(props: any) {
   );
 }
 
+const TAB_ITEMS = [
+  { value: "overview", label: "Overview" },
+  { value: "deployments", label: "Deployments" },
+  { value: "analytics", label: "Analytics" },
+  { value: "settings", label: "Settings" },
+];
+const TAB_PANELS: Record<string, { title: string; body: string; stats: [string, string][] }> = {
+  overview: { title: "Aurora", body: "Production is healthy. The last deploy went out 12 minutes ago from main.", stats: [["Uptime", "99.98%"], ["Regions", "4"], ["Builds today", "11"]] },
+  deployments: { title: "Deployments", body: "Every push to main ships to production; every pull request gets its own preview.", stats: [["Succeeded", "128"], ["Failed", "3"], ["Avg. build", "41s"]] },
+  analytics: { title: "Analytics", body: "Traffic over the last 7 days, across all regions and preview URLs.", stats: [["Visitors", "24.1k"], ["Page views", "88.3k"], ["Bounce", "31%"]] },
+  settings: { title: "Settings", body: "Domains, environment variables and who can deploy to production.", stats: [["Domains", "2"], ["Variables", "17"], ["Members", "6"]] },
+};
+
+function TabsDemo(props: any) {
+  const variant = props.variant === "underline" ? "underline" : "segment";
+  return (
+    <div className="w-[min(520px,calc(100vw-32px))]">
+      <Tabs defaultValue="overview" variant={variant} size={props.size ?? "md"} fullWidth={Boolean(props.fullWidth)}>
+        <TabsList aria-label="Project">
+          {TAB_ITEMS.map((tab) => (
+            <Tab key={tab.value} value={tab.value}>
+              {tab.label}
+            </Tab>
+          ))}
+        </TabsList>
+        {TAB_ITEMS.map(({ value }) => {
+          const panel = TAB_PANELS[value]!;
+          return (
+            <TabsPanel
+              key={value}
+              value={value}
+              className="rounded-2xl border border-black/50 bg-[#0c0c0d] p-5 shadow-[inset_0_2px_6px_rgba(0,0,0,0.7),0_1px_0_rgba(255,255,255,0.05)]"
+            >
+              <h3 className="text-sm font-medium tracking-tight text-neutral-100">{panel.title}</h3>
+              <p className="mt-1 text-[13px] leading-relaxed text-neutral-500">{panel.body}</p>
+              <dl className="mt-5 grid grid-cols-3 gap-4">
+                {panel.stats.map(([label, stat]) => (
+                  <div key={label} className="flex flex-col gap-1">
+                    <dt className="text-xs text-neutral-500">{label}</dt>
+                    <dd className="text-lg font-medium tracking-tight text-neutral-100 tabular-nums">{stat}</dd>
+                  </div>
+                ))}
+              </dl>
+            </TabsPanel>
+          );
+        })}
+      </Tabs>
+    </div>
+  );
+}
+
+const RANGE_OPTIONS = [
+  { value: "24h", label: "24h" },
+  { value: "7d", label: "7 days" },
+  { value: "30d", label: "30 days" },
+  { value: "90d", label: "90 days" },
+];
+
+function SegmentedControlDemo(props: any) {
+  const size = props.size ?? "md";
+  const fullWidth = Boolean(props.fullWidth);
+  const disabled = Boolean(props.disabled);
+  const [range, setRange] = useState("7d");
+  const [view, setView] = useState("grid");
+
+  return (
+    <div className="flex w-[min(420px,calc(100vw-32px))] flex-col items-center gap-8">
+      <div className="flex w-full flex-col items-center gap-3">
+        <SegmentedControl
+          aria-label="Time range"
+          options={RANGE_OPTIONS}
+          value={range}
+          onValueChange={setRange}
+          size={size}
+          fullWidth={fullWidth}
+          disabled={disabled}
+        />
+        <p className="text-[13px] text-neutral-500">
+          Showing the last <span className="text-neutral-300">{RANGE_OPTIONS.find((o) => o.value === range)?.label}</span>
+        </p>
+      </div>
+      <SegmentedControl
+        aria-label="View"
+        options={[
+          { value: "grid", icon: <IconLayoutGrid />, "aria-label": "Grid view" },
+          { value: "list", icon: <IconList />, "aria-label": "List view" },
+          { value: "board", icon: <IconLayoutKanban />, "aria-label": "Board view" },
+        ]}
+        value={view}
+        onValueChange={setView}
+        size={size}
+        disabled={disabled}
+      />
+    </div>
+  );
+}
+
+function ProgressDemo(props: any) {
+  const size = props.size ?? "md";
+  const value = props.indeterminate ? null : Number(props.value ?? 64);
+  return (
+    <div className="flex w-[min(420px,calc(100vw-32px))] flex-col gap-7">
+      <Progress label="Uploading assets" value={value} size={size} showValue={props.showValue ?? true} />
+      <Progress label="Building" value={null} size={size} />
+      <Progress
+        label="Storage"
+        value={7.4}
+        max={10}
+        size={size}
+        showValue
+        formatValue={(v, max) => `${v} of ${max} GB`}
+      />
+    </div>
+  );
+}
+
+const FRAMEWORKS = [
+  { value: "next", label: "Next.js", description: "React", icon: <IconBrandNextjs />, keywords: ["react", "vercel"] },
+  { value: "svelte", label: "SvelteKit", description: "Svelte", icon: <IconBrandSvelte /> },
+  { value: "astro", label: "Astro", description: "Islands", icon: <IconBolt /> },
+  { value: "remix", label: "Remix", description: "React", icon: <IconBrandChrome />, keywords: ["react"] },
+  { value: "rust", label: "Axum", description: "Rust", icon: <IconBrandRust /> },
+  { value: "go", label: "Gin", description: "Go", icon: <IconBrandGolang /> },
+  { value: "docker", label: "Custom image", description: "Docker", icon: <IconBrandDocker /> },
+  { value: "legacy", label: "Gatsby", description: "Deprecated", icon: <IconDatabase />, disabled: true },
+];
+
+function SpinnerDemo(props: any) {
+  const size = props.size ?? "md";
+  return (
+    <div className="flex flex-col items-center gap-8">
+      <div className="flex items-center gap-6">
+        <Spinner size="sm" />
+        <Spinner size="md" />
+        <Spinner size="lg" />
+      </div>
+      <div className="flex items-center gap-3">
+        <DialogButton tone="primary" loading>
+          Save changes
+        </DialogButton>
+        <span className="flex items-center gap-2 text-[13px] text-neutral-400">
+          <Spinner size={size} label={null} className="text-neutral-400" />
+          Syncing 12 files…
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function FileUploadDemo(props: any) {
+  const [files, setFiles] = useState<FileUploadItem[]>([]);
+  const timers = useRef(new Map<string, ReturnType<typeof setInterval>>());
+
+  useEffect(() => {
+    const running = timers.current;
+    return () => running.forEach((timer) => clearInterval(timer));
+  }, []);
+
+  // Fake an upload: the bar climbs in uneven steps, then the row settles on "Uploaded".
+  const upload = (added: FileUploadItem[]) => {
+    added.forEach((item) => {
+      setFiles((current) => current.map((f) => (f.id === item.id ? { ...f, status: "uploading", progress: 0 } : f)));
+      const timer = setInterval(() => {
+        setFiles((current) =>
+          current.map((f) => {
+            if (f.id !== item.id) return f;
+            const progress = Math.min((f.progress ?? 0) + 6 + Math.random() * 14, 100);
+            if (progress >= 100) {
+              clearInterval(timer);
+              timers.current.delete(item.id);
+              return { ...f, status: "done", progress: 100 };
+            }
+            return { ...f, progress };
+          })
+        );
+      }, 220);
+      timers.current.set(item.id, timer);
+    });
+  };
+
+  return (
+    <div className="flex w-[min(420px,calc(100vw-32px))] flex-col gap-1.5">
+      <span className="text-sm font-medium tracking-tight text-neutral-100">Attachments</span>
+      <FileUpload
+        value={files}
+        onValueChange={setFiles}
+        onFilesAdded={upload}
+        onRemove={(item) => {
+          clearInterval(timers.current.get(item.id));
+          timers.current.delete(item.id);
+        }}
+        accept={props.accept ?? "image/*,.pdf"}
+        maxSize={5 * 1024 * 1024}
+        maxFiles={props.maxFiles ?? 4}
+        multiple={props.multiple ?? true}
+        disabled={Boolean(props.disabled)}
+        invalid={Boolean(props.invalid)}
+      />
+    </div>
+  );
+}
+
+function ComboboxDemo(props: any) {
+  const [framework, setFramework] = useState<string | null>("next");
+  const invalid = Boolean(props.invalid);
+  return (
+    <div className="flex w-[min(360px,calc(100vw-32px))] flex-col gap-1.5">
+      <label id="framework-label" htmlFor="framework" className="text-sm font-medium tracking-tight text-neutral-100">
+        Framework
+      </label>
+      <Combobox
+        id="framework"
+        aria-labelledby="framework-label"
+        options={FRAMEWORKS}
+        value={framework}
+        onValueChange={setFramework}
+        placeholder={props.placeholder ?? "Search frameworks…"}
+        size={props.size ?? "md"}
+        clearable={props.clearable ?? true}
+        disabled={Boolean(props.disabled)}
+        invalid={invalid}
+      />
+      <p className={invalid ? "text-[13px] text-[rgb(229_115_115)]" : "text-[13px] text-neutral-500"}>
+        {invalid ? "Choose a framework to continue." : "Sets the build command and output directory."}
+      </p>
+    </div>
+  );
+}
+
+const DEPLOYS = [
+  { id: "dpl_8f2k", branch: "main", status: "Ready", region: "fra1", duration: 41, requests: 18240 },
+  { id: "dpl_7c1a", branch: "feat/billing", status: "Building", region: "iad1", duration: 0, requests: 0 },
+  { id: "dpl_6b9e", branch: "main", status: "Ready", region: "sfo1", duration: 38, requests: 9311 },
+  { id: "dpl_5a3d", branch: "fix/auth-redirect", status: "Failed", region: "fra1", duration: 12, requests: 0 },
+  { id: "dpl_4e0c", branch: "main", status: "Ready", region: "hnd1", duration: 45, requests: 27502 },
+];
+const STATUS_DOT: Record<string, string> = {
+  Ready: "bg-[rgb(126_190_152)]",
+  Building: "bg-[rgb(214_178_106)]",
+  Failed: "bg-[rgb(229_115_115)]",
+};
+type DeployKey = "branch" | "duration" | "requests";
+
+function TableDemo(props: any) {
+  const [sort, setSort] = useState<{ key: DeployKey; dir: "ascending" | "descending" }>({ key: "requests", dir: "descending" });
+  const [selected, setSelected] = useState("dpl_8f2k");
+  const rows = [...DEPLOYS].sort((a, b) => {
+    const order = a[sort.key] < b[sort.key] ? -1 : a[sort.key] > b[sort.key] ? 1 : 0;
+    return sort.dir === "ascending" ? order : -order;
+  });
+  const sortBy = (key: DeployKey) =>
+    setSort((current) => ({ key, dir: current.key === key && current.dir === "descending" ? "ascending" : "descending" }));
+  const sortOf = (key: DeployKey) => (sort.key === key ? sort.dir : false);
+
+  return (
+    <div className="w-[min(720px,calc(100vw-32px))]">
+      <Table
+        title={props.title ?? "Deployments"}
+        description={props.description ?? "Production deploys from the last 24 hours."}
+        action={<DialogButton className="h-8 px-3 text-[13px]">Redeploy</DialogButton>}
+        footer={
+          <>
+            <span>{DEPLOYS.length} deployments</span>
+            <span className="tabular-nums">Updated 2 min ago</span>
+          </>
+        }
+      >
+        <TableHeader>
+          <TableRow>
+            <TableHead>Deployment</TableHead>
+            <TableHead sort={sortOf("branch")} onSort={() => sortBy("branch")}>Branch</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Region</TableHead>
+            <TableHead numeric sort={sortOf("duration")} onSort={() => sortBy("duration")}>Build</TableHead>
+            <TableHead numeric sort={sortOf("requests")} onSort={() => sortBy("requests")}>Requests</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {rows.map((row) => (
+            <TableRow key={row.id} selected={row.id === selected} onClick={() => setSelected(row.id)} className="cursor-pointer">
+              <TableCell primary className="font-mono text-[13px]">{row.id}</TableCell>
+              <TableCell>{row.branch}</TableCell>
+              <TableCell>
+                <span className="inline-flex items-center gap-2">
+                  <span className={`size-1.5 rounded-full ${STATUS_DOT[row.status]}`} />
+                  {row.status}
+                </span>
+              </TableCell>
+              <TableCell className="font-mono text-[13px]">{row.region}</TableCell>
+              <TableCell numeric>{row.duration ? `${row.duration}s` : "—"}</TableCell>
+              <TableCell numeric>{row.requests ? row.requests.toLocaleString("en-US") : "—"}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+
+function BreadcrumbsDemo(props: any) {
+  return (
+    <Breadcrumbs
+      maxItems={props.maxItems ?? 4}
+      separator={props.separator ?? "/"}
+      items={[
+        { label: "Acme", href: "#", icon: <IconBolt /> },
+        { label: "Projects", href: "#" },
+        { label: "Aurora", href: "#" },
+        { label: "Deployments", href: "#" },
+        { label: "dpl_8f2k" },
+      ]}
+    />
+  );
+}
+
 function DialogDemo(props: any) {
   const danger = (props.tone ?? "danger") === "danger";
   return (
@@ -949,6 +1289,26 @@ export function PresentationRenderer({
       return <ModalDemo {...liveProps} />;
     case "dialog":
       return <DialogDemo {...liveProps} />;
+    case "tabs":
+      return <TabsDemo {...liveProps} />;
+    case "segmented-control":
+      return <SegmentedControlDemo {...liveProps} />;
+    case "drawer":
+      return <DrawerDemo {...liveProps} />;
+    case "nav":
+      return <NavDemo />;
+    case "progress":
+      return <ProgressDemo {...liveProps} />;
+    case "combobox":
+      return <ComboboxDemo {...liveProps} />;
+    case "spinner":
+      return <SpinnerDemo {...liveProps} />;
+    case "file-upload":
+      return <FileUploadDemo {...liveProps} />;
+    case "table":
+      return <TableDemo {...liveProps} />;
+    case "breadcrumbs":
+      return <BreadcrumbsDemo {...liveProps} />;
 
     case "now-playing-card":
       return <NowPlayingCard song={{ isPlaying: true, title: "Main Chala Jaunga", artist: "Fiddlecraft", album: "Hawai Jahaaz", image: "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/41/c7/65/41c765a0-5a1e-3e35-9c22-5d664da2b95e/cover.jpg/600x600bb.jpg", songUrl: "https://open.spotify.com", playedAt: null }} />;
@@ -1196,7 +1556,7 @@ export function PresentationRenderer({
         </div>
       );
     case "toast":
-      return <ToastDemo />;
+      return <ToastDemo {...liveProps} />;
     case "bento-grid":
       return <BentoGridDemo liveProps={liveProps} />;
     case "matrix-ripple-background":
@@ -1268,140 +1628,147 @@ function BentoGridDemo({ liveProps }: { liveProps?: Record<string, unknown> }) {
   );
 }
 
-function ToastDemo() {
-  const [toasts, setToasts] = useState<number[]>([]);
-  const [isHovered, setIsHovered] = useState(false);
-  const [hasFocus, setHasFocus] = useState(false);
-  const nextToastId = useRef(0);
-  const activeToasts = useRef<number[]>([]);
-  const toastTimers = useRef(new Map<number, ReturnType<typeof setTimeout>>());
-  const isExpanded = isHovered || hasFocus;
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  const clearToastTimer = (id: number) => {
-    const timer = toastTimers.current.get(id);
-    if (timer) clearTimeout(timer);
-    toastTimers.current.delete(id);
-  };
-
-  const dismissToast = (id: number) => {
-    activeToasts.current = activeToasts.current.filter((toastId) => toastId !== id);
-    setToasts(activeToasts.current);
-    clearToastTimer(id);
-  };
-
-  const showToast = () => {
-    const id = nextToastId.current++;
-    const nextToasts = [...activeToasts.current, id];
-    const droppedToast = nextToasts.length > 3 ? nextToasts.shift() : undefined;
-
-    activeToasts.current = nextToasts;
-    if (droppedToast !== undefined) clearToastTimer(droppedToast);
-    setToasts(nextToasts);
-    toastTimers.current.set(
-      id,
-      setTimeout(() => dismissToast(id), 5000)
-    );
-  };
-
-  useEffect(
-    () => () => {
-      toastTimers.current.forEach((timer) => clearTimeout(timer));
-      toastTimers.current.clear();
+function ToastDemo(props: any) {
+  const position = props.position ?? "bottom-right";
+  const shows: { label: string; run: () => void }[] = [
+    { label: "Default", run: () => toast("Changes saved", { description: "Your profile is up to date." }) },
+    { label: "Success", run: () => toast.success("Deployment ready", { description: "main → production in 41s." }) },
+    {
+      label: "Error",
+      run: () =>
+        toast.error("Couldn't reach the server", {
+          description: "Check your connection and try again.",
+          action: { label: "Retry", onClick: () => toast.success("Connected") },
+        }),
     },
-    []
-  );
-
+    { label: "Warning", run: () => toast.warning("Storage almost full", { description: "7.4 of 10 GB used." }) },
+    {
+      label: "Promise",
+      run: () => {
+        toast.promise(wait(1800), { loading: "Publishing…", success: "Published", error: "Couldn't publish" });
+      },
+    },
+    {
+      label: "Action",
+      run: () => toast("Message archived", { action: { label: "Undo", onClick: () => toast("Message restored") } }),
+    },
+  ];
   return (
-    <div className="relative flex min-h-dvh w-full items-center justify-center">
-      <button
-        type="button"
-        onClick={showToast}
-        style={{
-          backgroundColor: "#171717",
-          boxShadow: "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.12), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.45), 0 4px 14px rgba(0, 0, 0, 0.6)",
-        }}
-        className="px-5 h-11 rounded-xl text-xs font-bold text-neutral-200 border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 hover:text-white cursor-pointer active:scale-95 transition-all"
-      >
-        Press to get toasts
-      </button>
-
-      <div
-        className="pointer-events-none absolute bottom-0 left-0 mx-2 right-0 h-[190px] sm:left-auto sm:right-0 sm:h-[300px] sm:w-[360px]"
-        style={{ perspective: "1000px" }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        onFocusCapture={() => setHasFocus(true)}
-        onBlurCapture={(event) => {
-          if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-            setHasFocus(false);
-          }
-        }}
-      >
-        <AnimatePresence initial={false}>
-          {toasts.map((id, index) => (
-            <Toast
-              key={id}
-              title="Toast created"
-              description="This is the description of the toast."
-              stackDepth={toasts.length - index - 1}
-              isExpanded={isExpanded}
-              onDismiss={() => dismissToast(id)}
-            />
-          ))}
-        </AnimatePresence>
+    <div className="relative flex min-h-dvh w-full items-center justify-center p-4">
+      <div className="grid w-[min(360px,100%)] grid-cols-2 gap-2.5 sm:grid-cols-3">
+        {shows.map((show) => (
+          <DialogButton key={show.label} onClick={show.run}>
+            {show.label}
+          </DialogButton>
+        ))}
       </div>
+      <Toaster
+        position={position}
+        expand={Boolean(props.expand)}
+        visibleToasts={props.visibleToasts ?? 3}
+        duration={props.duration ?? 5000}
+      />
     </div>
   );
 }
 
 function SidebarDemo({ liveProps }: { liveProps: any }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeSide, setActiveSide] = useState<"left" | "right">("left");
+  const side = liveProps.side === "right" ? "right" : "left";
 
-  const openSidebar = (side: "left" | "right") => {
-    setActiveSide(side);
-    setIsOpen(true);
-  };
+  if (liveProps.inline) {
+    return (
+      <div className="w-full p-8">
+        <Sidebar inline />
+      </div>
+    );
+  }
 
   return (
-    <div className="w-full flex flex-wrap items-center justify-center p-12 gap-4 font-['DM_Sans',sans-serif]">
-      {/* DM Sans font loader */}
-      <style dangerouslySetInnerHTML={{ __html: `@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');` }} />
+    <div className="flex w-full items-center justify-center p-12">
+      <DialogButton onClick={() => setIsOpen(true)}>Open sidebar</DialogButton>
+      <Sidebar isOpen={isOpen} onClose={() => setIsOpen(false)} side={side} />
+    </div>
+  );
+}
 
-      <button
-        type="button"
-        onClick={() => openSidebar("left")}
-        style={{
-          backgroundColor: "#171717",
-          boxShadow:
-            "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.40), 0 4px 12px rgba(0, 0, 0, 0.5)",
-          fontFamily: "'DM Sans', sans-serif",
-        }}
-        className="px-6 h-12 rounded-xl text-xs font-bold text-neutral-200 border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 hover:text-white cursor-pointer active:scale-95 transition-all font-['DM_Sans',sans-serif]"
-      >
-        Open Sidebar Left
-      </button>
+const DRAWER_STATUS = [
+  { value: "ready", label: "Ready", description: "Built and serving traffic." },
+  { value: "building", label: "Building", description: "Queued or in progress." },
+  { value: "failed", label: "Failed", description: "Stopped with an error." },
+];
 
-      <button
-        type="button"
-        onClick={() => openSidebar("right")}
-        style={{
-          backgroundColor: "#171717",
-          boxShadow:
-            "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.40), 0 4px 12px rgba(0, 0, 0, 0.5)",
-          fontFamily: "'DM Sans', sans-serif",
-        }}
-        className="px-6 h-12 rounded-xl text-xs font-bold text-neutral-200 border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 hover:text-white cursor-pointer active:scale-95 transition-all font-['DM_Sans',sans-serif]"
-      >
-        Open Sidebar Right
-      </button>
+function DrawerDemo(props: any) {
+  const [open, setOpen] = useState(false);
+  const [status, setStatus] = useState<string[]>(["ready", "building"]);
+  const [env, setEnv] = useState("production");
+  const side = props.side === "left" ? "left" : "right";
 
-      <Sidebar
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        side={activeSide}
-        {...liveProps}
-      />
+  return (
+    <Drawer
+      open={open}
+      onOpenChange={setOpen}
+      side={side}
+      size={props.size ?? "md"}
+      dismissible={props.dismissible ?? true}
+      title={props.title ?? "Filters"}
+      description={props.description ?? "Narrow the deployments list. Filters apply as soon as you save."}
+      trigger={<DialogButton>Filters</DialogButton>}
+      footer={
+        <>
+          <DialogButton onClick={() => setStatus([])}>Clear</DialogButton>
+          <DialogButton tone="primary" onClick={() => setOpen(false)}>
+            Save filters
+          </DialogButton>
+        </>
+      }
+    >
+      <div className="flex flex-col gap-7">
+        <div className="flex flex-col gap-3">
+          <span className="text-sm font-medium tracking-tight text-neutral-100">Environment</span>
+          <SegmentedControl
+            aria-label="Environment"
+            fullWidth
+            value={env}
+            onValueChange={setEnv}
+            options={[
+              { value: "production", label: "Production" },
+              { value: "preview", label: "Preview" },
+              { value: "all", label: "All" },
+            ]}
+          />
+        </div>
+        <ChoiceGroup type="checkbox" label="Status" value={status} onValueChange={setStatus}>
+          {DRAWER_STATUS.map((option) => (
+            <Choice key={option.value} {...option} />
+          ))}
+        </ChoiceGroup>
+      </div>
+    </Drawer>
+  );
+}
+
+function NavDemo() {
+  return (
+    <div className="w-[min(280px,calc(100vw-32px))] rounded-3xl border border-white/[0.08] border-t-white/[0.16] bg-[linear-gradient(180deg,#1b1b1d_0%,#151516_100%)] p-3 shadow-[inset_0_1.5px_0_0_rgba(255,255,255,0.08),inset_0_-1px_0_0_rgba(0,0,0,0.5),0_14px_30px_-10px_rgba(0,0,0,0.5),0_1px_4px_-1px_rgba(0,0,0,0.35)]">
+      <Nav aria-label="Project" defaultValue="overview">
+        <NavGroup label="Project">
+          <NavItem value="overview" icon={<IconEye />}>Overview</NavItem>
+          <NavSection label="Deployments" icon={<IconGitBranch />} defaultOpen>
+            <NavItem value="production" badge="3">Production</NavItem>
+            <NavItem value="previews">Previews</NavItem>
+            <NavItem value="rollbacks">Rollbacks</NavItem>
+          </NavSection>
+          <NavItem value="storage" icon={<IconDatabase />}>Storage</NavItem>
+          <NavItem value="logs" icon={<IconTerminal2 />}>Logs</NavItem>
+        </NavGroup>
+        <NavGroup label="Security">
+          <NavItem value="access" icon={<IconShieldCheck />}>Access</NavItem>
+          <NavItem value="danger" icon={<IconTrash />} disabled>Delete project</NavItem>
+        </NavGroup>
+      </Nav>
     </div>
   );
 }
@@ -1410,40 +1777,16 @@ function CommandPaletteDemo() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="w-full flex flex-col items-center justify-center p-8 gap-6 min-h-[500px] font-['DM_Sans',sans-serif] select-none">
-      {/* DM Sans font loader tag */}
-      <style dangerouslySetInnerHTML={{ __html: `@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');` }} />
+    <div className="flex min-h-[500px] w-full flex-col items-center justify-center gap-5 p-8">
+      <DialogButton onClick={() => setIsOpen(true)}>
+        Search
+        <span className="ml-1 flex items-center gap-1 text-[11px] text-neutral-500">
+          <kbd className="font-sans">⌘</kbd>
+          <kbd className="font-sans">K</kbd>
+        </span>
+      </DialogButton>
 
-      <div className="text-center space-y-3 max-w-md">
-        <h3 className="text-xl font-bold tracking-wide text-white font-['DM_Sans',sans-serif]">
-          Tactile Command Palette
-        </h3>
-        <p className="text-xs text-neutral-400 font-['DM_Sans',sans-serif] leading-relaxed">
-          Press <kbd className="px-1.5 py-0.5 rounded bg-white/10 text-white font-mono text-[11px]">⌘ K</kbd> anywhere or click the button below to open the command palette.
-        </p>
-      </div>
-
-      {/* Centered Trigger Button */}
-      <button
-        type="button"
-        onClick={() => setIsOpen(true)}
-        style={{
-          backgroundColor: "#171717",
-          boxShadow:
-            "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.12), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.45), 0 4px 14px rgba(0, 0, 0, 0.6)",
-        }}
-        className="px-6 h-12 rounded-xl text-xs font-bold text-neutral-200 border-t border-white/20 border-x border-white/[0.02] border-b border-white/10 hover:text-white hover:border-white/30 cursor-pointer active:scale-95 transition-all font-['DM_Sans',sans-serif] flex items-center gap-2.5"
-      >
-        <span>Open Command Palette</span>
-        <kbd className="px-2 py-0.5 rounded bg-white/10 text-neutral-300 font-mono text-[10px] uppercase border border-white/10 tracking-wider">⌘ K</kbd>
-      </button>
-
-      {/* Modal Viewport Overlay Mode */}
-      <CommandPalette
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        inline={false}
-      />
+      <CommandPalette isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </div>
   );
 }

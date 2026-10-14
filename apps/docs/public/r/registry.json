@@ -547,6 +547,176 @@
       ]
     },
     {
+      "name": "tabs",
+      "type": "registry:ui",
+      "title": "Tabs",
+      "description": "Switch between panels of one view. The list is a well and the active tab is a raised segment that slides between tabs; the underline variant swaps it for a prismatic line, for page-level tabs. Arrow keys move and select, Home and End jump.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/Tabs.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "segmented-control",
+      "type": "registry:ui",
+      "title": "Segmented Control",
+      "description": "A small inline choice of two to five options in the Tabs material. Real radio inputs underneath, so arrow keys and forms work natively; the raised segment glides to whichever is checked. Labels, icons, or icons alone.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/segmented-control/SegmentedControl.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/segmented-control/Tabs.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "drawer",
+      "type": "registry:ui",
+      "title": "Drawer",
+      "description": "A panel that slides in from the side on the native <dialog>, with focus trap, Escape and focus return built in. It floats just off the edge so the bevel, prismatic edge and long shadow all read; title, close socket and a footer tray for actions.",
+      "files": [
+        {
+          "path": "components/ui/Drawer.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "nav",
+      "type": "registry:ui",
+      "title": "Nav",
+      "description": "Vertical navigation for sidebars and drawers. Groups, links or buttons with icons and badges, and collapsible sections on a machined rail. The current page is a raised segment that glides between items, even into a section.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/nav/Nav.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/nav/Tabs.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "progress",
+      "type": "registry:ui",
+      "title": "Progress",
+      "description": "A track cut into the surface with a popout fill rising out of it. Determinate progress slides the fill; leave the value out and a short slab sweeps across the well instead. Label and value above, real progressbar semantics underneath.",
+      "files": [
+        {
+          "path": "components/ui/Progress.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "combobox",
+      "type": "registry:ui",
+      "title": "Combobox",
+      "description": "An input that filters a list as you type. The field is a well; the list opens on the browser's top layer so nothing can clip it, flips above the field when there's no room, and its highlight sinks into a tray that glides between rows.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/combobox/Combobox.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/combobox/search.ts",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "table",
+      "type": "registry:ui",
+      "title": "Table",
+      "description": "A real <table> in a raised card: a darker header band, rows split by a machined cut line, numbers right-aligned in tabular figures, and sortable headers that report aria-sort. Optional title, action and footer tray.",
+      "files": [
+        {
+          "path": "components/ui/Table.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "breadcrumbs",
+      "type": "registry:ui",
+      "title": "Breadcrumbs",
+      "description": "Where you are, as a trail of quiet links: ancestors in tertiary text, separators set back further, the current page in primary. Long trails fold their middle into a small socket that opens in place.",
+      "files": [
+        {
+          "path": "components/ui/Breadcrumbs.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "spinner",
+      "type": "registry:ui",
+      "title": "Spinner",
+      "description": "A faint ring cut into the surface with a quarter arc running round it, trailed by a softer half-arc so the turn reads as motion. Takes its colour from the text around it, so it works on popout and raised surfaces alike.",
+      "files": [
+        {
+          "path": "components/ui/Spinner.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "file-upload",
+      "type": "registry:ui",
+      "title": "File Upload",
+      "description": "A dashed well you drop files into or click to browse, with a real file input underneath so forms and keyboards just work. Files list below in trays with a thumbnail, size and a slim progress bar; rejected files stay with the reason.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/file-upload/FileUpload.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/file-upload/Progress.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "toast",
+      "type": "registry:ui",
+      "title": "Toast",
+      "description": "Mount one <Toaster /> and call toast() from anywhere. Small raised cards with a status dot, optional action, promise support, a stack that fans out on hover, timers that pause while you look, and swipe to dismiss.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/toast/Toast.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/toast/Spinner.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "moon-pull",
       "type": "registry:ui",
       "title": "Moon Pull",
@@ -1060,14 +1230,26 @@
       "name": "sidebar",
       "type": "registry:ui",
       "title": "Sidebar",
-      "description": "Sleek, modern slide-out website navigation sidebar for web applications and dashboards with expandable dashboard sub-menu options and DM Sans typography.",
+      "description": "An app sidebar built from the primitives: a Drawer on the native <dialog> when it overlays the page, or the same raised panel docked inline. Nav inside, with collapsible sections and a current-page segment that glides between items; plan card and profile in a footer tray.",
       "dependencies": [
         "framer-motion",
         "lucide-react"
       ],
       "files": [
         {
-          "path": "components/ui/Sidebar.tsx",
+          "path": "components/ui/sidebar/Sidebar.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/sidebar/../primitives/Drawer.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/sidebar/../primitives/Nav.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/sidebar/../primitives/Tabs.tsx",
           "type": "registry:ui"
         }
       ]
@@ -1076,14 +1258,18 @@
       "name": "command-palette",
       "type": "registry:ui",
       "title": "Command Palette",
-      "description": "Tactile 3D skeuomorphic command palette modal (Cmd+K) featuring debossed search wells, raised tactile keycaps, clean monochrome styling, and smooth keyboard navigation.",
+      "description": "A ⌘K command palette on a native dialog: search set into a raised panel, results in a recessed tray, and a highlight that rises out of the tray and glides between rows.",
       "dependencies": [
         "framer-motion",
         "lucide-react"
       ],
       "files": [
         {
-          "path": "components/ui/CommandPalette.tsx",
+          "path": "components/ui/command-palette/CommandPalette.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/command-palette/../primitives/search.ts",
           "type": "registry:ui"
         }
       ]
@@ -1177,21 +1363,6 @@
       "files": [
         {
           "path": "components/ui/BentoGrid.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
-      "name": "toast",
-      "type": "registry:ui",
-      "title": "Toast",
-      "description": "A tactile beveled notification toast with a red dismiss control and reduced-motion-aware entrance and exit animation.",
-      "dependencies": [
-        "framer-motion"
-      ],
-      "files": [
-        {
-          "path": "components/ui/Toast.tsx",
           "type": "registry:ui"
         }
       ]

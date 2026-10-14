@@ -228,7 +228,7 @@ Status key: ✅ exists and matches · ⚠️ exists but drifts from §1 · ❌ m
 - **Drift:** cursor-parallax tilt, the white pulsing dot and the 0.88 scale entrance. All three should go: opacity + 4px slide, 120ms.
 - **A11y:** shows on keyboard focus too, not just hover.
 
-### Tabs — ❌
+### Tabs — ✅ `Tabs`, `TabsList`, `Tab`, `TabsPanel` (`primitives/Tabs.tsx`)
 - **List:** a `surface-well` track, `rounded-xl`, padding 4.
 - **Active tab:** a raised segment that slides between tabs (shared `layoutId`, `spring-control`). Inactive tabs are `text-tertiary` → hover `text-secondary`.
 - **Variant `underline`:** for page-level tabs, a 1.5px prismatic line under the active tab.
@@ -240,7 +240,7 @@ Status key: ✅ exists and matches · ⚠️ exists but drifts from §1 · ❌ m
   - The trigger lacks `aria-expanded` and `aria-controls`.
   - The `icon` field in the item data is never rendered.
 
-### Toast — ⚠️ `Toast`
+### Toast — ✅ `primitives/Toast.tsx` (`<Toaster />` + `toast()`)
 - **Material:** the stack, bevel and prismatic edge are right.
 - **Drift:** the filled red 40px close button is the loudest thing in the component.
 - **Fix:**
@@ -280,11 +280,11 @@ Status key: ✅ exists and matches · ⚠️ exists but drifts from §1 · ❌ m
 - **Material:** well surface in the shape of the content it replaces.
 - **Motion:** a slow highlight sweep (`rgba(255,255,255,0.04)`, 1.6s), disabled under reduced motion.
 
-### Spinner — ⚠️ loaders exist (`Loaders1`) but none is a plain inline spinner
+### Spinner — ✅ `primitives/Spinner.tsx`
 - **Shape:** a 16px ring at `rgba(255,255,255,0.15)` with a 90° arc in `text-primary`.
 - **Motion:** 0.8s linear rotation (the one place linear easing is right).
 
-### Table — ❌ (`docs/props-table-design.md` is the visual reference)
+### Table — ✅ `primitives/Table.tsx` (`docs/props-table-design.md` is the visual reference)
 - **Material:** sits in a raised card. Header row is a `surface-tray` band with `text-xs text-tertiary`.
 - **Rows:** h-11, separated by the Separator cut line. Row hover gets a `rgba(255,255,255,0.02)` fill.
 - **Data:** numbers right-aligned in tabular figures; mono only for code values.
@@ -299,19 +299,19 @@ Status key: ✅ exists and matches · ⚠️ exists but drifts from §1 · ❌ m
 
 | Component | Status | Material and notes |
 |---|---|---|
-| Segmented Control | ❌ | Same as Tabs list; the selection is a raised segment. Used for 2–5 options inline. |
+| Segmented Control | ✅ `primitives/SegmentedControl.tsx` | Same as Tabs list; the selection is a raised segment. Used for 2–5 options inline. |
 | Slider | ❌ | The track is a 6px well; the filled part is `rgba(255,255,255,0.5)`; the thumb is an 18px popout pearl. Value tooltip while dragging. |
-| Progress | ⚠️ `Meter` | A 6px well track with a popout fill. Indeterminate = a slow sweep. |
-| Drawer / Sheet | ⚠️ `Sidebar` | Dialog material anchored to an edge; `rounded-3xl` on the inner corners only. Slides 260ms `ease-out`. |
-| Combobox | ❌ | Input + Popover listbox with filtering. Shares rows with Select. |
+| Progress | ✅ `primitives/Progress.tsx` | A 6px well track with a popout fill. Indeterminate = a slow sweep. |
+| Drawer / Sheet | ✅ `primitives/Drawer.tsx` | Dialog material on the native `<dialog>`, floating 8px off the edge with all corners `rounded-3xl` (so the bevel and prismatic edge read). Slides 260ms `ease-out`, exits 180ms `ease-in`. `Nav` (`primitives/Nav.tsx`) supplies the navigation; `Sidebar` is built from both. |
+| Combobox | ✅ `primitives/Combobox.tsx` | Input + Popover listbox with filtering. Shares rows with Select. |
 | Command Palette | ⚠️ `CommandPalette` | Dialog + Combobox. Check against Dialog motion and the restraint rules. |
-| Breadcrumbs | ❌ | `text-tertiary` links, a `/` separator in `text-disabled`, the current page in `text-primary`. |
+| Breadcrumbs | ✅ `primitives/Breadcrumbs.tsx` | `text-tertiary` links, a `/` separator in `text-disabled`, the current page in `text-primary`. |
 | Pagination | ❌ | Ghost buttons; the current page is a raised square. |
 | Navbar | ⚠️ `NavBar1` | Floating raised bar, `rounded-2xl`, prismatic edge. |
 | Datepicker | ⚠️ `Datepicker` | Popover + grid; the selected day is popout, today has a 1px ring. |
 | OTP Input | ⚠️ `OTPInput` | A row of 48px wells; the active well gets the focus border; filled digits in `text-primary`. |
 | Empty State | ❌ | An icon in a 48px socket, title, one line of `text-secondary`, one action. No illustrations. |
-| File Upload | ❌ | A dashed `rgba(255,255,255,0.12)` well, `rounded-2xl`. On drag-over the border becomes `0.3` and the well lightens one step. |
+| File Upload | ✅ `primitives/FileUpload.tsx` | A dashed `rgba(255,255,255,0.12)` well, `rounded-2xl`. On drag-over the border becomes `0.3` and the well lightens one step. |
 | Stepper | ❌ | Steps are sockets; completed steps become popout pearls; connectors are Separator lines. |
 
 ---

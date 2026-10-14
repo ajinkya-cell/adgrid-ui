@@ -4,8 +4,7 @@ import { LayoutGroup } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { Navbar } from "@/components/site/Navbar";
 import { PageTransition } from "@/components/site/PageTransition";
-import { CommandPalette } from "@/components/presentation/CommandPalette";
-import { presentationEntries } from "@/components/presentation/presentation-registry";
+import { SiteSearch } from "@/components/site/SiteSearch";
 
 export function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -16,7 +15,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
       {!isIsolated && (
         <>
           <Navbar />
-          <CommandPalette entry={presentationEntries[0]!} mode="site" />
+          <SiteSearch />
         </>
       )}
       <div className="min-h-screen flex flex-col">

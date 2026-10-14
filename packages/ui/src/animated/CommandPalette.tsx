@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import { LayoutGroup, motion, useReducedMotion } from "framer-motion";
 import {
   Search,
   Command,
   ArrowUpRight,
-  CornerDownLeft,
   User,
   LayoutGrid,
   Copy,
@@ -18,8 +17,17 @@ import {
   Compass,
 } from "lucide-react";
 import { cn } from "../lib/utils";
+import { rankMatches } from "../primitives/search";
 
-// Custom High-Quality Brand SVG Icons
+// Dialog + Combobox in the primitives' material: a raised panel on a native <dialog>, the results
+// in a recessed tray, and the highlighted row rising out of the tray and gliding between rows.
+// The input keeps focus the whole time; the list is driven through aria-activedescendant.
+
+const EXIT_MS = 180;
+const PRISMATIC =
+  "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 25%, rgba(255,255,255,0.32) 50%, rgba(255,255,255,0.18) 75%, transparent 100%)";
+const SPRING = { type: "spring", stiffness: 500, damping: 40 } as const;
+
 const GithubIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
     <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
@@ -45,6 +53,10 @@ export interface CommandItem {
   description?: string;
   icon?: React.ReactNode;
   badge?: string;
+  /** Keys shown on the right, e.g. ["⌘", "G"]. Display only. */
+  shortcut?: string[];
+  /** Extra words the search matches but doesn't show. */
+  keywords?: string[];
   url?: string;
   isExternal?: boolean;
   onSelect?: () => void;
@@ -61,457 +73,569 @@ export interface CommandPaletteProps {
   placeholder?: string;
   /** If true, renders inline inside container instead of fixed screen overlay modal */
   inline?: boolean;
+  /** Handles internal urls, e.g. a client-side router push. Defaults to a full page load. */
+  onNavigate?: (url: string) => void;
   /** Custom class names */
   className?: string;
 }
 
-// Single Icon Right-Side Command Row Component
-function CommandRow({
-  item,
-  isSelected,
-  onClick,
-}: {
-  item: CommandItem;
-  isSelected: boolean;
-  onClick: () => void;
-}) {
-  const active = isSelected;
+const isExternalItem = (item: CommandItem) => Boolean(item.isExternal || item.url?.startsWith("http"));
 
+// ─── Small parts ────────────────────────────────────────────────────────────
+
+/** A tiny raised key. */
+function Kbd({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div
-      onClick={onClick}
-      style={
-        active
-          ? {
-              backgroundColor: "rgba(255, 255, 255, 0.055)",
-            }
-          : undefined
-      }
+    <kbd
       className={cn(
-        "relative flex items-center justify-between px-3.5 py-2.5 rounded-lg cursor-pointer select-none transition-colors duration-150 group",
-        active
-          ? "border border-white/[0.08] text-white"
-          : "border border-transparent text-neutral-300 hover:bg-white/[0.025] hover:text-white"
+        "inline-grid h-5 min-w-5 place-items-center rounded-md px-1.5 font-sans text-[11px] leading-none font-medium text-neutral-400",
+        "border border-white/[0.08] border-t-white/[0.12] bg-[linear-gradient(180deg,#202022_0%,#19191b_100%)]",
+        "shadow-[inset_0_1px_0_rgba(255,255,255,0.05),inset_0_-1px_0_rgba(0,0,0,0.4),0_1px_2px_rgba(0,0,0,0.4)]",
+        className
       )}
     >
-      {/* Icon, Label & Description */}
-      <div className="flex items-center gap-3 min-w-0">
-        <span className={cn("flex items-center justify-center shrink-0 [&>svg]:h-5 [&>svg]:w-5", active ? "text-neutral-100" : "text-neutral-500 group-hover:text-neutral-300")}>
-          {item.icon || <Terminal className="w-5 h-5" />}
-        </span>
+      {children}
+    </kbd>
+  );
+}
 
-        <div className="flex flex-col min-w-0">
-          <div className="flex items-center gap-2">
-            <span
-              className={cn(
-                "text-xs truncate",
-                active ? "text-white font-medium" : "text-neutral-200"
-              )}
-            >
-              {item.label}
-            </span>
-            {item.badge && (
-              <span
-                className={cn(
-                  "text-[9px] tracking-wider px-1.5 py-0.5 rounded uppercase font-semibold shrink-0",
-                  active
-                    ? "bg-white/20 text-white border border-white/30"
-                    : "bg-white/10 text-neutral-400 border border-white/10"
-                )}
-              >
-                {item.badge}
-              </span>
-            )}
-          </div>
-          {item.description && (
-            <span
-              className={cn(
-                "text-[10px] truncate",
-                active ? "text-neutral-300" : "text-neutral-500"
-              )}
-            >
-              {item.description}
-            </span>
+function CommandRow({
+  item,
+  optionId,
+  active,
+  highlightId,
+  reduceMotion,
+  onPoint,
+  onChoose,
+}: {
+  item: CommandItem;
+  optionId: string;
+  active: boolean;
+  highlightId: string;
+  reduceMotion: boolean;
+  onPoint: () => void;
+  onChoose: () => void;
+}) {
+  return (
+    <div
+      id={optionId}
+      role="option"
+      aria-selected={active}
+      data-active={active ? "" : undefined}
+      onPointerMove={active ? undefined : onPoint}
+      // Keep focus in the search field.
+      onMouseDown={(event) => event.preventDefault()}
+      onClick={onChoose}
+      className="group/row relative flex h-12 cursor-pointer items-center gap-3 rounded-xl px-2.5 select-none"
+    >
+      {/* The highlight: one raised segment that glides from row to row. */}
+      {active && (
+        <motion.span
+          aria-hidden="true"
+          layoutId={highlightId}
+          transition={reduceMotion ? { duration: 0 } : SPRING}
+          className={cn(
+            "absolute inset-0 rounded-xl border border-white/[0.07] border-t-white/[0.13]",
+            "bg-[linear-gradient(180deg,#1f1f21_0%,#18181a_100%)]",
+            "shadow-[inset_0_1px_0_rgba(255,255,255,0.06),inset_0_-1px_0_rgba(0,0,0,0.5),0_6px_14px_-6px_rgba(0,0,0,0.8),0_1px_3px_rgba(0,0,0,0.5)]"
           )}
-        </div>
-      </div>
+        />
+      )}
 
-      {/* Right Side: Exactly ONE Single Action Icon */}
-      <div className="shrink-0 ml-3 flex items-center justify-center">
-        {item.isExternal || item.url?.startsWith("http") ? (
-          <ArrowUpRight
-            className={cn(
-              "w-4 h-4 transition-colors",
-              active ? "text-neutral-200" : "text-neutral-600 group-hover:text-neutral-400"
-            )}
-          />
-        ) : (
-          <CornerDownLeft
-            className={cn(
-              "w-4 h-4 transition-colors",
-              active ? "text-neutral-200" : "text-neutral-600 group-hover:text-neutral-400"
-            )}
-          />
+      <span
+        aria-hidden="true"
+        className={cn(
+          "relative grid size-8 shrink-0 place-items-center rounded-lg border border-white/[0.06] bg-[#070707]",
+          "shadow-[inset_0_1.5px_3px_rgba(0,0,0,0.85),0_1px_0_rgba(255,255,255,0.05)]",
+          "transition-colors duration-150 [&>svg]:size-4",
+          active ? "text-neutral-100" : "text-neutral-500"
         )}
-      </div>
+      >
+        {item.icon || <Terminal />}
+      </span>
+
+      <span className="relative flex min-w-0 flex-1 items-baseline gap-2.5">
+        <span
+          className={cn(
+            "shrink-0 truncate text-sm font-medium tracking-tight transition-colors duration-150",
+            active ? "text-neutral-50" : "text-neutral-300"
+          )}
+        >
+          {item.label}
+        </span>
+        {item.description && (
+          <span
+            className={cn(
+              "min-w-0 truncate text-[13px] transition-colors duration-150",
+              active ? "text-neutral-400" : "text-neutral-500"
+            )}
+          >
+            {item.description}
+          </span>
+        )}
+      </span>
+
+      <span className="relative flex shrink-0 items-center gap-2">
+        {item.badge && (
+          <span className="inline-flex h-5 items-center rounded-md border border-white/[0.06] bg-[#070707] px-1.5 text-[11px] font-medium text-neutral-400 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]">
+            {item.badge}
+          </span>
+        )}
+        {item.shortcut ? (
+          <span className="flex items-center gap-1">
+            {item.shortcut.map((key) => (
+              <Kbd key={key}>{key}</Kbd>
+            ))}
+          </span>
+        ) : isExternalItem(item) ? (
+          <ArrowUpRight
+            aria-hidden="true"
+            className={cn("size-4 transition-colors duration-150", active ? "text-neutral-300" : "text-neutral-600")}
+          />
+        ) : null}
+      </span>
     </div>
   );
 }
 
-// Complete Catalog of Items (Connect, Actions, & ALL AdGrid Components)
-const defaultCommandItems: CommandItem[] = [
-  // 1. CONNECT SECTION
-  {
-    id: "conn-github",
-    label: "GitHub Profile",
-    category: "Connect",
-    description: "github.com/ajinkya-cell",
-    url: "https://github.com/ajinkya-cell",
-    isExternal: true,
-    icon: <GithubIcon className="w-5 h-5" />,
-    badge: "Official",
-  },
-  {
-    id: "conn-linkedin",
-    label: "LinkedIn Network",
-    category: "Connect",
-    description: "linkedin.com/in/ajinkya",
-    url: "https://linkedin.com",
-    isExternal: true,
-    icon: <LinkedinIcon className="w-5 h-5" />,
-  },
-  {
-    id: "conn-x",
-    label: "X (Twitter)",
-    category: "Connect",
-    description: "x.com / twitter updates",
-    url: "https://x.com",
-    isExternal: true,
-    icon: <XIcon className="w-5 h-5" />,
-  },
+// ─── Default content ────────────────────────────────────────────────────────
 
-  // 2. QUICK ACTIONS SECTION
-  {
-    id: "act-portfolio",
-    label: "Visit Portfolio",
-    category: "Quick Actions",
-    description: "ajinkya.org personal portfolio",
-    url: "https://ajinkya.org",
-    isExternal: true,
-    icon: <User className="w-5 h-5" />,
-  },
+const defaultCommandItems: CommandItem[] = [
   {
     id: "act-gallery",
-    label: "Browse All Components",
-    category: "Quick Actions",
-    description: "Explore complete AdGrid UI component library",
+    label: "Browse components",
+    category: "Quick actions",
+    description: "The full AdGrid UI library",
     url: "/gallery",
-    icon: <LayoutGrid className="w-5 h-5" />,
+    icon: <LayoutGrid />,
+    shortcut: ["G", "C"],
   },
   {
     id: "act-copy-cli",
-    label: "Copy CLI Install Command",
-    category: "Quick Actions",
+    label: "Copy install command",
+    category: "Quick actions",
     description: "npx @adgrid-ui/cli add",
-    icon: <Copy className="w-5 h-5" />,
+    icon: <Copy />,
+    keywords: ["cli", "terminal", "npm"],
     onSelect: () => {
       if (typeof navigator !== "undefined" && navigator.clipboard) {
         navigator.clipboard.writeText("npx @adgrid-ui/cli add");
       }
     },
   },
-
-  // 3. ALL COMPONENTS SECTION (Full Catalog)
+  {
+    id: "act-portfolio",
+    label: "Visit portfolio",
+    category: "Quick actions",
+    description: "ajinkya.org",
+    url: "https://ajinkya.org",
+    isExternal: true,
+    icon: <User />,
+  },
   {
     id: "comp-image-parallax",
     label: "Image Parallax",
     category: "Components",
-    description: "Smooth mouse-move & scroll-driven parallax perspective image",
+    description: "Mouse and scroll driven depth",
     url: "/present/animated/image-parallax",
-    icon: <Compass className="w-5 h-5" />,
+    icon: <Compass />,
     badge: "Popular",
   },
   {
     id: "comp-infinite-scroll",
     label: "Infinite Scroll",
     category: "Components",
-    description: "Lenis & GSAP powered smooth parallax scroll engine",
+    description: "Lenis and GSAP parallax scroll",
     url: "/present/animated/infinite-scroll",
-    icon: <Maximize2 className="w-5 h-5" />,
+    icon: <Maximize2 />,
   },
   {
     id: "comp-image-reveal",
     label: "Image Reveal",
     category: "Components",
-    description: "Diagonal stripe mask & sliding clip-path image reveal",
+    description: "Striped clip-path reveal",
     url: "/present/animated/image-reveal",
-    icon: <Sparkles className="w-5 h-5" />,
+    icon: <Sparkles />,
   },
   {
     id: "comp-sidebar",
     label: "Sidebar",
     category: "Components",
-    description: "Skeuomorphic 3D tactile expandable sidebar navigation",
+    description: "Tactile expandable navigation",
     url: "/present/animated/sidebar",
-    icon: <Layers className="w-5 h-5" />,
-    badge: "3D",
+    icon: <Layers />,
   },
   {
     id: "comp-command-palette",
     label: "Command Palette",
     category: "Components",
-    description: "Tactile Cmd+K quick-search vault modal",
+    description: "This one",
     url: "/present/animated/command-palette",
-    icon: <Command className="w-5 h-5" />,
+    icon: <Command />,
   },
-
   {
     id: "comp-pneumatic-button",
-    label: "Pneumatic Press Button",
+    label: "Pneumatic Button",
     category: "Components",
-    description: "Skeuomorphic spring-loaded tactile push button",
+    description: "Spring-loaded push button",
     url: "/present/animated/pneumatic-button",
-    icon: <Zap className="w-5 h-5" />,
+    icon: <Zap />,
   },
   {
-    id: "comp-neon-card",
-    label: "Neon Glow Card",
-    category: "Components",
-    description: "Vibrant high-contrast glassmorphism card",
-    url: "/present/animated/neon-card",
-    icon: <Sparkles className="w-5 h-5" />,
+    id: "conn-github",
+    label: "GitHub",
+    category: "Connect",
+    description: "github.com/ajinkya-cell",
+    url: "https://github.com/ajinkya-cell",
+    isExternal: true,
+    icon: <GithubIcon />,
+  },
+  {
+    id: "conn-linkedin",
+    label: "LinkedIn",
+    category: "Connect",
+    description: "linkedin.com/in/ajinkya",
+    url: "https://linkedin.com",
+    isExternal: true,
+    icon: <LinkedinIcon />,
+  },
+  {
+    id: "conn-x",
+    label: "X",
+    category: "Connect",
+    description: "x.com",
+    url: "https://x.com",
+    isExternal: true,
+    icon: <XIcon />,
+    keywords: ["twitter"],
   },
 ];
+
+// ─── Search ─────────────────────────────────────────────────────────────────
+
+/** Every word must match somewhere; label hits rank above description hits. Groups keep their first-seen order. */
+function search(items: CommandItem[], query: string) {
+  const results = rankMatches(
+    items,
+    query,
+    (item) => item.label,
+    (item) => [item.label, item.category, item.description, item.url, ...(item.keywords ?? [])].join(" ")
+  );
+
+  const groups = new Map<string, CommandItem[]>();
+  for (const item of results) {
+    const key = item.category || "General";
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key)!.push(item);
+  }
+  // Keyboard order follows what's on screen, group by group.
+  const ordered = Array.from(groups.values()).flat();
+  return { groups: Array.from(groups.entries()), ordered };
+}
+
+// ─── Palette ────────────────────────────────────────────────────────────────
 
 export function CommandPalette({
   isOpen: controlledIsOpen,
   onClose: controlledOnClose,
   items = defaultCommandItems,
-  placeholder = "Search components, social links, or actions...",
+  placeholder = "Search components, actions and links…",
   inline = false,
+  onNavigate,
   className,
 }: CommandPaletteProps) {
-  const shouldReduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotion() ?? false;
   const [uncontrolledIsOpen, setUncontrolledIsOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [query, setQuery] = useState("");
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [state, setState] = useState<"open" | "closed">("closed");
+
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+  const scrollOnChange = useRef(false);
+
+  const baseId = useId();
+  const listId = `${baseId}-list`;
+  const highlightId = `${baseId}-highlight`;
+  const optionId = (id: string) => `${baseId}-option-${id}`;
 
   const isControlled = controlledIsOpen !== undefined;
-  const open = isControlled ? controlledIsOpen : uncontrolledIsOpen;
+  const open = inline || (isControlled ? controlledIsOpen : uncontrolledIsOpen);
 
   const handleClose = useCallback(() => {
-    if (controlledOnClose) {
-      controlledOnClose();
-    }
-    if (!isControlled) {
-      setUncontrolledIsOpen(false);
-    }
+    controlledOnClose?.();
+    if (!isControlled) setUncontrolledIsOpen(false);
   }, [controlledOnClose, isControlled]);
+  const closeRef = useRef(handleClose);
+  closeRef.current = handleClose;
 
-  const handleOpen = useCallback(() => {
-    if (!isControlled) {
-      setUncontrolledIsOpen(true);
-    }
-  }, [isControlled]);
-
-  // Global Cmd+K Listener
+  // ⌘K / Ctrl+K toggles from anywhere. When controlled, the owner binds its own shortcut.
   useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
-        if (open) {
-          handleClose();
-        } else {
-          handleOpen();
-        }
+    if (inline || isControlled) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        if (open) handleClose();
+        else setUncontrolledIsOpen(true);
       }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open, handleClose, handleOpen]);
+  }, [inline, isControlled, open, handleClose]);
 
-  // Robust Multi-word Token Search Filtering
-  const filteredItems = useMemo(() => {
-    const raw = searchQuery.trim().toLowerCase();
-    if (!raw) return items;
-
-    const tokens = raw.split(/\s+/);
-    return items.filter((item) => {
-      const searchTarget = `${item.label} ${item.category || ""} ${item.description || ""} ${item.url || ""}`.toLowerCase();
-      return tokens.every((token) => searchTarget.includes(token));
-    });
-  }, [items, searchQuery]);
+  // Same lifecycle as the Dialog primitive: showModal, then animate in; animate out, then close.
+  useEffect(() => {
+    if (inline) return;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (open) {
+      if (!dialog.open) {
+        dialog.showModal();
+        inputRef.current?.focus();
+      }
+      const frame = requestAnimationFrame(() => setState("open"));
+      return () => cancelAnimationFrame(frame);
+    }
+    setState("closed");
+    if (!dialog.open) return;
+    const timer = window.setTimeout(() => {
+      dialog.close();
+      setQuery("");
+      setActiveIndex(0);
+    }, EXIT_MS);
+    return () => window.clearTimeout(timer);
+  }, [inline, open]);
 
   useEffect(() => {
-    setSelectedIndex(-1);
-  }, [searchQuery]);
+    if (inline || !open) return;
+    const root = document.documentElement;
+    const previous = root.style.overflow;
+    root.style.overflow = "hidden";
+    return () => {
+      root.style.overflow = previous;
+    };
+  }, [inline, open]);
 
-  const handleSelect = (item: CommandItem) => {
-    if (item.onSelect) {
-      item.onSelect();
-    }
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (inline || !dialog) return;
+    const onCancel = (event: Event) => {
+      event.preventDefault();
+      closeRef.current();
+    };
+    dialog.addEventListener("cancel", onCancel);
+    return () => dialog.removeEventListener("cancel", onCancel);
+  }, [inline]);
+
+  const { groups, ordered } = useMemo(() => search(items, query), [items, query]);
+  const active = ordered[Math.min(activeIndex, ordered.length - 1)];
+
+  useEffect(() => {
+    setActiveIndex(0);
+    listRef.current?.scrollTo({ top: 0 });
+  }, [query]);
+
+  // Keyboard moves bring the row into view; pointer moves never scroll.
+  useEffect(() => {
+    if (!scrollOnChange.current || !active) return;
+    scrollOnChange.current = false;
+    document.getElementById(optionId(active.id))?.scrollIntoView({ block: "nearest" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active]);
+
+  const choose = (item: CommandItem) => {
+    item.onSelect?.();
     if (item.url) {
       if (item.url.startsWith("http://") || item.url.startsWith("https://")) {
         window.open(item.url, "_blank", "noopener,noreferrer");
+      } else if (onNavigate) {
+        onNavigate(item.url);
       } else {
         window.location.href = item.url;
       }
     }
-    handleClose();
+    if (!inline) handleClose();
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setSelectedIndex((prev) => {
-        if (prev === -1) return 0;
-        return prev < filteredItems.length - 1 ? prev + 1 : 0;
-      });
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setSelectedIndex((prev) => {
-        if (prev === -1) return filteredItems.length - 1;
-        return prev > 0 ? prev - 1 : filteredItems.length - 1;
-      });
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      if (selectedIndex >= 0 && filteredItems[selectedIndex]) {
-        handleSelect(filteredItems[selectedIndex]);
-      }
-    } else if (e.key === "Escape" && !inline) {
-      e.preventDefault();
-      handleClose();
+  const move = (next: number) => {
+    if (!ordered.length) return;
+    scrollOnChange.current = true;
+    setActiveIndex((next + ordered.length) % ordered.length);
+  };
+
+  const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const current = Math.min(activeIndex, ordered.length - 1);
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      move(current + 1);
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      move(current - 1);
+    } else if (event.key === "Home" && event.ctrlKey) {
+      event.preventDefault();
+      move(0);
+    } else if (event.key === "End" && event.ctrlKey) {
+      event.preventDefault();
+      move(ordered.length - 1);
+    } else if (event.key === "Enter" && active) {
+      event.preventDefault();
+      choose(active);
     }
   };
 
-  // Group items by category (Connect, Quick Actions, Components, etc.)
-  const groupedItems = useMemo(() => {
-    const map = new Map<string, CommandItem[]>();
-    filteredItems.forEach((item) => {
-      const cat = item.category || "General";
-      if (!map.has(cat)) map.set(cat, []);
-      map.get(cat)!.push(item);
-    });
-    return map;
-  }, [filteredItems]);
+  const actionLabel = !active ? null : isExternalItem(active) ? "Open link" : active.url ? "Go to page" : "Run command";
 
-  const paletteContent = (
-    <motion.div
-      key="skeuo-command-palette"
-      initial={inline || shouldReduceMotion ? false : { scale: 0.98, opacity: 0, y: -8 }}
-      animate={{ scale: 1, opacity: 1, y: 0 }}
-      exit={inline || shouldReduceMotion ? undefined : { scale: 0.98, opacity: 0, y: -6 }}
-      transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 350, damping: 28 }}
-      onClick={(e) => e.stopPropagation()}
-      onKeyDown={handleKeyDown}
-      style={{
-        backgroundColor: "#171717",
-        boxShadow:
-          "inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.45), 0 4px 6px -1px rgba(0, 0, 0, 0.8), 0 2px 4px -1px rgba(0, 0, 0, 0.9), 0 30px 80px rgba(0, 0, 0, 0.75)",
-        fontFamily: "Inter, var(--font-inter-loaded, sans-serif)",
-      }}
+  const panel = (
+    <div
+      data-state={inline ? "open" : state}
       className={cn(
-        "relative w-full max-w-xl rounded-2xl border-t border-white/[0.22] border-x border-white/[0.02] border-b border-white/10 overflow-hidden p-4 select-none",
-        inline ? "mx-auto" : "",
+        "relative flex w-full max-w-[640px] flex-col overflow-hidden rounded-3xl text-neutral-100",
+        "border border-white/[0.08] border-t-white/[0.16] bg-[linear-gradient(180deg,#1b1b1d_0%,#151516_100%)]",
+        "shadow-[inset_0_1.5px_0_0_rgba(255,255,255,0.08),inset_0_-1.5px_0_0_rgba(0,0,0,0.45),0_40px_100px_-20px_rgba(0,0,0,0.9),0_8px_24px_-6px_rgba(0,0,0,0.7)]",
+        !inline && [
+          "max-h-[calc(100dvh-24vh)]",
+          // Exit (default): quick and accelerating. Entrance: slower and settling.
+          "-translate-y-2 scale-[0.98] opacity-0 blur-[4px]",
+          "transition-[opacity,translate,scale,filter] duration-[180ms] ease-[cubic-bezier(0.4,0,1,1)]",
+          "data-[state=open]:translate-y-0 data-[state=open]:scale-100 data-[state=open]:opacity-100 data-[state=open]:blur-[0px]",
+          "data-[state=open]:duration-[260ms] data-[state=open]:ease-[cubic-bezier(0.32,0.72,0,1)]",
+          "motion-reduce:translate-y-0 motion-reduce:scale-100 motion-reduce:blur-[0px]",
+        ],
+        inline && "mx-auto",
         className
       )}
     >
-      {/* Header Search Input Well */}
-      <div
-        style={{
-          backgroundColor: "#050505",
-          boxShadow: "inset 0 1.5px 3.5px rgba(0, 0, 0, 0.85)",
-        }}
-        className="relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl border border-white/[0.08]"
-      >
-        <Search className="w-5 h-5 text-neutral-400 shrink-0" />
-        <input
-          type="text"
-          autoFocus
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder={placeholder}
-          className="w-full bg-transparent text-xs font-medium text-neutral-100 placeholder-neutral-500 focus:outline-none"
-        />
-        <span className="text-[10px] font-mono font-medium text-neutral-500 uppercase shrink-0 select-none">
-          ESC
-        </span>
-      </div>
+      <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[1.5px]" style={{ background: PRISMATIC }} />
 
-      {/* Command Items List / Debossed Recessed Tray */}
-      <div
-        style={{
-          backgroundColor: "#070707",
-          boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.85), 0 1px 0 rgba(255, 255, 255, 0.05)",
-        }}
-        className="mt-3 p-2 rounded-xl border border-white/[0.05] max-h-[360px] overflow-y-auto space-y-3"
-      >
-        {filteredItems.length === 0 ? (
-          <div className="py-10 text-center space-y-2">
-            <Command className="w-8 h-8 text-neutral-600 mx-auto" />
-            <p className="text-xs text-neutral-500 uppercase tracking-wider">
-              No matching results found
-            </p>
-          </div>
+      {/* Search: set straight into the panel, no box of its own. */}
+      <div className="flex h-[60px] shrink-0 items-center gap-3 px-5">
+        <Search aria-hidden="true" className="size-[18px] shrink-0 text-neutral-500" />
+        <input
+          ref={inputRef}
+          type="text"
+          role="combobox"
+          aria-expanded="true"
+          aria-controls={listId}
+          aria-autocomplete="list"
+          aria-activedescendant={active ? optionId(active.id) : undefined}
+          aria-label="Search commands"
+          autoComplete="off"
+          spellCheck={false}
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          onKeyDown={onKeyDown}
+          placeholder={placeholder}
+          className="h-full min-w-0 flex-1 bg-transparent text-[15px] tracking-tight text-neutral-100 outline-none placeholder:text-neutral-500"
+        />
+        {inline ? (
+          <span className="flex shrink-0 items-center gap-1">
+            <Kbd>⌘</Kbd>
+            <Kbd>K</Kbd>
+          </span>
         ) : (
-          Array.from(groupedItems.entries()).map(([category, catItems]) => (
-            <div key={category} className="space-y-1">
-              <div className="px-3 pt-1 pb-1 text-[10px] tracking-widest text-neutral-500 uppercase font-semibold flex items-center justify-between">
-                <span>{category}</span>
-                <span className="text-[9px] text-neutral-600">{catItems.length}</span>
-              </div>
-              <div className="space-y-1">
-                {catItems.map((item) => {
-                  const globalIdx = filteredItems.indexOf(item);
-                  const isSelected = globalIdx === selectedIndex;
-                  return (
-                    <CommandRow
-                      key={item.id}
-                      item={item}
-                      isSelected={isSelected}
-                      onClick={() => handleSelect(item)}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-          ))
+          <button
+            type="button"
+            onClick={handleClose}
+            className="shrink-0 cursor-pointer rounded-md outline-white/40 outline-offset-2 focus-visible:outline focus-visible:outline-1"
+            aria-label="Close"
+          >
+            <Kbd className="transition-colors duration-150 hover:text-neutral-200">Esc</Kbd>
+          </button>
         )}
       </div>
 
-      {/* Footer Instructions Bar */}
-      <div className="flex items-center gap-4 pt-3 px-1 text-[11px] font-mono text-neutral-500 border-t border-white/5 mt-3 select-none">
-        <span className="flex items-center gap-1.5">
-          <span className="text-neutral-400 font-bold">↑↓</span>
+      {/* Results sit in a tray cut into the panel. */}
+      <div
+        ref={listRef}
+        id={listId}
+        role="listbox"
+        aria-label="Commands"
+        className={cn(
+          "mx-2 min-h-0 overflow-y-auto overscroll-contain rounded-2xl border border-black/50 bg-[#0c0c0d] p-1",
+          "shadow-[inset_0_2px_6px_rgba(0,0,0,0.7),0_1px_0_rgba(255,255,255,0.05)]",
+          "max-h-[min(400px,52dvh)] [scrollbar-color:#2a2a2c_transparent] [scrollbar-width:thin]"
+        )}
+      >
+        {ordered.length === 0 ? (
+          <div className="flex flex-col items-center gap-3 px-6 py-12 text-center">
+            <span
+              aria-hidden="true"
+              className="grid size-12 place-items-center rounded-full border border-white/[0.06] bg-[#070707] text-neutral-500 shadow-[inset_0_1.5px_3px_rgba(0,0,0,0.85),0_1px_0_rgba(255,255,255,0.05)]"
+            >
+              <Search className="size-5" />
+            </span>
+            <div className="flex flex-col gap-1">
+              <p className="text-sm font-medium tracking-tight text-neutral-100">No results for “{query.trim()}”</p>
+              <p className="text-[13px] leading-relaxed text-neutral-500">Try a component name, an action or a link.</p>
+            </div>
+          </div>
+        ) : (
+          <LayoutGroup id={baseId}>
+            {groups.map(([category, groupItems], groupIndex) => (
+              <div key={category} role="group" aria-labelledby={`${baseId}-group-${groupIndex}`}>
+                <div
+                  id={`${baseId}-group-${groupIndex}`}
+                  className={cn("px-3 pb-1.5 text-xs font-medium text-neutral-500", groupIndex === 0 ? "pt-2" : "pt-3.5")}
+                >
+                  {category}
+                </div>
+                {groupItems.map((item) => (
+                  <CommandRow
+                    key={item.id}
+                    item={item}
+                    optionId={optionId(item.id)}
+                    active={item === active}
+                    highlightId={highlightId}
+                    reduceMotion={reduceMotion}
+                    onPoint={() => setActiveIndex(ordered.indexOf(item))}
+                    onChoose={() => choose(item)}
+                  />
+                ))}
+              </div>
+            ))}
+          </LayoutGroup>
+        )}
+      </div>
+
+      {/* Footer: how to drive it, and what Enter will do right now. */}
+      <div className="flex h-12 shrink-0 items-center justify-between gap-4 px-5 text-xs text-neutral-500">
+        <span className="flex items-center gap-2">
+          <span className="flex items-center gap-1">
+            <Kbd>↑</Kbd>
+            <Kbd>↓</Kbd>
+          </span>
           Navigate
         </span>
-        <span className="flex items-center gap-1.5">
-          <span className="text-neutral-400 font-bold">↵</span>
-          Select
-        </span>
+        {actionLabel && (
+          <span className="flex items-center gap-2">
+            {actionLabel}
+            <Kbd>↵</Kbd>
+          </span>
+        )}
       </div>
-    </motion.div>
+    </div>
   );
 
-  if (inline) {
-    return paletteContent;
-  }
+  if (inline) return panel;
 
   return (
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
-          onClick={handleClose}
-          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 cursor-default select-none"
-        >
-          {paletteContent}
-        </motion.div>
+    <dialog
+      ref={dialogRef}
+      aria-label="Command palette"
+      data-state={state}
+      onClick={(event) => {
+        if (event.target === event.currentTarget) handleClose();
+      }}
+      className={cn(
+        "group/palette mx-auto mt-[12vh] mb-auto h-fit max-h-none w-[calc(100vw-32px)] max-w-[640px] overflow-visible border-0 bg-transparent p-0 outline-none",
+        "backdrop:bg-black/60 backdrop:opacity-0 backdrop:backdrop-blur-[3px]",
+        "backdrop:transition-opacity backdrop:duration-[180ms]",
+        "data-[state=open]:backdrop:opacity-100 data-[state=open]:backdrop:duration-[260ms]"
       )}
-    </AnimatePresence>
+    >
+      {panel}
+    </dialog>
   );
 }
 
