@@ -16,7 +16,7 @@ export const PRESENTATION_GROUPS: { id: string; label: string; slugs: string[] }
   {
     id: "feedback",
     label: "Feedback & Overlays",
-    slugs: ["toast", "progress", "spinner", "meter", "tooltip", "popover", "modal", "dialog", "drawer", "command-palette"],
+    slugs: ["toast", "progress", "spinner", "meter", "gauge", "tooltip", "popover", "modal", "dialog", "drawer", "command-palette"],
   },
   {
     id: "navigation",
@@ -31,7 +31,7 @@ export const PRESENTATION_GROUPS: { id: string; label: string; slugs: string[] }
   {
     id: "cards",
     label: "Cards",
-    slugs: ["simple-card", "cards", "sticker-card", "developer-id-card", "now-playing-card", "breathing-scale-card", "expand-on-hover", "gravity-card-stack", "stacked-cards", "stacked-card-fan"],
+    slugs: ["simple-card", "cards", "sticker-card", "developer-id-card", "now-playing-card", "breathing-scale-card", "expand-on-hover", "gravity-card-stack", "stacked-cards", "stacked-card-fan", "polaroid-develop"],
   },
   {
     id: "text",
@@ -51,7 +51,7 @@ export const PRESENTATION_GROUPS: { id: string; label: string; slugs: string[] }
   {
     id: "pages",
     label: "Pages",
-    slugs: ["premium-hero", "hero", "forgeui-landing", "rays-landing"],
+    slugs: ["premium-hero", "hero", "forgeui-landing", "rays-landing", "chalkboard-404"],
   },
 ];
 

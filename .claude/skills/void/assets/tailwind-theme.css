@@ -1,0 +1,66 @@
+/* adgrid-ui tokens as Tailwind v4 theme utilities. Import after tokens.css and tailwindcss:
+ *
+ *   @import "tailwindcss";
+ *   @import "./tokens.css";
+ *   @import "./tailwind-theme.css";
+ *
+ * Gives bg-surface-well, text-fg-secondary, shadow-raised, rounded-v-lg, ease-v-out and so on, so
+ * revamped markup reads as tokens instead of long arbitrary values.
+ */
+
+@theme inline {
+  --color-page: var(--v-page);
+  --color-surface-tray: var(--v-surface-tray);
+  --color-surface-well: var(--v-surface-well);
+  --color-edge: var(--v-border);
+  --color-edge-hover: var(--v-border-hover);
+  --color-edge-lit: var(--v-border-top-lit);
+
+  --color-fg-primary: var(--v-text-primary);
+  --color-fg-secondary: var(--v-text-secondary);
+  --color-fg-tertiary: var(--v-text-tertiary);
+  --color-fg-disabled: var(--v-text-disabled);
+  --color-fg-on-popout: var(--v-text-on-popout);
+
+  --color-danger: var(--v-danger);
+  --color-success: var(--v-success);
+  --color-warning: var(--v-warning);
+
+  --shadow-raised: var(--v-shadow-raised);
+  --shadow-raised-hover: var(--v-shadow-raised-hover);
+  --shadow-pressed: var(--v-shadow-pressed);
+  --shadow-overlay: var(--v-shadow-overlay);
+  --shadow-well: var(--v-shadow-well);
+  --shadow-popout: var(--v-shadow-popout);
+
+  --radius-v-xs: var(--v-radius-xs);
+  --radius-v-sm: var(--v-radius-sm);
+  --radius-v-md: var(--v-radius-md);
+  --radius-v-lg: var(--v-radius-lg);
+  --radius-v-xl: var(--v-radius-xl);
+
+  --ease-v-out: var(--v-ease-out);
+  --ease-v-in: var(--v-ease-in);
+}
+
+/* Gradient surfaces can't be theme colours, so they get utilities of their own. */
+@utility bg-surface-raised {
+  background: var(--v-surface-raised);
+}
+@utility bg-surface-raised-hover {
+  background: var(--v-surface-raised-hover);
+}
+@utility bg-surface-popout {
+  background: var(--v-surface-popout);
+}
+@utility prismatic {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1.5px;
+    background: var(--v-prismatic);
+    pointer-events: none;
+  }
+}

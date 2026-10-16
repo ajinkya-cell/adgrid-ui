@@ -1,0 +1,154 @@
+/* void-tokens — adgrid-ui design tokens.
+ * The canonical values from primitives.md §2, as CSS variables plus a few material classes for
+ * sites that aren't React + Tailwind. Copy this file into the target project once, import it at
+ * the app root, and build everything else from it. Don't add values here per project: a new value
+ * means the system is missing something (see SKILL.md › Missing components).
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* Page */
+  --v-page: #050505;
+
+  /* Surfaces */
+  --v-surface-raised: linear-gradient(180deg, #1b1b1d 0%, #151516 100%);
+  --v-surface-raised-hover: linear-gradient(180deg, #1f1f21 0%, #18181a 100%);
+  --v-surface-tray: #0c0c0d;
+  --v-surface-well: #070707;
+  --v-surface-popout: linear-gradient(180deg, #f5f5f5 0%, #d9d9d9 100%);
+  --v-overlay: rgba(0, 0, 0, 0.62);
+  --v-overlay-blur: 3px;
+
+  /* Edges */
+  --v-border: rgba(255, 255, 255, 0.08);
+  --v-border-hover: rgba(255, 255, 255, 0.13);
+  --v-border-top-lit: rgba(255, 255, 255, 0.16);
+  --v-border-focus: rgba(255, 255, 255, 0.18);
+  --v-border-popout: rgba(255, 255, 255, 0.4);
+  --v-prismatic: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.18) 25%, rgba(255, 255, 255, 0.32) 50%, rgba(255, 255, 255, 0.18) 75%, transparent 100%);
+  --v-cut-line: rgba(255, 255, 255, 0.06);
+
+  /* Shadows */
+  --v-shadow-raised: inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1px 0 0 rgba(0, 0, 0, 0.5), 0 14px 30px -10px rgba(0, 0, 0, 0.5), 0 1px 4px -1px rgba(0, 0, 0, 0.35);
+  --v-shadow-raised-hover: inset 0 1.5px 0 0 rgba(255, 255, 255, 0.12), inset 0 -1px 0 0 rgba(0, 0, 0, 0.6), 0 20px 40px -12px rgba(0, 0, 0, 0.7), 0 2px 8px -2px rgba(0, 0, 0, 0.5);
+  --v-shadow-pressed: inset 0 3px 8px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  --v-shadow-overlay: inset 0 1.5px 0 0 rgba(255, 255, 255, 0.08), inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.45), 0 40px 100px -20px rgba(0, 0, 0, 0.9), 0 8px 24px -6px rgba(0, 0, 0, 0.7);
+  --v-shadow-well: inset 0 1.5px 3px rgba(0, 0, 0, 0.85), 0 1px 0 rgba(255, 255, 255, 0.05);
+  --v-shadow-popout: inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 0 rgba(0, 0, 0, 0.18), 0 1px 2px rgba(0, 0, 0, 0.6), 0 4px 10px -2px rgba(0, 0, 0, 0.5);
+
+  /* Text (Tailwind neutral-100/400/500/600/950) */
+  --v-text-primary: #f5f5f5;
+  --v-text-secondary: #a3a3a3;
+  --v-text-tertiary: #737373;
+  --v-text-disabled: #525252;
+  --v-text-on-popout: #0a0a0a;
+
+  /* Status: text, a 6px dot, or an edge at 40%. Never a fill above 10%. */
+  --v-danger: rgb(229 115 115);
+  --v-success: rgb(126 190 152);
+  --v-warning: rgb(214 178 106);
+
+  /* Radius */
+  --v-radius-xs: 6px;
+  --v-radius-sm: 8px;
+  --v-radius-md: 12px;
+  --v-radius-lg: 16px;
+  --v-radius-xl: 24px;
+
+  /* Motion */
+  --v-ease-out: cubic-bezier(0.32, 0.72, 0, 1);
+  --v-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --v-duration-micro: 150ms;
+  --v-duration-control: 200ms;
+  --v-duration-panel-in: 260ms;
+  --v-duration-panel-out: 180ms;
+}
+
+/* ── Materials ─────────────────────────────────────────────────────────────
+ * One class per tier. Pick by what the thing is: something that floats is raised, something that
+ * holds a value is a well, the selected or primary thing is popout, a content area inside a
+ * raised surface is a tray. Inner is always darker than outer.
+ */
+
+.v-raised {
+  position: relative;
+  background: var(--v-surface-raised);
+  border: 1px solid var(--v-border);
+  box-shadow: var(--v-shadow-raised);
+  color: var(--v-text-primary);
+}
+.v-raised.v-interactive {
+  transition: box-shadow var(--v-duration-micro), border-color var(--v-duration-micro), background var(--v-duration-micro);
+}
+.v-raised.v-interactive:hover {
+  background: var(--v-surface-raised-hover);
+  border-color: var(--v-border-hover);
+  box-shadow: var(--v-shadow-raised-hover);
+}
+
+/* The 1.5px light line on the top edge. For raised surfaces 40px tall and up. */
+.v-prismatic::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1.5px;
+  background: var(--v-prismatic);
+  pointer-events: none;
+}
+
+.v-overlay-panel {
+  position: relative;
+  background: var(--v-surface-raised);
+  border: 1px solid var(--v-border);
+  box-shadow: var(--v-shadow-overlay);
+}
+
+.v-tray {
+  background: var(--v-surface-tray);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.v-well {
+  background: var(--v-surface-well);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: var(--v-shadow-well);
+}
+.v-well:focus-within {
+  border-color: var(--v-border-focus);
+}
+
+.v-popout {
+  background: var(--v-surface-popout);
+  border: 1px solid var(--v-border-popout);
+  box-shadow: var(--v-shadow-popout);
+  color: var(--v-text-on-popout);
+}
+
+/* A machined cut line: light over dark. */
+.v-separator {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(180deg, var(--v-cut-line) 50%, rgba(0, 0, 0, 0.5) 50%);
+}
+
+.v-focus:focus-visible,
+.v-raised:focus-visible,
+.v-popout:focus-visible {
+  outline: 1px solid rgba(255, 255, 255, 0.4);
+  outline-offset: 2px;
+}
+
+.v-pressable {
+  transition: transform var(--v-duration-control) var(--v-ease-out), box-shadow var(--v-duration-micro);
+}
+.v-pressable:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: var(--v-shadow-pressed);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v-pressable:active {
+    transform: none;
+  }
+}

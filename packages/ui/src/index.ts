@@ -157,6 +157,15 @@ export type { ForgeUILandingProps } from "./animated/ForgeUILanding";
 export { RaysLanding } from "./animated/RaysLanding";
 export type { RaysLandingProps } from "./animated/RaysLanding";
 
+// Chalkboard 404
+export { ChalkboardNotFound } from "./animated/ChalkboardNotFound";
+export type { ChalkboardNotFoundProps } from "./animated/ChalkboardNotFound";
+
+// Polaroid Develop
+export { PolaroidDevelop } from "./animated/PolaroidDevelop";
+export type { PolaroidDevelopProps, PolaroidPhoto } from "./animated/PolaroidDevelop";
+
+
 // Breathing Scale Card
 export { BreathingScaleCard } from "./animated/BreathingScaleCard";
 export type {
@@ -194,9 +203,9 @@ export type { CommandPaletteProps, CommandItem } from "./animated/CommandPalette
 export { Switch } from "./animated/Switch";
 export type { SwitchProps } from "./animated/Switch";
 
-// Laser Vault OTPInput Component
-export { OTPInput, OTP } from "./animated/OTPInput";
-export type { OTPInputProps } from "./animated/OTPInput";
+// OTP Input
+export { OTPInput, OTP } from "./primitives/OTPInput";
+export type { OTPInputProps, OTPInputSize } from "./primitives/OTPInput";
 
 // Magnetic Hologram Tooltip Component
 export { Tooltip } from "./animated/Tooltip";
@@ -218,6 +227,10 @@ export type { BentoGridProps, BentoGridItemProps, BentoIconType } from "./animat
 // Minimalist Precision Meter / Sentiment Gauge Component
 export { Meter } from "./animated/Meter";
 export type { MeterProps } from "./animated/Meter";
+
+// Gauge
+export { Gauge } from "./primitives/Gauge";
+export type { GaugeProps, GaugeSize, GaugeStatus } from "./primitives/Gauge";
 
 
 // Roughly - Hand-Drawn Text Annotation Suite

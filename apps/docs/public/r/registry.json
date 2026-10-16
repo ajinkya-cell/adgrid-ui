@@ -1237,6 +1237,51 @@
       ]
     },
     {
+      "name": "chalkboard-404",
+      "type": "registry:ui",
+      "title": "Chalkboard 404",
+      "description": "A 404 on a chalkboard set in a raised frame: the digits have fallen onto the chalk ledge and dashed chalk outlines show where they go. Drag the 4, 0 and 4 back (or press Enter on each) and an eraser wipes the slate white before sending you home.",
+      "dependencies": [
+        "framer-motion",
+        "roughjs",
+        "opentype.js"
+      ],
+      "files": [
+        {
+          "path": "components/ui/chalkboard-404/ChalkboardNotFound.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/chalkboard-404/roughly/glyph-paths.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/chalkboard-404/roughly/handwriting-fonts.ts",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "polaroid-develop",
+      "type": "registry:ui",
+      "title": "Polaroid Develop",
+      "description": "Polaroid prints scattered down a table that develop as you scroll: murky chemistry clears from the centre out, a cool cast warms into full colour, a sheen slides across, and the caption is written in ink stroke by stroke. Prints swing and lag with scroll speed and straighten on hover.",
+      "dependencies": [
+        "framer-motion",
+        "opentype.js"
+      ],
+      "files": [
+        {
+          "path": "components/ui/polaroid-develop/PolaroidDevelop.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/polaroid-develop/roughly/handwriting-fonts.ts",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "breathing-scale-card",
       "type": "registry:ui",
       "title": "Breathing Scale Card",
@@ -1347,11 +1392,10 @@
     {
       "name": "otp-input",
       "type": "registry:ui",
-      "title": "OTP Component",
-      "description": "Laser Vault PIN keypad and cell array featuring debossed input sockets, digit slot entry flash, red laser error shake, and green success unlock reveal.",
+      "title": "OTP Input",
+      "description": "A one-time code field: a row of wells over a single real input, so SMS autofill, paste and screen readers just work. The active well takes the focus border, characters rise into place, masked PINs show as popout pearls, and error or success tint the edges with a message underneath.",
       "dependencies": [
-        "framer-motion",
-        "lucide-react"
+        "framer-motion"
       ],
       "files": [
         {
@@ -1433,6 +1477,21 @@
       "files": [
         {
           "path": "components/ui/Meter.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "gauge",
+      "type": "registry:ui",
+      "title": "Gauge",
+      "description": "An instrument card: a dial of machined segments around a recessed face. Segments between the origin and the value rise to popout, the leading one runs long as the needle, and the value sits in the face. Low, high and optimum work like the native <meter>, with a status chip in the header and a real meter underneath.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/Gauge.tsx",
           "type": "registry:ui"
         }
       ]

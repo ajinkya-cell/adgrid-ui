@@ -302,6 +302,7 @@ Status key: ✅ exists and matches · ⚠️ exists but drifts from §1 · ❌ m
 | Segmented Control | ✅ `primitives/SegmentedControl.tsx` | Same as Tabs list; the selection is a raised segment. Used for 2–5 options inline. |
 | Slider | ❌ | The track is a 6px well; the filled part is `rgba(255,255,255,0.5)`; the thumb is an 18px popout pearl. Value tooltip while dragging. |
 | Progress | ✅ `primitives/Progress.tsx` | A 6px well track with a popout fill. Indeterminate = a slow sweep. |
+| Gauge | ✅ `primitives/Gauge.tsx` | A raised card holding a 240° dial of segment slots around a recessed face. Segments from the origin (zero for bipolar ranges) to the value rise to popout; the leading one runs long as the needle. `low`/`high`/`optimum` as on the native `<meter>` add scale marks and a status chip (dot + word). Real `<meter>` underneath. The older `animated/Meter` stays as a showpiece. |
 | Drawer / Sheet | ✅ `primitives/Drawer.tsx` | Dialog material on the native `<dialog>`, floating 8px off the edge with all corners `rounded-3xl` (so the bevel and prismatic edge read). Slides 260ms `ease-out`, exits 180ms `ease-in`. `Nav` (`primitives/Nav.tsx`) supplies the navigation; `Sidebar` is built from both. |
 | Combobox | ✅ `primitives/Combobox.tsx` | Input + Popover listbox with filtering. Shares rows with Select. |
 | Command Palette | ⚠️ `CommandPalette` | Dialog + Combobox. Check against Dialog motion and the restraint rules. |
@@ -311,7 +312,7 @@ Status key: ✅ exists and matches · ⚠️ exists but drifts from §1 · ❌ m
 | Menubar | ✅ `primitives/Menubar.tsx` | A slim raised bar of DropdownMenus; the open trigger sinks into the bar and the sunken segment glides between menus. |
 | Navbar | ⚠️ `NavBar1` | Floating raised bar, `rounded-2xl`, prismatic edge. |
 | Datepicker | ⚠️ `Datepicker` | Popover + grid; the selected day is popout, today has a 1px ring. |
-| OTP Input | ⚠️ `OTPInput` | A row of 48px wells; the active well gets the focus border; filled digits in `text-primary`. |
+| OTP Input | ✅ `primitives/OTPInput.tsx` | A row of 48px wells over one real `<input>` (SMS autofill, paste, forms); the active well gets the focus border; filled digits in `text-primary`, masked ones as popout pearls; status as edge tint + message. |
 | Empty State | ❌ | An icon in a 48px socket, title, one line of `text-secondary`, one action. No illustrations. |
 | File Upload | ✅ `primitives/FileUpload.tsx` | A dashed `rgba(255,255,255,0.12)` well, `rounded-2xl`. On drag-over the border becomes `0.3` and the well lightens one step. |
 | Stepper | ❌ | Steps are sockets; completed steps become popout pearls; connectors are Separator lines. |

@@ -82,6 +82,8 @@ import {
   AnimatedIcons1,
   ForgeUILanding,
   RaysLanding,
+  PolaroidDevelop,
+  ChalkboardNotFound,
   BreathingScaleCard,
   GithubHeatmap,
   DeveloperIdCard,
@@ -117,6 +119,7 @@ import {
   BentoGrid,
   BentoGridItem,
   Meter,
+  Gauge,
   MatrixRippleBackground,
   StackedCardFanDemo,
 } from "@adgrid-ui/ui";
@@ -716,6 +719,39 @@ function ProgressDemo(props: any) {
         size={size}
         showValue
         formatValue={(v, max) => `${v} of ${max} GB`}
+      />
+    </div>
+  );
+}
+
+function GaugeDemo(props: any) {
+  const size = props.size ?? "md";
+  const segments = Number(props.segments ?? 41);
+  const thresholds = props.thresholds ?? true;
+  return (
+    <div className="flex flex-wrap items-center justify-center gap-6 p-6">
+      <Gauge
+        label={props.label ?? "CPU load"}
+        description="8 cores · 2.4 GHz"
+        caption="of capacity"
+        value={Number(props.value ?? 64)}
+        low={thresholds ? 50 : undefined}
+        high={thresholds ? 80 : undefined}
+        optimum={thresholds ? 20 : undefined}
+        formatValue={(v) => `${Math.round(v)}%`}
+        segments={segments}
+        size={size}
+      />
+      {/* A bipolar range: segments light left or right from zero at the top. */}
+      <Gauge
+        label="Sentiment"
+        description="Last 24 hours"
+        caption="net score"
+        value={-28}
+        min={-100}
+        max={100}
+        segments={segments}
+        size={size}
       />
     </div>
   );
@@ -1800,6 +1836,11 @@ export function PresentationRenderer({
         </div>
       );
     }
+    case "chalkboard-404":
+      return <ChalkboardDemo {...liveProps} />;
+    case "polaroid-develop":
+      // Keyed so switching "redevelop" or the font starts the roll over from blank.
+      return <PolaroidDevelop key={`${liveProps.redevelop}-${liveProps.font}`} {...liveProps} />;
     case "breathing-scale-card": {
       return (
         <div className="flex items-center justify-center w-full min-h-[450px] p-8">
@@ -1983,7 +2024,8 @@ export function PresentationRenderer({
     case "switch":
       return <SwitchDemo {...liveProps} />;
     case "otp-input":
-      return <OTPInputDemo />;
+      // Keyed so changing the length or pattern starts from an empty code.
+      return <OTPInputDemo key={`${liveProps.length}-${liveProps.pattern}`} {...liveProps} />;
     case "tooltip":
       return <TooltipDemo />;
     case "timeline":
@@ -1996,6 +2038,8 @@ export function PresentationRenderer({
           <Meter value={45} {...liveProps} />
         </div>
       );
+    case "gauge":
+      return <GaugeDemo {...liveProps} />;
     case "toast":
       return <ToastDemo {...liveProps} />;
     case "bento-grid":
@@ -2232,17 +2276,53 @@ function CommandPaletteDemo() {
   );
 }
 
-function OTPInputDemo() {
+// In the gallery a solved board shouldn't leave the page: hold the white for a beat, then set
+// the board up again so it can be played twice.
+function ChalkboardDemo(props: any) {
+  const [round, setRound] = useState(0);
   return (
-    <div className="flex flex-col items-center justify-center p-8 gap-6 min-h-[400px] font-['DM_Sans',sans-serif] select-none">
-      <style dangerouslySetInnerHTML={{ __html: `@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');` }} />
+    <ChalkboardNotFound
+      key={`${round}-${props.font}`}
+      {...props}
+      homeHref="#"
+      onSolved={() => window.setTimeout(() => setRound((r) => r + 1), 900)}
+    />
+  );
+}
 
-      <OTPInput length={6} correctPin="777777" />
+function OTPInputDemo(props: any) {
+  const length = Number(props.length ?? 6);
+  const groupSize = Number(props.groupSize ?? 3);
+  // Demo only: the app decides whether a code is right. This one accepts 4242… cut to length.
+  const expected = "42424242".slice(0, length);
+  const [code, setCode] = useState("");
+  const [status, setStatus] = useState<"idle" | "checking" | "ok" | "bad">("idle");
+  const timer = useRef<number | undefined>(undefined);
+  useEffect(() => () => window.clearTimeout(timer.current), []);
 
-      <div className="text-center text-xs font-mono text-neutral-400">
-        Try entering passcode <code className="text-[#a78bfa] font-bold">777777</code> or <code className="text-[#a78bfa] font-bold">123456</code>
-      </div>
-    </div>
+  return (
+    <OTPInput
+      label="Verification code"
+      length={length}
+      size={props.size ?? "md"}
+      groupSize={groupSize > 0 ? groupSize : undefined}
+      pattern={props.pattern ?? "numeric"}
+      mask={Boolean(props.mask)}
+      disabled={Boolean(props.disabled)}
+      value={code}
+      onValueChange={(next) => {
+        setCode(next);
+        window.clearTimeout(timer.current);
+        setStatus("idle");
+      }}
+      onComplete={(next) => {
+        setStatus("checking");
+        timer.current = window.setTimeout(() => setStatus(next === expected ? "ok" : "bad"), 700);
+      }}
+      description={status === "checking" ? "Checking…" : `We sent a code to ada@lovelace.dev. Try ${expected}.`}
+      error={status === "bad" ? "That code didn't match. Check the email and try again." : undefined}
+      success={status === "ok" ? "Verified. You're in." : undefined}
+    />
   );
 }
 
