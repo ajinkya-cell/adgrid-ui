@@ -21,7 +21,7 @@ export const PRESENTATION_GROUPS: { id: string; label: string; slugs: string[] }
   {
     id: "navigation",
     label: "Navigation",
-    slugs: ["nav", "sidebar", "navbar-1", "menubar", "tabs", "breadcrumbs", "pagination", "weapon-wheel", "scroll-progress", "ruler-scrollbar", "scroll-water"],
+    slugs: ["nav", "sidebar", "navbar-1", "menubar", "ruler-nav", "tabs", "breadcrumbs", "pagination", "weapon-wheel", "scroll-progress", "ruler-scrollbar", "scroll-water"],
   },
   {
     id: "data",
@@ -31,7 +31,7 @@ export const PRESENTATION_GROUPS: { id: string; label: string; slugs: string[] }
   {
     id: "cards",
     label: "Cards",
-    slugs: ["simple-card", "cards", "sticker-card", "developer-id-card", "now-playing-card", "breathing-scale-card", "expand-on-hover", "gravity-card-stack", "stacked-cards", "stacked-card-fan", "polaroid-develop"],
+    slugs: ["simple-card", "cards", "sticker-card", "developer-id-card", "now-playing-card", "breathing-scale-card", "expand-on-hover", "gravity-card-stack", "stacked-cards", "stacked-card-fan", "polaroid-develop", "activity-card", "folder-reveal"],
   },
   {
     id: "text",

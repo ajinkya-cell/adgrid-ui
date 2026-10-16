@@ -352,6 +352,12 @@ export type {
 } from "./primitives/Popover";
 export { Menubar, MenubarMenu } from "./primitives/Menubar";
 export type { MenubarProps, MenubarMenuProps } from "./primitives/Menubar";
+export { RulerNav } from "./primitives/RulerNav";
+export { ActivityCard } from "./animated/ActivityCard";
+export { FolderReveal } from "./animated/FolderReveal";
+export type { FolderRevealProps } from "./animated/FolderReveal";
+export type { ActivityCardProps, ActivityCardMetric, ActivityCardRing } from "./animated/ActivityCard";
+export type { RulerNavProps, RulerNavGroup, RulerNavItem } from "./primitives/RulerNav";
 export { Pagination, pageRange } from "./primitives/Pagination";
 export type { PaginationProps, PaginationVariant, PaginationSize } from "./primitives/Pagination";
 export type { ToasterProps, ToasterPosition, ToastOptions, ToastAction, ToastData, ToastType } from "./primitives/Toast";

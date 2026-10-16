@@ -113,6 +113,10 @@ import {
   MenuRadioItem,
   Menubar,
   MenubarMenu,
+  RulerNav,
+  type RulerNavGroup,
+  ActivityCard,
+  FolderReveal,
   Pagination,
   usePopoverClose,
   Globe,
@@ -1780,6 +1784,12 @@ export function PresentationRenderer({
       return <PaginationDemo {...liveProps} />;
     case "menubar":
       return <MenubarDemo />;
+    case "ruler-nav":
+      return <RulerNavDemo liveProps={liveProps} />;
+    case "folder-reveal":
+      return <FolderRevealDemo liveProps={liveProps} />;
+    case "activity-card":
+      return <ActivityCardDemo liveProps={liveProps} />;
     case "file-upload":
       return <FileUploadDemo {...liveProps} />;
     case "table":
@@ -2158,6 +2168,113 @@ function ToastDemo(props: any) {
         visibleToasts={props.visibleToasts ?? 3}
         duration={props.duration ?? 5000}
       />
+    </div>
+  );
+}
+
+const RULER_NAV_GROUPS: RulerNavGroup[] = [
+  {
+    id: "getting-started",
+    label: "Getting started",
+    items: [
+      { id: "introduction", label: "Introduction" },
+      { id: "installation", label: "Installation", keywords: "setup npm pnpm" },
+      { id: "theming", label: "Theming", keywords: "colors tokens dark" },
+    ],
+  },
+  {
+    id: "inputs",
+    label: "Inputs",
+    items: [
+      { id: "button", label: "Button" },
+      { id: "text-field", label: "Text Field", keywords: "input form" },
+      { id: "select", label: "Select", keywords: "dropdown" },
+      { id: "color-picker", label: "Color Picker", badge: "new" },
+      { id: "otp-input", label: "OTP Input", keywords: "code verify" },
+    ],
+  },
+  {
+    id: "navigation",
+    label: "Navigation",
+    items: [
+      { id: "tabs", label: "Tabs" },
+      { id: "menubar", label: "Menubar", badge: "new" },
+      { id: "pagination", label: "Pagination" },
+      { id: "breadcrumbs", label: "Breadcrumbs" },
+      { id: "ruler-nav", label: "Ruler Nav", badge: "new" },
+    ],
+  },
+  {
+    id: "feedback",
+    label: "Feedback",
+    items: [
+      { id: "toast", label: "Toast", badge: 3 },
+      { id: "dialog", label: "Dialog", keywords: "modal" },
+      { id: "progress", label: "Progress" },
+      { id: "spinner", label: "Spinner", disabled: true },
+    ],
+  },
+];
+
+function FolderRevealDemo({ liveProps }: { liveProps: any }) {
+  return (
+    <div className="flex flex-col items-center gap-10">
+      <FolderReveal
+        key={String(liveProps.defaultOpen)}
+        files={liveProps.files ?? 3}
+        size={liveProps.size ?? 320}
+        bounce={liveProps.bounce ?? 0.6}
+        openAngle={liveProps.openAngle ?? 32}
+        defaultOpen={liveProps.defaultOpen ?? false}
+        label={liveProps.label ?? "Folder"}
+      />
+      <span className="font-inter text-xs text-neutral-500">Hover the folder</span>
+    </div>
+  );
+}
+
+function ActivityCardDemo({ liveProps }: { liveProps: any }) {
+  return (
+    <ActivityCard
+      key={`${liveProps.ring1}-${liveProps.ring2}-${liveProps.ring3}-${liveProps.animate}`}
+      title={liveProps.title}
+      date={liveProps.date}
+      score={liveProps.score}
+      scoreLabel={liveProps.scoreLabel}
+      animate={liveProps.animate}
+      rings={[
+        { value: liveProps.ring1 ?? 31, label: "Light activity" },
+        { value: liveProps.ring2 ?? 84, label: "Moderate activity" },
+        { value: liveProps.ring3 ?? 53, label: "Vigorous activity" },
+      ]}
+    />
+  );
+}
+
+function RulerNavDemo({ liveProps }: { liveProps: any }) {
+  const [current, setCurrent] = useState("ruler-nav");
+  const label = RULER_NAV_GROUPS.flatMap((g) => g.items).find((i) => i.id === current)?.label;
+  return (
+    // The caption hangs below the panel outside the flow, so the panel itself sits dead centre.
+    <div className="relative">
+      <div
+        className="h-[min(560px,calc(100dvh-160px))] w-[300px] overflow-hidden rounded-2xl border border-white/[0.06]"
+        style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.04), 0 24px 60px -20px rgba(0,0,0,0.9)" }}
+      >
+        <RulerNav
+          groups={RULER_NAV_GROUPS}
+          value={current}
+          onValueChange={(id) => setCurrent(id)}
+          title={liveProps.title ?? "Components"}
+          searchable={liveProps.searchable ?? true}
+          collapsible={liveProps.collapsible ?? true}
+          showCounts={liveProps.showCounts ?? true}
+          accent={liveProps.accent ?? "#fafafa"}
+        />
+      </div>
+      <span className="absolute top-full left-1/2 mt-4 -translate-x-1/2 whitespace-nowrap font-inter text-xs text-neutral-500">
+        Showing <span className="text-neutral-200">{label}</span> · ↑ ↓ to move, Enter to open, / to search
+      </span>
     </div>
   );
 }

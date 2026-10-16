@@ -790,6 +790,55 @@
       ]
     },
     {
+      "name": "folder-reveal",
+      "type": "registry:ui",
+      "title": "Folder Reveal",
+      "description": "A dark folder with a frosted-glass front. Hover it and the flap tips forward on its hinge while the sheets inside spring up one after another, overshooting a touch and fanning out like a hand of cards.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/FolderReveal.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "activity-card",
+      "type": "registry:ui",
+      "title": "Activity Card",
+      "description": "A daily activity summary on a raised card: metric rows with sleep and heart glyphs on the left, and concentric rings sweeping in from the corner around a popout score disc. Each ring runs in a sunken track, its fill brightening toward the disc, with a value pearl at its end.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/ActivityCard.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ruler-nav",
+      "type": "registry:ui",
+      "title": "Ruler Nav",
+      "description": "The presentation-mode navigator as a component: a grouped list hung off a ruler of hairline ticks. The row under the pointer stretches its tick and springs its label right, leaving a soft settling trail. Search with highlighted matches, folding groups, badges, and full keyboard control.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/ruler-nav/RulerNav.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/ruler-nav/search.ts",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "spinner",
       "type": "registry:ui",
       "title": "Spinner",
