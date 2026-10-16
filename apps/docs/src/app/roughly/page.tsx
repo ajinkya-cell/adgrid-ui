@@ -12,6 +12,8 @@ import {
   RoughBox,
   RoughArrow,
   RoughHandwriting,
+  RoughCheck,
+  RoughSticky,
   VoidButton,
 } from "@adgrid-ui/ui";
 import type {
@@ -27,6 +29,10 @@ import type {
   ArrowheadStyle,
   ArrowLabelFont,
   HandwritingFont,
+  CheckMark,
+  CheckSide,
+  StickyPin,
+  StickyFont,
 } from "@adgrid-ui/ui";
 import {
   Check,
@@ -45,6 +51,8 @@ import {
   Highlighter as HighlightIcon,
   ArrowRight as ArrowIcon,
   PenTool,
+  ListChecks,
+  StickyNote,
 } from "lucide-react";
 
 // ── Syntax Highlighting Helpers & Constants ──────────────────
@@ -118,6 +126,13 @@ const PROPS = new Set([
   "crossOrigin",
   "onClick",
   "key",
+  "mark",
+  "checked",
+  "note",
+  "pin",
+  "paper",
+  "font",
+  "fontSize",
 ]);
 
 const importSnippet = `import {
@@ -130,6 +145,8 @@ const importSnippet = `import {
   RoughStrike,
   RoughCross,
   RoughArrow,
+  RoughCheck,
+  RoughSticky,
 } from "@/components/ui/roughly";`;
 
 const articleHeroSnippet = `import {
@@ -390,6 +407,15 @@ export default function RoughlyPage() {
   const [handwritingFont, setHandwritingFont] = useState<HandwritingFont>("reenie-beanie");
   const [handwritingFontSize, setHandwritingFontSize] = useState(44);
   const [handwritingEditable, setHandwritingEditable] = useState(false);
+  const [checkMark, setCheckMark] = useState<CheckMark>("check");
+  const [checkSide, setCheckSide] = useState<CheckSide>("left");
+  const [checkChecked, setCheckChecked] = useState(true);
+  const [stickyNote, setStickyNote] = useState("Ship this first!");
+  const [stickyPin, setStickyPin] = useState<StickyPin>("tape");
+  const [stickyPaper, setStickyPaper] = useState("#FDE68A");
+  const [stickyFont, setStickyFont] = useState<StickyFont>("caveat");
+  const [stickyWidth, setStickyWidth] = useState(150);
+  const [stickyFontSize, setStickyFontSize] = useState(20);
   const [replayKey, setReplayKey] = useState(0);
   const [copiedCode, setCopiedCode] = useState(false);
   const [copiedInstall, setCopiedInstall] = useState(false);
@@ -428,6 +454,8 @@ export default function RoughlyPage() {
     { id: "highlight", label: "Highlight", icon: HighlightIcon },
     { id: "arrow", label: "Arrow", icon: ArrowIcon },
     { id: "handwriting", label: "Handwriting", icon: PenTool },
+    { id: "check", label: "Margin Tick", icon: ListChecks },
+    { id: "sticky", label: "Sticky Note", icon: StickyNote },
   ];
 
   const colorPresets = [
@@ -440,6 +468,13 @@ export default function RoughlyPage() {
     { name: "Cyan", hex: "#06B6D4" },
     { name: "Black", hex: "#000000" },
     { name: "White", hex: "#FFFFFF" },
+  ];
+
+  const stickyPapers = [
+    { name: "Yellow", hex: "#FDE68A" },
+    { name: "Pink", hex: "#FBCFE8" },
+    { name: "Mint", hex: "#BBF7D0" },
+    { name: "Sky", hex: "#BFDBFE" },
   ];
 
   const triggerReplay = () => {
@@ -567,6 +602,33 @@ export default function RoughlyPage() {
 
       const propsString = ` ${propsList.join(" ")}`;
       return `<Roughly${propsString}>\n  ${text}\n</Roughly>`;
+    }
+
+    if (selectedType === "check") {
+      const propsList: string[] = [];
+      if (checkMark !== "check") propsList.push(`mark="${checkMark}"`);
+      if (checkSide !== "left") propsList.push(`side="${checkSide}"`);
+      if (!checkChecked) propsList.push(`checked={false}`);
+      const defaultColor = checkMark === "cross" ? "#F43F5E" : "#10B981";
+      if (selectedColor !== defaultColor) propsList.push(`color="${selectedColor}"`);
+      if (strokeWidth !== 2.5) propsList.push(`strokeWidth={${strokeWidth}}`);
+      if (duration !== 500) propsList.push(`animationDuration={${duration}}`);
+
+      const propsString = propsList.length > 0 ? ` ${propsList.join(" ")}` : "";
+      return `<RoughCheck${propsString}>\n  ${text}\n</RoughCheck>`;
+    }
+
+    if (selectedType === "sticky") {
+      const propsList: string[] = [`note="${stickyNote}"`];
+      if (stickyPin !== "tape") propsList.push(`pin="${stickyPin}"`);
+      if (stickyPaper !== "#FDE68A") propsList.push(`paper="${stickyPaper}"`);
+      if (stickyFont !== "caveat") propsList.push(`font="${stickyFont}"`);
+      if (stickyWidth !== 150) propsList.push(`width={${stickyWidth}}`);
+      if (stickyFontSize !== 20) propsList.push(`fontSize={${stickyFontSize}}`);
+      if (selectedColor !== "#3B2A14") propsList.push(`color="${selectedColor}"`);
+      if (duration !== 550) propsList.push(`animationDuration={${duration}}`);
+
+      return `<RoughSticky ${propsList.join(" ")} />`;
     }
 
     const propsList: string[] = [];
@@ -717,7 +779,7 @@ export default function RoughlyPage() {
                 <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
                   Annotation Type
                 </label>
-                <span className="text-[10px] font-mono text-neutral-500">9 styles</span>
+                <span className="text-[10px] font-mono text-neutral-500">{typePresets.length} styles</span>
               </div>
               <div className={`rounded-xl overflow-hidden divide-y divide-white/[0.04] ${PLAYGROUND_WELL_CLASS}`}>
                 {typePresets.map((t) => {
@@ -746,6 +808,9 @@ export default function RoughlyPage() {
                           else if (t.id === "box") setSelectedColor("#10B981");
                           else if (t.id === "highlight") setSelectedColor("#4338CA");
                           else if (t.id === "arrow") setSelectedColor("#F59E0B");
+                          else if (t.id === "check")
+                            setSelectedColor(checkMark === "cross" ? "#F43F5E" : "#10B981");
+                          else if (t.id === "sticky") setSelectedColor("#3B2A14");
                         }
                       }}
                       className={`w-full px-3 py-2.5 flex items-center justify-between text-left transition-colors cursor-pointer ${
@@ -771,91 +836,93 @@ export default function RoughlyPage() {
 
             {/* 2. Middle: Controls Panel */}
             <div className={`order-3 lg:order-none lg:col-span-4 space-y-5 p-5 rounded-2xl ${PLAYGROUND_PANEL_CLASS}`}>
-              {/* Editable Text & Presets */}
-              <div className="space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
-                    Sample Text {selectedType === "bracket" && "(Multiline)"}
-                  </label>
+              {/* Editable Text & Presets (the sticky note shows only the note) */}
+              {selectedType !== "sticky" && (
+                <div className="space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                      Sample Text {selectedType === "bracket" && "(Multiline)"}
+                    </label>
+                    {selectedType === "bracket" ? (
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          onClick={() =>
+                            setText(
+                              "Dynamic multiline bracket\nSmooth single stroke animation"
+                            )
+                          }
+                          className="px-2 py-0.5 text-[10px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                        >
+                          2 Lines
+                        </button>
+                        <button
+                          onClick={() =>
+                            setText(
+                              "Zero layout shift on page reloads\nSized to encompass tall ascenders\nHardware-accelerated SVG draw stroke"
+                            )
+                          }
+                          className="px-2 py-0.5 text-[10px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                        >
+                          3 Lines
+                        </button>
+                        <button
+                          onClick={() =>
+                            setText(
+                              "const theme = 'void';\nconst fluid = true;\nrender(<RoughBracket />);"
+                            )
+                          }
+                          className="px-2 py-0.5 text-[10px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                        >
+                          Code
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          onClick={() => setText("Roughly")}
+                          className="px-2 py-0.5 text-[10px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                        >
+                          Short
+                        </button>
+                        <button
+                          onClick={() => setText("Interfaces with visceral")}
+                          className="px-2 py-0.5 text-[10px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                        >
+                          Medium
+                        </button>
+                        <button
+                          onClick={() =>
+                            setText(
+                              "Interfaces with visceral depth and tactile precision"
+                            )
+                          }
+                          className="px-2 py-0.5 text-[10px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                        >
+                          Long
+                        </button>
+                      </div>
+                    )}
+                  </div>
                   {selectedType === "bracket" ? (
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        onClick={() =>
-                          setText(
-                            "Dynamic multiline bracket\nSmooth single stroke animation"
-                          )
-                        }
-                        className="px-2 py-0.5 text-[10px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
-                      >
-                        2 Lines
-                      </button>
-                      <button
-                        onClick={() =>
-                          setText(
-                            "Zero layout shift on page reloads\nSized to encompass tall ascenders\nHardware-accelerated SVG draw stroke"
-                          )
-                        }
-                        className="px-2 py-0.5 text-[10px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
-                      >
-                        3 Lines
-                      </button>
-                      <button
-                        onClick={() =>
-                          setText(
-                            "const theme = 'void';\nconst fluid = true;\nrender(<RoughBracket />);"
-                          )
-                        }
-                        className="px-2 py-0.5 text-[10px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
-                      >
-                        Code
-                      </button>
-                    </div>
+                    <textarea
+                      rows={3}
+                      value={text}
+                      onChange={(e) => setText(e.target.value)}
+                      className={`w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none focus:border-indigo-500 font-inter transition-colors resize-y leading-relaxed ${PLAYGROUND_WELL_CLASS}`}
+                      placeholder="Enter multiline text..."
+                    />
                   ) : (
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        onClick={() => setText("Roughly")}
-                        className="px-2 py-0.5 text-[10px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
-                      >
-                        Short
-                      </button>
-                      <button
-                        onClick={() => setText("Interfaces with visceral")}
-                        className="px-2 py-0.5 text-[10px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
-                      >
-                        Medium
-                      </button>
-                      <button
-                        onClick={() =>
-                          setText(
-                            "Interfaces with visceral depth and tactile precision"
-                          )
-                        }
-                        className="px-2 py-0.5 text-[10px] font-mono rounded bg-white/[0.04] hover:bg-white/10 text-neutral-400 hover:text-white transition-colors cursor-pointer"
-                      >
-                        Long
-                      </button>
-                    </div>
+                    <input
+                      type="text"
+                      value={text}
+                      onChange={(e) => setText(e.target.value)}
+                      className={`w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none focus:border-indigo-500 font-inter transition-colors ${PLAYGROUND_WELL_CLASS}`}
+                      placeholder="Enter text to annotate..."
+                    />
                   )}
-                </div>
-                {selectedType === "bracket" ? (
-                  <textarea
-                    rows={3}
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none focus:border-indigo-500 font-inter transition-colors resize-y leading-relaxed ${PLAYGROUND_WELL_CLASS}`}
-                    placeholder="Enter multiline text..."
-                  />
-                ) : (
-                  <input
-                    type="text"
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-lg text-sm text-white focus:outline-none focus:border-indigo-500 font-inter transition-colors ${PLAYGROUND_WELL_CLASS}`}
-                    placeholder="Enter text to annotate..."
-                  />
-                )}
 
-              </div>
+                </div>
+              )}
 
               {/* Type-Specific Options */}
               {selectedType === "circle" && (
@@ -1598,6 +1665,202 @@ export default function RoughlyPage() {
                 </div>
               )}
 
+              {selectedType === "check" && (
+                <div className={`space-y-3.5 p-3 rounded-xl ${PLAYGROUND_WELL_CLASS}`}>
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                      Mark
+                    </label>
+                    <div className="flex gap-2">
+                      {[
+                        { id: "check", label: "✓ Check" },
+                        { id: "cross", label: "✗ Cross" },
+                      ].map((item) => (
+                        <button
+                          key={item.id}
+                          onClick={() => {
+                            setCheckMark(item.id as CheckMark);
+                            setSelectedColor(item.id === "cross" ? "#F43F5E" : "#10B981");
+                          }}
+                          className={`flex-1 py-1.5 text-xs rounded-lg capitalize cursor-pointer transition-colors ${
+                            checkMark === item.id
+                              ? `${PLAYGROUND_RAISED_CLASS} font-medium`
+                              : "bg-white/[0.04] text-neutral-400 hover:text-white"
+                          }`}
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                      Margin
+                    </label>
+                    <div className="flex gap-2">
+                      {(["left", "right"] as CheckSide[]).map((v) => (
+                        <button
+                          key={v}
+                          onClick={() => setCheckSide(v)}
+                          className={`flex-1 py-1.5 text-xs rounded-lg capitalize cursor-pointer transition-colors ${
+                            checkSide === v
+                              ? `${PLAYGROUND_RAISED_CLASS} font-medium`
+                              : "bg-white/[0.04] text-neutral-400 hover:text-white"
+                          }`}
+                        >
+                          {v}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                      State
+                    </label>
+                    <div className="flex gap-2">
+                      {[
+                        { id: true, label: "Checked" },
+                        { id: false, label: "Unchecked" },
+                      ].map((item) => (
+                        <button
+                          key={String(item.id)}
+                          onClick={() => setCheckChecked(item.id)}
+                          className={`flex-1 py-1.5 text-xs rounded-lg capitalize cursor-pointer transition-colors ${
+                            checkChecked === item.id
+                              ? `${PLAYGROUND_RAISED_CLASS} font-medium`
+                              : "bg-white/[0.04] text-neutral-400 hover:text-white"
+                          }`}
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {selectedType === "sticky" && (
+                <div className={`space-y-3.5 p-3 rounded-xl ${PLAYGROUND_WELL_CLASS}`}>
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                      Note Text
+                    </label>
+                    <input
+                      type="text"
+                      value={stickyNote}
+                      onChange={(e) => setStickyNote(e.target.value)}
+                      placeholder="e.g. Ship this first!"
+                      className="w-full px-3 py-1.5 text-base rounded-lg bg-white/[0.04] border border-white/10 text-white focus:outline-none focus:border-amber-400 font-[family-name:var(--font-caveat),cursive]"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                      Paper
+                    </label>
+                    <div className="flex gap-2">
+                      {stickyPapers.map((p) => (
+                        <button
+                          key={p.hex}
+                          onClick={() => setStickyPaper(p.hex)}
+                          title={p.name}
+                          style={{ backgroundColor: p.hex }}
+                          className={`w-7 h-7 rounded-[3px] border-2 transition-transform cursor-pointer ${
+                            stickyPaper === p.hex
+                              ? "scale-110 border-white shadow-[0_0_8px_rgba(255,255,255,0.4)]"
+                              : "border-transparent opacity-80 hover:opacity-100"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-[11px] font-mono text-neutral-400">
+                        <span>Note Size</span>
+                        <span>{stickyWidth}px</span>
+                      </div>
+                      <input
+                        type="range"
+                        min={100}
+                        max={260}
+                        step={5}
+                        value={stickyWidth}
+                        onChange={(e) => setStickyWidth(Number(e.target.value))}
+                        className="w-full accent-amber-500 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer"
+                        aria-label="Sticky note width"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-[11px] font-mono text-neutral-400">
+                        <span>Text Size</span>
+                        <span>{stickyFontSize}px</span>
+                      </div>
+                      <input
+                        type="range"
+                        min={14}
+                        max={36}
+                        step={1}
+                        value={stickyFontSize}
+                        onChange={(e) => setStickyFontSize(Number(e.target.value))}
+                        className="w-full accent-amber-500 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer"
+                        aria-label="Sticky note text size"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                      Attachment
+                    </label>
+                    <div className="flex gap-2">
+                      {(["tape", "pin", "none"] as StickyPin[]).map((v) => (
+                        <button
+                          key={v}
+                          onClick={() => setStickyPin(v)}
+                          className={`flex-1 py-1.5 text-xs rounded-lg capitalize cursor-pointer transition-colors ${
+                            stickyPin === v
+                              ? `${PLAYGROUND_RAISED_CLASS} font-medium`
+                              : "bg-white/[0.04] text-neutral-400 hover:text-white"
+                          }`}
+                        >
+                          {v}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
+                      Font
+                    </label>
+                    <div className="grid grid-cols-3 gap-1">
+                      {[
+                        { id: "caveat", name: "Caveat", fontClass: "font-[family-name:var(--font-caveat),cursive] text-sm" },
+                        { id: "reenie-beanie", name: "Reenie Beanie", fontClass: "font-[family-name:'Reenie_Beanie',cursive] text-base" },
+                        { id: "kalam", name: "Kalam", fontClass: "font-[family-name:'Kalam',cursive] text-xs" },
+                      ].map((f) => (
+                        <button
+                          key={f.id}
+                          onClick={() => setStickyFont(f.id as StickyFont)}
+                          className={`py-1.5 px-1.5 rounded-lg transition-colors cursor-pointer text-center ${
+                            stickyFont === f.id
+                              ? `${PLAYGROUND_RAISED_CLASS} font-medium`
+                              : "bg-white/[0.04] text-neutral-400 hover:text-white border border-transparent"
+                          }`}
+                        >
+                          <span className={`${f.fontClass} block truncate leading-tight`}>{f.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                </div>
+              )}
+
               {/* Color Palette */}
               <div className="space-y-2">
                 <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
@@ -1827,6 +2090,43 @@ export default function RoughlyPage() {
                         </span>
                       )}
                     </div>
+                  ) : selectedType === "check" ? (
+                    <div className="flex flex-col items-start gap-2 text-left">
+                      <RoughCheck
+                        key={`check-${replayKey}-${checkMark}-${checkSide}-${selectedColor}-${strokeWidth}-${duration}`}
+                        mark={checkMark}
+                        side={checkSide}
+                        checked={checkChecked}
+                        color={selectedColor}
+                        strokeWidth={strokeWidth}
+                        animationDuration={duration}
+                        animate={true}
+                      >
+                        {text}
+                      </RoughCheck>
+                      <button
+                        type="button"
+                        onClick={() => setCheckChecked((c) => !c)}
+                        className="text-[11px] font-mono font-normal text-[#8a7d6b] hover:text-[#1a1714] underline cursor-pointer"
+                      >
+                        {checkChecked ? "uncheck" : "check"} it
+                      </button>
+                    </div>
+                  ) : selectedType === "sticky" ? (
+                    <div className="py-6 flex items-center justify-center">
+                      <RoughSticky
+                        key={`sticky-${replayKey}-${stickyPin}-${stickyPaper}-${stickyFont}-${selectedColor}-${duration}`}
+                        note={stickyNote}
+                        pin={stickyPin}
+                        paper={stickyPaper}
+                        font={stickyFont}
+                        width={stickyWidth}
+                        fontSize={stickyFontSize}
+                        color={selectedColor}
+                        animationDuration={duration}
+                        animate={true}
+                      />
+                    </div>
                   ) : (
                     <Roughly
                       type={selectedType}
@@ -1941,6 +2241,22 @@ export default function RoughlyPage() {
                 hand-drawn callout arrow
               </RoughArrow>{" "}
               that automatically calculates its trajectory, clearance, and entry angle directly onto the target word.
+            </p>
+
+
+            <div className="relative grid gap-1.5 sm:grid-cols-2 text-sm">
+              <Roughly.Check mark="check">Draws on scroll, zero layout shift</Roughly.Check>
+              <Roughly.Check mark="cross">No canvas, no images</Roughly.Check>
+              <Roughly.Check mark="check">Sized to the line it sits beside</Roughly.Check>
+              <Roughly.Check mark="cross">Pixel-perfect machine strokes</Roughly.Check>
+            </div>
+
+            <p className="relative pt-14">
+              Leave a reviewer&apos;s aside with a{" "}
+              <RoughSticky note="pinned right here!" placement="top-right" paper="#FBCFE8" offset={-4}>
+                sticky note callout
+              </RoughSticky>{" "}
+              that slaps onto the page.
             </p>
           </div>
         </section>
@@ -2182,7 +2498,7 @@ export default function RoughlyPage() {
                   <td className="p-3 text-indigo-400">RoughlyType</td>
                   <td className="p-3 text-neutral-500">&quot;underline&quot;</td>
                   <td className="p-3 font-sans text-neutral-400">
-                    &quot;underline&quot; | &quot;circle&quot; | &quot;strike-through&quot; | &quot;cross-off&quot; | &quot;bracket&quot; | &quot;box&quot; | &quot;highlight&quot; | &quot;arrow&quot; | &quot;handwriting&quot;
+                    &quot;underline&quot; | &quot;circle&quot; | &quot;strike-through&quot; | &quot;cross-off&quot; | &quot;bracket&quot; | &quot;box&quot; | &quot;highlight&quot; | &quot;arrow&quot; | &quot;handwriting&quot; | &quot;check&quot; | &quot;sticky&quot;
                   </td>
                 </tr>
                 <tr>
@@ -2355,6 +2671,70 @@ export default function RoughlyPage() {
                   <td className="p-3 text-neutral-500">false</td>
                   <td className="p-3 font-sans text-neutral-400">
                     Enables interactive live-typing mode for handwriting with real-time SVG stroke tracing
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">mark</td>
+                  <td className="p-3 text-indigo-400">CheckMark</td>
+                  <td className="p-3 text-neutral-500">&quot;check&quot;</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Margin tick: &quot;check&quot; (✓) | &quot;cross&quot; (✗)
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">checked</td>
+                  <td className="p-3 text-indigo-400">boolean</td>
+                  <td className="p-3 text-neutral-500">true</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Margin tick: flip to draw or erase the mark, e.g. in a checklist
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">side</td>
+                  <td className="p-3 text-indigo-400">CheckSide</td>
+                  <td className="p-3 text-neutral-500">&quot;left&quot;</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Margin tick: which margin the mark sits in, &quot;left&quot; | &quot;right&quot;
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">note</td>
+                  <td className="p-3 text-indigo-400">ReactNode</td>
+                  <td className="p-3 text-neutral-500">undefined</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Sticky note: the handwritten text on the note
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">placement</td>
+                  <td className="p-3 text-indigo-400">StickyPlacement</td>
+                  <td className="p-3 text-neutral-500">&quot;top-right&quot;</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Sticky note: where the note sits around the target (same 8 directions as the arrow)
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">pin</td>
+                  <td className="p-3 text-indigo-400">StickyPin</td>
+                  <td className="p-3 text-neutral-500">&quot;tape&quot;</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Sticky note: &quot;tape&quot; | &quot;pin&quot; | &quot;none&quot;
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">width / fontSize</td>
+                  <td className="p-3 text-indigo-400">number</td>
+                  <td className="p-3 text-neutral-500">150 / 20</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Sticky note: note width and handwritten text size in pixels
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">paper</td>
+                  <td className="p-3 text-indigo-400">string</td>
+                  <td className="p-3 text-neutral-500">&quot;#FDE68A&quot;</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Sticky note: paper color
                   </td>
                 </tr>
               </tbody>

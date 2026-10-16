@@ -25,3 +25,7 @@ export type {
   ArrowLabelFont,
 } from "./RoughArrow";
 
+export { RoughCheck } from "./RoughCheck";
+export type { RoughCheckProps, CheckMark, CheckSide } from "./RoughCheck";
+export { RoughSticky } from "./RoughSticky";
+export type { RoughStickyProps, StickyPlacement, StickyPin, StickyFont } from "./RoughSticky";

@@ -25,6 +25,8 @@ import {
   type HandwritingFont,
   type RoughHandwritingProps,
 } from "./roughly/RoughHandwriting";
+import { RoughCheck, type CheckMark } from "./roughly/RoughCheck";
+import { RoughSticky, type StickyPin, type StickyFont } from "./roughly/RoughSticky";
 
 export type RoughlyType =
   | "underline"
@@ -35,7 +37,9 @@ export type RoughlyType =
   | "box"
   | "highlight"
   | "arrow"
-  | "handwriting";
+  | "handwriting"
+  | "check"
+  | "sticky";
 
 export type { BracketSide, BracketStyle } from "./roughly/RoughBracket";
 export type { BoxVariant } from "./roughly/RoughBox";
@@ -51,6 +55,8 @@ export type { HandwritingFont, RoughHandwritingProps };
 export type UnderlineVariant = "single" | "double" | "wavy";
 export type { StrikeVariant } from "./roughly/RoughStrike";
 export type { CrossVariant } from "./roughly/RoughCross";
+export type { CheckMark, CheckSide } from "./roughly/RoughCheck";
+export type { StickyPlacement, StickyPin, StickyFont } from "./roughly/RoughSticky";
 
 export interface RoughlyProps {
   children?: React.ReactNode;
@@ -72,6 +78,16 @@ export interface RoughlyProps {
   bracketStyle?: BracketStyle;
   /** Variant for underline ('single' | 'double' | 'wavy'), strike-through ('single' | 'double' | 'triple'), cross-off ('single' | 'double'), or box ('single' | 'double') */
   variant?: UnderlineVariant | StrikeVariant | CrossVariant | BoxVariant;
+  /** Margin mark when type is 'check': 'check' (✓) | 'cross' (✗) (default: 'check') */
+  mark?: CheckMark;
+  /** Whether the 'check' mark is drawn; flip to draw / erase (default: true) */
+  checked?: boolean;
+  /** Handwritten note text when type is 'sticky' */
+  note?: React.ReactNode;
+  /** Sticky note attachment: 'tape' | 'pin' | 'none' (default: 'tape') */
+  pin?: StickyPin;
+  /** Sticky note paper color (default: "#FDE68A") */
+  paper?: string;
   /** Placement direction when type is 'arrow' */
   placement?: ArrowPlacement;
   /** Arrow curve variant ('curved' | 'straight' | 's-curve') */
@@ -137,6 +153,8 @@ const DEFAULT_COLORS: Record<RoughlyType, string> = {
   highlight: "#4338CA", // Deep Royal Indigo
   arrow: "#F59E0B", // Cyber Amber
   handwriting: "#6366F1", // Indigo
+  check: "#10B981", // Emerald Green
+  sticky: "#3B2A14", // Pencil ink on paper
 };
 
 export function Roughly({
@@ -174,6 +192,11 @@ export function Roughly({
   fontSize,
   maxWords,
   maxLength,
+  mark = "check",
+  checked,
+  note,
+  pin,
+  paper,
   className = "",
   textClassName = "",
 }: RoughlyProps) {
@@ -342,6 +365,45 @@ export function Roughly({
     );
   }
 
+  if (type === "check") {
+    const checkSide = side === "right" ? "right" : "left";
+    return (
+      <RoughCheck
+        mark={mark}
+        side={checkSide}
+        checked={checked}
+        color={color || (mark === "cross" ? "#F43F5E" : DEFAULT_COLORS.check)}
+        strokeWidth={strokeWidth}
+        animate={animate}
+        animationDuration={animationDuration}
+        className={className}
+        textClassName={textClassName}
+      >
+        {children}
+      </RoughCheck>
+    );
+  }
+
+  if (type === "sticky") {
+    return (
+      <RoughSticky
+        note={note}
+        placement={placement}
+        pin={pin}
+        paper={paper}
+        font={(font as StickyFont | undefined) ?? arrowLabelFont}
+        fontSize={fontSize}
+        color={color || DEFAULT_COLORS.sticky}
+        animate={animate}
+        animationDuration={animationDuration}
+        className={className}
+        textClassName={textClassName}
+      >
+        {children}
+      </RoughSticky>
+    );
+  }
+
   return (
     <RoughUnderline
       variant="single"
@@ -410,4 +472,16 @@ Roughly.Handwriting = function RoughlyHandwriting(
   props: React.ComponentProps<typeof RoughHandwriting>
 ) {
   return <RoughHandwriting {...props} />;
+};
+
+Roughly.Check = function RoughlyCheck(
+  props: React.ComponentProps<typeof RoughCheck>
+) {
+  return <RoughCheck {...props} />;
+};
+
+Roughly.Sticky = function RoughlySticky(
+  props: React.ComponentProps<typeof RoughSticky>
+) {
+  return <RoughSticky {...props} />;
 };

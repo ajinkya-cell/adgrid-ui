@@ -69,6 +69,14 @@
         {
           "path": "components/ui/roughly/roughly/RoughUnderline.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/roughly/roughly/RoughCheck.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/roughly/roughly/RoughSticky.tsx",
+          "type": "registry:ui"
         }
       ]
     },

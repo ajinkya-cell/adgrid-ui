@@ -131,6 +131,7 @@ export function ChartsDemo(props: Record<string, unknown>) {
   const grid = (props.grid as boolean) ?? true;
   const legend = (props.legend as boolean) ?? true;
   const shuffle = (props.shuffle as boolean) ?? false;
+  const deltas = (props.deltas as boolean) ?? false;
   const focusSize = ((props.size as ChartSize) ?? "lg") as ChartSize;
   const d = useMemo(() => build(shuffle ? 7 : 0), [shuffle]);
 
@@ -148,7 +149,7 @@ export function ChartsDemo(props: Record<string, unknown>) {
         description="Monthly recurring, thousands of dollars"
         value={`$${revenueNow.toFixed(1)}k`}
         valueCaption="December"
-        delta={pctDelta(d.revenue.map((r) => r.thisYear))}
+        delta={deltas ? pctDelta(d.revenue.map((r) => r.thisYear)) : undefined}
         data={d.revenue}
         xKey="month"
         series={[
@@ -220,7 +221,7 @@ export function ChartsDemo(props: Record<string, unknown>) {
         description="Milliseconds, last 24 hours"
         value={`${latencyNow} ms`}
         valueCaption="p50 now"
-        delta={pctDelta(d.latency.map((l) => l.p50))}
+        delta={deltas ? pctDelta(d.latency.map((l) => l.p50)) : undefined}
         higherIsBetter={false}
         data={d.latency}
         xKey="hour"
@@ -276,7 +277,7 @@ export function ChartsDemo(props: Record<string, unknown>) {
         height={200}
       />
     ),
-    sparkline: <KpiTiles d={d} size={size} />,
+    sparkline: <KpiTiles d={d} size={size} deltas={deltas} />,
   };
 
   if (!all) {
@@ -286,7 +287,7 @@ export function ChartsDemo(props: Record<string, unknown>) {
   return (
     <div className="@container w-full max-w-[1120px] p-2 sm:p-6">
       <div className="grid grid-cols-1 gap-4 @3xl:grid-cols-6 [&>div>*]:h-full">
-        <KpiTiles d={d} size="fluid" />
+        <KpiTiles d={d} size="fluid" deltas={deltas} />
         <div className="@3xl:col-span-4">{charts.area}</div>
         <div className="@3xl:col-span-2">{charts.donut}</div>
         <div className="@3xl:col-span-2">{charts.bar}</div>
@@ -301,7 +302,7 @@ export function ChartsDemo(props: Record<string, unknown>) {
   );
 }
 
-function KpiTiles({ d, size }: { d: ReturnType<typeof build>; size: ChartSize }) {
+function KpiTiles({ d, size, deltas }: { d: ReturnType<typeof build>; size: ChartSize; deltas: boolean }) {
   const { users, churn, requests } = d.kpi;
   const tiles = (
     <>
@@ -310,7 +311,7 @@ function KpiTiles({ d, size }: { d: ReturnType<typeof build>; size: ChartSize })
         label="Active users"
         description="Monthly"
         value={Math.round(users[users.length - 1] * 1000).toLocaleString("en-US")}
-        delta={pctDelta(users)}
+        delta={deltas ? pctDelta(users) : undefined}
       >
         <Sparkline className="mt-4" data={users} variant="area" label="Active users over 12 months" />
       </ChartCard>
@@ -319,7 +320,7 @@ function KpiTiles({ d, size }: { d: ReturnType<typeof build>; size: ChartSize })
         label="Churn"
         description="Accounts lost per month"
         value={`${churn[churn.length - 1].toFixed(1)}%`}
-        delta={churn[churn.length - 1] - churn[churn.length - 2]}
+        delta={deltas ? churn[churn.length - 1] - churn[churn.length - 2] : undefined}
         formatDelta={(v) => `${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(v).toFixed(2)} pts`}
         higherIsBetter={false}
       >
@@ -330,7 +331,7 @@ function KpiTiles({ d, size }: { d: ReturnType<typeof build>; size: ChartSize })
         label="Requests"
         description="API calls per day"
         value={`${requests[requests.length - 1].toFixed(1)}M`}
-        delta={pctDelta(requests)}
+        delta={deltas ? pctDelta(requests) : undefined}
       >
         <Sparkline className="mt-4" data={requests} variant="bar" label="API requests over 12 days" />
       </ChartCard>

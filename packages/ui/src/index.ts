@@ -273,6 +273,15 @@ export type {
   RoughHandwritingProps,
   HandwritingFont,
 } from "./animated/roughly/RoughHandwriting";
+export { RoughCheck } from "./animated/roughly/RoughCheck";
+export type { RoughCheckProps, CheckMark, CheckSide } from "./animated/roughly/RoughCheck";
+export { RoughSticky } from "./animated/roughly/RoughSticky";
+export type {
+  RoughStickyProps,
+  StickyPlacement,
+  StickyPin,
+  StickyFont,
+} from "./animated/roughly/RoughSticky";
 
 // Matrix Ripple Background
 export { MatrixRippleBackground } from "./animated/matrix-ripple-background";
