@@ -232,6 +232,9 @@ export type { MeterProps } from "./animated/Meter";
 export { Gauge } from "./primitives/Gauge";
 export type { GaugeProps, GaugeSize, GaugeStatus } from "./primitives/Gauge";
 
+// Charts - line, area, bar, donut, radar, scatter, radial rings and sparklines in one material
+export * from "./charts";
+
 
 // Roughly - Hand-Drawn Text Annotation Suite
 export { Roughly } from "./animated/Roughly";

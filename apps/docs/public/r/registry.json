@@ -1497,6 +1497,69 @@
       ]
     },
     {
+      "name": "charts",
+      "type": "registry:ui",
+      "title": "Charts",
+      "description": "A family of charts in the machined material: line, area, grouped and stacked bars, ranked horizontal bars, donut, radar, scatter, radial goal rings and sparklines. Plots are cut into the card as recessed trays, series are told apart by luminance and dash rather than hue, bars rise out of wells as popout parts, and a crosshair tooltip follows the pointer or arrow keys. Every chart carries its data as a hidden table for screen readers.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/charts/index.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/charts/scale.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/charts/hooks.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/charts/axes.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/charts/ChartCard.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/charts/ChartTooltip.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/charts/LineChart.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/charts/BarChart.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/charts/DonutChart.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/charts/RadarChart.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/charts/ScatterChart.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/charts/RadialBarChart.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/charts/Sparkline.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "matrix-ripple-background",
       "type": "registry:ui",
       "title": "Matrix Ripple Background",

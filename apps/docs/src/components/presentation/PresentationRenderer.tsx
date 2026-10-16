@@ -124,6 +124,7 @@ import {
   StackedCardFanDemo,
 } from "@adgrid-ui/ui";
 import { Cards } from "../../../../../packages/ui/src/animated/Cards";
+import { ChartsDemo } from "./ChartsDemo";
 import type { RegistryEntry } from "@/registry";
 import { usePresentationStore } from "@/lib/presentation/store";
 import {
@@ -2038,6 +2039,8 @@ export function PresentationRenderer({
           <Meter value={45} {...liveProps} />
         </div>
       );
+    case "charts":
+      return <ChartsDemo {...liveProps} />;
     case "gauge":
       return <GaugeDemo {...liveProps} />;
     case "toast":
