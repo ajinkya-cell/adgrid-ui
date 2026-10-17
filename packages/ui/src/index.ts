@@ -83,6 +83,8 @@ export type {
   BreathingBackgroundPatternVariant,
 } from "./backgrounds/BreathingBackground";
 export { FloatingEmbers } from "./backgrounds/FloatingEmbers";
+export { HorizonGlow } from "./backgrounds/HorizonGlow";
+export type { HorizonGlowProps } from "./backgrounds/HorizonGlow";
 
 export { SpotlightGrid } from "./backgrounds/SpotlightGrid";
 export { LuminaWave } from "./backgrounds/LuminaWave";
@@ -356,6 +358,8 @@ export { RulerNav } from "./primitives/RulerNav";
 export { ActivityCard } from "./animated/ActivityCard";
 export { FolderReveal } from "./animated/FolderReveal";
 export type { FolderRevealProps } from "./animated/FolderReveal";
+export { PolaroidStack } from "./animated/PolaroidStack";
+export type { PolaroidStackProps, PolaroidStackPhoto, PolaroidStackVariant } from "./animated/PolaroidStack";
 export type { ActivityCardProps, ActivityCardMetric, ActivityCardRing } from "./animated/ActivityCard";
 export type { RulerNavProps, RulerNavGroup, RulerNavItem } from "./primitives/RulerNav";
 export { Pagination, pageRange } from "./primitives/Pagination";

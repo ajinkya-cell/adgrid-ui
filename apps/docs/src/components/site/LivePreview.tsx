@@ -29,6 +29,8 @@ const COMPONENT_HEIGHTS: Record<string, number> = {
   LuminaWave: 500,
   BreathingGrid: 500,
   FloatingEmbers: 500,
+  HorizonGlow: 500,
+  PolaroidStack: 720,
   PixelMelt: 500,
   ImageParallax: 500,
   TextShuffle: 520,

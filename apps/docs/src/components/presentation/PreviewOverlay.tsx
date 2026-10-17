@@ -34,6 +34,7 @@ const UI = {
   PixelMeltBackground: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.PixelMeltBackground }))),
   BreathingGrid: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.BreathingGrid }))),
   FloatingEmbers: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.FloatingEmbers }))),
+  HorizonGlow: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.HorizonGlow }))),
   SpotlightGrid: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.SpotlightGrid }))),
   LuminaWave: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.LuminaWave }))),
   MatrixRain: React.lazy(() => import("@adgrid-ui/ui").then(m => ({ default: m.MatrixRain }))),
@@ -268,6 +269,14 @@ export function MiniPreviewRenderer({ slug }: { slug: string }) {
         <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl pointer-events-none">
           <Suspense fallback={null}>
             <UI.FloatingEmbers />
+          </Suspense>
+        </div>
+      );
+    case "horizon-glow":
+      return (
+        <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl pointer-events-none">
+          <Suspense fallback={null}>
+            <UI.HorizonGlow className="min-h-0" />
           </Suspense>
         </div>
       );

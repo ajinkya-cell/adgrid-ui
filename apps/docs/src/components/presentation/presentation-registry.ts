@@ -31,7 +31,7 @@ export const PRESENTATION_GROUPS: { id: string; label: string; slugs: string[] }
   {
     id: "cards",
     label: "Cards",
-    slugs: ["simple-card", "cards", "sticker-card", "developer-id-card", "now-playing-card", "breathing-scale-card", "expand-on-hover", "gravity-card-stack", "stacked-cards", "stacked-card-fan", "polaroid-develop", "activity-card", "folder-reveal"],
+    slugs: ["simple-card", "cards", "sticker-card", "developer-id-card", "now-playing-card", "breathing-scale-card", "expand-on-hover", "gravity-card-stack", "stacked-cards", "stacked-card-fan", "polaroid-develop", "polaroid-stack", "activity-card", "folder-reveal"],
   },
   {
     id: "text",
@@ -46,7 +46,7 @@ export const PRESENTATION_GROUPS: { id: string; label: string; slugs: string[] }
   {
     id: "backgrounds",
     label: "Backgrounds",
-    slugs: ["lumina-wave", "breathing-background", "breathing-grid", "spotlight-grid", "floating-embers", "pixel-melt", "matrix-rain", "matrix-ripple-background", "flickering-grid-playground", "dot-pattern-playground"],
+    slugs: ["lumina-wave", "breathing-background", "breathing-grid", "spotlight-grid", "floating-embers", "horizon-glow", "pixel-melt", "matrix-rain", "matrix-ripple-background", "flickering-grid-playground", "dot-pattern-playground"],
   },
   {
     id: "pages",

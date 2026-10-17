@@ -17,6 +17,7 @@ import {
   ExpandOnHover,
   FloatingEmbers,
   GravityCardStack,
+  HorizonGlow,
   GuillocheButton,
   ImageParallax,
   ImageReveal,
@@ -117,6 +118,7 @@ import {
   type RulerNavGroup,
   ActivityCard,
   FolderReveal,
+  PolaroidStack,
   Pagination,
   usePopoverClose,
   Globe,
@@ -1680,6 +1682,8 @@ export function PresentationRenderer({
       return <BreathingBackground {...(liveProps as any)} />;
     case "floating-embers":
       return <FloatingEmbers />;
+    case "horizon-glow":
+      return <HorizonGlow {...(liveProps as any)} />;
     case "spotlight-grid":
       return <SpotlightGrid />;
     case "lumina-wave":
@@ -1788,6 +1792,8 @@ export function PresentationRenderer({
       return <RulerNavDemo liveProps={liveProps} />;
     case "folder-reveal":
       return <FolderRevealDemo liveProps={liveProps} />;
+    case "polaroid-stack":
+      return <PolaroidStackDemo liveProps={liveProps} />;
     case "activity-card":
       return <ActivityCardDemo liveProps={liveProps} />;
     case "file-upload":
@@ -2229,6 +2235,35 @@ function FolderRevealDemo({ liveProps }: { liveProps: any }) {
         label={liveProps.label ?? "Folder"}
       />
       <span className="font-inter text-xs text-neutral-500">Hover the folder</span>
+    </div>
+  );
+}
+
+function PolaroidStackDemo({ liveProps }: { liveProps: any }) {
+  const maxOut = liveProps.maxOut ?? 5;
+  const variant = liveProps.variant ?? "click";
+  return (
+    <div className="flex w-full max-w-6xl flex-col items-center gap-2 px-4">
+      <h2 className="text-center leading-none text-neutral-100" style={{ fontFamily: "'Jersey 10', monospace", fontSize: "clamp(2.75rem, 7vw, 5rem)" }}>
+        Play with Polaroids
+      </h2>
+      <p className="max-w-md text-center font-inter text-sm text-neutral-500">
+        {variant === "drag"
+          ? `Pick a print up and put it down anywhere. ${maxOut} fit on the table — drop one back on the pile, or double-click it, to put it home.`
+          : `Hover a print to peek at it, click to pull it out of the pile. ${maxOut} fit on the table — pull one more and the first goes home.`}
+      </p>
+      <PolaroidStack
+        key={`${liveProps.count}-${maxOut}-${variant}`}
+        variant={variant}
+        count={liveProps.count ?? 12}
+        maxOut={maxOut}
+        cardWidth={liveProps.cardWidth ?? 220}
+        spread={liveProps.spread ?? 0.55}
+        maxTilt={liveProps.maxTilt ?? 10}
+        hoverShift={liveProps.hoverShift ?? 28}
+        bounce={liveProps.bounce ?? 0.55}
+        inkColor={liveProps.inkColor ?? "#2b2b2b"}
+      />
     </div>
   );
 }

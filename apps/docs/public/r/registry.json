@@ -327,6 +327,18 @@
       ]
     },
     {
+      "name": "horizon-glow",
+      "type": "registry:ui",
+      "title": "Horizon Glow",
+      "description": "Soft blurred colour blobs drifting along the bottom edge and fading out as they rise, with film grain and a subtle cursor parallax.",
+      "files": [
+        {
+          "path": "components/ui/HorizonGlow.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "spotlight-grid",
       "type": "registry:ui",
       "title": "Spotlight Grid",
@@ -800,6 +812,21 @@
       "files": [
         {
           "path": "components/ui/FolderReveal.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "polaroid-stack",
+      "type": "registry:ui",
+      "title": "Polaroid Stack",
+      "description": "A pile of polaroids fanned out on a table with handwritten captions. Hover a print and it steps sideways out of the pile; click it and it springs out onto the table. Only a few fit at once: pull one more and the oldest bounces back home. The drag variant lets you pick prints up and put them down anywhere instead.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/PolaroidStack.tsx",
           "type": "registry:ui"
         }
       ]
