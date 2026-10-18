@@ -358,6 +358,8 @@ export { RulerNav } from "./primitives/RulerNav";
 export { ActivityCard } from "./animated/ActivityCard";
 export { FolderReveal } from "./animated/FolderReveal";
 export type { FolderRevealProps } from "./animated/FolderReveal";
+export { ChatFaq } from "./animated/ChatFaq";
+export type { ChatFaqProps, ChatFaqItem } from "./animated/ChatFaq";
 export { PolaroidStack } from "./animated/PolaroidStack";
 export type { PolaroidStackProps, PolaroidStackPhoto, PolaroidStackVariant } from "./animated/PolaroidStack";
 export type { ActivityCardProps, ActivityCardMetric, ActivityCardRing } from "./animated/ActivityCard";

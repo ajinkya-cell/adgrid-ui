@@ -118,6 +118,7 @@ import {
   type RulerNavGroup,
   ActivityCard,
   FolderReveal,
+  ChatFaq,
   PolaroidStack,
   Pagination,
   usePopoverClose,
@@ -1790,6 +1791,8 @@ export function PresentationRenderer({
       return <MenubarDemo />;
     case "ruler-nav":
       return <RulerNavDemo liveProps={liveProps} />;
+    case "chat-faq":
+      return <ChatFaqDemo liveProps={liveProps} />;
     case "folder-reveal":
       return <FolderRevealDemo liveProps={liveProps} />;
     case "polaroid-stack":
@@ -2546,3 +2549,54 @@ function TimelineDemo() {
 
 
 
+
+const CHAT_FAQ_ITEMS = [
+  {
+    id: "what",
+    question: "What is void-ui?",
+    answer: "A dark-first React component library. Every piece is built from the same material: machined surfaces lit from above, that rise when they matter and sink when they hold something.",
+  },
+  {
+    id: "install",
+    question: "How do I add a component?",
+    answer: "Run the shadcn CLI with the component's registry URL and the file lands in your project, ready to edit. Or install the package and import it.\n\nEither way it's your code from then on, with no runtime to keep in sync.",
+  },
+  {
+    id: "tailwind",
+    question: "Do I need Tailwind?",
+    answer: "The components are written with Tailwind v4 classes, so it's the smoothest path. The tokens also ship as plain CSS variables if you'd rather port a piece by hand.",
+  },
+  {
+    id: "next",
+    question: "Will it work with Next.js? Can I use it in server components?",
+    answer: "Yes. Every interactive component is marked \"use client\", so you can render it from a server component and it hydrates on its own. Nothing depends on Next-only APIs, so Vite and Remix work too.",
+  },
+  {
+    id: "a11y",
+    question: "Is it accessible?",
+    answer: "Each control sits on a native element, so keyboard, focus and screen readers work out of the box. Motion has a reduced-motion path everywhere.",
+  },
+  {
+    id: "light",
+    question: "Is there a light mode?",
+    answer: "Not yet. Every value is a token, so light mode will be a token swap rather than a rewrite.",
+  },
+  {
+    id: "price",
+    question: "What does it cost?",
+    answer: "Nothing. It's free and open source, for personal and commercial work.",
+  },
+];
+
+function ChatFaqDemo({ liveProps }: { liveProps: any }) {
+  return (
+    <div className="w-full max-w-[640px] px-4">
+      <ChatFaq
+        key={`${liveProps.allowMultiple}-${liveProps.animateText}`}
+        {...liveProps}
+        items={liveProps.items ?? CHAT_FAQ_ITEMS}
+        defaultValue={["install"]}
+      />
+    </div>
+  );
+}

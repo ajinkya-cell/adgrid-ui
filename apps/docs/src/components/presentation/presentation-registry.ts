@@ -26,7 +26,7 @@ export const PRESENTATION_GROUPS: { id: string; label: string; slugs: string[] }
   {
     id: "data",
     label: "Data Display",
-    slugs: ["charts", "table", "accordion", "timeline", "github-heatmap", "globe", "bento-grid", "dot-matrix"],
+    slugs: ["charts", "table", "accordion", "chat-faq", "timeline", "github-heatmap", "globe", "bento-grid", "dot-matrix"],
   },
   {
     id: "cards",

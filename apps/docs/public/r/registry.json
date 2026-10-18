@@ -1241,6 +1241,21 @@
       ]
     },
     {
+      "name": "chat-faq",
+      "type": "registry:ui",
+      "title": "Chat FAQ",
+      "description": "An FAQ that reads like a conversation. Questions are raised pills; ask one and it rises out of the stack, and the answer arrives as a reply bubble: a beat of typing dots, then the words stream in while the bubble grows to hold them. One answer at a time by default, full keyboard support, and screen readers get the whole answer at once.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/ChatFaq.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "sticker-card",
       "type": "registry:ui",
       "title": "Sticker Card",
