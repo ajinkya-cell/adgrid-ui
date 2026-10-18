@@ -330,7 +330,7 @@
       "name": "horizon-glow",
       "type": "registry:ui",
       "title": "Horizon Glow",
-      "description": "Soft blurred colour blobs drifting along the bottom edge and fading out as they rise, with film grain and a subtle cursor parallax.",
+      "description": "A glow rising off the bottom edge and fading out as it climbs, with film grain and a subtle cursor parallax. Two moods: soft drifting colour blobs, or a very slow audio-visualizer of heavily blurred columns rising and settling into one glowing skyline.",
       "files": [
         {
           "path": "components/ui/HorizonGlow.tsx",

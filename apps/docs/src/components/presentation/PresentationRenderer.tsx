@@ -1683,7 +1683,7 @@ export function PresentationRenderer({
     case "floating-embers":
       return <FloatingEmbers />;
     case "horizon-glow":
-      return <HorizonGlow {...(liveProps as any)} />;
+      return <HorizonGlowDemo liveProps={liveProps} />;
     case "spotlight-grid":
       return <SpotlightGrid />;
     case "lumina-wave":
@@ -2238,6 +2238,16 @@ function FolderRevealDemo({ liveProps }: { liveProps: any }) {
     </div>
   );
 }
+
+const HORIZON_GLOW_DEFAULTS = ["#ab0910", "#ed943a", "#dbbc27", "#0ea5e9"];
+
+function HorizonGlowDemo({ liveProps }: { liveProps: any }) {
+  // The tweaker edits single colours, so the four pickers are gathered back into `colors` here.
+  const { color1, color2, color3, color4, ...rest } = liveProps;
+  const colors = [color1, color2, color3, color4].map((c, i) => c ?? HORIZON_GLOW_DEFAULTS[i]);
+  return <HorizonGlow {...rest} colors={colors} />;
+}
+
 
 function PolaroidStackDemo({ liveProps }: { liveProps: any }) {
   const maxOut = liveProps.maxOut ?? 5;

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { motion, useMotionValue, useReducedMotion, type Transition } from "framer-motion";
+import { animate as animateValue, motion, useMotionValue, useReducedMotion, type Transition, type ValueAnimationTransition } from "framer-motion";
 import { cn } from "../lib/utils";
 
 // A pile of polaroids fanned out on a table, the middle print on top and the rest tucked behind
@@ -189,6 +189,8 @@ export function PolaroidStack({
   });
   // Drops whose centre lands within this of the pile's middle (and low enough) count as "put back".
   const pileHalf = ((n - 1) * step) / 2 + W * 0.3;
+  // Where a carried print may go: its box stays inside the component.
+  const bounds = { x: Math.max(0, (width - W) / 2), top: 0, bottom: Math.max(0, rootH - H) };
 
   const slotGap = limit > 1 ? Math.min(W * 1.2, (width - 2 * GUTTER - W * OUT_SCALE) / (limit - 1)) : 0;
   const slots = Array.from({ length: limit }, (_, s) => {
@@ -270,7 +272,13 @@ export function PolaroidStack({
         if (isOut) {
           const pulled = out[order];
           const s = pulled.at ?? slots[pulled.slot] ?? slots[0];
-          target = { x: s.x, y: s.y, rotate: s.rotate, scale: isHovered ? OUT_SCALE + 0.04 : OUT_SCALE };
+          // Dropped prints stay inside the component if it narrows afterwards.
+          target = {
+            x: pulled.at ? clamp(s.x, -bounds.x, bounds.x) : s.x,
+            y: pulled.at ? clamp(s.y, bounds.top, bounds.bottom) : s.y,
+            rotate: s.rotate,
+            scale: isHovered ? OUT_SCALE + 0.04 : OUT_SCALE,
+          };
         } else if (isHovered) {
           const dir = Math.abs(home.t) < 1e-6 ? 0 : Math.sign(home.t);
           target = {
@@ -300,7 +308,7 @@ export function PolaroidStack({
             inkColor={inkColor}
             isOut={isOut}
             draggable={draggable}
-            constraints={rootRef}
+            bounds={bounds}
             onActivate={() => toggle(i)}
             onHover={(on) => setHovered((h) => (on ? i : h === i ? null : h))}
             onDrop={(x, y) => drop(i, x, y)}
@@ -324,7 +332,7 @@ interface PrintProps {
   inkColor: string;
   isOut: boolean;
   draggable: boolean;
-  constraints: React.RefObject<HTMLDivElement | null>;
+  bounds: { x: number; top: number; bottom: number };
   onActivate: () => void;
   onHover: (on: boolean) => void;
   onDrop: (x: number, y: number) => void;
@@ -343,7 +351,7 @@ function Print({
   inkColor,
   isOut,
   draggable,
-  constraints,
+  bounds,
   onActivate,
   onHover,
   onDrop,
@@ -353,9 +361,41 @@ function Print({
   const x = useMotionValue(target.x);
   const y = useMotionValue(target.y);
   const [dragging, setDragging] = useState(false);
+  // The pointer holding this print. Carrying is done by hand rather than with framer's `drag`:
+  // its release inertia and ref constraints fought the drop animation and measured the tilted
+  // print wrongly, so prints jittered on release and stuck near the edges.
+  const hold = useRef<{ id: number; sx: number; sy: number; ox: number; oy: number; moved: boolean } | null>(null);
+  const lastDrop = useRef(0);
+
+  function release(e: React.PointerEvent<HTMLButtonElement>) {
+    const h = hold.current;
+    if (!h || h.id !== e.pointerId) return;
+    hold.current = null;
+    if (!h.moved) return;
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
+    lastDrop.current = Date.now();
+    setDragging(false);
+    onDrop(x.get(), y.get());
+  }
+
+  // x/y are driven here, never through `animate`: dropping them from `animate` while held made
+  // framer spring them back towards where the print was first mounted, under the pointer.
+  useEffect(() => {
+    if (dragging || (x.get() === target.x && y.get() === target.y)) return;
+    const ax = animateValue(x, target.x, transition as ValueAnimationTransition<number>);
+    const ay = animateValue(y, target.y, transition as ValueAnimationTransition<number>);
+    let live = true;
+    Promise.all([ax, ay]).then(() => live && onSettled());
+    return () => {
+      live = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [target.x, target.y, dragging]);
 
   // While held, only lift and straighten; x/y belong to the pointer.
-  const animate = dragging ? { scale: target.scale + 0.08, rotate: target.rotate * 0.3 } : target;
+  const animate = dragging
+    ? { scale: target.scale + 0.08, rotate: target.rotate * 0.3 }
+    : { scale: target.scale, rotate: target.rotate };
 
   return (
     <motion.button
@@ -364,27 +404,43 @@ function Print({
       aria-label={isOut ? `${label} — put back` : `${label} — pull out`}
       // Dragging replaces mouse clicks; Enter/Space (a click with detail 0) still work.
       onClick={(e) => (!draggable || e.detail === 0) && onActivate()}
-      onDoubleClick={() => draggable && isOut && onActivate()}
-      onHoverStart={() => onHover(true)}
-      onHoverEnd={() => onHover(false)}
-      onFocus={() => onHover(true)}
+      // Two quick carries also make a double-click; only a real one sends the print home.
+      onDoubleClick={() => draggable && isOut && Date.now() - lastDrop.current > 400 && onActivate()}
+      onHoverStart={() => !hold.current?.moved && onHover(true)}
+      onHoverEnd={() => !hold.current?.moved && onHover(false)}
+      // Keyboard focus only; a mouse click focuses too, which left the print stuck "hovered".
+      onFocus={(e) => e.currentTarget.matches(":focus-visible") && onHover(true)}
       onBlur={() => onHover(false)}
-      drag={draggable}
-      dragConstraints={constraints}
-      dragElastic={0.12}
-      dragMomentum={false}
-      onDragStart={() => {
-        setDragging(true);
-        onHover(false);
+      onPointerDown={(e) => {
+        if (!draggable || !e.isPrimary || e.button !== 0) return;
+        hold.current = { id: e.pointerId, sx: e.clientX, sy: e.clientY, ox: 0, oy: 0, moved: false };
       }}
-      onDragEnd={() => {
-        setDragging(false);
-        onDrop(x.get(), y.get());
+      onPointerMove={(e) => {
+        const h = hold.current;
+        if (!h || h.id !== e.pointerId) return;
+        if (!h.moved) {
+          // A few px of slack so a plain click or double-click doesn't pick the print up.
+          if (Math.hypot(e.clientX - h.sx, e.clientY - h.sy) < 4) return;
+          h.moved = true;
+          e.currentTarget.setPointerCapture(e.pointerId);
+          // Take it from wherever it is, even mid-flight, without a jump.
+          x.stop();
+          y.stop();
+          h.ox = x.get();
+          h.oy = y.get();
+          h.sx = e.clientX;
+          h.sy = e.clientY;
+          setDragging(true);
+          onHover(false);
+        }
+        x.set(clamp(h.ox + e.clientX - h.sx, -bounds.x, bounds.x));
+        y.set(clamp(h.oy + e.clientY - h.sy, bounds.top, bounds.bottom));
       }}
+      onPointerUp={release}
+      onPointerCancel={release}
       initial={false}
       animate={animate}
       transition={dragging ? liftTransition : transition}
-      onAnimationComplete={onSettled}
       className="absolute left-1/2 top-0 block rounded-[3px] p-0 text-left outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
       style={{
         x,

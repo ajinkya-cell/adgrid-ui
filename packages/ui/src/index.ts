@@ -84,7 +84,7 @@ export type {
 } from "./backgrounds/BreathingBackground";
 export { FloatingEmbers } from "./backgrounds/FloatingEmbers";
 export { HorizonGlow } from "./backgrounds/HorizonGlow";
-export type { HorizonGlowProps } from "./backgrounds/HorizonGlow";
+export type { HorizonGlowProps, HorizonGlowVariant } from "./backgrounds/HorizonGlow";
 
 export { SpotlightGrid } from "./backgrounds/SpotlightGrid";
 export { LuminaWave } from "./backgrounds/LuminaWave";
