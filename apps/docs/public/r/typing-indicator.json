@@ -1,0 +1,21 @@
+{
+  "name": "typing-indicator",
+  "type": "registry:ui",
+  "title": "Typing Indicator",
+  "description": "Shows the assistant is working before any words arrive: three dots breathing in turn, or a label with a band of light passing across it.",
+  "dependencies": [
+    "framer-motion"
+  ],
+  "files": [
+    {
+      "path": "components/ui/TypingIndicator.tsx",
+      "content": "\"use client\";\n\nimport { forwardRef, type HTMLAttributes } from \"react\";\nimport { motion, useReducedMotion } from \"framer-motion\";\nimport { cn } from \"@/lib/utils\";\n\n// Shows the assistant is working before any words arrive. Two forms:\n// - dots: three small dots breathing in turn, lifted straight from the Chat FAQ bubble.\n// - shimmer: a label (\"Thinking\") with a band of light passing across it, left to right.\n// Both are live states, so both may move; neither glows. Under reduced motion the dots keep their\n// slow fade (it's opacity only) and the shimmer becomes a gentle fade of the whole label.\n// It's a status region, so screen readers hear the label once.\n\nexport type TypingIndicatorVariant = \"dots\" | \"shimmer\";\nexport type TypingIndicatorSize = \"sm\" | \"md\" | \"lg\";\n\nexport interface TypingIndicatorProps extends Omit<HTMLAttributes<HTMLSpanElement>, \"children\"> {\n  /** Default \"dots\". */\n  variant?: TypingIndicatorVariant;\n  /** Default \"md\". */\n  size?: TypingIndicatorSize;\n  /** Shown by the shimmer, read by screen readers for both. Default \"Thinking\". */\n  label?: string;\n}\n\nconst SIZES = {\n  sm: { dot: \"size-1\", gap: \"gap-1\", text: \"text-[13px]\" },\n  md: { dot: \"size-[5px]\", gap: \"gap-1.5\", text: \"text-sm\" },\n  lg: { dot: \"size-1.5\", gap: \"gap-2\", text: \"text-[15px]\" },\n} as const;\n\n// Dim text with a brighter band in the middle of a wide background; sliding the background moves\n// the band across the letters.\nconst SHIMMER =\n  \"bg-[linear-gradient(90deg,#737373_0%,#737373_40%,#e5e5e5_50%,#737373_60%,#737373_100%)] bg-[length:250%_100%] bg-clip-text text-transparent\";\n\nexport const TypingIndicator = forwardRef<HTMLSpanElement, TypingIndicatorProps>(function TypingIndicator(\n  { variant = \"dots\", size = \"md\", label = \"Thinking\", className, ...rest },\n  ref\n) {\n  const reduce = useReducedMotion() ?? false;\n  const s = SIZES[size];\n\n  return (\n    <span\n      {...rest}\n      ref={ref}\n      role=\"status\"\n      data-variant={variant}\n      className={cn(\"inline-flex items-center\", className)}\n    >\n      {variant === \"dots\" ? (\n        <>\n          <span aria-hidden=\"true\" className={cn(\"inline-flex h-[1.5em] items-center\", s.gap)}>\n            {[0, 1, 2].map((d) => (\n              <motion.span\n                key={d}\n                className={cn(\"rounded-full bg-neutral-400\", s.dot)}\n                initial={{ opacity: 0.25 }}\n                animate={{ opacity: [0.25, 1, 0.25] }}\n                transition={{ duration: reduce ? 1.6 : 1, repeat: Infinity, delay: d * 0.16, ease: \"easeInOut\" }}\n              />\n            ))}\n          </span>\n          <span className=\"sr-only\">{label}</span>\n        </>\n      ) : (\n        <motion.span\n          className={cn(\"font-medium tracking-tight select-none\", s.text, reduce ? \"text-neutral-400\" : SHIMMER)}\n          initial={reduce ? { opacity: 0.5 } : { backgroundPosition: \"100% 0%\" }}\n          animate={reduce ? { opacity: [0.5, 1, 0.5] } : { backgroundPosition: [\"100% 0%\", \"0% 0%\"] }}\n          transition={{ duration: reduce ? 2 : 1.8, repeat: Infinity, ease: reduce ? \"easeInOut\" : \"linear\" }}\n        >\n          {label}\n        </motion.span>\n      )}\n    </span>\n  );\n});\n",
+      "type": "registry:ui"
+    },
+    {
+      "path": "lib/utils.ts",
+      "content": "import { clsx, type ClassValue } from \"clsx\";\r\nimport { twMerge } from \"tailwind-merge\";\r\n\r\nexport function cn(...inputs: ClassValue[]) {\r\n  return twMerge(clsx(inputs));\r\n}",
+      "type": "registry:lib"
+    }
+  ]
+}

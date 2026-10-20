@@ -1256,6 +1256,165 @@
       ]
     },
     {
+      "name": "conversation",
+      "type": "registry:ui",
+      "title": "Conversation",
+      "description": "The scrolling thread a chat lives in. It holds on to the bottom while a reply streams, lets go when you scroll up to read, and offers a raised key to glide back down. A native log region: set busy while streaming and screen readers announce the finished reply, not every token.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/Conversation.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "message",
+      "type": "registry:ui",
+      "title": "Message",
+      "description": "One turn in a chat. A user message is a raised bubble with a curl off its corner; an assistant reply sits flat on the page beside an avatar socket. Status walks it from typing dots to streaming words to done, or to an error with Retry. Messages rise in and fade away.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/message/Message.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/message/StreamingText.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/message/TypingIndicator.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "prompt-input",
+      "type": "registry:ui",
+      "title": "Prompt Input",
+      "description": "The chat composer: a deep well that grows a line at a time, with a tray for tools and a send key that rises out of its socket once there's something to send. While a reply is on its way the key becomes stop. Enter sends, Shift+Enter breaks a line; status matches the AI SDK's useChat.",
+      "files": [
+        {
+          "path": "components/ui/PromptInput.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "streaming-text",
+      "type": "registry:ui",
+      "title": "Streaming Text",
+      "description": "Text that arrives a word at a time; each word settles and un-blurs as it lands. Feed it a growing string from a model stream, or the finished text with reveal and it plays itself. A caret blinks while it's live.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/StreamingText.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "typing-indicator",
+      "type": "registry:ui",
+      "title": "Typing Indicator",
+      "description": "Shows the assistant is working before any words arrive: three dots breathing in turn, or a label with a band of light passing across it.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/TypingIndicator.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "chat-sidebar",
+      "type": "registry:ui",
+      "title": "Chat Sidebar",
+      "description": "The history panel of a chat app: a New chat key, a search well, and threads grouped Pinned, Today, Yesterday, Previous 7 days and on by month. The open thread is a raised segment that glides between rows. Each row's ⋯ key unfolds a menu (Share, Rename, Pin, Archive, Delete) that scales out of the key as its blur clears, with a gliding highlight and a small gesture on every icon. Icons by Hugeicons.",
+      "dependencies": [
+        "framer-motion",
+        "@hugeicons/react",
+        "@hugeicons/core-free-icons"
+      ],
+      "files": [
+        {
+          "path": "components/ui/ChatSidebar.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "markdown",
+      "type": "registry:ui",
+      "title": "Markdown",
+      "description": "A model's reply, rendered as it streams: headings, lists, quotes, tables, fenced code as a Code Block, and inline marks. Words come out on a steady beat and fade up out of a blur; half-finished bold or code is closed for you so nothing flickers. Built-in parser, no dependency.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/markdown/Markdown.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/markdown/CodeBlock.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/markdown/StreamingText.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "code-block",
+      "type": "registry:ui",
+      "title": "Code Block",
+      "description": "Code in a well, with a tray carrying the language and a copy key. Highlighting is monochrome, light and weight instead of hue, from a tiny built-in tokenizer. Optional line numbers; scrolls sideways instead of wrapping.",
+      "files": [
+        {
+          "path": "components/ui/CodeBlock.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "message-actions",
+      "type": "registry:ui",
+      "title": "Message Actions",
+      "description": "The quiet row of keys under a reply: copy (turns into a tick), regenerate (gives its arrows a turn), good and bad. A rating sinks into a socket and stays there. Add your own keys with MessageAction.",
+      "files": [
+        {
+          "path": "components/ui/MessageActions.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "prompt-suggestions",
+      "type": "registry:ui",
+      "title": "Prompt Suggestions",
+      "description": "Starter prompts for an empty chat or a follow-up: a wrapping row of raised pills, or a grid of cards with an icon in a socket and a line of description. They rise in one after another.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/PromptSuggestions.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "sticker-card",
       "type": "registry:ui",
       "title": "Sticker Card",

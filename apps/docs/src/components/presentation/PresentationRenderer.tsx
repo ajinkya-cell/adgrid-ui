@@ -132,6 +132,18 @@ import {
 } from "@adgrid-ui/ui";
 import { Cards } from "../../../../../packages/ui/src/animated/Cards";
 import { ChartsDemo } from "./ChartsDemo";
+import {
+  ChatSidebarDemo,
+  CodeBlockDemo,
+  ConversationDemo,
+  MarkdownDemo,
+  MessageActionsDemo,
+  MessageDemo,
+  PromptInputDemo,
+  PromptSuggestionsDemo,
+  StreamingTextDemo,
+  TypingIndicatorDemo,
+} from "./AiChatDemos";
 import type { RegistryEntry } from "@/registry";
 import { usePresentationStore } from "@/lib/presentation/store";
 import {
@@ -1793,6 +1805,26 @@ export function PresentationRenderer({
       return <RulerNavDemo liveProps={liveProps} />;
     case "chat-faq":
       return <ChatFaqDemo liveProps={liveProps} />;
+    case "conversation":
+      return <ConversationDemo liveProps={liveProps} />;
+    case "message":
+      return <MessageDemo liveProps={liveProps} />;
+    case "prompt-input":
+      return <PromptInputDemo liveProps={liveProps} />;
+    case "streaming-text":
+      return <StreamingTextDemo liveProps={liveProps} />;
+    case "typing-indicator":
+      return <TypingIndicatorDemo liveProps={liveProps} />;
+    case "chat-sidebar":
+      return <ChatSidebarDemo liveProps={liveProps} />;
+    case "markdown":
+      return <MarkdownDemo liveProps={liveProps} />;
+    case "code-block":
+      return <CodeBlockDemo liveProps={liveProps} />;
+    case "message-actions":
+      return <MessageActionsDemo liveProps={liveProps} />;
+    case "prompt-suggestions":
+      return <PromptSuggestionsDemo liveProps={liveProps} />;
     case "folder-reveal":
       return <FolderRevealDemo liveProps={liveProps} />;
     case "polaroid-stack":

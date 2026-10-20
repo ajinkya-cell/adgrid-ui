@@ -367,3 +367,25 @@ export type { RulerNavProps, RulerNavGroup, RulerNavItem } from "./primitives/Ru
 export { Pagination, pageRange } from "./primitives/Pagination";
 export type { PaginationProps, PaginationVariant, PaginationSize } from "./primitives/Pagination";
 export type { ToasterProps, ToasterPosition, ToastOptions, ToastAction, ToastData, ToastType } from "./primitives/Toast";
+
+// AI — chat building blocks
+export { StreamingText } from "./ai/StreamingText";
+export type { StreamingTextProps } from "./ai/StreamingText";
+export { TypingIndicator } from "./ai/TypingIndicator";
+export type { TypingIndicatorProps, TypingIndicatorVariant, TypingIndicatorSize } from "./ai/TypingIndicator";
+export { Message } from "./ai/Message";
+export type { MessageProps, MessageFrom, MessageStatus, MessageSize } from "./ai/Message";
+export { Conversation } from "./ai/Conversation";
+export type { ConversationProps } from "./ai/Conversation";
+export { PromptInput } from "./ai/PromptInput";
+export type { PromptInputProps, PromptInputStatus, PromptInputSize } from "./ai/PromptInput";
+export { CodeBlock } from "./ai/CodeBlock";
+export type { CodeBlockProps } from "./ai/CodeBlock";
+export { Markdown } from "./ai/Markdown";
+export type { MarkdownProps } from "./ai/Markdown";
+export { MessageActions, MessageAction } from "./ai/MessageActions";
+export type { MessageActionsProps, MessageActionProps, MessageFeedback, MessageActionsSize } from "./ai/MessageActions";
+export { PromptSuggestions } from "./ai/PromptSuggestions";
+export type { PromptSuggestionsProps, PromptSuggestion, PromptSuggestionsVariant, PromptSuggestionsSize } from "./ai/PromptSuggestions";
+export { ChatSidebar } from "./ai/ChatSidebar";
+export type { ChatSidebarProps, ChatThread } from "./ai/ChatSidebar";

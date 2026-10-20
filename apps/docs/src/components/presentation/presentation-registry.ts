@@ -24,6 +24,11 @@ export const PRESENTATION_GROUPS: { id: string; label: string; slugs: string[] }
     slugs: ["nav", "sidebar", "navbar-1", "menubar", "ruler-nav", "tabs", "breadcrumbs", "pagination", "weapon-wheel", "scroll-progress", "ruler-scrollbar", "scroll-water"],
   },
   {
+    id: "ai",
+    label: "AI",
+    slugs: ["chat-sidebar", "conversation", "message", "prompt-input", "markdown", "code-block", "message-actions", "prompt-suggestions", "streaming-text", "typing-indicator"],
+  },
+  {
     id: "data",
     label: "Data Display",
     slugs: ["charts", "table", "accordion", "chat-faq", "timeline", "github-heatmap", "globe", "bento-grid", "dot-matrix"],
