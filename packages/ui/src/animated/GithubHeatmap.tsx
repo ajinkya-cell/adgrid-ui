@@ -1,8 +1,18 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { cn } from "../lib/utils";
+import { SegmentedControl } from "../primitives/SegmentedControl";
+
+// Two variants share one API and one data pipeline:
+// - "glow" (default): the original neon heatmap with colour presets, ambient glows and emoji stats.
+// - "machined": the design-system heatmap. The grid is cut into a recessed tray, empty days are
+//   sockets, and activity is light rather than hue: each level is a brighter surface until the
+//   busiest days become the popout. Stats sit in a tray, the year picker is a SegmentedControl,
+//   and nothing glows or sets its own font. `preset` is ignored; `customColors` still applies.
+
+export type GithubHeatmapVariant = "glow" | "machined";
 
 export type GithubHeatmapPreset =
   | "emerald"
@@ -20,6 +30,8 @@ export interface ContributionDay {
 export interface GithubHeatmapProps
   extends React.HTMLAttributes<HTMLDivElement> {
   username?: string;
+  /** "glow" (default) is the original; "machined" follows the design system. */
+  variant?: GithubHeatmapVariant;
   preset?: GithubHeatmapPreset;
   customColors?: [string, string, string, string, string];
   data?: ContributionDay[];
@@ -116,6 +128,13 @@ function isContributionLevel(level: unknown): level is ContributionDay["level"] 
   return typeof level === "number" && Number.isInteger(level) && level >= 0 && level <= 4;
 }
 
+// "YYYY-MM-DD" parsed as a local date. `new Date("YYYY-MM-DD")` is UTC midnight, which lands on
+// the previous day (and sometimes the previous month) west of Greenwich.
+function parseDay(date: string) {
+  const [y, m, d] = date.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+
 function getContributionLevel(count: number): ContributionDay["level"] {
   if (count > 12) return 4;
   if (count > 7) return 3;
@@ -125,6 +144,7 @@ function getContributionLevel(count: number): ContributionDay["level"] {
 
 export function GithubHeatmap({
   username = "ajinkya-cell",
+  variant = "glow",
   preset = "emerald",
   customColors,
   data: customData,
@@ -291,7 +311,7 @@ export function GithubHeatmap({
     const weekCols: ContributionDay[][] = [];
     let currentWeek: ContributionDay[] = [];
 
-    const firstDate = new Date(sorted[0].date);
+    const firstDate = parseDay(sorted[0].date);
     const firstDayOfWeek = firstDate.getDay();
 
     for (let i = 0; i < firstDayOfWeek; i++) {
@@ -302,7 +322,7 @@ export function GithubHeatmap({
     let lastMonth = -1;
 
     sorted.forEach((day) => {
-      const dateObj = new Date(day.date);
+      const dateObj = parseDay(day.date);
       const monthIndex = dateObj.getMonth();
 
       if (monthIndex !== lastMonth) {
@@ -340,6 +360,34 @@ export function GithubHeatmap({
 
   const selectedYearLabel =
     selectedYear === "last-year" ? "Now" : String(selectedYear);
+
+  if (variant === "machined") {
+    return (
+      <MachinedHeatmap
+        username={username}
+        years={years}
+        selectedYear={selectedYear}
+        onYearChange={(yr) => {
+          setSelectedYear(yr);
+          setSelectedMonth(null);
+        }}
+        loading={loading}
+        loadError={loadError}
+        stats={stats}
+        weeks={weeks}
+        monthHeaders={monthHeaders}
+        selectedMonth={selectedMonth}
+        onMonthChange={setSelectedMonth}
+        customColors={customColors}
+        showStats={showStats}
+        showLegend={showLegend}
+        showMonthLabels={showMonthLabels}
+        showDayLabels={showDayLabels}
+        className={className}
+        {...props}
+      />
+    );
+  }
 
   return (
     <div
@@ -380,16 +428,17 @@ export function GithubHeatmap({
             </div>
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-xl font-bold tracking-tight text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                @{username}
-              </h2>
-              <span className="text-xs px-2 py-0.5 rounded-full border-t border-t-white/20 border-b border-b-black/80 bg-neutral-900 text-neutral-400 font-mono shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
-                GitHub
-              </span>
-            </div>
+            <h2 className="text-xl font-bold tracking-tight text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+              @{username}
+            </h2>
             <p className="text-xs text-neutral-400">
-              Contribution activity ({selectedYear === "last-year" ? "past 365 days ending today" : `in ${selectedYear}`})
+              {loading
+                ? "Loading contributions..."
+                : loadError
+                  ? "Contribution activity"
+                  : `${stats.total.toLocaleString()} ${stats.total === 1 ? "contribution" : "contributions"} ${
+                      selectedYear === "last-year" ? "in the last year" : `in ${selectedYear}`
+                    }`}
             </p>
           </div>
         </div>
@@ -537,7 +586,7 @@ export function GithubHeatmap({
                         );
                       }
 
-                      const dayMonth = new Date(day.date).getMonth();
+                      const dayMonth = parseDay(day.date).getMonth();
                       const isFilteredOut =
                         selectedMonth !== null && dayMonth !== selectedMonth;
 
@@ -601,7 +650,7 @@ export function GithubHeatmap({
               {hoveredDay.day.count === 1 ? "contribution" : "contributions"}
             </div>
             <div className="text-[10px] text-neutral-400 font-mono">
-              {new Date(hoveredDay.day.date).toLocaleDateString(undefined, {
+              {parseDay(hoveredDay.day.date).toLocaleDateString(undefined, {
                 weekday: "short",
                 year: "numeric",
                 month: "short",
@@ -637,6 +686,356 @@ export function GithubHeatmap({
               ))}
             </div>
             <span className="text-[11px] text-neutral-500 font-medium">More</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Machined (design-system) variant ───────────────────────────────────────
+
+type YearOption = number | "last-year";
+
+// Empty days are sockets cut into the tray; activity is light, not hue. Each level is a brighter
+// surface, and the busiest days rise into the popout.
+const MACHINED_LEVELS: [string, string, string, string, string] = [
+  "border border-white/[0.04] bg-[#070707] shadow-[inset_0_1px_2px_rgba(0,0,0,0.85)]",
+  "border border-white/[0.05] border-t-white/[0.1] bg-white/[0.1]",
+  "border border-white/[0.08] border-t-white/[0.18] bg-white/[0.24]",
+  "border border-white/[0.16] border-t-white/[0.32] bg-white/[0.5]",
+  "border border-white/40 bg-[linear-gradient(180deg,#f5f5f5_0%,#d9d9d9_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_1px_2px_rgba(0,0,0,0.6)]",
+];
+
+const TRAY_CLASS =
+  "rounded-xl border border-white/[0.06] bg-[#0c0c0d] shadow-[inset_0_1.5px_3px_rgba(0,0,0,0.85),0_1px_0_rgba(255,255,255,0.05)]";
+
+const RAISED_CLASS = cn(
+  "border border-white/[0.08] border-t-white/[0.16] bg-[linear-gradient(180deg,#1b1b1d_0%,#151516_100%)]",
+  "shadow-[inset_0_1.5px_0_0_rgba(255,255,255,0.08),inset_0_-1px_0_0_rgba(0,0,0,0.5),0_14px_30px_-10px_rgba(0,0,0,0.5),0_1px_4px_-1px_rgba(0,0,0,0.35)]"
+);
+
+// Rows run Sunday → Saturday, as the weeks are built.
+const DAY_ROW_LABELS = ["", "Mon", "", "Wed", "", "Fri", ""];
+
+const EASE_OUT = [0.32, 0.72, 0, 1] as const;
+
+function formatDay(date: string, options: Intl.DateTimeFormatOptions) {
+  return parseDay(date).toLocaleDateString(undefined, options);
+}
+
+function MachinedHeatmap({
+  username,
+  years,
+  selectedYear,
+  onYearChange,
+  loading,
+  loadError,
+  stats,
+  weeks,
+  monthHeaders,
+  selectedMonth,
+  onMonthChange,
+  customColors,
+  showStats,
+  showLegend,
+  showMonthLabels,
+  showDayLabels,
+  className,
+  ...props
+}: {
+  username: string;
+  years: YearOption[];
+  selectedYear: YearOption;
+  onYearChange: (year: YearOption) => void;
+  loading: boolean;
+  loadError: string | null;
+  stats: {
+    total: number;
+    currentStreak: number;
+    longestStreak: number;
+    peakDay: { count: number; date: string };
+  };
+  weeks: ContributionDay[][];
+  monthHeaders: { monthIndex: number; name: string; colIndex: number }[];
+  selectedMonth: number | null;
+  onMonthChange: (month: number | null) => void;
+  customColors?: [string, string, string, string, string];
+  showStats: boolean;
+  showLegend: boolean;
+  showMonthLabels: boolean;
+  showDayLabels: boolean;
+  className?: string;
+} & React.HTMLAttributes<HTMLDivElement>) {
+  const reduceMotion = useReducedMotion() ?? false;
+  const trayRef = useRef<HTMLDivElement>(null);
+  const [avatarFailed, setAvatarFailed] = useState(false);
+  const [hovered, setHovered] = useState<{ day: ContributionDay; x: number; y: number } | null>(null);
+
+  useEffect(() => setAvatarFailed(false), [username]);
+
+  const levelClass = (level: ContributionDay["level"]) => customColors?.[level] ?? MACHINED_LEVELS[level];
+  const period = selectedYear === "last-year" ? "in the last year" : `in ${selectedYear}`;
+  const ready = !loading && !loadError && weeks.length > 0;
+
+  // The label column is optional, so every grid column index is offset by it.
+  const columnOffset = showDayLabels ? 2 : 1;
+  const gridTemplateColumns = `${showDayLabels ? "auto " : ""}repeat(${weeks.length}, minmax(0, 1fr))`;
+  // A month that starts within two weeks of the next one has no room for its label.
+  const visibleMonths = monthHeaders.filter(
+    (mh, i) => (monthHeaders[i + 1]?.colIndex ?? weeks.length) - mh.colIndex >= 2
+  );
+
+  const monthTotal = useMemo(() => {
+    if (selectedMonth === null) return 0;
+    let total = 0;
+    for (const week of weeks) {
+      for (const day of week) {
+        if (day.count > 0 && parseDay(day.date).getMonth() === selectedMonth) total += day.count;
+      }
+    }
+    return total;
+  }, [weeks, selectedMonth]);
+
+  // Measured against the tray rather than the viewport, so the tooltip stays put inside
+  // transformed (scaled) previews as well.
+  const showTooltip = (day: ContributionDay, cell: HTMLElement) => {
+    const tray = trayRef.current;
+    if (!tray) return;
+    const trayRect = tray.getBoundingClientRect();
+    const cellRect = cell.getBoundingClientRect();
+    const scale = trayRect.width ? tray.offsetWidth / trayRect.width : 1;
+    setHovered({
+      day,
+      x: (cellRect.left + cellRect.width / 2 - trayRect.left) * scale,
+      y: (cellRect.top - trayRect.top) * scale,
+    });
+  };
+
+  return (
+    <div
+      className={cn("relative w-full rounded-2xl p-5 text-neutral-100 sm:p-6", RAISED_CLASS, className)}
+      {...props}
+    >
+      {/* Prismatic edge */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[1.5px] rounded-t-2xl"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 25%, rgba(255,255,255,0.32) 50%, rgba(255,255,255,0.18) 75%, transparent 100%)",
+        }}
+      />
+
+      {/* Header: avatar socket, handle, year picker */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex min-w-0 items-center gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/[0.06] bg-[#070707] p-[3px] shadow-[inset_0_1.5px_3px_rgba(0,0,0,0.85),0_1px_0_rgba(255,255,255,0.05)]">
+            {avatarFailed ? (
+              <span className="text-sm font-medium text-neutral-400 uppercase">{username.charAt(0)}</span>
+            ) : (
+              <img
+                src={`https://github.com/${username}.png`}
+                alt=""
+                className="h-full w-full rounded-full object-cover"
+                onError={() => setAvatarFailed(true)}
+              />
+            )}
+          </span>
+          <div className="min-w-0">
+            <div className="truncate text-sm font-medium tracking-tight text-neutral-100">@{username}</div>
+            <div className="truncate text-xs text-neutral-500" aria-live="polite">
+              {loading
+                ? "Loading contributions…"
+                : loadError
+                  ? "GitHub contributions"
+                  : `${stats.total.toLocaleString()} ${stats.total === 1 ? "contribution" : "contributions"} ${period}`}
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-full overflow-x-auto">
+          <SegmentedControl
+            size="sm"
+            aria-label="Contribution period"
+            value={String(selectedYear)}
+            onValueChange={(value) => onYearChange(value === "last-year" ? "last-year" : Number(value))}
+            options={years.map((yr) => ({
+              value: String(yr),
+              label: yr === "last-year" ? "Past year" : String(yr),
+            }))}
+          />
+        </div>
+      </div>
+
+      {/* Stats tray */}
+      {showStats && !loadError && (
+        <div className={cn("mt-5 grid grid-cols-2 gap-px overflow-hidden sm:grid-cols-4", TRAY_CLASS, "bg-white/[0.06]")}>
+          {[
+            { label: "Contributions", value: stats.total.toLocaleString() },
+            { label: "Current streak", value: `${stats.currentStreak} ${stats.currentStreak === 1 ? "day" : "days"}` },
+            { label: "Longest streak", value: `${stats.longestStreak} ${stats.longestStreak === 1 ? "day" : "days"}` },
+            {
+              label: "Best day",
+              value: stats.peakDay.count.toLocaleString(),
+              meta: stats.peakDay.date !== "-" ? formatDay(stats.peakDay.date, { month: "short", day: "numeric" }) : undefined,
+            },
+          ].map((stat) => (
+            <div key={stat.label} className="flex flex-col gap-1 bg-[#0c0c0d] px-3.5 py-3">
+              <span className="text-xs text-neutral-500">{stat.label}</span>
+              <span className="flex items-baseline gap-1.5">
+                <span className="text-base font-medium tracking-tight text-neutral-100 tabular-nums">
+                  {loading ? "—" : stat.value}
+                </span>
+                {!loading && stat.meta && <span className="text-xs text-neutral-500">{stat.meta}</span>}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Grid tray */}
+      <div ref={trayRef} className={cn("relative mt-4 p-3 sm:p-4", TRAY_CLASS)}>
+        {!ready ? (
+          <div role="status" className="flex h-32 items-center justify-center text-center text-sm text-neutral-500">
+            {loading ? "Loading contributions…" : loadError ?? "No contributions to show."}
+          </div>
+        ) : (
+          <motion.div
+            key={String(selectedYear)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.26, ease: EASE_OUT }}
+          >
+            {showMonthLabels && (
+              <div className="mb-1.5 grid gap-[3px]" style={{ gridTemplateColumns }}>
+                {showDayLabels && <span aria-hidden="true" />}
+                {visibleMonths.map((mh) => {
+                  const active = selectedMonth === mh.monthIndex;
+                  return (
+                    <button
+                      key={`${mh.monthIndex}-${mh.colIndex}`}
+                      type="button"
+                      aria-pressed={active}
+                      onClick={() => onMonthChange(active ? null : mh.monthIndex)}
+                      style={{ gridColumnStart: mh.colIndex + columnOffset, gridRowStart: 1 }}
+                      className={cn(
+                        "-ml-1 w-max cursor-pointer rounded-md px-1 py-0.5 text-left text-[11px] leading-none transition-colors duration-150",
+                        "outline-white/40 outline-offset-1 focus-visible:outline focus-visible:outline-1",
+                        active ? "bg-white/[0.08] text-neutral-100" : "text-neutral-500 hover:text-neutral-300"
+                      )}
+                    >
+                      {mh.name}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+
+            <div
+              role="img"
+              aria-label={`${stats.total.toLocaleString()} contributions ${period}`}
+              className="grid gap-[3px]"
+              style={{ gridTemplateColumns, gridTemplateRows: "repeat(7, auto)", gridAutoFlow: "column" }}
+              onMouseLeave={() => setHovered(null)}
+            >
+              {showDayLabels &&
+                DAY_ROW_LABELS.map((label, i) => (
+                  <span
+                    key={`label-${i}`}
+                    aria-hidden="true"
+                    className="flex items-center pr-2 text-[10px] leading-none text-neutral-500"
+                  >
+                    {label}
+                  </span>
+                ))}
+              {weeks.flatMap((week, colIdx) =>
+                Array.from({ length: 7 }, (_, rowIdx) => {
+                  const day = week[rowIdx];
+                  if (!day || day.count === -1) {
+                    return <span key={`${colIdx}-${rowIdx}`} aria-hidden="true" />;
+                  }
+                  const dimmed = selectedMonth !== null && parseDay(day.date).getMonth() !== selectedMonth;
+                  return (
+                    <span
+                      key={day.date}
+                      aria-hidden="true"
+                      onMouseEnter={(e) => showTooltip(day, e.currentTarget)}
+                      className={cn(
+                        "aspect-square w-full rounded-[3px] transition-[opacity,outline-color] duration-150",
+                        levelClass(day.level),
+                        dimmed && "opacity-15",
+                        hovered?.day.date === day.date
+                          ? "outline outline-1 outline-offset-1 outline-white/60"
+                          : "outline-transparent"
+                      )}
+                    />
+                  );
+                })
+              )}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Tooltip: a small raised pill above the hovered day */}
+        <AnimatePresence>
+          {hovered && ready && (
+            <div
+              key="tooltip"
+              className="pointer-events-none absolute z-20"
+              style={{ left: hovered.x, top: hovered.y, transform: "translate(-50%, calc(-100% - 6px))" }}
+            >
+              <motion.div
+                initial={{ opacity: 0, y: reduceMotion ? 0 : 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: reduceMotion ? 0 : 4 }}
+                transition={{ duration: 0.12, ease: EASE_OUT }}
+                className={cn("rounded-lg px-2.5 py-1.5 text-xs whitespace-nowrap", RAISED_CLASS)}
+              >
+                <span className="font-medium text-neutral-100">
+                  {hovered.day.count === 0
+                    ? "No contributions"
+                    : `${hovered.day.count} ${hovered.day.count === 1 ? "contribution" : "contributions"}`}
+                </span>
+                <span className="text-neutral-400">
+                  {" on "}
+                  {formatDay(hovered.day.date, { weekday: "short", month: "short", day: "numeric", year: "numeric" })}
+                </span>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Footer: month filter and legend */}
+      {showLegend && ready && (
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-neutral-500">
+          <div className="flex min-h-6 items-center gap-2">
+            {selectedMonth !== null && (
+              <>
+                <span>
+                  <span className="text-neutral-100 tabular-nums">{monthTotal.toLocaleString()}</span> in{" "}
+                  {MONTH_NAMES[selectedMonth]}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => onMonthChange(null)}
+                  className="h-6 cursor-pointer rounded-lg px-2 text-neutral-400 transition-colors duration-150 outline-white/40 outline-offset-1 hover:bg-[#0c0c0d] hover:text-neutral-100 focus-visible:outline focus-visible:outline-1"
+                >
+                  Show all
+                </button>
+              </>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2" aria-hidden="true">
+            <span>Less</span>
+            <div className="flex gap-[3px]">
+              {([0, 1, 2, 3, 4] as const).map((lvl) => (
+                <span key={lvl} className={cn("h-2.5 w-2.5 rounded-[3px]", levelClass(lvl))} />
+              ))}
+            </div>
+            <span>More</span>
           </div>
         </div>
       )}

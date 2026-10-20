@@ -181,6 +181,7 @@ export { GithubHeatmap } from "./animated/GithubHeatmap";
 export type {
   GithubHeatmapProps,
   GithubHeatmapPreset,
+  GithubHeatmapVariant,
   ContributionDay,
 } from "./animated/GithubHeatmap";
 

@@ -1558,13 +1558,21 @@
       "name": "github-heatmap",
       "type": "registry:ui",
       "title": "GitHub Heatmap",
-      "description": "An ultra-polished GitHub contribution heatmap featuring live data fetching for @ajinkya-cell, streak stats, theme presets, interactive tooltips, and month focus filtering.",
+      "description": "Two heatmaps in one: the original neon GitHub contribution grid with glowing theme presets, and a machined variant from the design system, where the grid is cut into a recessed tray and busier days are lit brighter until they rise into the popout. Both fetch live data for @ajinkya-cell, with streak stats, tooltips and month focus filtering.",
       "dependencies": [
         "framer-motion"
       ],
       "files": [
         {
-          "path": "components/ui/GithubHeatmap.tsx",
+          "path": "components/ui/github-heatmap/GithubHeatmap.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/github-heatmap/../primitives/SegmentedControl.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/github-heatmap/../primitives/Tabs.tsx",
           "type": "registry:ui"
         }
       ]
