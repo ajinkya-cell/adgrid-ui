@@ -27,7 +27,7 @@ const LIT_LENGTH = 34;
 const SHIFT = 10;
 
 // Only the latest few, so the dot still means something.
-const NEW = new Set(["chat-sidebar", "markdown", "code-block", "message-actions", "prompt-suggestions", "conversation", "message", "prompt-input", "streaming-text", "typing-indicator", "chat-faq", "polaroid-stack", "folder-reveal", "activity-card", "ruler-nav", "charts", "gauge", "chalkboard-404", "otp-input", "polaroid-develop", "color-picker", "pagination", "menubar"]);
+const NEW = new Set(["hatched-text", "inspect-text", "chat-sidebar", "markdown", "code-block", "message-actions", "prompt-suggestions", "conversation", "message", "prompt-input", "streaming-text", "typing-indicator", "chat-faq", "polaroid-stack", "folder-reveal", "activity-card", "ruler-nav", "charts", "gauge", "chalkboard-404", "otp-input", "polaroid-develop", "color-picker", "pagination", "menubar"]);
 
 // A line width in whole device pixels. A 1px line at 125% scaling is 1.25 device pixels, which crispEdges
 // rounds to 1 or 2 depending on where it lands, so every few ticks came out thick. Drawing each

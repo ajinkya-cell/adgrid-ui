@@ -41,7 +41,7 @@ export const PRESENTATION_GROUPS: { id: string; label: string; slugs: string[] }
   {
     id: "text",
     label: "Text & Icons",
-    slugs: ["living-text", "spotlight-text", "text-shuffle", "animated-icons-1"],
+    slugs: ["hatched-text", "inspect-text", "living-text", "spotlight-text", "text-shuffle", "animated-icons-1"],
   },
   {
     id: "media",

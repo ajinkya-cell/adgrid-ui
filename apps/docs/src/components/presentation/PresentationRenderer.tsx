@@ -26,6 +26,8 @@ import {
   LiquidGoldButton,
   LivingText,
   SpotlightText,
+  InspectText,
+  HatchedText,
   LuminaWave,
   MatrixRain,
 
@@ -1587,6 +1589,10 @@ export function PresentationRenderer({
       };
       return <LivingText {...(livingTextProps as Parameters<typeof LivingText>[0])} />;
     }
+    case "inspect-text":
+      return <InspectText {...liveProps} />;
+    case "hatched-text":
+      return <HatchedText {...liveProps} />;
     case "spotlight-text": {
       const spotlightTextProps = {
         text: "Antimetal",

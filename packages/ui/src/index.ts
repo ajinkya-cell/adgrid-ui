@@ -164,6 +164,10 @@ export { ChalkboardNotFound } from "./animated/ChalkboardNotFound";
 export type { ChalkboardNotFoundProps } from "./animated/ChalkboardNotFound";
 
 // Polaroid Develop
+export { HatchedText } from "./animated/HatchedText";
+export type { HatchedTextProps, HatchedTextDirection } from "./animated/HatchedText";
+export { InspectText, InspectWord } from "./animated/InspectText";
+export type { InspectTextProps, InspectWordProps, InspectTextSize } from "./animated/InspectText";
 export { PolaroidDevelop } from "./animated/PolaroidDevelop";
 export type { PolaroidDevelopProps, PolaroidPhoto } from "./animated/PolaroidDevelop";
 

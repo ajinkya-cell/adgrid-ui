@@ -126,6 +126,37 @@
       ]
     },
     {
+      "name": "hatched-text",
+      "type": "registry:ui",
+      "title": "Hatched Text",
+      "description": "Oversized display type engraved into the surface. The glyphs carry no solid fill, only fine diagonal hatching over a faint body, with an optional fade toward the bottom. The line fits its container's width.",
+      "files": [
+        {
+          "path": "components/ui/HatchedText.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "inspect-text",
+      "type": "registry:ui",
+      "title": "Inspect Text",
+      "description": "Display text with words you can inspect like a layer in a design tool. Hover any word and a selection frame settles around it, popout handles land on its corners, a chip reports its measured size, and the glyphs re-render from the top down as fine diagonal hatching.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/inspect-text/InspectText.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/inspect-text/HatchedText.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "spotlight-text",
       "type": "registry:ui",
       "title": "Spotlight Text",
