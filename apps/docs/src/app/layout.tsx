@@ -47,6 +47,7 @@ const caveat = Caveat({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.voidui.in"),
   title: "void/ui — dark-first component library",
   description: "Open source React components built for the void.",
   icons: {
