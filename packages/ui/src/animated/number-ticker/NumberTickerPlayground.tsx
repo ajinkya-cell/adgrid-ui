@@ -4,9 +4,11 @@ import { useState } from "react";
 import { cn } from "../../lib/utils";
 import { VoidButton } from "../VoidButton";
 import { NumberTicker, type NumberTickerProps } from "./NumberTicker";
+import { NumberTickerClock } from "./NumberTickerClock";
 
 // A large ticker with a row of buttons that push it through every kind of change: single steps,
-// multi-place rolls, gaining and losing places, sign flips and random jumps.
+// multi-place rolls, gaining and losing places, sign flips and random jumps. Below it, a live
+// clock on the same wheels, sharing the roll timing.
 
 export interface NumberTickerPlaygroundProps extends Omit<NumberTickerProps, "value"> {
   /** Starting value. */
@@ -24,6 +26,7 @@ const ACTIONS: { label: string; apply: (n: number) => number }[] = [
 ];
 
 export function NumberTickerPlayground({ start = 1234, prefix = "$", className, ...props }: NumberTickerPlaygroundProps) {
+  const { duration, bounce, stagger, blur } = props;
   const [value, setValue] = useState(start);
   return (
     <div className="flex w-full flex-col items-center gap-10 py-6">
@@ -40,6 +43,7 @@ export function NumberTickerPlayground({ start = 1234, prefix = "$", className, 
           </VoidButton>
         ))}
       </div>
+      <NumberTickerClock duration={duration} bounce={bounce} stagger={stagger} blur={blur} className="mt-4 text-5xl sm:text-6xl" />
     </div>
   );
 }

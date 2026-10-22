@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <linearGradient id="bar" gradientUnits="userSpaceOnUse" x1="110" y1="140" x2="290" y2="380">
+      <stop offset="0" stop-color="#fbfaff"/>
+      <stop offset="0.5" stop-color="#e4e0fb"/>
+      <stop offset="1" stop-color="#c4bcf7"/>
+    </linearGradient>
+    <radialGradient id="barGlow" gradientUnits="userSpaceOnUse" cx="262" cy="345" r="95">
+      <stop offset="0" stop-color="#7f78f6" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#7f78f6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="orb" gradientUnits="userSpaceOnUse" cx="352" cy="222" r="96" fx="352" fy="226">
+      <stop offset="0" stop-color="#3a0ff6"/>
+      <stop offset="0.35" stop-color="#5a2ef4"/>
+      <stop offset="0.75" stop-color="#b47af2"/>
+      <stop offset="1" stop-color="#f0bdf7"/>
+    </radialGradient>
+    <linearGradient id="tri" gradientUnits="userSpaceOnUse" x1="300" y1="258" x2="345" y2="335">
+      <stop offset="0" stop-color="#fbfaff"/>
+      <stop offset="1" stop-color="#b9aff8"/>
+    </linearGradient>
+    <mask id="barShape" maskUnits="userSpaceOnUse" x="0" y="0" width="500" height="500">
+      <polygon points="112,152 202,150 293,362 218,364"
+               fill="#fff" stroke="#fff" stroke-width="34" stroke-linejoin="round"/>
+    </mask>
+  </defs>
+
+  <circle cx="250" cy="250" r="248" fill="#000"/>
+
+  <!-- left stroke of the V; round joins on a stroke in the mask give the soft corners -->
+  <g mask="url(#barShape)">
+    <rect width="500" height="500" fill="url(#bar)"/>
+    <rect width="500" height="500" fill="url(#barGlow)"/>
+  </g>
+
+  <circle cx="351" cy="187" r="57" fill="url(#orb)"/>
+
+  <polygon points="295,263 376,263 331,325"
+           fill="url(#tri)" stroke="url(#tri)" stroke-width="18" stroke-linejoin="round"/>
+</svg>

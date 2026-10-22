@@ -168,8 +168,8 @@ export { HatchedText } from "./animated/HatchedText";
 export type { HatchedTextProps, HatchedTextDirection } from "./animated/HatchedText";
 export { InspectText, InspectWord } from "./animated/InspectText";
 export type { InspectTextProps, InspectWordProps, InspectTextSize } from "./animated/InspectText";
-export { NumberTicker, NumberTickerPlayground } from "./animated/number-ticker";
-export type { NumberTickerProps, NumberTickerPlaygroundProps } from "./animated/number-ticker";
+export { NumberTicker, NumberTickerClock, NumberTickerPlayground } from "./animated/number-ticker";
+export type { NumberTickerProps, NumberTickerClockProps, NumberTickerPlaygroundProps } from "./animated/number-ticker";
 export { PolaroidDevelop } from "./animated/PolaroidDevelop";
 export type { PolaroidDevelopProps, PolaroidPhoto } from "./animated/PolaroidDevelop";
 

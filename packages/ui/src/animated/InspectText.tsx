@@ -76,10 +76,10 @@ export const InspectWord = forwardRef<HTMLSpanElement, InspectWordProps>(functio
     defaultInspecting = false,
     onInspectingChange,
     showSize = true,
-    pitch = 5,
+    pitch = 3,
     lineWidth = 1,
     direction = "left",
-    intensity = 0.45,
+    intensity = 1,
     className,
     onPointerEnter,
     onPointerLeave,
@@ -211,7 +211,7 @@ export const InspectWord = forwardRef<HTMLSpanElement, InspectWordProps>(functio
 });
 
 export const InspectText = forwardRef<HTMLParagraphElement, InspectTextProps>(function InspectText(
-  { text = "Vibrant Design", size = "md", showSize = true, pitch = 5, lineWidth = 1, direction = "left", intensity = 0.45, className, ...rest },
+  { text = "Vibrant Design", size = "md", showSize = true, pitch = 3, lineWidth = 1, direction = "left", intensity = 1, className, ...rest },
   ref
 ) {
   // With no asterisks every word is its own layer; with them, only the marked words are.

@@ -16,8 +16,10 @@ import {
 // One digit place of the ticker, drawn as an odometer wheel. The column springs a continuous
 // position (the whole value at this place and above, e.g. 123 for the tens of 1,234) and draws the
 // ten digits around `position mod 10`, so a rising value always rolls up and a falling one always
-// rolls down, straight through 9 → 0. The spring's velocity drives a vertical-only SVG blur, which
-// reads as motion blur rather than the soft focus a CSS `blur()` gives.
+// rolls down, straight through 9 → 0. A column only ever turns as far as its digit changes (at most
+// nine faces), and longer turns get a little more time and almost no bounce, so big jumps glide in
+// rather than whipping round and overshooting. The spring's velocity drives a vertical-only SVG
+// blur, which reads as motion blur rather than the soft focus a CSS `blur()` gives.
 
 export interface DigitColumnProps {
   /** floor(|value| / 10^place) — the column's continuous target. */
@@ -26,7 +28,12 @@ export interface DigitColumnProps {
   direction: -1 | 0 | 1;
   /** Seconds before this column starts moving (place × stagger). */
   delay: number;
-  spring: { stiffness: number; damping: number; mass: number };
+  /** Seconds a one-face turn takes to settle; longer turns stretch from this. */
+  duration: number;
+  /** Overshoot on a one-face turn, 0–1; longer turns overshoot less. */
+  bounce: number;
+  /** Raw spring for every turn, overriding the distance-aware `duration` and `bounce`. */
+  spring?: { stiffness: number; damping: number; mass: number };
   /** Maximum motion blur, in px. */
   blur: number;
   flash: boolean;
@@ -36,10 +43,21 @@ export interface DigitColumnProps {
   reduced: boolean;
   /** Position on mount: 0 to roll in, `target` to start settled. */
   initial: number;
+  /** Faces on the wheel. 10 for an odometer; a clock's tens of seconds uses 6. */
+  base?: number;
 }
 
-// A column never spins more than one full turn, however far the value jumps.
-const MAX_SPIN = 10;
+/**
+ * A spring that takes about `duration` seconds to settle, overshooting by `bounce` (0–1), with the
+ * same mapping framer-motion uses for its own `visualDuration`.
+ */
+export function springFromDuration(duration: number, bounce: number) {
+  const root = (2 * Math.PI) / (Math.max(0.05, duration) * 1.2);
+  const stiffness = root * root;
+  const damping = 2 * Math.min(1, Math.max(0.05, 1 - bounce)) * Math.sqrt(stiffness);
+  return { stiffness, damping, mass: 1 };
+}
+
 // Velocity (cells/s) → blur (px).
 const BLUR_PER_SPEED = 0.35;
 // The window extends this far above and below the glyph, so the edge fade never touches a
@@ -49,16 +67,16 @@ const PAD = "0.15em";
 const GLOW_ROOM = "0.3em";
 const MASK =`linear-gradient(to bottom, transparent 0, #000 ${PAD}, #000 calc(100% - ${PAD}), transparent 100%)`;
 
-/** Offset of digit `i` from the window, in cells, wrapped to [-5, 5). */
-function cellOffset(i: number, position: number) {
-  const m = (((i - position) % 10) + 10) % 10;
-  return ((m + 5) % 10) - 5;
+/** Offset of digit `i` from the window, in cells, wrapped to [-base/2, base/2). */
+function cellOffset(i: number, position: number, base: number) {
+  const m = (((i - position) % base) + base) % base;
+  return m >= base / 2 ? m - base : m;
 }
 
-function Cell({ digit, position }: { digit: number; position: MotionValue<number> }) {
-  const y = useTransform(position, (p) => `${cellOffset(digit, p) * 100}%`);
+function Cell({ digit, position, base }: { digit: number; position: MotionValue<number>; base: number }) {
+  const y = useTransform(position, (p) => `${cellOffset(digit, p, base) * 100}%`);
   // Neighbours fade out with distance, so nothing peeks into the window's padding at rest.
-  const opacity = useTransform(position, (p) => Math.max(0, 1 - Math.abs(cellOffset(digit, p))));
+  const opacity = useTransform(position, (p) => Math.max(0, 1 - Math.abs(cellOffset(digit, p, base))));
   return (
     <motion.span className="absolute inset-x-0 text-center" style={{ top: PAD, bottom: PAD, y, opacity }}>
       {digit}
@@ -70,6 +88,8 @@ export function DigitColumn({
   target,
   direction,
   delay,
+  duration,
+  bounce,
   spring,
   blur,
   flash,
@@ -77,6 +97,7 @@ export function DigitColumn({
   downColor,
   reduced,
   initial,
+  base = 10,
 }: DigitColumnProps) {
   const filterId = `nt-blur-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const position = useMotionValue(initial);
@@ -105,11 +126,19 @@ export function DigitColumn({
       return;
     }
 
+    // Turn only as far as the digit changes: drop whole turns by jumping a multiple of `base`,
+    // which draws the same face, so there's no visible snap.
     const gap = target - position.get();
-    if (Math.abs(gap) > MAX_SPIN) position.jump(target - Math.sign(gap) * MAX_SPIN);
-    // `animate` picks up from the live value and velocity, so a change mid-roll retargets
-    // smoothly instead of restarting.
-    const roll = animate(position, target, { type: "spring", ...spring, delay });
+    const travel = Math.abs(gap) % base;
+    const velocity = position.getVelocity();
+    if (Math.abs(gap) >= base) position.jump(target - Math.sign(gap) * travel);
+    // A spring's overshoot scales with distance, so spread the bounce over the turn and give long
+    // turns a bit more time: a nine-face roll takes ~1.6× a single step and barely overshoots.
+    const timing =
+      spring ??
+      springFromDuration(duration * (1 + 0.2 * Math.sqrt(Math.max(0, travel - 1))), bounce / Math.sqrt(Math.max(1, travel)));
+    // Carry the live velocity, so a change mid-roll retargets smoothly instead of restarting.
+    const roll = animate(position, target, { type: "spring", ...timing, velocity, delay });
 
     if (!first && flash && direction !== 0) {
       flashColor.set(direction > 0 ? upColor : downColor);
@@ -160,8 +189,8 @@ export function DigitColumn({
         className="absolute inset-0"
         style={{ color, textShadow }}
       >
-        {Array.from({ length: 10 }, (_, d) => (
-          <Cell key={d} digit={d} position={position} />
+        {Array.from({ length: base }, (_, d) => (
+          <Cell key={d} digit={d} position={position} base={base} />
         ))}
       </motion.span>
     </span>

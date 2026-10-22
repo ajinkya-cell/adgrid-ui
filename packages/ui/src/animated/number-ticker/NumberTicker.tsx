@@ -3,7 +3,7 @@
 import { forwardRef, useRef, type HTMLAttributes, type ReactNode } from "react";
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "framer-motion";
 import { cn } from "../../lib/utils";
-import { DigitColumn } from "./DigitColumn";
+import { DigitColumn, springFromDuration } from "./DigitColumn";
 import { sanitize, toParts } from "./format";
 
 // An integer that rolls like an odometer whenever `value` changes. Every place is its own
@@ -20,7 +20,11 @@ export interface NumberTickerProps extends Omit<HTMLAttributes<HTMLSpanElement>,
   prefix?: string;
   /** Static text after the number, e.g. `%`. */
   suffix?: string;
-  /** Spring for the roll. The default overshoots a little before settling. */
+  /** Seconds a one-place step takes to settle; bigger jumps stretch from this. */
+  duration?: number;
+  /** Overshoot on a one-place step, 0–1; bigger jumps overshoot less. 0 glides in with none. */
+  bounce?: number;
+  /** Raw spring for the roll; overrides `duration` and `bounce`. */
   spring?: { stiffness?: number; damping?: number; mass?: number };
   /** Seconds between places starting to roll, from the units leftward. */
   stagger?: number;
@@ -34,18 +38,18 @@ export interface NumberTickerProps extends Omit<HTMLAttributes<HTMLSpanElement>,
   animateOnMount?: boolean;
 }
 
-const DEFAULT_SPRING = { stiffness: 140, damping: 18, mass: 1 };
-
 export const NumberTicker = forwardRef<HTMLSpanElement, NumberTickerProps>(function NumberTicker(
   {
     value,
     locale = "en-US",
     prefix,
     suffix,
+    duration = 0.45,
+    bounce = 0.25,
     spring,
-    stagger = 0.035,
+    stagger = 0.04,
     blur = 8,
-    flash = true,
+    flash = false,
     upColor = "#4ade80",
     downColor = "#f87171",
     animateOnMount = true,
@@ -56,7 +60,7 @@ export const NumberTicker = forwardRef<HTMLSpanElement, NumberTickerProps>(funct
   ref,
 ) {
   const reduced = useReducedMotion() ?? false;
-  const springConfig = { ...DEFAULT_SPRING, ...spring };
+  const springConfig = { ...springFromDuration(duration, bounce), ...spring };
 
   const lastFinite = useRef(0);
   const v = sanitize(value, lastFinite.current);
@@ -131,7 +135,9 @@ export const NumberTicker = forwardRef<HTMLSpanElement, NumberTickerProps>(funct
                   target={target}
                   direction={direction.current}
                   delay={reduced ? 0 : part.place * stagger}
-                  spring={springConfig}
+                  duration={duration}
+                  bounce={bounce}
+                  spring={spring && springConfig}
                   blur={blur}
                   flash={flash}
                   upColor={upColor}

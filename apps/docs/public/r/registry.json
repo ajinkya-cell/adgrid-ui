@@ -160,7 +160,7 @@
       "name": "number-ticker",
       "type": "registry:ui",
       "title": "Number Ticker",
-      "description": "Integers that roll like an odometer whenever the value changes. Each place spins on a spring with vertical motion blur scaled to its speed, travels up when the value rises and down when it falls, grows in or folds away as the number gains or loses places, and briefly glows green or red.",
+      "description": "Integers that roll like an odometer whenever the value changes. Each place spins on a spring with vertical motion blur scaled to its speed, travels up when the value rises and down when it falls, grows in or folds away as the number gains or loses places, and can glow green or red on change. Comes with a live clock on the same wheels, each turning only forward.",
       "dependencies": [
         "framer-motion"
       ],
@@ -175,6 +175,10 @@
         },
         {
           "path": "components/ui/number-ticker/format.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/number-ticker/NumberTickerClock.tsx",
           "type": "registry:ui"
         }
       ]
