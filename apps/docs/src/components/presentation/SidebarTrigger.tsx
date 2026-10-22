@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Code2, List } from "lucide-react";
+import { VoidButton } from "@adgrid-ui/ui";
 import { usePresentationStore } from "@/lib/presentation/store";
 
 export function SidebarTrigger() {
@@ -223,35 +224,35 @@ export function SidebarTrigger() {
         </motion.div>
       </motion.button>
 
-      {/* 2. Code toggle: a raised button while browsing; pressed into the surface while the code is open. */}
+      {/* 2. Code toggle: the default VoidButton as a pill, in Poppins. */}
       <AnimatePresence>
         {sidebarOpen && (
-          <motion.button
-            type="button"
-            onClick={handleCodeClick}
-            aria-pressed={isCodeActive}
-            aria-label={isCodeActive ? "Back to components" : "View code"}
+          <motion.div
             initial={{ opacity: 0, x: -6 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -6 }}
             transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
-            className={`inline-flex h-9 cursor-pointer items-center gap-2 rounded-xl border px-3.5 font-inter text-[13px] font-medium tracking-tight select-none transition-[background,box-shadow,color,border-color,translate,scale] duration-150 active:translate-y-px active:scale-[0.98] outline-white/40 outline-offset-2 focus-visible:outline focus-visible:outline-1 ${
-              isCodeActive
-                ? "border-white/[0.06] bg-[#0c0c0d] text-neutral-100 shadow-[inset_0_2px_6px_rgba(0,0,0,0.75),0_1px_0_rgba(255,255,255,0.04)]"
-                : "border-white/[0.08] border-t-white/[0.14] bg-[linear-gradient(180deg,#1f1f21_0%,#18181a_100%)] text-neutral-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.07),inset_0_-1px_0_rgba(0,0,0,0.5),0_4px_12px_-4px_rgba(0,0,0,0.7)] hover:bg-[linear-gradient(180deg,#242426_0%,#1c1c1e_100%)] hover:text-neutral-100"
-            }`}
           >
-            {isCodeActive ? (
-              <List aria-hidden="true" className="size-3.5 shrink-0 text-neutral-400" />
-            ) : (
-              <Code2
-                key={animKey}
-                aria-hidden="true"
-                className={`size-3.5 shrink-0 text-neutral-400 ${animKey > 0 ? "animate-code-slash" : ""}`}
-              />
-            )}
-            <span>{isCodeActive ? "Components" : "View code"}</span>
-          </motion.button>
+            <VoidButton
+              type="button"
+              style="pill"
+              onClick={handleCodeClick}
+              aria-pressed={isCodeActive}
+              aria-label={isCodeActive ? "Back to components" : "View code"}
+              className="gap-2 font-poppins"
+            >
+              {isCodeActive ? (
+                <List aria-hidden="true" className="relative size-3.5 shrink-0" />
+              ) : (
+                <Code2
+                  key={animKey}
+                  aria-hidden="true"
+                  className={`relative size-3.5 shrink-0 ${animKey > 0 ? "animate-code-slash" : ""}`}
+                />
+              )}
+              <span className="relative">{isCodeActive ? "Components" : "View code"}</span>
+            </VoidButton>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
