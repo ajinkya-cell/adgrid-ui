@@ -25,7 +25,6 @@ import type {
   CrossVariant,
   BoxVariant,
   ArrowPlacement,
-  ArrowVariant,
   ArrowheadStyle,
   ArrowLabelFont,
   HandwritingFont,
@@ -387,19 +386,16 @@ export default function RoughlyPage() {
   const [boxPaddingX, setBoxPaddingX] = useState(8);
   const [boxPaddingY, setBoxPaddingY] = useState(4);
   const [arrowPlacement, setArrowPlacement] = useState<ArrowPlacement>("top-right");
-  const [arrowVariant, setArrowVariant] = useState<ArrowVariant>("curved");
   const [arrowheadStyle, setArrowheadStyle] = useState<ArrowheadStyle>("open");
-  const [arrowIterations, setArrowIterations] = useState<number>(2);
+  const [arrowIterations, setArrowIterations] = useState<number>(1);
   const [arrowLabel, setArrowLabel] = useState<string>("Instant deploy ⚡");
   const [arrowLabelFont, setArrowLabelFont] = useState<ArrowLabelFont>("caveat");
   const [arrowLabelFontSize, setArrowLabelFontSize] = useState<number>(24);
   const [arrowLabelFontWeight, setArrowLabelFontWeight] = useState<number>(450);
   const [arrowLabelOffsetX, setArrowLabelOffsetX] = useState<number>(0);
   const [arrowLabelOffsetY, setArrowLabelOffsetY] = useState<number>(0);
-  const [arrowDistance, setArrowDistance] = useState<number>(65);
-  const [arrowOffset, setArrowOffset] = useState<number>(8);
-  const [arrowCurvature, setArrowCurvature] = useState<number>(0.38);
-  const [arrowFlip, setArrowFlip] = useState<boolean>(false);
+  const [arrowSize, setArrowSize] = useState<number>(1);
+  const [arrowBend, setArrowBend] = useState<number>(0.38);
   const [circlePaddingX, setCirclePaddingX] = useState(22);
   const [circlePaddingY, setCirclePaddingY] = useState(10);
   const [circleIterations, setCircleIterations] = useState(2);
@@ -571,15 +567,12 @@ export default function RoughlyPage() {
     if (selectedType === "arrow") {
       const propsList: string[] = [];
       if (arrowPlacement !== "top-right") propsList.push(`placement="${arrowPlacement}"`);
-      if (arrowVariant !== "curved") propsList.push(`variant="${arrowVariant}"`);
       if (arrowheadStyle !== "open") propsList.push(`arrowhead="${arrowheadStyle}"`);
       if (selectedColor !== "#F59E0B") propsList.push(`color="${selectedColor}"`);
       if (strokeWidth !== 2) propsList.push(`strokeWidth={${strokeWidth}}`);
-      if (arrowIterations !== 2) propsList.push(`iterations={${arrowIterations}}`);
-      if (arrowDistance !== 65) propsList.push(`distance={${arrowDistance}}`);
-      if (arrowOffset !== 8) propsList.push(`offset={${arrowOffset}}`);
-      if (arrowCurvature !== 0.38) propsList.push(`curvature={${arrowCurvature}}`);
-      if (arrowFlip) propsList.push(`flipCurve={true}`);
+      if (arrowIterations !== 1) propsList.push(`iterations={${arrowIterations}}`);
+      if (arrowSize !== 1) propsList.push(`size={${arrowSize}}`);
+      if (arrowBend !== 0.38) propsList.push(`bend={${arrowBend}}`);
       if (arrowLabel) propsList.push(`label="${arrowLabel}"`);
       if (arrowLabelFont !== "caveat") propsList.push(`labelFont="${arrowLabelFont}"`);
       if (arrowLabelFontSize !== 24) propsList.push(`labelFontSize={${arrowLabelFontSize}}`);
@@ -1422,32 +1415,6 @@ export default function RoughlyPage() {
                     </div>
                   </div>
 
-                  {/* Curve Variant */}
-                  <div className="space-y-1.5">
-                    <label className="text-[11px] uppercase tracking-wider text-neutral-400 font-mono">
-                      Curve Trajectory
-                    </label>
-                    <div className="grid grid-cols-3 gap-1.5">
-                      {[
-                        { id: "curved", label: "Curved" },
-                        { id: "s-curve", label: "S-Curve" },
-                        { id: "straight", label: "Straight" },
-                      ].map((v) => (
-                        <button
-                          key={v.id}
-                          onClick={() => setArrowVariant(v.id as ArrowVariant)}
-                          className={`py-1.5 text-xs rounded-lg cursor-pointer transition-colors ${
-                            arrowVariant === v.id
-                              ? `${PLAYGROUND_RAISED_CLASS} font-medium`
-                              : "bg-white/[0.04] text-neutral-400 hover:text-white"
-                          }`}
-                        >
-                          {v.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
                   {/* Arrowhead & Stroke Passes */}
                   <div className="grid grid-cols-2 gap-2">
                     <div className="space-y-1">
@@ -1480,8 +1447,8 @@ export default function RoughlyPage() {
                       </label>
                       <div className="flex gap-1">
                         {[
-                          { id: 2, label: "Double" },
                           { id: 1, label: "Single" },
+                          { id: 2, label: "Double" },
                         ].map((item) => (
                           <button
                             key={item.id}
@@ -1499,71 +1466,40 @@ export default function RoughlyPage() {
                     </div>
                   </div>
 
-                  {/* Sliders: Distance & Offset */}
+                  {/* Sliders: Size & Bend */}
                   <div className="grid grid-cols-2 gap-3 pt-1">
                     <div className="space-y-1">
                       <div className="flex justify-between text-[11px] font-mono text-neutral-400">
-                        <span>Distance</span>
-                        <span>{arrowDistance}px</span>
+                        <span>Size</span>
+                        <span>{arrowSize.toFixed(2)}×</span>
                       </div>
                       <input
                         type="range"
-                        min="35"
-                        max="120"
-                        step="5"
-                        value={arrowDistance}
-                        onChange={(e) => setArrowDistance(Number(e.target.value))}
+                        min="0.5"
+                        max="2"
+                        step="0.05"
+                        value={arrowSize}
+                        onChange={(e) => setArrowSize(Number(e.target.value))}
                         className="w-full accent-amber-500 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer"
+                        aria-label="Arrow size"
                       />
                     </div>
                     <div className="space-y-1">
                       <div className="flex justify-between text-[11px] font-mono text-neutral-400">
-                        <span>Target Offset</span>
-                        <span>{arrowOffset}px</span>
+                        <span>Bend</span>
+                        <span>{arrowBend === 0 ? "straight" : arrowBend.toFixed(2)}</span>
                       </div>
                       <input
                         type="range"
-                        min="2"
-                        max="24"
-                        step="1"
-                        value={arrowOffset}
-                        onChange={(e) => setArrowOffset(Number(e.target.value))}
+                        min="-0.8"
+                        max="0.8"
+                        step="0.02"
+                        value={arrowBend}
+                        onChange={(e) => setArrowBend(Number(e.target.value))}
                         className="w-full accent-amber-500 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer"
+                        aria-label="Arrow bend"
                       />
                     </div>
-                  </div>
-
-                  {/* Arc Curvature Slider */}
-                  {arrowVariant !== "straight" && (
-                    <div className="space-y-1 pt-1">
-                      <div className="flex justify-between text-[11px] font-mono text-neutral-400">
-                        <span>Arc Curvature</span>
-                        <span>{arrowCurvature}</span>
-                      </div>
-                      <input
-                        type="range"
-                        min="0.15"
-                        max="0.65"
-                        step="0.05"
-                        value={arrowCurvature}
-                        onChange={(e) => setArrowCurvature(Number(e.target.value))}
-                        className="w-full accent-amber-500 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer"
-                      />
-                    </div>
-                  )}
-
-                  <div className="pt-1 flex items-center justify-between">
-                    <span className="text-xs text-neutral-400">Invert Arc Curvature</span>
-                    <button
-                      onClick={() => setArrowFlip((prev) => !prev)}
-                      className={`px-2.5 py-1 text-[11px] rounded font-mono transition-colors cursor-pointer ${
-                        arrowFlip
-                          ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
-                          : "bg-white/[0.04] text-neutral-400 hover:text-white border border-transparent"
-                      }`}
-                    >
-                      {arrowFlip ? "Flipped" : "Normal"}
-                    </button>
                   </div>
                 </div>
               )}
@@ -2046,15 +1982,12 @@ export default function RoughlyPage() {
                   ) : selectedType === "arrow" ? (
                     <div className="py-16 px-10 flex items-center justify-center">
                       <RoughArrow
-                        key={`arrow-${replayKey}-${arrowPlacement}-${arrowVariant}-${arrowheadStyle}-${arrowIterations}-${arrowDistance}-${arrowOffset}-${arrowCurvature}-${arrowFlip}-${selectedColor}-${strokeWidth}-${arrowLabel}-${arrowLabelFont}-${arrowLabelFontSize}-${arrowLabelFontWeight}-${arrowLabelOffsetX}-${arrowLabelOffsetY}`}
+                        key={`arrow-${replayKey}-${arrowPlacement}-${arrowheadStyle}-${arrowIterations}-${arrowSize}-${arrowBend}-${selectedColor}-${strokeWidth}-${arrowLabel}-${arrowLabelFont}-${arrowLabelFontSize}-${arrowLabelFontWeight}-${arrowLabelOffsetX}-${arrowLabelOffsetY}`}
                         placement={arrowPlacement}
-                        variant={arrowVariant}
                         arrowhead={arrowheadStyle}
                         iterations={arrowIterations}
-                        distance={arrowDistance}
-                        offset={arrowOffset}
-                        curvature={arrowCurvature}
-                        flipCurve={arrowFlip}
+                        size={arrowSize}
+                        bend={arrowBend}
                         label={arrowLabel}
                         labelFont={arrowLabelFont}
                         labelFontSize={arrowLabelFontSize}
@@ -2562,11 +2495,19 @@ export default function RoughlyPage() {
                   </td>
                 </tr>
                 <tr>
-                  <td className="p-3 font-semibold text-white">arrowVariant / variant</td>
-                  <td className="p-3 text-indigo-400">ArrowVariant</td>
-                  <td className="p-3 text-neutral-500">&quot;curved&quot;</td>
+                  <td className="p-3 font-semibold text-white">arrowSize / size</td>
+                  <td className="p-3 text-indigo-400">number</td>
+                  <td className="p-3 text-neutral-500">1</td>
                   <td className="p-3 font-sans text-neutral-400">
-                    Curve trajectory: &quot;curved&quot; (parabolic arc) | &quot;s-curve&quot; (double wave) | &quot;straight&quot;
+                    Overall scale. Length, arrowhead and target gap grow together; use distance / offset for exact pixels
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold text-white">arrowBend / bend</td>
+                  <td className="p-3 text-indigo-400">number</td>
+                  <td className="p-3 text-neutral-500">0.38</td>
+                  <td className="p-3 font-sans text-neutral-400">
+                    Signed arc from -1 to 1. 0 is a straight line, negative bends to the other side. Always one smooth arc
                   </td>
                 </tr>
                 <tr>

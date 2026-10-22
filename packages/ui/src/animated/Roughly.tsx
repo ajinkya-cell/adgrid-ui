@@ -90,6 +90,10 @@ export interface RoughlyProps {
   paper?: string;
   /** Placement direction when type is 'arrow' */
   placement?: ArrowPlacement;
+  /** Overall arrow scale: length, arrowhead and gap grow together (default: 1) */
+  arrowSize?: number;
+  /** Signed arc bend from -1 to 1; 0 is straight, negative bends the other way (default: 0.38) */
+  arrowBend?: number;
   /** Arrow curve variant ('curved' | 'straight' | 's-curve') */
   arrowVariant?: ArrowVariant;
   /** Arrowhead style ('open' | 'filled') */
@@ -114,7 +118,7 @@ export interface RoughlyProps {
   arrowLabelRotate?: number;
   /** Optional custom text color for arrow callout text (defaults to arrow color) */
   arrowLabelColor?: string;
-  /** Arc curvature intensity factor for curved arrows (default: 0.38) */
+  /** @deprecated Use `arrowBend`. Arc curvature intensity for curved arrows */
   arrowCurvature?: number;
   /** Handwriting font family: 'reenie-beanie' | 'caveat' | 'kalam' (default: "reenie-beanie") */
   font?: HandwritingFont;
@@ -169,6 +173,8 @@ export function Roughly({
   bracketStyle = "curly",
   variant = "single",
   placement,
+  arrowSize,
+  arrowBend,
   arrowVariant,
   arrowhead,
   arrowLabel,
@@ -315,6 +321,8 @@ export function Roughly({
     return (
       <RoughArrow
         placement={placement}
+        size={arrowSize}
+        bend={arrowBend}
         variant={arrowVariant}
         arrowhead={arrowhead}
         label={arrowLabel}

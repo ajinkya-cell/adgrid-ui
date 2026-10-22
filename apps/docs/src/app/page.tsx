@@ -182,7 +182,7 @@ export default function HomePage() {
               or view the source code on{" "}
               <RoughArrow 
                 color="#ffffff"
-                placement="bottom-right" offset={9} strokeWidth={2.1} curvature={0.5} iterations={1} flipCurve={true} label="Leave a star " labelFont="reenie-beanie" labelFontSize={30} labelFontWeight={600}
+                placement="bottom-right" offset={9} strokeWidth={2.1} bend={-0.5} iterations={1} label="Leave a star " labelFont="reenie-beanie" labelFontSize={30} labelFontWeight={600}
                 animationDelay={850}
               >
                 <a

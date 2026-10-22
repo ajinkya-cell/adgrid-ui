@@ -2,7 +2,6 @@
 
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import rough from "roughjs";
 
 export type ArrowPlacement =
   | "top"
@@ -27,7 +26,11 @@ export interface RoughArrowProps {
   children?: React.ReactNode;
   /** Direction from which the arrow points toward the target (default: "top-right") */
   placement?: ArrowPlacement;
-  /** Curve trajectory variation: 'curved' | 'straight' | 's-curve' (default: "curved") */
+  /** Overall scale of the arrow: length, arrowhead and target gap grow together (default: 1) */
+  size?: number;
+  /** Signed arc bend from -1 to 1. 0 is a straight line, negative bends the other way (default: 0.38) */
+  bend?: number;
+  /** Curve shape: 'curved' (single arc) | 'straight' | 's-curve' (default: "curved") */
   variant?: ArrowVariant;
   /** Arrowhead style: 'open' (>) or 'filled' (solid triangle) (default: "open") */
   arrowhead?: ArrowheadStyle;
@@ -35,12 +38,12 @@ export interface RoughArrowProps {
   color?: string;
   /** Stroke thickness in pixels (default: 2) */
   strokeWidth?: number;
-  /** Number of sketch passes (1 = single line, 2 = authentic double sketch loops) (default: 2) */
+  /** Number of pen passes (1 = clean single line, 2 = sketchy double line) (default: 1) */
   iterations?: number;
-  /** Hand-drawn sketch roughness (default: 1.2) */
+  /** How much the pen passes drift from the ideal arc. The arc itself never kinks (default: 1) */
   roughness?: number;
-  /** Hand-drawn line bowing curvature (default: 1.5) */
-  bowing?: number;
+  /** Seed for the hand-drawn variation, so several arrows on a page differ (default: derived from placement) */
+  seed?: number;
   /** Callout label text placed near the tail of the arrow */
   label?: React.ReactNode;
   /** Callout label font family: 'caveat' | 'reenie-beanie' | 'kalam' (default: "caveat") */
@@ -61,14 +64,16 @@ export interface RoughArrowProps {
   labelOffsetX?: number;
   /** Optional custom vertical offset in pixels for callout label */
   labelOffsetY?: number;
-  /** Distance in pixels between arrow tail origin and target (default: 60) */
+  /** Exact distance in pixels between tail and target; overrides `size` for length (default: 65 × size) */
   distance?: number;
-  /** Gap in pixels between arrow tip and target edge (default: 8) */
+  /** Exact gap in pixels between tip and target edge; overrides `size` for the gap (default: 8 × size) */
   offset?: number;
-  /** Arc curvature intensity factor for curved arrows (default: 0.38) */
+  /** @deprecated Use `bend`. Arc intensity for curved arrows */
   curvature?: number;
-  /** Invert the curvature direction of the arc (default: false) */
+  /** @deprecated Use a negative `bend`. Inverts the arc direction */
   flipCurve?: boolean;
+  /** @deprecated No longer used; the arc is always a single smooth curve */
+  bowing?: number;
   /** Whether the drawing stroke animates into view (default: true) */
   animate?: boolean;
   /** Total drawing animation duration in milliseconds (default: 800) */
@@ -97,16 +102,45 @@ const labelFontClassMap: Record<ArrowLabelFont, string> = {
   kalam: "font-[family-name:'Kalam',cursive] text-lg",
 };
 
+const BASE_LENGTH = 65;
+const BASE_GAP = 8;
+const BARB_ANGLE = 28 * (Math.PI / 180);
+
+const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
+
+// Deterministic PRNG so server and client draw the same arrow (no hydration mismatch)
+function mulberry32(seed: number) {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function hashString(str: string) {
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++) {
+    h = Math.imul(h ^ str.charCodeAt(i), 16777619);
+  }
+  return h >>> 0;
+}
+
+const fmt = (n: number) => Math.round(n * 100) / 100;
+
 export function RoughArrow({
   children,
   placement = "top-right",
+  size = 1,
+  bend,
   variant = "curved",
   arrowhead = "open",
   color = "#F59E0B",
   strokeWidth = 2,
-  iterations = 2,
-  roughness = 1.2,
-  bowing = 1.5,
+  iterations = 1,
+  roughness = 1,
+  seed,
   label,
   labelFont = "caveat",
   labelFontSize,
@@ -117,8 +151,8 @@ export function RoughArrow({
   labelColor,
   labelOffsetX = 0,
   labelOffsetY = 0,
-  distance = 60,
-  offset = 8,
+  distance,
+  offset,
   curvature = 0.38,
   flipCurve = false,
   animate = true,
@@ -197,10 +231,16 @@ export function RoughArrow({
   // Resolved geometry coordinates relative to the target container
   const w = dimensions?.width || (children ? 80 : 0);
   const h = dimensions?.height || (children ? 24 : 0);
-  const D = distance;
-  const gap = offset;
+  const scale = clamp(size, 0.25, 4);
+  const D = distance ?? BASE_LENGTH * scale;
+  const gap = offset ?? BASE_GAP * scale;
 
-  const { tip, ctrlPoints, tipTangent, labelPos, labelTransform } = useMemo(() => {
+  // One signed bend value; legacy curvature/flipCurve map onto it
+  const resolvedBend =
+    variant === "straight" ? 0 : clamp(bend ?? (flipCurve ? -curvature : curvature), -1, 1);
+  const resolvedSeed = seed ?? hashString(`${placement}|${variant}`);
+
+  const { tail, tip, labelPos, labelTransform } = useMemo(() => {
     let P_tip: Point;
     let P_tail: Point;
     let lblPos: Point;
@@ -267,242 +307,125 @@ export function RoughArrow({
             : "top")
         : labelPlacement;
 
+    const flipped = resolvedBend < 0;
     const rotStr = labelRotate ? ` rotate(${labelRotate}deg)` : "";
 
     switch (effectivePlacement) {
       case "top": {
-        const topYOffset = labelPlacement === "auto" ? (flipCurve ? -15 : -labelDistance) : -labelDistance;
+        const topYOffset = labelPlacement === "auto" ? (flipped ? -15 : -labelDistance) : -labelDistance;
         lblPos = { x: P_tail.x + labelOffsetX, y: P_tail.y + topYOffset + labelOffsetY };
         lblTransform = `translate(-50%, -100%)${rotStr}`;
         break;
       }
       case "bottom": {
-        const bottomYOffset = labelPlacement === "auto" ? (flipCurve ? -2 : labelDistance) : labelDistance;
+        const bottomYOffset = labelPlacement === "auto" ? (flipped ? -2 : labelDistance) : labelDistance;
         lblPos = { x: P_tail.x + labelOffsetX, y: P_tail.y + bottomYOffset + labelOffsetY };
         lblTransform = `translate(-50%, 0)${rotStr}`;
         break;
       }
       case "left": {
-        const leftYOffset = labelPlacement === "auto" ? (flipCurve ? -6 : 0) : 0;
+        const leftYOffset = labelPlacement === "auto" ? (flipped ? -6 : 0) : 0;
         lblPos = { x: P_tail.x - labelDistance + labelOffsetX, y: P_tail.y + leftYOffset + labelOffsetY };
         lblTransform = `translate(-100%, -50%)${rotStr}`;
         break;
       }
       case "right": {
-        const rightYOffset = labelPlacement === "auto" ? (flipCurve ? -6 : 0) : 0;
+        const rightYOffset = labelPlacement === "auto" ? (flipped ? -6 : 0) : 0;
         lblPos = { x: P_tail.x + labelDistance + labelOffsetX, y: P_tail.y + rightYOffset + labelOffsetY };
         lblTransform = `translate(0, -50%)${rotStr}`;
         break;
       }
     }
 
-    // 2. Vector math for curve generation
-    const dx = P_tip.x - P_tail.x;
-    const dy = P_tip.y - P_tail.y;
-    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-    const ux = dx / dist;
-    const uy = dy / dist;
-    // Perpendicular normal vector
-    const normalSign = flipCurve ? -1 : 1;
-    const nx = -uy * normalSign;
-    const ny = ux * normalSign;
-    const bowDepth = dist * curvature;
+    return { tail: P_tail, tip: P_tip, labelPos: lblPos, labelTransform: lblTransform };
+  }, [w, h, D, gap, placement, resolvedBend, labelOffsetX, labelOffsetY, labelPlacement, labelDistance, labelRotate]);
 
-    let points: [number, number][];
-    let tipTangent: { x: number; y: number };
-
-    switch (variant) {
-      case "straight":
-        points = [
-          [P_tail.x, P_tail.y],
-          [P_tip.x, P_tip.y],
-        ];
-        tipTangent = { x: dx, y: dy };
-        break;
-
-      case "curved": {
-        // Cubic Bézier curve with organic hand-drawn sweep matching Layer 3.png
-        // C1 departs gracefully with outward deflection, C2 curls inward toward target
-        const c1X = P_tail.x + dx * 0.35 + nx * (bowDepth * 1.05);
-        const c1Y = P_tail.y + dy * 0.35 + ny * (bowDepth * 1.05);
-        const c2X = P_tail.x + dx * 0.75 + nx * (bowDepth * 0.88);
-        const c2Y = P_tail.y + dy * 0.75 + ny * (bowDepth * 0.88);
-
-        // Sample 6 points along the cubic Bézier curve for seamless rough.js spline
-        const sampled: [number, number][] = [];
-        const steps = 5;
-        for (let i = 0; i <= steps; i++) {
-          const t = i / steps;
-          const mt = 1 - t;
-          const b0 = mt * mt * mt;
-          const b1 = 3 * mt * mt * t;
-          const b2 = 3 * mt * t * t;
-          const b3 = t * t * t;
-          sampled.push([
-            b0 * P_tail.x + b1 * c1X + b2 * c2X + b3 * P_tip.x,
-            b0 * P_tail.y + b1 * c1Y + b2 * c2Y + b3 * P_tip.y,
-          ]);
-        }
-        points = sampled;
-        // Exact analytical arrival tangent: B'(1) = 3 * (P_tip - C2)
-        tipTangent = {
-          x: P_tip.x - c2X,
-          y: P_tip.y - c2Y,
-        };
-        break;
-      }
-
-      case "s-curve": {
-        // S-curve with smooth inflection
-        const c1X = P_tail.x + dx * 0.3 + nx * (bowDepth * 0.85);
-        const c1Y = P_tail.y + dy * 0.3 + ny * (bowDepth * 0.85);
-        const c2X = P_tail.x + dx * 0.7 - nx * (bowDepth * 0.85);
-        const c2Y = P_tail.y + dy * 0.7 - ny * (bowDepth * 0.85);
-
-        const sampled: [number, number][] = [];
-        const steps = 6;
-        for (let i = 0; i <= steps; i++) {
-          const t = i / steps;
-          const mt = 1 - t;
-          const b0 = mt * mt * mt;
-          const b1 = 3 * mt * mt * t;
-          const b2 = 3 * mt * t * t;
-          const b3 = t * t * t;
-          sampled.push([
-            b0 * P_tail.x + b1 * c1X + b2 * c2X + b3 * P_tip.x,
-            b0 * P_tail.y + b1 * c1Y + b2 * c2Y + b3 * P_tip.y,
-          ]);
-        }
-        points = sampled;
-        tipTangent = {
-          x: P_tip.x - c2X,
-          y: P_tip.y - c2Y,
-        };
-        break;
-      }
-
-      default:
-        points = [
-          [P_tail.x, P_tail.y],
-          [P_tip.x, P_tip.y],
-        ];
-        tipTangent = { x: dx, y: dy };
-        break;
-    }
-
-    return {
-      tail: P_tail,
-      tip: P_tip,
-      ctrlPoints: points,
-      tipTangent,
-      labelPos: lblPos,
-      labelTransform: lblTransform,
-    };
-  }, [
-    w,
-    h,
-    D,
-    gap,
-    placement,
-    variant,
-    flipCurve,
-    curvature,
-    labelOffsetX,
-    labelOffsetY,
-    labelPlacement,
-    labelDistance,
-    labelRotate,
-  ]);
-
-  // Generate rough.js SVG paths for shaft and arrowhead
+  // Build the shaft as true cubic Béziers (never resampled), so the line is always one smooth arc
   const { shaftPaths, headPaths } = useMemo(() => {
-    const gen = rough.generator();
+    const rand = mulberry32(resolvedSeed);
+    const jitter = () => rand() * 2 - 1;
 
-    const disableMultiStroke = iterations === 1;
+    const isS = variant === "s-curve";
 
-    // 1. Shaft Path
-    let shaftDrawable;
-    if (variant === "straight") {
-      shaftDrawable = gen.line(
-        ctrlPoints[0][0],
-        ctrlPoints[0][1],
-        ctrlPoints[ctrlPoints.length - 1][0],
-        ctrlPoints[ctrlPoints.length - 1][1],
-        {
-          roughness,
-          bowing,
-          stroke: color,
-          strokeWidth,
-          disableMultiStroke,
-        }
-      );
-    } else {
-      shaftDrawable = gen.curve(ctrlPoints, {
-        roughness,
-        bowing,
-        stroke: color,
-        strokeWidth,
-        disableMultiStroke,
-      });
-    }
-    const sPaths = gen.toPaths(shaftDrawable);
-
-    // 2. Arrowhead Tangent and Barb Generation
-    const endX = tip.x;
-    const endY = tip.y;
-    const theta = Math.atan2(tipTangent.y, tipTangent.x);
-
-    // Proportional barb length and angle matching authentic hand-drawn markers
-    const barbLen = Math.max(13, strokeWidth * 5.2);
-    const alpha = 28 * (Math.PI / 180);
-
-    const b1 = {
-      x: endX - barbLen * Math.cos(theta - alpha),
-      y: endY - barbLen * Math.sin(theta - alpha),
+    // Symmetric control points at 1/3 and 2/3 of the chord, pushed out by the same depth, give an
+    // even, near-circular arc with no hook. Such a curve can never inflect, so it never kinks.
+    const arc = (from: Point, bendRatio: number) => {
+      const dx = tip.x - from.x;
+      const dy = tip.y - from.y;
+      const chord = Math.hypot(dx, dy) || 1;
+      // Perpendicular normal; positive bend bows to this side
+      const nx = -dy / chord;
+      const ny = dx / chord;
+      const depth = bendRatio * chord;
+      return {
+        chord,
+        nx,
+        ny,
+        c1: { x: from.x + dx / 3 + nx * depth, y: from.y + dy / 3 + ny * depth },
+        c2: {
+          x: from.x + (dx * 2) / 3 + nx * depth * (isS ? -1 : 1),
+          y: from.y + (dy * 2) / 3 + ny * depth * (isS ? -1 : 1),
+        },
+      };
     };
-    const b2 = {
-      x: endX - barbLen * Math.cos(theta + alpha),
-      y: endY - barbLen * Math.sin(theta + alpha),
-    };
+    const toPath = (from: Point, c1: Point, c2: Point) =>
+      `M ${fmt(from.x)} ${fmt(from.y)} C ${fmt(c1.x)} ${fmt(c1.y)}, ${fmt(c2.x)} ${fmt(c2.y)}, ${fmt(tip.x)} ${fmt(tip.y)}`;
 
-    let hPaths: ReturnType<typeof gen.toPaths> = [];
+    // Pass 0 is the clean arc; a tiny per-arrow depth variation keeps it feeling hand-drawn
+    const mainBend = resolvedBend * (1 + jitter() * 0.05 * roughness);
+    const main = arc(tail, mainBend);
+    const chord = main.chord;
 
-    if (arrowhead === "filled") {
-      const poly = gen.polygon(
-        [
-          [endX, endY],
-          [b1.x, b1.y],
-          [b2.x, b2.y],
-        ],
-        {
-          fill: color,
-          fillStyle: "solid",
-          roughness: Math.max(0.6, roughness * 0.7),
-          stroke: color,
-          strokeWidth,
-          disableMultiStroke,
-        }
-      );
-      hPaths = gen.toPaths(poly);
-    } else {
-      // Open barbs
-      const l1 = gen.line(endX, endY, b1.x, b1.y, {
-        roughness: Math.max(0.5, roughness * 0.6),
-        stroke: color,
-        strokeWidth,
-        disableMultiStroke,
-      });
-      const l2 = gen.line(endX, endY, b2.x, b2.y, {
-        roughness: Math.max(0.5, roughness * 0.6),
-        stroke: color,
-        strokeWidth,
-        disableMultiStroke,
-      });
-      hPaths = [...gen.toPaths(l1), ...gen.toPaths(l2)];
+    // Exact arrival direction of the curve at the tip: B'(1) ∝ tip − c2
+    let tx = tip.x - main.c2.x;
+    let ty = tip.y - main.c2.y;
+    const tLen = Math.hypot(tx, ty) || 1;
+    tx /= tLen;
+    ty /= tLen;
+
+    const passes = clamp(Math.round(iterations), 1, 3);
+    const amp = roughness * clamp(chord * 0.025, 0.8, 3);
+    const shaft: string[] = [toPath(tail, main.c1, main.c2)];
+
+    // Extra passes start from a slightly shifted tail and are rebuilt as their own symmetric arc to
+    // the same tip, always bowing to the main arc's side, so they stay single smooth curves.
+    const side = mainBend !== 0 ? Math.sign(mainBend) : jitter() < 0 ? -1 : 1;
+    for (let i = 1; i < passes; i++) {
+      const from = {
+        x: tail.x + main.nx * jitter() * amp - main.ny * jitter() * amp * 0.6,
+        y: tail.y + main.ny * jitter() * amp + main.nx * jitter() * amp * 0.6,
+      };
+      const drift = (Math.abs(mainBend) * (1 + jitter() * 0.08) + (Math.abs(jitter()) * amp * 0.5) / chord) * side;
+      const pass = arc(from, isS ? mainBend : drift);
+      shaft.push(toPath(from, pass.c1, pass.c2));
     }
 
-    return { shaftPaths: sPaths, headPaths: hPaths };
-  }, [ctrlPoints, tip, tipTangent, variant, arrowhead, color, strokeWidth, iterations, roughness, bowing]);
+    // Arrowhead scales with the arrow, never smaller than the stroke can carry
+    const headLen = Math.max(clamp(chord * 0.16, 7, 24), strokeWidth * 3.5);
+    const theta = Math.atan2(ty, tx);
+    const barb = (sign: 1 | -1) => {
+      const len = headLen * (1 + jitter() * 0.06 * roughness);
+      const ang = BARB_ANGLE + jitter() * 0.03 * roughness;
+      return {
+        x: tip.x - len * Math.cos(theta + sign * ang),
+        y: tip.y - len * Math.sin(theta + sign * ang),
+      };
+    };
+
+    const head: string[] = [];
+    const headPasses = arrowhead === "filled" ? 1 : passes;
+    for (let i = 0; i < headPasses; i++) {
+      const b1 = barb(-1);
+      const b2 = barb(1);
+      head.push(
+        arrowhead === "filled"
+          ? `M ${fmt(tip.x)} ${fmt(tip.y)} L ${fmt(b1.x)} ${fmt(b1.y)} L ${fmt(b2.x)} ${fmt(b2.y)} Z`
+          : `M ${fmt(b1.x)} ${fmt(b1.y)} L ${fmt(tip.x)} ${fmt(tip.y)} L ${fmt(b2.x)} ${fmt(b2.y)}`
+      );
+    }
+
+    return { shaftPaths: shaft, headPaths: head };
+  }, [tail, tip, resolvedBend, resolvedSeed, variant, arrowhead, strokeWidth, iterations, roughness]);
 
   return (
     <span
@@ -515,12 +438,12 @@ export function RoughArrow({
         className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-visible z-20"
       >
         {/* Shaft / Stem */}
-        {shaftPaths.map((p, idx) => (
+        {shaftPaths.map((d, idx) => (
           <motion.path
             key={`shaft-${idx}`}
-            d={p.d}
-            stroke={p.stroke || color}
-            strokeWidth={p.strokeWidth || strokeWidth}
+            d={d}
+            stroke={color}
+            strokeWidth={idx === 0 ? strokeWidth : strokeWidth * 0.85}
             fill="none"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -535,19 +458,13 @@ export function RoughArrow({
         ))}
 
         {/* Arrowhead */}
-        {headPaths.map((p, idx) => (
+        {headPaths.map((d, idx) => (
           <motion.path
             key={`head-${idx}`}
-            d={p.d}
-            stroke={p.stroke || color}
-            strokeWidth={p.strokeWidth || strokeWidth}
-            fill={
-              p.fill && p.fill !== "none"
-                ? p.fill
-                : arrowhead === "filled"
-                ? color
-                : "none"
-            }
+            d={d}
+            stroke={color}
+            strokeWidth={idx === 0 ? strokeWidth : strokeWidth * 0.85}
+            fill={arrowhead === "filled" ? color : "none"}
             strokeLinecap="round"
             strokeLinejoin="round"
             initial={{ pathLength: 0, opacity: 0 }}
