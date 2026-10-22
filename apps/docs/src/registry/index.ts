@@ -197,6 +197,28 @@ export const registry: RegistryEntry[] = [
     ],
   },
   {
+    name: "Number Ticker",
+    slug: "number-ticker",
+    category: "animated",
+    description: "Integers that roll like an odometer whenever the value changes. Each place spins on a spring with vertical motion blur scaled to its speed, travels up when the value rises and down when it falls, grows in or folds away as the number gains or loses places, and briefly glows green or red.",
+    dependencies: ["framer-motion"],
+    packagePath: "animated/number-ticker/NumberTicker.tsx",
+    files: [
+      "animated/number-ticker/NumberTicker.tsx",
+      "animated/number-ticker/DigitColumn.tsx",
+      "animated/number-ticker/format.ts",
+    ],
+    presentationStrategy: "center",
+    propDefs: [
+      { name: "prefix", type: "string", default: "$", description: "Static text before the number", required: false },
+      { name: "suffix", type: "string", default: "", description: "Static text after the number", required: false },
+      { name: "stagger", type: "number", default: 0.035, min: 0, max: 0.15, step: 0.005, description: "Seconds between places starting to roll, units first", required: false },
+      { name: "blur", type: "number", default: 8, min: 0, max: 20, step: 1, description: "Maximum vertical motion blur (px)", required: false },
+      { name: "flash", type: "boolean", default: true, description: "Glow green on rise, red on fall", required: false },
+      { name: "locale", type: "select", default: "en-US", options: ["en-US", "de-DE", "en-IN", "fr-FR"], description: "Digit grouping locale", required: false },
+    ],
+  },
+  {
     name: "Spotlight Text",
     slug: "spotlight-text",
     category: "animated",

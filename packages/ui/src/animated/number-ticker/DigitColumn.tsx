@@ -45,7 +45,9 @@ const BLUR_PER_SPEED = 0.35;
 // The window extends this far above and below the glyph, so the edge fade never touches a
 // settled digit.
 const PAD = "0.15em";
-const MASK = `linear-gradient(to bottom, transparent 0, #000 ${PAD}, #000 calc(100% - ${PAD}), transparent 100%)`;
+// Side room so the flash glow isn't cut off by the mask; cancelled by a negative margin.
+const GLOW_ROOM = "0.3em";
+const MASK =`linear-gradient(to bottom, transparent 0, #000 ${PAD}, #000 calc(100% - ${PAD}), transparent 100%)`;
 
 /** Offset of digit `i` from the window, in cells, wrapped to [-5, 5). */
 function cellOffset(i: number, position: number) {
@@ -55,8 +57,10 @@ function cellOffset(i: number, position: number) {
 
 function Cell({ digit, position }: { digit: number; position: MotionValue<number> }) {
   const y = useTransform(position, (p) => `${cellOffset(digit, p) * 100}%`);
+  // Neighbours fade out with distance, so nothing peeks into the window's padding at rest.
+  const opacity = useTransform(position, (p) => Math.max(0, 1 - Math.abs(cellOffset(digit, p))));
   return (
-    <motion.span className="absolute inset-x-0 text-center" style={{ top: PAD, bottom: PAD, y }}>
+    <motion.span className="absolute inset-x-0 text-center" style={{ top: PAD, bottom: PAD, y, opacity }}>
       {digit}
     </motion.span>
   );
@@ -90,6 +94,7 @@ export function DigitColumn({
 
   const mounted = useRef(false);
   const glowControls = useRef<AnimationPlaybackControls | null>(null);
+  const flashToken = useRef(0);
 
   useEffect(() => {
     const first = !mounted.current;
@@ -108,9 +113,12 @@ export function DigitColumn({
 
     if (!first && flash && direction !== 0) {
       flashColor.set(direction > 0 ? upColor : downColor);
+      // Only the latest flash may fade out; a superseded one resolving late must not cut it short.
+      const token = ++flashToken.current;
       glowControls.current?.stop();
       glowControls.current = animate(glow, 1, { duration: 0.12, delay });
       glowControls.current.then(() => {
+        if (token !== flashToken.current) return;
         glowControls.current = animate(glow, 0, { duration: 0.6, delay: 0.25 });
       });
     }
@@ -133,7 +141,12 @@ export function DigitColumn({
     <span
       aria-hidden
       className="relative inline-block overflow-clip"
-      style={{ paddingBlock: PAD, marginBlock: `-${PAD}`, maskImage: MASK, WebkitMaskImage: MASK }}
+      style={{
+        padding: `${PAD} ${GLOW_ROOM}`,
+        margin: `-${PAD} -${GLOW_ROOM}`,
+        maskImage: MASK,
+        WebkitMaskImage: MASK,
+      }}
     >
       <svg width="0" height="0" className="absolute" aria-hidden focusable="false">
         <filter id={filterId} x="-20%" y="-50%" width="140%" height="200%">
@@ -145,7 +158,7 @@ export function DigitColumn({
       <motion.span
         ref={stripRef}
         className="absolute inset-0"
-        style={reduced ? undefined : { color, textShadow }}
+        style={{ color, textShadow }}
       >
         {Array.from({ length: 10 }, (_, d) => (
           <Cell key={d} digit={d} position={position} />

@@ -28,6 +28,7 @@ import {
   SpotlightText,
   InspectText,
   HatchedText,
+  NumberTickerPlayground,
   LuminaWave,
   MatrixRain,
 
@@ -1593,6 +1594,8 @@ export function PresentationRenderer({
       return <InspectText {...liveProps} />;
     case "hatched-text":
       return <HatchedText {...liveProps} />;
+    case "number-ticker":
+      return <NumberTickerPlayground {...liveProps} />;
     case "spotlight-text": {
       const spotlightTextProps = {
         text: "Antimetal",
