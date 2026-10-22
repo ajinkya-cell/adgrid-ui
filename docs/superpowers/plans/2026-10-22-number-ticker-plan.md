@@ -126,7 +126,7 @@
   - Mark the column `aria-hidden`.
 
 - [ ] **Step 2: Typecheck**
-  Run: `pnpm --filter void-ui typecheck`
+  Run: `pnpm --filter @adgrid-ui/ui typecheck`
   Expected: no errors
 
 - [ ] **Step 3: Commit**
@@ -194,7 +194,7 @@
     - `locale` (select "en-US", options en-US/de-DE/en-IN/fr-FR)
   - Description, in the house voice: "Integers that roll like an odometer whenever the value changes. Each place spins on a spring with vertical motion blur scaled to its speed, travels up when the value rises and down when it falls, grows in or folds away as the number gains or loses places, and briefly glows green or red."
 - [ ] **Step 4: Typecheck and build**
-  Run: `pnpm --filter void-ui typecheck && pnpm build:registry`
+  Run: `pnpm --filter @adgrid-ui/ui typecheck && pnpm build:registry`
   Expected: no type errors; `apps/docs/public/r/number-ticker.json` exists.
 - [ ] **Step 5: Visual verification in docs** (`pnpm dev`, open the Number Ticker presentation)
   - `+1` on 1,234: only the units column rolls up, overshoots slightly and settles, with a green glow.
