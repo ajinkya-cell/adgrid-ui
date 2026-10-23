@@ -3,14 +3,12 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
-import {
-  RoughHighlight,
-  RoughUnderline,
-  RoughHandwriting,
-  RoughArrow,
-  RoughBox,
-  RoughBracket,
-} from "@adgrid-ui/ui";
+import { RoughHighlight } from "@ui/animated/roughly/RoughHighlight";
+import { RoughUnderline } from "@ui/animated/roughly/RoughUnderline";
+import { RoughHandwriting } from "@ui/animated/roughly/RoughHandwriting";
+import { RoughArrow } from "@ui/animated/roughly/RoughArrow";
+import { RoughBox } from "@ui/animated/roughly/RoughBox";
+import { RoughBracket } from "@ui/animated/roughly/RoughBracket";
 import { registry } from "@/registry";
 import { LinkedinOriginal } from "devicons-react";
 

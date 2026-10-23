@@ -1,21 +1,19 @@
 "use client";
 
 import { useState, useRef, useEffect, type ReactNode } from "react";
-import {
-  Roughly,
-  RoughCircle,
-  RoughUnderline,
-  RoughStrike,
-  RoughCross,
-  RoughBracket,
-  RoughHighlight,
-  RoughBox,
-  RoughArrow,
-  RoughHandwriting,
-  RoughCheck,
-  RoughSticky,
-  VoidButton,
-} from "@adgrid-ui/ui";
+import { Roughly } from "@ui/animated/Roughly";
+import { RoughCircle } from "@ui/animated/roughly/RoughCircle";
+import { RoughUnderline } from "@ui/animated/roughly/RoughUnderline";
+import { RoughStrike } from "@ui/animated/roughly/RoughStrike";
+import { RoughCross } from "@ui/animated/roughly/RoughCross";
+import { RoughBracket } from "@ui/animated/roughly/RoughBracket";
+import { RoughHighlight } from "@ui/animated/roughly/RoughHighlight";
+import { RoughBox } from "@ui/animated/roughly/RoughBox";
+import { RoughArrow } from "@ui/animated/roughly/RoughArrow";
+import { RoughHandwriting } from "@ui/animated/roughly/RoughHandwriting";
+import { RoughCheck } from "@ui/animated/roughly/RoughCheck";
+import { RoughSticky } from "@ui/animated/roughly/RoughSticky";
+import { VoidButton } from "@ui/animated/VoidButton";
 import type {
   RoughlyType,
   BracketSide,

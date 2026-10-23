@@ -6,7 +6,8 @@
     "plugins": [{ "name": "next" }],
     "paths": {
       "@/*": ["./src/*"],
-      "@adgrid-ui/ui": ["../../packages/ui/src/index.ts"]
+      "@adgrid-ui/ui": ["../../packages/ui/src/index.ts"],
+      "@ui/*": ["../../packages/ui/src/*"]
     },
     "types": ["react", "react-dom", "node"]
   },

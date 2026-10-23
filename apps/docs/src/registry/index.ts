@@ -909,6 +909,28 @@ export const registry: RegistryEntry[] = [
   },
 
   {
+    name: "Preview Card",
+    slug: "preview-card",
+    category: "primitives",
+    description: "A framed showcase card: a dark outer frame holds a raised, lighter well for the preview, with the name underneath. The preview is centred with breathing room, or fills the well edge to edge for canvases and video. Lifts on hover, the well brightens and an arrow slides in; renders as any link component.",
+    dependencies: [],
+    packagePath: "primitives/PreviewCard.tsx",
+    files: ["primitives/PreviewCard.tsx"],
+    presentationStrategy: "center",
+    propDefs: [
+      { name: "title", type: "string", default: "Image reveal", description: "Name shown under the preview well", required: false },
+      { name: "padded", type: "boolean", default: true, description: "Keep the preview off the well edges (off for canvases and video)", required: false },
+      { name: "showArrow", type: "boolean", default: true, description: "Arrow next to the title on hover", required: false },
+      { name: "lift", type: "boolean", default: true, description: "Lift the card on hover", required: false },
+      { name: "radius", type: "number", default: 30, min: 8, max: 48, step: 1, description: "Outer corner radius (px); the well follows", required: false },
+      { name: "inset", type: "number", default: 14, min: 4, max: 32, step: 1, description: "Gap between frame and well (px)", required: false },
+      { name: "frameColor", type: "color", default: "#141414", description: "Outer frame colour", required: false },
+      { name: "wellColor", type: "color", default: "#1c1c1c", description: "Preview well colour", required: false },
+      { name: "wellHoverColor", type: "color", default: "#202020", description: "Preview well colour on hover", required: false },
+      { name: "titleColor", type: "color", default: "#f5f5f5", description: "Title colour", required: false },
+    ],
+  },
+  {
     name: "Pagination",
     slug: "pagination",
     category: "primitives",

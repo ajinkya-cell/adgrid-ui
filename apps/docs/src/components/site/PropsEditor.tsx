@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { ColorPicker } from "@adgrid-ui/ui";
+import { ColorPicker } from "@ui/primitives/ColorPicker";
 import { PROP_COLOUR_PRESETS, propTakesAlpha } from "@/components/presentation/colour-control";
 
 export interface PropDefinition {

@@ -826,6 +826,18 @@
       ]
     },
     {
+      "name": "preview-card",
+      "type": "registry:ui",
+      "title": "Preview Card",
+      "description": "A framed showcase card: a dark outer frame holds a raised, lighter well for the preview, with the name underneath. The preview is centred with breathing room, or fills the well edge to edge for canvases and video. Lifts on hover, the well brightens and an arrow slides in; renders as any link component.",
+      "files": [
+        {
+          "path": "components/ui/PreviewCard.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "pagination",
       "type": "registry:ui",
       "title": "Pagination",

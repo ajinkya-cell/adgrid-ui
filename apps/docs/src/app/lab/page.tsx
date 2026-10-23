@@ -1,21 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import {
-  DotMatrix,
-  AnisotropicKnob,
-  ExpandOnHover,
-  TextShuffle,
-  LivingText,
-  LaserVaultPassword,
-  GravityCardStack,
-  WeaponWheel,
-  VoidButton,
-  BrushedTitaniumButton,
-  LiquidGoldButton,
-  GuillocheButton,
-  SpotlightGrid,
-} from "@adgrid-ui/ui";
+import { DotMatrix } from "@ui/matrix/DotMatrix";
+import { AnisotropicKnob } from "@ui/animated/AnisotropicKnob";
+import { ExpandOnHover } from "@ui/animated/expand-on-hover";
+import { TextShuffle } from "@ui/animated/text-shuffle";
+import { LivingText } from "@ui/animated/LivingText";
+import { LaserVaultPassword } from "@ui/animated/LaserVaultPassword";
+import { GravityCardStack } from "@ui/animated/GravityCardStack";
+import { WeaponWheel } from "@ui/animated/WeaponWheel";
+import { VoidButton } from "@ui/animated/VoidButton";
+import { BrushedTitaniumButton } from "@ui/animated/BrushedTitaniumButton";
+import { LiquidGoldButton } from "@ui/animated/LiquidGoldButton";
+import { GuillocheButton } from "@ui/animated/GuillocheButton";
+import { SpotlightGrid } from "@ui/backgrounds/SpotlightGrid";
 
 // ─── Data ───
 

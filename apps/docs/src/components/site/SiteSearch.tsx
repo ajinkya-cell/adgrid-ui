@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Bug, Layers, User } from "lucide-react";
-import { CommandPalette, type CommandItem } from "@adgrid-ui/ui";
+import { CommandPalette, type CommandItem } from "@ui/animated/CommandPalette";
 import { usePresentationStore } from "@/lib/presentation/store";
 import { presentationEntries } from "@/components/presentation/presentation-registry";
 import { usePresentation } from "@/components/presentation/hooks/usePresentation";

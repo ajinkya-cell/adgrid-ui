@@ -5,7 +5,7 @@ import { AnimatePresence, motion, useDragControls } from "framer-motion";
 import { ChevronDown, ChevronUp, RotateCcw, SlidersHorizontal, X } from "lucide-react";
 import type { PropDefinition, RegistryEntry } from "@/registry";
 import { usePresentationStore } from "@/lib/presentation/store";
-import { ColorPicker } from "@adgrid-ui/ui";
+import { ColorPicker } from "@ui/primitives/ColorPicker";
 import { PROP_COLOUR_PRESETS, propTakesAlpha } from "./colour-control";
 
 // ── Helpers for Casing ──────────────────────────────────────────

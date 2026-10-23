@@ -2,26 +2,18 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence } from "framer-motion";
-import {
-  Button,
-  ChatSidebar,
-  CodeBlock,
-  Conversation,
-  Markdown,
-  Message,
-  MessageAction,
-  MessageActions,
-  PromptInput,
-  PromptSuggestions,
-  StreamingText,
-  Toaster,
-  TypingIndicator,
-  toast,
-  type ChatThread,
-  type MessageFeedback,
-  type MessageStatus,
-  type PromptInputStatus,
-} from "@adgrid-ui/ui";
+import { Button } from "@ui/primitives/Button";
+import { ChatSidebar, type ChatThread } from "@ui/ai/ChatSidebar";
+import { CodeBlock } from "@ui/ai/CodeBlock";
+import { Conversation } from "@ui/ai/Conversation";
+import { Markdown } from "@ui/ai/Markdown";
+import { Message, type MessageStatus } from "@ui/ai/Message";
+import { MessageAction, MessageActions, type MessageFeedback } from "@ui/ai/MessageActions";
+import { PromptInput, type PromptInputStatus } from "@ui/ai/PromptInput";
+import { PromptSuggestions } from "@ui/ai/PromptSuggestions";
+import { StreamingText } from "@ui/ai/StreamingText";
+import { Toaster, toast } from "@ui/primitives/Toast";
+import { TypingIndicator } from "@ui/ai/TypingIndicator";
 import {
   IconBulb,
   IconKey,

@@ -15,13 +15,15 @@ export function GalleryIframePreview({
   className?: string;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(containerRef, { once: true, margin: "200px 0px" });
+  // Not `once`: the gallery holds ~100 previews, so frames far off screen unmount to free memory and WebGL contexts.
+  const isInView = useInView(containerRef, { margin: "150px 0px" });
   const [loaded, setLoaded] = useState(false);
+  if (!isInView && loaded) setLoaded(false);
 
   return (
     <div
       ref={containerRef}
-      className={`relative w-full h-full min-h-[170px] bg-[#070707] flex items-center justify-center overflow-hidden ${className}`}
+      className={`relative w-full h-full flex items-center justify-center overflow-hidden ${className}`}
     >
       {/* Loading Skeleton Pulse */}
       {!loaded && (
@@ -36,7 +38,7 @@ export function GalleryIframePreview({
           src={`/embed/${slug}${mode ? `?mode=${mode}` : ""}`}
           title={`Live preview of ${title}`}
           onLoad={() => setLoaded(true)}
-          className={`w-full h-full min-h-[170px] border-0 pointer-events-none transition-opacity duration-700 ${
+          className={`w-full h-full border-0 pointer-events-none transition-opacity duration-700 ${
             loaded ? "opacity-100" : "opacity-0"
           }`}
           loading="lazy"

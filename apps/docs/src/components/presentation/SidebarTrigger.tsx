@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Code2, List } from "lucide-react";
-import { VoidButton } from "@adgrid-ui/ui";
+import { VoidButton } from "@ui/animated/VoidButton";
 import { usePresentationStore } from "@/lib/presentation/store";
 
 export function SidebarTrigger() {

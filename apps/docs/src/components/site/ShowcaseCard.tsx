@@ -1,4 +1,4 @@
-import { cn } from "@adgrid-ui/ui";
+import { cn } from "@ui/lib/utils";
 
 interface ShowcaseCardProps {
   label: string;

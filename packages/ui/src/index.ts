@@ -373,6 +373,8 @@ export type { ActivityCardProps, ActivityCardMetric, ActivityCardRing } from "./
 export type { RulerNavProps, RulerNavGroup, RulerNavItem } from "./primitives/RulerNav";
 export { Pagination, pageRange } from "./primitives/Pagination";
 export type { PaginationProps, PaginationVariant, PaginationSize } from "./primitives/Pagination";
+export { PreviewCard } from "./primitives/PreviewCard";
+export type { PreviewCardProps } from "./primitives/PreviewCard";
 export type { ToasterProps, ToasterPosition, ToastOptions, ToastAction, ToastData, ToastType } from "./primitives/Toast";
 
 // AI — chat building blocks

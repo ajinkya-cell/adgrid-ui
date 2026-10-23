@@ -1,152 +1,32 @@
 "use client";
 
-// Note: CoverflowCarousel is imported from "@adgrid-ui/ui" in the imports section below and rendered under the "coverflow-carousel" case in the switch-statement inside the PresentationRenderer component.
+import { useRef, useState, useEffect, type ComponentProps } from "react";
+import dynamic from "next/dynamic";
 
-import { useRef, useState, useEffect } from "react";
-
-import {
-  AnisotropicKnob,
-  BreathingGrid,
-  BreathingBackground,
-  BrushedTitaniumButton,
-  ButtonAlpha,
-  ChromeInput,
-  ChromeSelect,
-  CoverflowCarousel,
-  DotMatrix,
-  ExpandOnHover,
-  FloatingEmbers,
-  GravityCardStack,
-  HorizonGlow,
-  GuillocheButton,
-  ImageParallax,
-  ImageReveal,
-  InfiniteScroll,
-  LaserVaultPassword,
-  LiquidGoldButton,
-  LivingText,
-  SpotlightText,
-  InspectText,
-  HatchedText,
-  NumberTickerPlayground,
-  LuminaWave,
-  MatrixRain,
-
-  NowPlayingCard,
-  PixelMeltBackground,
-  PremiumHero,
-  SimpleCard,
-  Marquee,
-  Marquee2,
-  Accordion,
-  StickerCard,
-  Datepicker,
-  NavBar1,
-  SpotlightGrid,
-  FlickeringGrid,
-  FlickeringGridPlayground,
-  DotPattern,
-  DotPatternPlayground,
-  TextShuffle,
-  VoidButton,
-  WheelPicker,
-  ScrollProgress,
-  RulerScrollbar,
-  ScrollWater,
-  MoonPull,
-  StackedCards,
-  TiltedCollage,
-  TapedMarquee,
-  Choice,
-  ChoiceGroup,
-  Modal,
-  Dialog,
-  DialogButton,
-  Tabs,
-  TabsList,
-  Tab,
-  TabsPanel,
-  SegmentedControl,
-  Drawer,
-  Nav,
-  NavGroup,
-  NavItem,
-  NavSection,
-  Progress,
-  Combobox,
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableHead,
-  TableCell,
-  Breadcrumbs,
-  WeaponWheel,
-  Hero,
-  AnimatedIcons1,
-  ForgeUILanding,
-  RaysLanding,
-  PolaroidDevelop,
-  ChalkboardNotFound,
-  BreathingScaleCard,
-  GithubHeatmap,
-  DeveloperIdCard,
-  Sidebar,
-  CommandPalette,
-  Switch,
-  OTPInput,
-  Tooltip,
-  Timeline,
-  Toaster,
-  toast,
-  Spinner,
-  FileUpload,
-  type FileUploadItem,
-  Button,
-  TextField,
-  Select,
-  ColorPicker,
-  Popover,
-  DropdownMenu,
-  MenuItem,
-  MenuCheckboxItem,
-  MenuSeparator,
-  MenuGroup,
-  MenuSub,
-  MenuRadioGroup,
-  MenuRadioItem,
-  Menubar,
-  MenubarMenu,
-  RulerNav,
-  type RulerNavGroup,
-  ActivityCard,
-  FolderReveal,
-  ChatFaq,
-  PolaroidStack,
-  Pagination,
-  usePopoverClose,
-  Globe,
-  BentoGrid,
-  BentoGridItem,
-  Meter,
-  Gauge,
-  MatrixRippleBackground,
-  StackedCardFanDemo,
-} from "@adgrid-ui/ui";
-import { Cards } from "../../../../../packages/ui/src/animated/Cards";
-import { ChartsDemo } from "./ChartsDemo";
-import {
-  ChatSidebarDemo,
-  CodeBlockDemo,
-  ConversationDemo,
-  MarkdownDemo,
-  MessageActionsDemo,
-  MessageDemo,
-  PromptInputDemo,
-  PromptSuggestionsDemo,
-  StreamingTextDemo,
-  TypingIndicatorDemo,
-} from "./AiChatDemos";
+import { Choice, ChoiceGroup } from "@ui/primitives/Choice";
+import { Modal, Dialog, DialogButton } from "@ui/primitives/Dialog";
+import { Tabs, TabsList, Tab, TabsPanel } from "@ui/primitives/Tabs";
+import { SegmentedControl } from "@ui/primitives/SegmentedControl";
+import { Drawer } from "@ui/primitives/Drawer";
+import { Nav, NavGroup, NavItem, NavSection } from "@ui/primitives/Nav";
+import { Progress } from "@ui/primitives/Progress";
+import { Combobox } from "@ui/primitives/Combobox";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@ui/primitives/Table";
+import { Breadcrumbs } from "@ui/primitives/Breadcrumbs";
+import { OTPInput } from "@ui/primitives/OTPInput";
+import { Toaster, toast } from "@ui/primitives/Toast";
+import { Spinner } from "@ui/primitives/Spinner";
+import { FileUpload, type FileUploadItem } from "@ui/primitives/FileUpload";
+import { Button } from "@ui/primitives/Button";
+import { TextField } from "@ui/primitives/TextField";
+import { Select } from "@ui/primitives/Select";
+import { ColorPicker } from "@ui/primitives/ColorPicker";
+import { Popover, DropdownMenu, MenuItem, MenuCheckboxItem, MenuSeparator, MenuGroup, MenuSub, MenuRadioGroup, MenuRadioItem, usePopoverClose } from "@ui/primitives/Popover";
+import { Menubar, MenubarMenu } from "@ui/primitives/Menubar";
+import { RulerNav, type RulerNavGroup } from "@ui/primitives/RulerNav";
+import { Pagination } from "@ui/primitives/Pagination";
+import { BentoGrid, BentoGridItem } from "@ui/animated/BentoGrid";
+import { Gauge } from "@ui/primitives/Gauge";
 import type { RegistryEntry } from "@/registry";
 import { usePresentationStore } from "@/lib/presentation/store";
 import {
@@ -196,6 +76,96 @@ import {
   IconHelp,
   IconKeyboard,
 } from "@tabler/icons-react";
+
+
+// Each slug's component loads on demand, so a page only compiles and ships the one it shows.
+const ChartsDemo = dynamic(() => import("./ChartsDemo").then((m) => m.ChartsDemo));
+const ChatSidebarDemo = dynamic(() => import("./AiChatDemos").then((m) => m.ChatSidebarDemo));
+const CodeBlockDemo = dynamic(() => import("./AiChatDemos").then((m) => m.CodeBlockDemo));
+const ConversationDemo = dynamic(() => import("./AiChatDemos").then((m) => m.ConversationDemo));
+const MarkdownDemo = dynamic(() => import("./AiChatDemos").then((m) => m.MarkdownDemo));
+const MessageActionsDemo = dynamic(() => import("./AiChatDemos").then((m) => m.MessageActionsDemo));
+const MessageDemo = dynamic(() => import("./AiChatDemos").then((m) => m.MessageDemo));
+const PromptInputDemo = dynamic(() => import("./AiChatDemos").then((m) => m.PromptInputDemo));
+const PromptSuggestionsDemo = dynamic(() => import("./AiChatDemos").then((m) => m.PromptSuggestionsDemo));
+const StreamingTextDemo = dynamic(() => import("./AiChatDemos").then((m) => m.StreamingTextDemo));
+const TypingIndicatorDemo = dynamic(() => import("./AiChatDemos").then((m) => m.TypingIndicatorDemo));
+const AnisotropicKnob = dynamic(() => import("@ui/animated/AnisotropicKnob").then((m) => m.AnisotropicKnob));
+const CoverflowCarousel = dynamic(() => import("@ui/animated/coverflow/CoverflowCarousel").then((m) => m.CoverflowCarousel));
+const HorizonGlow = dynamic(() => import("@ui/backgrounds/HorizonGlow").then((m) => m.HorizonGlow));
+const Marquee = dynamic(() => import("@ui/animated/Marquee").then((m) => m.Marquee));
+const WheelPicker = dynamic(() => import("@ui/animated/WheelPicker").then((m) => m.WheelPicker));
+const ScrollProgress = dynamic(() => import("@ui/animated/scrollprogress/ScrollProgress"));
+const RulerScrollbar = dynamic(() => import("@ui/animated/ruler-scrollbar/RulerScrollbar").then((m) => m.RulerScrollbar));
+const ScrollWater = dynamic(() => import("@ui/animated/scroll-water/ScrollWater").then((m) => m.ScrollWater));
+const MoonPull = dynamic(() => import("@ui/animated/moon-pull/MoonPull").then((m) => m.MoonPull));
+const StackedCards = dynamic(() => import("@ui/animated/paper/StackedCards").then((m) => m.StackedCards));
+const TiltedCollage = dynamic(() => import("@ui/animated/paper/TiltedCollage").then((m) => m.TiltedCollage));
+const TapedMarquee = dynamic(() => import("@ui/animated/paper/TapedMarquee").then((m) => m.TapedMarquee));
+const WeaponWheel = dynamic(() => import("@ui/animated/WeaponWheel").then((m) => m.WeaponWheel));
+const ChalkboardNotFound = dynamic(() => import("@ui/animated/ChalkboardNotFound").then((m) => m.ChalkboardNotFound));
+const Sidebar = dynamic(() => import("@ui/animated/Sidebar").then((m) => m.Sidebar));
+const CommandPalette = dynamic(() => import("@ui/animated/CommandPalette").then((m) => m.CommandPalette));
+const Switch = dynamic(() => import("@ui/animated/Switch").then((m) => m.Switch));
+const Tooltip = dynamic(() => import("@ui/animated/Tooltip").then((m) => m.Tooltip));
+const Timeline = dynamic(() => import("@ui/animated/Timeline").then((m) => m.Timeline));
+const ActivityCard = dynamic(() => import("@ui/animated/ActivityCard").then((m) => m.ActivityCard));
+const FolderReveal = dynamic(() => import("@ui/animated/FolderReveal").then((m) => m.FolderReveal));
+const ChatFaq = dynamic(() => import("@ui/animated/ChatFaq").then((m) => m.ChatFaq));
+const PolaroidStack = dynamic(() => import("@ui/animated/PolaroidStack").then((m) => m.PolaroidStack));
+const BreathingGrid = dynamic(() => import("@ui/backgrounds/BreathingGrid").then((m) => m.BreathingGrid));
+const BreathingBackground = dynamic(() => import("@ui/backgrounds/BreathingBackground").then((m) => m.BreathingBackground));
+const BrushedTitaniumButton = dynamic(() => import("@ui/animated/BrushedTitaniumButton").then((m) => m.BrushedTitaniumButton));
+const ButtonAlpha = dynamic(() => import("@ui/animated/ButtonAlpha").then((m) => m.ButtonAlpha));
+const ChromeInput = dynamic(() => import("@ui/animated/ChromeInput").then((m) => m.ChromeInput));
+const ChromeSelect = dynamic(() => import("@ui/animated/ChromeSelect").then((m) => m.ChromeSelect));
+const DotMatrix = dynamic(() => import("@ui/matrix/DotMatrix").then((m) => m.DotMatrix));
+const ExpandOnHover = dynamic(() => import("@ui/animated/expand-on-hover").then((m) => m.ExpandOnHover));
+const FloatingEmbers = dynamic(() => import("@ui/backgrounds/FloatingEmbers").then((m) => m.FloatingEmbers));
+const GravityCardStack = dynamic(() => import("@ui/animated/GravityCardStack").then((m) => m.GravityCardStack));
+const GuillocheButton = dynamic(() => import("@ui/animated/GuillocheButton").then((m) => m.GuillocheButton));
+const ImageParallax = dynamic(() => import("@ui/animated/ImageParallax").then((m) => m.ImageParallax));
+const ImageReveal = dynamic(() => import("@ui/animated/ImageReveal").then((m) => m.ImageReveal));
+const InfiniteScroll = dynamic(() => import("@ui/animated/InfiniteScroll").then((m) => m.InfiniteScroll));
+const LaserVaultPassword = dynamic(() => import("@ui/animated/LaserVaultPassword").then((m) => m.LaserVaultPassword));
+const LiquidGoldButton = dynamic(() => import("@ui/animated/LiquidGoldButton").then((m) => m.LiquidGoldButton));
+const LivingText = dynamic(() => import("@ui/animated/LivingText").then((m) => m.LivingText));
+const SpotlightText = dynamic(() => import("@ui/animated/spotlight-text").then((m) => m.SpotlightText));
+const InspectText = dynamic(() => import("@ui/animated/InspectText").then((m) => m.InspectText));
+const HatchedText = dynamic(() => import("@ui/animated/HatchedText").then((m) => m.HatchedText));
+const NumberTickerPlayground = dynamic(() => import("@ui/animated/number-ticker").then((m) => m.NumberTickerPlayground));
+const LuminaWave = dynamic(() => import("@ui/backgrounds/LuminaWave").then((m) => m.LuminaWave));
+const MatrixRain = dynamic(() => import("@ui/backgrounds/MatrixRain").then((m) => m.MatrixRain));
+const NowPlayingCard = dynamic(() => import("@ui/animated/NowPlayingCard").then((m) => m.NowPlayingCard));
+const PixelMeltBackground = dynamic(() => import("@ui/backgrounds/PixelMelt").then((m) => m.PixelMeltBackground));
+const PremiumHero = dynamic(() => import("@ui/animated/PremiumHero").then((m) => m.PremiumHero));
+const SimpleCard = dynamic(() => import("@ui/animated/SimpleCard").then((m) => m.SimpleCard));
+const PreviewCard = dynamic(() => import("@ui/primitives/PreviewCard").then((m) => m.PreviewCard));
+const Marquee2 = dynamic(() => import("@ui/animated/Marquee2"));
+const Accordion = dynamic(() => import("@ui/animated/Accordion").then((m) => m.Accordion));
+const StickerCard = dynamic(() => import("@ui/animated/StickerCard"));
+const Datepicker = dynamic(() => import("@ui/animated/Datepicker"));
+const NavBar1 = dynamic(() => import("@ui/animated/NavBar1"));
+const SpotlightGrid = dynamic(() => import("@ui/backgrounds/SpotlightGrid").then((m) => m.SpotlightGrid));
+const FlickeringGrid = dynamic(() => import("@ui/animated/FlickeringGrid").then((m) => m.FlickeringGrid));
+const FlickeringGridPlayground = dynamic(() => import("@ui/animated/FlickeringGridPlayground").then((m) => m.FlickeringGridPlayground));
+const DotPattern = dynamic(() => import("@ui/animated/DotPattern").then((m) => m.DotPattern));
+const DotPatternPlayground = dynamic(() => import("@ui/animated/DotPatternPlayground").then((m) => m.DotPatternPlayground));
+const TextShuffle = dynamic(() => import("@ui/animated/text-shuffle").then((m) => m.TextShuffle));
+const VoidButton = dynamic(() => import("@ui/animated/VoidButton").then((m) => m.VoidButton));
+const Hero = dynamic(() => import("@ui/animated/Hero").then((m) => m.Hero));
+const AnimatedIcons1 = dynamic(() => import("@ui/animated/Loaders1").then((m) => m.AnimatedIcons1));
+const ForgeUILanding = dynamic(() => import("@ui/animated/ForgeUILanding").then((m) => m.ForgeUILanding));
+const RaysLanding = dynamic(() => import("@ui/animated/RaysLanding").then((m) => m.RaysLanding));
+const PolaroidDevelop = dynamic(() => import("@ui/animated/PolaroidDevelop").then((m) => m.PolaroidDevelop));
+const BreathingScaleCard = dynamic(() => import("@ui/animated/BreathingScaleCard").then((m) => m.BreathingScaleCard));
+const GithubHeatmap = dynamic(() => import("@ui/animated/GithubHeatmap").then((m) => m.GithubHeatmap));
+const DeveloperIdCard = dynamic(() => import("@ui/animated/DeveloperIdCard").then((m) => m.DeveloperIdCard));
+const Globe = dynamic(() => import("@ui/animated/Globe").then((m) => m.Globe));
+const Meter = dynamic(() => import("@ui/animated/Meter").then((m) => m.Meter));
+const MatrixRippleBackground = dynamic(() => import("@ui/animated/matrix-ripple-background").then((m) => m.MatrixRippleBackground));
+const StackedCardFanDemo = dynamic(() => import("@ui/animated/stacked-card-fan").then((m) => m.StackedCardFanDemo));
+const Cards = dynamic(() => import("@ui/animated/Cards").then((m) => m.Cards));
 
 const imageParallaxDemo = "/utils/image-parallax.png";
 
@@ -1484,7 +1454,7 @@ function WheelPickerDemo({
         </span>
         <span className="text-[13px] text-neutral-500">{framework}</span>
       </div>
-      <WheelPicker {...(wheelPickerProps as Parameters<typeof WheelPicker>[0])} />
+      <WheelPicker {...(wheelPickerProps as ComponentProps<typeof WheelPicker>)} />
     </div>
   );
 }
@@ -1588,7 +1558,7 @@ export function PresentationRenderer({
         liquify: true,
         ...liveProps,
       };
-      return <LivingText {...(livingTextProps as Parameters<typeof LivingText>[0])} />;
+      return <LivingText {...(livingTextProps as ComponentProps<typeof LivingText>)} />;
     }
     case "inspect-text":
       return <InspectText {...liveProps} />;
@@ -1605,7 +1575,7 @@ export function PresentationRenderer({
       };
       return (
         <div className="flex items-center justify-center w-full min-h-[300px] p-6">
-          <SpotlightText {...(spotlightTextProps as Parameters<typeof SpotlightText>[0])} />
+          <SpotlightText {...(spotlightTextProps as ComponentProps<typeof SpotlightText>)} />
         </div>
       );
     }
@@ -1759,7 +1729,7 @@ export function PresentationRenderer({
         glow: true,
         ...liveProps,
       };
-      return <DotMatrix {...(dotMatrixProps as Parameters<typeof DotMatrix>[0])} />;
+      return <DotMatrix {...(dotMatrixProps as ComponentProps<typeof DotMatrix>)} />;
     }
 
     case "ruler-scrollbar":
@@ -1938,7 +1908,7 @@ export function PresentationRenderer({
             items={expandItems}
             variant="modern"
             animation="spring"
-            {...(liveProps as unknown as Partial<Parameters<typeof ExpandOnHover>[0]>)}
+            {...(liveProps as unknown as Partial<ComponentProps<typeof ExpandOnHover>>)}
           />
         </div>
       );
@@ -1950,7 +1920,7 @@ export function PresentationRenderer({
         fontWeight: 800,
         ...liveProps,
       };
-      return <TextShuffle {...(textShuffleProps as Parameters<typeof TextShuffle>[0])} />;
+      return <TextShuffle {...(textShuffleProps as ComponentProps<typeof TextShuffle>)} />;
     }
     case "infinite-scroll":
       return (
@@ -1968,6 +1938,21 @@ export function PresentationRenderer({
           <Cards />
         </div>
       );
+    case "preview-card":
+      return (
+        <div className="flex items-center justify-center w-full h-full min-h-[360px]">
+          <div className="h-[340px] w-[340px]">
+            <PreviewCard {...liveProps}>
+              <img
+                src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=480&h=600&fit=crop&auto=format&q=80"
+                alt="Black and white portrait"
+                className="h-full max-h-[170px] w-auto object-cover grayscale"
+              />
+            </PreviewCard>
+          </div>
+        </div>
+      );
+
     case "simple-card":
       return (
         <div className="flex items-center justify-center w-full h-full min-h-[360px]">
@@ -2014,7 +1999,7 @@ export function PresentationRenderer({
       return (
         <div className="flex w-full items-center justify-center p-6">
           <div className="w-[min(560px,calc(100vw-32px))]">
-            <Accordion defaultExpanded={["1"]} {...(accordionProps as Parameters<typeof Accordion>[0])} />
+            <Accordion defaultExpanded={["1"]} {...(accordionProps as ComponentProps<typeof Accordion>)} />
           </div>
         </div>
       );
@@ -2025,7 +2010,7 @@ export function PresentationRenderer({
       };
       return (
         <div className="w-full min-h-screen flex items-center justify-center p-6 bg-transparent">
-          <Marquee2 {...(marquee2Props as Parameters<typeof Marquee2>[0])} />
+          <Marquee2 {...(marquee2Props as ComponentProps<typeof Marquee2>)} />
         </div>
       );
     }
@@ -2035,7 +2020,7 @@ export function PresentationRenderer({
       };
       return (
         <div className="pt-16">
-          <StickerCard {...(stickerCardProps as Parameters<typeof StickerCard>[0])} />
+          <StickerCard {...(stickerCardProps as ComponentProps<typeof StickerCard>)} />
         </div>
       );
     }
@@ -2045,7 +2030,7 @@ export function PresentationRenderer({
       };
       return (
         <div className="w-full min-h-screen flex items-center justify-center pb-32 p-6 bg-transparent">
-          <Datepicker {...(datepickerProps as Parameters<typeof Datepicker>[0])} />
+          <Datepicker {...(datepickerProps as ComponentProps<typeof Datepicker>)} />
         </div>
       );
     }
@@ -2055,7 +2040,7 @@ export function PresentationRenderer({
       };
       return (
         <div className="w-full min-h-screen flex items-center justify-center p-6 bg-transparent">
-          <NavBar1 {...(navbarProps as Parameters<typeof NavBar1>[0])} />
+          <NavBar1 {...(navbarProps as ComponentProps<typeof NavBar1>)} />
         </div>
       );
     }

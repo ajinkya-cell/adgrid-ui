@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { registry } from "@/registry";
 import { PresentationRenderer } from "@/components/presentation/PresentationRenderer";
+import { FitToFrame } from "@/components/site/FitToFrame";
 
 export default async function EmbedComponentPage({
   params,
@@ -23,31 +24,8 @@ export default async function EmbedComponentPage({
     slug.includes("dot-pattern") ||
     slug === "matrix-rain";
 
+  // Present-mode scales; gallery mode measures and fits instead (FitToFrame).
   const getScaleClass = (s: string, category?: string) => {
-    if (isGallery) {
-      if (isBackground) return "w-full h-full scale-100";
-      if (category === "buttons" || s.includes("button")) return "scale-100";
-      if (s === "living-text") return "scale-[0.85] sm:scale-100";
-      if (s === "spotlight-text") return "scale-[0.9] sm:scale-100";
-      if (s === "text-shuffle") return "scale-[0.9] sm:scale-100";
-      if (s === "anisotropic-knob") return "scale-100 sm:scale-[1.05]";
-      if (s === "coverflow-carousel") return "scale-[0.60] sm:scale-[0.75]";
-      if (s === "image-parallax") return "scale-[0.55] sm:scale-[0.65]";
-      if (s === "simple-card") return "scale-[0.95] sm:scale-100";
-      if (s === "cards" || s === "sticker-card") return "scale-[0.65] sm:scale-[0.75]";
-      if (s === "laser-vault-password") return "scale-[0.65] sm:scale-[0.75]";
-      if (s === "now-playing-card") return "scale-[0.85] sm:scale-100";
-      if (s === "dot-matrix") return "scale-[0.85] sm:scale-[0.95]";
-      if (s === "github-heatmap") return "scale-[0.80] sm:scale-[0.92] lg:scale-100";
-      if (s === "breathing-scale-card") return "scale-[0.85] sm:scale-100";
-      if (s === "meter") return "scale-[0.85] sm:scale-100";
-      if (s === "dashed-marquee" || s === "marquee") return "scale-[0.85] sm:scale-100";
-      if (s === "wheel-picker" || s === "weapon-wheel") return "scale-[0.65] sm:scale-[0.75]";
-      if (s === "hero" || s === "premium-hero") return "scale-[0.35] sm:scale-[0.42]";
-      if (s === "infinite-scroll") return "scale-[0.45] sm:scale-[0.55]";
-      return "scale-[0.75] sm:scale-[0.85]";
-    }
-
     if (s === "image-parallax") return "scale-[0.15]";
     if (s === "living-text") return "scale-[0.30]";
     if (s === "coverflow-carousel") return "scale-[0.35]";
@@ -99,19 +77,24 @@ export default async function EmbedComponentPage({
 
   if (isGallery && slug === "coverflow-carousel") {
     return (
-      <div className="w-screen h-screen bg-[#070707] text-white overflow-hidden relative select-none flex items-center justify-center">
-        <div className="w-[860px] h-[480px] shrink-0 transform scale-[0.78] sm:scale-[0.88] lg:scale-[0.92] origin-center flex items-center justify-center overflow-hidden pointer-events-none select-none">
-          <PresentationRenderer entry={entry} liveProps={liveProps} hideIntro={hideIntro} mode="gallery" />
-        </div>
+      <div className="w-screen h-screen bg-[#1c1c1c] text-white overflow-hidden relative select-none flex items-center justify-center">
+        <FitToFrame padding={0}>
+          <div className="w-[860px] h-[480px] flex items-center justify-center overflow-hidden pointer-events-none select-none">
+            <PresentationRenderer entry={entry} liveProps={liveProps} hideIntro={hideIntro} mode="gallery" />
+          </div>
+        </FitToFrame>
       </div>
     );
   }
 
+  // Gallery mode matches the PreviewCard well colour (#1c1c1c) so the iframe blends in.
   return (
-    <div className="w-screen h-screen bg-[#070707] text-white overflow-hidden relative select-none flex items-center justify-center">
+    <div className={`w-screen h-screen ${isGallery ? "bg-[#1c1c1c]" : "bg-[#070707]"} text-white overflow-hidden relative select-none flex items-center justify-center`}>
       {isGallery ? (
-        <div className={`w-full h-full flex items-center justify-center shrink-0 transform ${scaleClass} origin-center overflow-hidden pointer-events-none select-none`}>
-          <PresentationRenderer entry={entry} liveProps={liveProps} hideIntro={hideIntro} mode="gallery" />
+        <div className="w-full h-full pointer-events-none select-none">
+          <FitToFrame>
+            <PresentationRenderer entry={entry} liveProps={liveProps} hideIntro={hideIntro} mode="gallery" />
+          </FitToFrame>
         </div>
       ) : (
         <div className={`w-[1280px] h-[720px] shrink-0 transform ${scaleClass} origin-center flex items-center justify-center overflow-hidden pointer-events-none select-none`}>

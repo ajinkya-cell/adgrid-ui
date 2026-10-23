@@ -1,18 +1,14 @@
 "use client";
 
 import { useMemo, type ReactNode } from "react";
-import {
-  AreaChart,
-  BarChart,
-  ChartCard,
-  DonutChart,
-  LineChart,
-  RadarChart,
-  RadialBarChart,
-  ScatterChart,
-  Sparkline,
-  type ChartSize,
-} from "@adgrid-ui/ui";
+import { AreaChart, LineChart } from "@ui/charts/LineChart";
+import { BarChart } from "@ui/charts/BarChart";
+import { ChartCard, type ChartSize } from "@ui/charts/ChartCard";
+import { DonutChart } from "@ui/charts/DonutChart";
+import { RadarChart } from "@ui/charts/RadarChart";
+import { RadialBarChart } from "@ui/charts/RadialBarChart";
+import { ScatterChart } from "@ui/charts/ScatterChart";
+import { Sparkline } from "@ui/charts/Sparkline";
 
 // The /present showcase for the charts: a quiet product dashboard where every chart type appears
 // once, with real-looking numbers. The tweaker can focus one type, and "shuffle" swaps in a second
