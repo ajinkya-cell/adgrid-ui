@@ -384,7 +384,7 @@ const print = (id: string, width: number, height: number, alt: string, wide?: bo
   alt,
   wide,
 });
-const PAPER_PRINTS = [
+export const PAPER_PRINTS = [
   print("1497250681960-ef046c08a56e", 800, 1100, "Fern fronds packed edge to edge"),
   print("1553356084-58ef4a67b2a7", 1000, 800, "Swirls of marbled paint"),
   print("1605106702734-205df224ecce", 800, 1000, "A geometric quilt of black and white triangles"),
@@ -2328,7 +2328,9 @@ function BookDemo({ liveProps }: { liveProps: any }) {
           </div>
         ))}
       </Book>
-      <span className="font-inter text-xs text-neutral-500">Click the cover · hold a page edge and turn it · ← → keys</span>
+      {!liveProps.bare && (
+        <span className="font-inter text-xs text-neutral-500">Click the cover · hold a page edge and turn it · ← → keys</span>
+      )}
     </div>
   );
 }
@@ -2345,7 +2347,7 @@ function FolderRevealDemo({ liveProps }: { liveProps: any }) {
         defaultOpen={liveProps.defaultOpen ?? false}
         label={liveProps.label ?? "Folder"}
       />
-      <span className="font-inter text-xs text-neutral-500">Hover the folder</span>
+      {!liveProps.bare && <span className="font-inter text-xs text-neutral-500">Hover the folder</span>}
     </div>
   );
 }
@@ -2365,14 +2367,18 @@ function PolaroidStackDemo({ liveProps }: { liveProps: any }) {
   const variant = liveProps.variant ?? "click";
   return (
     <div className="flex w-full max-w-6xl flex-col items-center gap-2 px-4">
-      <h2 className="text-center leading-none text-neutral-100" style={{ fontFamily: "'Jersey 10', monospace", fontSize: "clamp(2.75rem, 7vw, 5rem)" }}>
-        Play with Polaroids
-      </h2>
-      <p className="max-w-md text-center font-inter text-sm text-neutral-500">
-        {variant === "drag"
-          ? `Pick a print up and put it down anywhere. ${maxOut} fit on the table — drop one back on the pile, or double-click it, to put it home.`
-          : `Hover a print to peek at it, click to pull it out of the pile. ${maxOut} fit on the table — pull one more and the first goes home.`}
-      </p>
+      {!liveProps.bare && (
+        <>
+          <h2 className="text-center leading-none text-neutral-100" style={{ fontFamily: "'Jersey 10', monospace", fontSize: "clamp(2.75rem, 7vw, 5rem)" }}>
+            Play with Polaroids
+          </h2>
+          <p className="max-w-md text-center font-inter text-sm text-neutral-500">
+            {variant === "drag"
+              ? `Pick a print up and put it down anywhere. ${maxOut} fit on the table — drop one back on the pile, or double-click it, to put it home.`
+              : `Hover a print to peek at it, click to pull it out of the pile. ${maxOut} fit on the table — pull one more and the first goes home.`}
+          </p>
+        </>
+      )}
       <PolaroidStack
         key={`${liveProps.count}-${maxOut}-${variant}`}
         variant={variant}
