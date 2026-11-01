@@ -902,6 +902,21 @@
       ]
     },
     {
+      "name": "book",
+      "type": "registry:ui",
+      "title": "Book",
+      "description": "A hardcover notebook. Click the cover and it swings open on its spine while the next leaves riffle past and settle on a spread. Hold a page edge and it lifts at the corner you grip, bows as it turns and lands on a cushion of air. Buttons and arrow keys too. Every page renders once, so state inside pages survives every turn.",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/Book.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "folder-reveal",
       "type": "registry:ui",
       "title": "Folder Reveal",

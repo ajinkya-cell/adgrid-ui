@@ -111,6 +111,7 @@ const Tooltip = dynamic(() => import("@ui/animated/Tooltip").then((m) => m.Toolt
 const Timeline = dynamic(() => import("@ui/animated/Timeline").then((m) => m.Timeline));
 const ActivityCard = dynamic(() => import("@ui/animated/ActivityCard").then((m) => m.ActivityCard));
 const FolderReveal = dynamic(() => import("@ui/animated/FolderReveal").then((m) => m.FolderReveal));
+const Book = dynamic(() => import("@ui/animated/Book").then((m) => m.Book));
 const ChatFaq = dynamic(() => import("@ui/animated/ChatFaq").then((m) => m.ChatFaq));
 const PolaroidStack = dynamic(() => import("@ui/animated/PolaroidStack").then((m) => m.PolaroidStack));
 const BreathingGrid = dynamic(() => import("@ui/backgrounds/BreathingGrid").then((m) => m.BreathingGrid));
@@ -1820,6 +1821,8 @@ export function PresentationRenderer({
       return <PromptSuggestionsDemo liveProps={liveProps} />;
     case "folder-reveal":
       return <FolderRevealDemo liveProps={liveProps} />;
+    case "book":
+      return <BookDemo liveProps={liveProps} />;
     case "polaroid-stack":
       return <PolaroidStackDemo liveProps={liveProps} />;
     case "activity-card":
@@ -2264,6 +2267,71 @@ const RULER_NAV_GROUPS: RulerNavGroup[] = [
     ],
   },
 ];
+
+// A week of handwritten notes. Each line is one rule of the ruled paper.
+const BOOK_PAGES: { date: string; lines: string[] }[] = [
+  { date: "Mon, 3 Nov", lines: ["Bought this notebook today.", "Promised myself one page", "a day, no skipping.", "Let's see how long", "that lasts :)"] },
+  { date: "Tue, 4 Nov", lines: ["Rain all morning.", "Fixed the bug that's been", "bothering me for a week —", "it was a missing key.", "Of course it was."] },
+  { date: "Wed, 5 Nov", lines: ["Coffee with R.", "She said: ship the ugly", "version first, then make", "it beautiful.", "Writing that one down."] },
+  { date: "Thu, 6 Nov", lines: ["Ideas for the weekend:", "— fix the bike", "— call grandma", "— finally read", "   that book"] },
+  { date: "Fri, 7 Nov", lines: ["Note to self:"] },
+  { date: "Sat, 8 Nov", lines: ["Long walk by the lake.", "No phone for three hours.", "Felt like a whole", "vacation."] },
+  { date: "Sun, 9 Nov", lines: ["One week, seven pages.", "Didn't skip a day.", "Small promises kept", "add up."] },
+  { date: "Later…", lines: ["To remember:", "be kind, go slow,", "turn the page."] },
+];
+
+const HAND_FONT = "'Reenie Beanie', cursive";
+
+function BookDemo({ liveProps }: { liveProps: any }) {
+  const light = liveProps.paper === "light";
+  // Ink: graphite on light paper, chalky white on dark.
+  const ink = light ? "#2b2b30" : "#d6d6d8"; // void-lint-ignore: handwriting ink in the demo
+  const hand = { fontFamily: HAND_FONT, fontSize: 23, lineHeight: "var(--book-rule)", color: ink } as const;
+  return (
+    <div className="flex w-full flex-col items-center gap-6 px-4">
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap');`}</style>
+      <Book
+        title={liveProps.title ?? "Field Notes"}
+        subtitle={liveProps.subtitle ?? "Vol. 03"}
+        landOn={liveProps.landOn ?? 3}
+        size={liveProps.size ?? 240}
+        paper={liveProps.paper ?? "dark"}
+        ruled={liveProps.ruled ?? true}
+        turnDuration={liveProps.turnDuration ?? 900}
+        riffle={liveProps.riffle ?? 85}
+        bounce={liveProps.bounce ?? 0.4}
+        controls={liveProps.controls ?? false}
+        pageNumbers={liveProps.pageNumbers ?? true}
+        draggable={liveProps.draggable ?? true}
+        float={liveProps.float ?? true}
+        label={liveProps.label ?? "Book"}
+      >
+        {BOOK_PAGES.map((page, i) => (
+          <div key={page.date} style={hand}>
+            <div style={{ opacity: 0.6, fontSize: 19 }}>{page.date}</div>
+            {page.lines.map((line, j) => (
+              <div key={j} style={{ whiteSpace: "pre" }}>
+                {line}
+              </div>
+            ))}
+            {i === 4 && (
+              // A plain line on the page: whatever is typed here is written in the same hand, and
+              // stays on the page as it's turned away and back.
+              <textarea
+                aria-label="Write a note"
+                placeholder="write something…"
+                rows={6}
+                className="block w-full resize-none bg-transparent outline-none placeholder:opacity-35"
+                style={{ ...hand, padding: 0, border: 0 }}
+              />
+            )}
+          </div>
+        ))}
+      </Book>
+      <span className="font-inter text-xs text-neutral-500">Click the cover · hold a page edge and turn it · ← → keys</span>
+    </div>
+  );
+}
 
 function FolderRevealDemo({ liveProps }: { liveProps: any }) {
   return (
