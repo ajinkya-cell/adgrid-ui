@@ -153,6 +153,8 @@ const DotPattern = dynamic(() => import("@ui/animated/DotPattern").then((m) => m
 const DotPatternPlayground = dynamic(() => import("@ui/animated/DotPatternPlayground").then((m) => m.DotPatternPlayground));
 const TextShuffle = dynamic(() => import("@ui/animated/text-shuffle").then((m) => m.TextShuffle));
 const VoidButton = dynamic(() => import("@ui/animated/VoidButton").then((m) => m.VoidButton));
+const PixelButton = dynamic(() => import("@ui/animated/PixelButton").then((m) => m.PixelButton));
+const HoldButton = dynamic(() => import("@ui/animated/HoldButton").then((m) => m.HoldButton));
 const Hero = dynamic(() => import("@ui/animated/Hero").then((m) => m.Hero));
 const AnimatedIcons1 = dynamic(() => import("@ui/animated/Loaders1").then((m) => m.AnimatedIcons1));
 const ForgeUILanding = dynamic(() => import("@ui/animated/ForgeUILanding").then((m) => m.ForgeUILanding));
@@ -1610,6 +1612,18 @@ export function PresentationRenderer({
         </div>
       );
     }
+    case "pixel-button":
+      return (
+        <div className="flex items-center justify-center w-full min-h-[300px] p-6">
+          <PixelButton {...liveProps} />
+        </div>
+      );
+    case "hold-button":
+      return (
+        <div className="flex items-center justify-center w-full min-h-[300px] p-6">
+          <HoldButton {...liveProps} />
+        </div>
+      );
     case "brushed-titanium-button": {
       const titaniumProps = {
         disabled: false,

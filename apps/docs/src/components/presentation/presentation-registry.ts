@@ -11,7 +11,7 @@ export const PRESENTATION_GROUPS: { id: string; label: string; slugs: string[] }
   {
     id: "buttons",
     label: "Buttons",
-    slugs: ["button", "button-alpha", "void-button", "brushed-titanium-button", "liquid-gold-button", "guilloche-button"],
+    slugs: ["button", "button-alpha", "void-button", "pixel-button", "hold-button", "brushed-titanium-button", "liquid-gold-button", "guilloche-button"],
   },
   {
     id: "feedback",

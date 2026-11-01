@@ -18,6 +18,10 @@ export { GravityCardStack } from "./animated/GravityCardStack";
 
 export { VoidButton } from "./animated/VoidButton";
 export type { VoidButtonProps } from "./animated/VoidButton";
+export { PixelButton } from "./animated/PixelButton";
+export type { PixelButtonProps } from "./animated/PixelButton";
+export { HoldButton } from "./animated/HoldButton";
+export type { HoldButtonProps } from "./animated/HoldButton";
 export { BrushedTitaniumButton } from "./animated/BrushedTitaniumButton";
 export type { BrushedTitaniumButtonProps } from "./animated/BrushedTitaniumButton";
 export { LiquidGoldButton } from "./animated/LiquidGoldButton";
