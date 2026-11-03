@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { useRoughMotion } from "./useRoughMotion";
 import { annotate } from "rough-notation";
 import type { RoughAnnotation } from "rough-notation/lib/model";
 
@@ -36,13 +37,14 @@ export function RoughStrike({
   color = "#EF4444",
   strokeWidth = 2,
   animationDuration = 650,
-  animate = true,
+  animate: animateProp = true,
   animationDelay = 0,
   multiline = true,
   iterations,
   className = "",
   textClassName = "",
 }: RoughStrikeProps) {
+  const animate = useRoughMotion(animateProp);
   const containerRef = useRef<HTMLSpanElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
   const annotationRef = useRef<RoughAnnotation | null>(null);
@@ -164,7 +166,7 @@ export function RoughStrike({
   return (
     <span
       ref={containerRef}
-      className={`relative inline-block [&>.rough-annotation]:z-20 [&>.rough-annotation]:pointer-events-none ${className}`}
+      className={`relative ${multiline ? "inline" : "inline-block"} [&>.rough-annotation]:z-20 [&>.rough-annotation]:pointer-events-none ${className}`}
     >
       <span ref={textRef} className={`relative z-10 inline ${textClassName}`}>
         {children}

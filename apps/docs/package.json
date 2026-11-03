@@ -9,10 +9,11 @@
     "build": "pnpm build:registry && next build",
     "start": "next start",
     "lint": "eslint",
-    "build:registry": "tsx scripts/build-registry.ts"
+    "build:registry": "tsx scripts/build-registry.ts && tsx scripts/build-skill-zip.ts"
   },
   "dependencies": {
     "@adgrid-ui/ui": "workspace:*",
+    "@calcom/embed-react": "^1.5.3",
     "@codesandbox/sandpack-react": "^2.20.0",
     "@next/mdx": "^16.0.0",
     "@react-three/drei": "^10.7.8",

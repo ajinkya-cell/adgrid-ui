@@ -7,6 +7,7 @@ import React, {
   useState,
   useCallback,
 } from "react";
+import { INSTANT, useRoughMotion } from "./useRoughMotion";
 import { motion } from "framer-motion";
 import type { Font, Path } from "opentype.js";
 import {
@@ -128,7 +129,7 @@ export function RoughHandwriting({
   fontUrl,
   color = "#6366F1",
   strokeWidth = 1.5,
-  animate = true,
+  animate: animateProp = true,
   animationDuration = 1200,
   animationDelay = 0,
   fontSize = 40,
@@ -142,6 +143,7 @@ export function RoughHandwriting({
   className = "",
   textClassName = "",
 }: RoughHandwritingProps) {
+  const animate = useRoughMotion(animateProp);
   const containerRef = useRef<HTMLSpanElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const instanceId = useId().replace(/:/g, "");
@@ -401,7 +403,7 @@ export function RoughHandwriting({
                         ? { pathLength: 1, strokeOpacity: 1, fillOpacity: 1 }
                         : { pathLength: 0, strokeOpacity: 0, fillOpacity: 0 }
                     }
-                    transition={{
+                    transition={animate ? {
                       pathLength: {
                         duration: charDuration,
                         delay: charDelay,
@@ -416,7 +418,7 @@ export function RoughHandwriting({
                         delay: charDelay + charDuration * 0.55,
                         ease: "easeOut",
                       },
-                    }}
+                    } : INSTANT}
                   />
                 );
               })}

@@ -2,7 +2,7 @@
  * Rebuilds this skill's references/ from the adgrid-ui (void-ui) repo, so the skill never drifts
  * from the library. Run it after adding or changing a component:
  *
- *   npx tsx .claude/skills/void/scripts/sync.ts [path/to/adgrid-ui]
+ *   node --experimental-strip-types .claude/skills/void/scripts/sync.ts [path/to/adgrid-ui]
  *
  * Writes:
  *   references/primitives.md  ← packages/ui/src/primitives/context.md (the rules)
@@ -13,11 +13,11 @@
 
 import fs from "fs";
 import path from "path";
-import { pathToFileURL } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 
-const SKILL = path.resolve(__dirname, "..");
+const SKILL = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(SKILL, "references");
-const REGISTRY_URL = "https://void-ui-phi.vercel.app/r";
+const REGISTRY_URL = "https://www.voidui.in/r";
 
 function findRepo(start: string): string {
   let dir = path.resolve(start);

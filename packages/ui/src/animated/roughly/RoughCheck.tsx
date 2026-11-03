@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { INSTANT, useRoughMotion } from "./useRoughMotion";
 import { motion } from "framer-motion";
 
 export type CheckMark = "check" | "cross";
@@ -59,12 +60,13 @@ export function RoughCheck({
   size,
   gap = 10,
   animationDuration = 500,
-  animate = true,
+  animate: animateProp = true,
   animationDelay = 0,
   as: Component = "div",
   className = "",
   textClassName = "",
 }: RoughCheckProps) {
+  const animate = useRoughMotion(animateProp);
   const containerRef = useRef<HTMLElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
   const [lineHeight, setLineHeight] = useState(24);
@@ -150,7 +152,7 @@ export function RoughCheck({
             strokeLinejoin="round"
             initial={animate ? { pathLength: 0, opacity: 0 } : false}
             animate={visible ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
-            transition={{
+            transition={animate ? {
               pathLength: {
                 duration: strokeDuration,
                 // erase in reverse order, draw in forward order
@@ -165,7 +167,7 @@ export function RoughCheck({
                   ? animationDelay / 1000 + i * strokeDuration
                   : strokeDuration * strokes.length,
               },
-            }}
+            } : INSTANT}
           />
         ))}
       </svg>

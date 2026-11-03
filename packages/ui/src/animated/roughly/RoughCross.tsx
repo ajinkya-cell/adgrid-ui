@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { useRoughMotion } from "./useRoughMotion";
 import { annotate } from "rough-notation";
 import type { RoughAnnotation } from "rough-notation/lib/model";
 
@@ -38,7 +39,7 @@ export function RoughCross({
   color = "#F43F5E",
   strokeWidth = 2,
   animationDuration = 700,
-  animate = true,
+  animate: animateProp = true,
   animationDelay = 0,
   padding = 6,
   multiline = true,
@@ -46,6 +47,7 @@ export function RoughCross({
   className = "",
   textClassName = "",
 }: RoughCrossProps) {
+  const animate = useRoughMotion(animateProp);
   const containerRef = useRef<HTMLSpanElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
   const annotationRef = useRef<RoughAnnotation | null>(null);
@@ -168,7 +170,7 @@ export function RoughCross({
   return (
     <span
       ref={containerRef}
-      className={`relative inline-block [&>.rough-annotation]:z-20 [&>.rough-annotation]:pointer-events-none ${className}`}
+      className={`relative ${multiline ? "inline" : "inline-block"} [&>.rough-annotation]:z-20 [&>.rough-annotation]:pointer-events-none ${className}`}
     >
       <span ref={textRef} className={`relative z-10 inline ${textClassName}`}>
         {children}

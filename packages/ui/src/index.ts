@@ -230,7 +230,7 @@ export type { TimelineProps, StepItem, TimelineItem } from "./animated/Timeline"
 
 // Minimalist 3D Globe Component
 export { Globe } from "./animated/Globe";
-export type { GlobeProps } from "./animated/Globe";
+export type { GlobeProps, GlobeVariant, GlobeDots } from "./animated/Globe";
 
 
 // 3D Skeuomorphic BentoGrid Component

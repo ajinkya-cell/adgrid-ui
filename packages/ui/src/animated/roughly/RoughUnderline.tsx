@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { INSTANT, useRoughMotion } from "./useRoughMotion";
 import { annotate } from "rough-notation";
 import type { RoughAnnotation } from "rough-notation/lib/model";
 import { motion } from "framer-motion";
@@ -36,11 +37,12 @@ export function RoughUnderline({
   color = "#6366F1",
   strokeWidth = 2,
   animationDuration = 650,
-  animate = true,
+  animate: animateProp = true,
   animationDelay = 0,
   className = "",
   textClassName = "",
 }: RoughUnderlineProps) {
+  const animate = useRoughMotion(animateProp);
   const containerRef = useRef<HTMLSpanElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
   const annotationRef = useRef<RoughAnnotation | null>(null);
@@ -215,16 +217,16 @@ export function RoughUnderline({
             strokeWidth={strokeWidth}
             strokeLinecap="round"
             strokeLinejoin="round"
-            initial={{ pathLength: 0, opacity: 0 }}
+            initial={animate ? { pathLength: 0, opacity: 0 } : false}
             animate={inView ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
-            transition={{
+            transition={animate ? {
               pathLength: {
                 duration: animationDuration / 1000,
                 delay: animationDelay / 1000,
                 ease: [0.25, 0.1, 0.25, 1],
               },
               opacity: { duration: 0.05 },
-            }}
+            } : INSTANT}
           />
         </svg>
       )}

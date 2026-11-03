@@ -49,7 +49,7 @@ function Hint({ hint }: { hint: ShowcaseHint }) {
 function MarginNote({ note, href }: { note: string; href: string }) {
   return (
     // Only where the margin is wide enough to hold it.
-    <div className="absolute inset-y-6 left-full ml-3 hidden min-[1400px]:block">
+    <div className="absolute left-full top-1/2 ml-3 hidden h-[min(210px,calc(100%-48px))] -translate-y-1/2 min-[1400px]:block">
       <RoughBracket side="left" color={HINT_INK} strokeWidth={1.6} bracketPadding={12} animationDelay={400} className="h-full" textClassName="flex h-full items-center">
         <Link
           href={href}
@@ -71,7 +71,7 @@ function TileBody({ tile }: { tile: ResolvedTile }) {
       return <div className="absolute inset-0 overflow-hidden [transform:translateZ(0)]">{demo}</div>;
     case "scroll":
       return (
-        <div className="absolute inset-0 flex justify-center overflow-y-auto overscroll-contain py-6 [scrollbar-width:thin]">
+        <div className="absolute inset-0 flex justify-center overflow-y-auto py-6 [scrollbar-width:thin]">
           {demo}
         </div>
       );

@@ -37,7 +37,7 @@ export interface ShowcaseTile {
 // Each block closes whole rows of 3 cells so the bento has no holes.
 export const GALLERY_TOP: ShowcaseTile[] = [
   // The AI section: sidebar, thread list and a live chat panel in one piece.
-  { slug: "chat-sidebar", size: "full", rows: 3, fit: "native" },
+  { slug: "chat-sidebar", size: "full", rows: 3, fit: "native", note: "check out all the AI components" },
   { slug: "github-heatmap", size: "full", rows: 2, fit: "native", props: { variant: "machined", showStats: true } },
 
   {

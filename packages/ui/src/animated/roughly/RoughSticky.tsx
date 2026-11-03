@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { INSTANT, useRoughMotion } from "./useRoughMotion";
 import { motion } from "framer-motion";
 import type { ArrowLabelFont, ArrowPlacement } from "./RoughArrow";
 
@@ -46,7 +47,7 @@ export interface RoughStickyProps {
 }
 
 const fontClassMap: Record<StickyFont, string> = {
-  caveat: "font-[family-name:var(--font-caveat),cursive]",
+  caveat: "font-[family-name:var(--font-caveat,'Caveat'),cursive]",
   "reenie-beanie": "font-[family-name:'Reenie_Beanie',cursive] tracking-wide",
   kalam: "font-[family-name:'Kalam',cursive]",
 };
@@ -87,13 +88,14 @@ export function RoughSticky({
   rotate,
   width = 150,
   offset = 6,
-  animate = true,
+  animate: animateProp = true,
   animationDuration = 550,
   animationDelay = 0,
   className = "",
   textClassName = "",
   noteClassName = "",
 }: RoughStickyProps) {
+  const animate = useRoughMotion(animateProp);
   const containerRef = useRef<HTMLSpanElement>(null);
   const [inView, setInView] = useState(!animate);
 
@@ -149,13 +151,13 @@ export function RoughSticky({
           ? { opacity: 1, scale: 1, rotate: tilt, y: 0 }
           : { opacity: 0, scale: 1.18, rotate: tilt * 2.5, y: -10 }
       }
-      transition={{
+      transition={animate ? {
         type: "spring",
         bounce: 0.45,
         duration: animationDuration / 1000,
         delay: animationDelay / 1000,
         opacity: { duration: 0.12, delay: animationDelay / 1000 },
-      }}
+      } : INSTANT}
     >
       {pin === "tape" && (
         <span

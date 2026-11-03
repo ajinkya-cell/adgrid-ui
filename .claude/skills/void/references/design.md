@@ -1,4 +1,4 @@
-<!-- Synced from DESIGN.md by scripts/sync.ts on 2026-10-16. Edit the source, not this copy. -->
+<!-- Synced from DESIGN.md by scripts/sync.ts on 2026-11-02. Edit the source, not this copy. -->
 
 # adgrid-ui — Design System
 

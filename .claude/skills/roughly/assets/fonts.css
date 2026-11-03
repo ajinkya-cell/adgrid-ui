@@ -1,0 +1,4 @@
+/* Handwriting fonts used by Roughly arrow labels and sticky notes.
+   Put this at the very top of your global stylesheet (before @import "tailwindcss" / @tailwind base).
+   Drop the families you don't use. */
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Kalam:wght@300;400;700&family=Reenie+Beanie&display=swap");

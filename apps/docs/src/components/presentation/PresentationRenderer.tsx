@@ -2094,7 +2094,8 @@ export function PresentationRenderer({
     case "timeline":
       return <TimelineDemo />;
     case "globe":
-      return <Globe />;
+      // Keyed on what cobe has to rebuild for, so the tweaker swaps cleanly.
+      return <Globe key={`${liveProps.variant}-${liveProps.dots}`} {...liveProps} />;
     case "meter":
       return (
         <div className="w-full min-h-[400px] flex items-center justify-center p-6 bg-transparent">

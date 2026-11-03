@@ -63,6 +63,8 @@ export default async function EmbedComponentPage({
       ? { name: "ajinkya", iconVariant: "flower", iconPosition: "inline", introduction: "", hideFooter: true, hideNav: true }
       : slug === "premium-hero"
       ? { introduction: "", hideFooter: true, hideNav: true }
+      : slug === "globe"
+      ? { variant: search?.variant, dots: search?.dots }
       : slug === "weapon-wheel"
       ? { variant: "wheel-4", hideText: true }
       : {};

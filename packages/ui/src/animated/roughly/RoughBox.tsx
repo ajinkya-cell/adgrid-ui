@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { useRoughMotion } from "./useRoughMotion";
 import { annotate } from "rough-notation";
 import type { RoughAnnotation } from "rough-notation/lib/model";
 
@@ -43,7 +44,7 @@ export function RoughBox({
   strokeWidth = 2,
   iterations,
   animationDuration = 800,
-  animate = true,
+  animate: animateProp = true,
   animationDelay = 0,
   padding,
   paddingX,
@@ -52,6 +53,7 @@ export function RoughBox({
   className = "",
   textClassName = "",
 }: RoughBoxProps) {
+  const animate = useRoughMotion(animateProp);
   const containerRef = useRef<HTMLSpanElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
   const annotationRef = useRef<RoughAnnotation | null>(null);

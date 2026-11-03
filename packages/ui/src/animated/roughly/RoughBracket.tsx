@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { INSTANT, useRoughMotion } from "./useRoughMotion";
 import { motion } from "framer-motion";
 
 export type BracketSide = "left" | "right" | "top" | "bottom" | "both";
@@ -211,13 +212,14 @@ export function RoughBracket({
   color = "#F59E0B",
   strokeWidth = 2,
   animationDuration = 750,
-  animate = true,
+  animate: animateProp = true,
   animationDelay = 0,
   bracketPadding = 10,
   as: Component = "div",
   className = "",
   textClassName = "",
 }: RoughBracketProps) {
+  const animate = useRoughMotion(animateProp);
   const containerRef = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(!animate);
   const [dimensions, setDimensions] = useState<{ width: number; height: number }>({
@@ -348,9 +350,9 @@ export function RoughBracket({
           strokeWidth={strokeWidth}
           strokeLinecap="round"
           strokeLinejoin="round"
-          initial={{ pathLength: 0, opacity: 0 }}
+          initial={animate ? { pathLength: 0, opacity: 0 } : false}
           animate={inView ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
-          transition={pathTransition}
+          transition={animate ? pathTransition : INSTANT}
         />
       </svg>
     );

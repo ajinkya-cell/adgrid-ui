@@ -29,3 +29,6 @@ export { RoughCheck } from "./RoughCheck";
 export type { RoughCheckProps, CheckMark, CheckSide } from "./RoughCheck";
 export { RoughSticky } from "./RoughSticky";
 export type { RoughStickyProps, StickyPlacement, StickyPin, StickyFont } from "./RoughSticky";
+export { RoughHandwriting } from "./RoughHandwriting";
+export type { RoughHandwritingProps, HandwritingFont } from "./RoughHandwriting";
+export { useRoughMotion } from "./useRoughMotion";

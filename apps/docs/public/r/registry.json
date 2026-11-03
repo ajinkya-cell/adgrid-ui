@@ -27,7 +27,8 @@
       "dependencies": [
         "framer-motion",
         "roughjs",
-        "rough-notation"
+        "rough-notation",
+        "opentype.js"
       ],
       "files": [
         {
@@ -77,6 +78,18 @@
         {
           "path": "components/ui/roughly/roughly/RoughSticky.tsx",
           "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/roughly/roughly/RoughHandwriting.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/roughly/roughly/handwriting-fonts.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/roughly/roughly/useRoughMotion.ts",
+          "type": "registry:hook"
         }
       ]
     },
@@ -1820,7 +1833,7 @@
       "name": "globe",
       "type": "registry:ui",
       "title": "Globe",
-      "description": "A minimal monochrome 3D WebGL globe powered by cobe. Dark obsidian sphere with high-resolution world map sampling, atmospheric glow, and smooth drag rotation.",
+      "description": "A monochrome dotted WebGL globe on cobe, in three variants: minimal landmass; cities, where the world's largest metros rise as dots sized by population and each breathes on its own rhythm, with names that fade in as they turn to face you; and network, hubs joined by arcs with a ping travelling between them. Drag to spin it in any direction; it keeps the throw and settles back to its idle turn.",
       "dependencies": [
         "cobe"
       ],

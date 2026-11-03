@@ -1,4 +1,4 @@
-<!-- Synced from packages/ui/src/primitives/context.md by scripts/sync.ts on 2026-10-16. Edit the source, not this copy. -->
+<!-- Synced from packages/ui/src/primitives/context.md by scripts/sync.ts on 2026-11-02. Edit the source, not this copy. -->
 
 # Primitives — Fundamental Components Context
 

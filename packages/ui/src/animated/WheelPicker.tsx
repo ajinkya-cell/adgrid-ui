@@ -298,9 +298,12 @@ export const WheelPicker = forwardRef<WheelPickerRef, WheelPickerProps>(function
     // wheel events that arrive faster than a frame, so one event can carry several notches.
     let notchUnit = Infinity;
     const onWheel = (event: WheelEvent) => {
-      event.preventDefault(); // keep the page still while turning the drum
       const px = event.deltaMode === 1 ? event.deltaY * 16 : event.deltaMode === 2 ? event.deltaY * el.clientHeight : event.deltaY;
       if (px === 0) return;
+      // At either end of a non-looping drum, hand the scroll back to the page instead of trapping it.
+      const at = target ?? y.get();
+      if (!loop && ((px < 0 && at <= 0) || (px > 0 && at >= total - 1))) return;
+      event.preventDefault(); // keep the page still while turning the drum
       const notch = event.deltaMode !== 0 || Math.abs(px) >= NOTCH_PX;
       // A gesture starts from wherever the drum is, so a folded loop can never spin the long way.
       if (target === null) target = y.get();

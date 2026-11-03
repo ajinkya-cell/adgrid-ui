@@ -14,6 +14,8 @@ import { RoughHandwriting } from "@ui/animated/roughly/RoughHandwriting";
 import { RoughCheck } from "@ui/animated/roughly/RoughCheck";
 import { RoughSticky } from "@ui/animated/roughly/RoughSticky";
 import { VoidButton } from "@ui/animated/VoidButton";
+import { EventHorizon } from "./EventHorizon";
+import { SkillShowcase } from "./SkillShowcase";
 import type {
   RoughlyType,
   BracketSide,
@@ -666,11 +668,10 @@ export default function RoughlyPage() {
       <section className="relative isolate w-full min-h-screen flex flex-col items-center justify-center px-4 sm:px-8 pt-16 pb-20 overflow-hidden select-none">
         {/* Background Image Layer */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          {/* Event Horizon: a cursor-following black hole lensing the artwork (WebGL; the <img> is the fallback) */}
+          <EventHorizon
             src="/roughly-hero.png"
             alt="Roughly Hand-drawn Vector Annotations - Drafting & Stationery Artwork"
-            className="w-full h-full object-cover object-center pointer-events-none select-none"
           />
           {/* Subtle bottom fade for seamless transition into the page content */}
           <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#09090b] to-transparent pointer-events-none" />
@@ -2191,6 +2192,9 @@ export default function RoughlyPage() {
             </p>
           </div>
         </section>
+
+        {/* ── 3b. Agent Skill: before/after demo + download ─────── */}
+        <SkillShowcase />
 
         {/* ── 4. How to Use / Quickstart Guide ──────────────────── */}
         <section className="roughly-playground space-y-6 max-w-5xl mx-auto w-full font-inter">

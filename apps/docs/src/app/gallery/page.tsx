@@ -12,7 +12,9 @@ const GLOW_COLORS = ["#3a1a12", "#5a2f18", "#3d3420", "#16303d"]; // void-lint-i
 
 function Grid({ tiles }: { tiles: ResolvedTile[] }) {
   return (
-    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 auto-rows-[260px] grid-flow-dense">
+    // Components that contain their own scroll (chat threads, sidebars) chain to the page here, so
+    // once a tile's list hits its end the wheel keeps scrolling the gallery.
+    <div className="[&_*]:overscroll-auto! grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 auto-rows-[260px] grid-flow-dense">
       {tiles.map((tile, i) => (
         <LiveTile key={tile.slug} tile={tile} index={i} />
       ))}

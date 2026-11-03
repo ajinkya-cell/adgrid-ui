@@ -19,7 +19,7 @@ styling: everything is built from the system's material.
 |---|---|
 | `references/primitives.md` | **Always, before any work.** The essence, canonical values (§2), contracts (§3), what exists and what drifts. It is the tie-break over everything else. |
 | `references/recipes.md` | Mapping old patterns to ours, page-level rules (type, containers, sections), and recipes for cards, badges, alerts, navbar, footer, hero. |
-| `references/catalog.md` | Finding a component, its install command and its props. Search it (`grep -n "### " catalog.md`); don't read it whole. |
+| `references/catalog.md` | Finding a component, its install command and its props. Search it (`grep -n "### " catalog.md`); don't read it whole. It is a snapshot: check the live registry first (see *Finding components*). |
 | `references/product.md` | Tone and the anti-references (glass, gradient text, kickers, side stripes, neon). Short; read it once. |
 | `references/design.md` | Long-form material spec. Only when primitives.md doesn't answer a material question. Where they disagree, primitives.md wins. |
 | `assets/tokens.css` | Copy into the target project: CSS variables + material classes (`.v-raised`, `.v-well`, `.v-popout`…). |
@@ -78,7 +78,8 @@ Do this once, before touching any component:
 
 ### 3. Components
 
-Go page by page in the plan's order. For each element:
+Before mapping, run the *Finding components* check below once, so you know about components newer than the
+catalog. Go page by page in the plan's order. For each element:
 
 1. **Catalog component exists** → install it (see *Stack paths*), swap it in, and wire the old props, state
    and handlers across. Keep the old behaviour: same submit handlers, validation, routes, analytics hooks, test
@@ -140,11 +141,27 @@ Tell the user, briefly: pages done, components swapped, gaps built (local vs to 
 anything you couldn't verify, and the before/after screenshot paths. Keep `revamp/plan.md` up to date as the
 record.
 
+## Finding components
+
+The library ships new components often, and `references/catalog.md` only knows what existed at its last sync.
+The live registry is always current, so check it first:
+
+```bash
+node <skill>/scripts/registry.mjs            # every live component: slug, title, one-line description
+node <skill>/scripts/registry.mjs hold       # filter by slug, title or description
+node <skill>/scripts/registry.mjs --new      # only the ones the local catalog doesn't have yet
+```
+
+- A component listed live but **not** in the catalog is real and installable: install it with the command in
+  *Stack paths*. For its props, read the installed file (or fetch `https://www.voidui.in/r/<slug>.json`, whose
+  `files[].content` holds the source).
+- If the registry can't be reached (offline, sandboxed), the script says so; fall back to the catalog.
+
 ## Stack paths
 
 | Target | How components get in |
 |---|---|
-| React + Tailwind v4 | `npx shadcn@latest add https://void-ui-phi.vercel.app/r/<slug>.json`. Files land in `components/ui/` and need `cn` in `@/lib/utils` (clsx + tailwind-merge); create it if missing. Or install the package `@adgrid-ui/ui`. |
+| React + Tailwind v4 | `npx shadcn@latest add https://www.voidui.in/r/<slug>.json`. Files land in `components/ui/` and need `cn` in `@/lib/utils` (clsx + tailwind-merge); create it if missing. Or install the package `@adgrid-ui/ui`. |
 | React + Tailwind v3 | Same install. Then check the classes the component uses: v4-only syntax (`size-*` is fine on v3.4; `bg-white/[0.06]` is fine) and arbitrary values work, but CSS-first `@theme` doesn't: map tokens in `tailwind.config`. |
 | React without Tailwind | Add Tailwind v4 if the user agrees (the cleanest path). Otherwise rebuild each primitive's look with `assets/tokens.css` classes, keeping its structure and behaviour. |
 | Vue, Svelte, Astro, plain HTML | Port: read the primitive's source in the catalog for structure, states and motion, then write it in the target framework with `tokens.css` classes. Keep the native element underneath. Astro can use the React components directly via islands. |
@@ -170,7 +187,9 @@ The references are copies. After changing components or `context.md` in the adgr
 the repo root:
 
 ```bash
-npx -y tsx .claude/skills/void/scripts/sync.ts
+node --experimental-strip-types .claude/skills/void/scripts/sync.ts
 ```
 
-To use the skill in other projects, copy this folder to `~/.claude/skills/void/` (re-copy after a sync).
+To use the skill in other projects it lives in `~/.claude/skills/void/` too. `node .claude/scripts/void-skill-update.mjs --apply`
+does both steps (sync, then copy to `~/.claude/skills/void/`). Inside the adgrid-ui repo a hook notices new
+registry entries and asks the user first; **only run the update when the user approves it.**

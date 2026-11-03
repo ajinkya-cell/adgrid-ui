@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { INSTANT, useRoughMotion } from "./useRoughMotion";
 import { motion } from "framer-motion";
 
 export type ArrowPlacement =
@@ -97,7 +98,7 @@ interface Point {
 }
 
 const labelFontClassMap: Record<ArrowLabelFont, string> = {
-  caveat: "font-[family-name:var(--font-caveat),cursive] text-lg",
+  caveat: "font-[family-name:var(--font-caveat,'Caveat'),cursive] text-lg",
   "reenie-beanie": "font-[family-name:'Reenie_Beanie',cursive] text-2xl tracking-wide",
   kalam: "font-[family-name:'Kalam',cursive] text-lg",
 };
@@ -155,13 +156,14 @@ export function RoughArrow({
   offset,
   curvature = 0.38,
   flipCurve = false,
-  animate = true,
+  animate: animateProp = true,
   animationDuration = 800,
   animationDelay = 0,
   className = "",
   textClassName = "",
   labelClassName = "",
 }: RoughArrowProps) {
+  const animate = useRoughMotion(animateProp);
   const containerRef = useRef<HTMLSpanElement>(null);
   const [dimensions, setDimensions] = useState<{ width: number; height: number } | null>(null);
   const [inView, setInView] = useState(!animate);
@@ -447,13 +449,13 @@ export function RoughArrow({
             fill="none"
             strokeLinecap="round"
             strokeLinejoin="round"
-            initial={{ pathLength: 0 }}
+            initial={animate ? { pathLength: 0 } : false}
             animate={{ pathLength: inView ? 1 : 0 }}
-            transition={{
+            transition={animate ? {
               duration: (animationDuration * 0.65) / 1000,
               delay: animationDelay / 1000,
               ease: [0.25, 0.1, 0.25, 1],
-            }}
+            } : INSTANT}
           />
         ))}
 
@@ -467,16 +469,16 @@ export function RoughArrow({
             fill={arrowhead === "filled" ? color : "none"}
             strokeLinecap="round"
             strokeLinejoin="round"
-            initial={{ pathLength: 0, opacity: 0 }}
+            initial={animate ? { pathLength: 0, opacity: 0 } : false}
             animate={{
               pathLength: inView ? 1 : 0,
               opacity: inView ? 1 : 0,
             }}
-            transition={{
+            transition={animate ? {
               duration: (animationDuration * 0.35) / 1000,
               delay: (animationDelay + animationDuration * 0.55) / 1000,
               ease: [0.25, 0.1, 0.25, 1],
-            }}
+            } : INSTANT}
           />
         ))}
       </svg>
@@ -484,17 +486,17 @@ export function RoughArrow({
       {/* ── Handwritten Callout Label (Straight at Tail) ───────────── */}
       {label && (
         <motion.span
-          initial={{ opacity: 0, scale: 0.9, y: 4 }}
+          initial={animate ? { opacity: 0, scale: 0.9, y: 4 } : false}
           animate={{
             opacity: inView ? 1 : 0,
             scale: inView ? 1 : 0.9,
             y: inView ? 0 : 4,
           }}
-          transition={{
+          transition={animate ? {
             duration: 0.35,
             delay: (animationDelay + animationDuration * 0.7) / 1000,
             ease: [0.16, 1, 0.3, 1],
-          }}
+          } : INSTANT}
           className={`absolute pointer-events-none whitespace-nowrap select-none ${labelFontClassMap[labelFont] || labelFontClassMap.caveat} leading-none z-30 ${labelClassName}`}
           style={{
             left: labelPos.x,
