@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { registry, type ComponentCategory } from "@/registry";
 
-const categories: ComponentCategory[] = ["animated", "primitives", "charts", "widgets", "buttons", "backgrounds"];
+const categories: ComponentCategory[] = ["animated", "primitives", "charts", "widgets", "buttons", "backgrounds", "templates"];
 
 const categoryIcons: Record<ComponentCategory, string> = {
   animated: "animation",
@@ -13,6 +13,7 @@ const categoryIcons: Record<ComponentCategory, string> = {
   widgets: "widgets",
   buttons: "smart_button",
   backgrounds: "blur_on",
+  templates: "web",
 };
 
 export function Sidebar() {

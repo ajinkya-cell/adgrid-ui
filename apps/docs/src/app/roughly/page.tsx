@@ -9,7 +9,7 @@ import { RoughCross } from "@ui/animated/roughly/RoughCross";
 import { RoughBracket } from "@ui/animated/roughly/RoughBracket";
 import { RoughHighlight } from "@ui/animated/roughly/RoughHighlight";
 import { RoughBox } from "@ui/animated/roughly/RoughBox";
-import { RoughArrow } from "@ui/animated/roughly/RoughArrow";
+import { RoughArrow, arrowAutoBend } from "@ui/animated/roughly/RoughArrow";
 import { RoughHandwriting } from "@ui/animated/roughly/RoughHandwriting";
 import { RoughCheck } from "@ui/animated/roughly/RoughCheck";
 import { RoughSticky } from "@ui/animated/roughly/RoughSticky";
@@ -395,7 +395,7 @@ export default function RoughlyPage() {
   const [arrowLabelOffsetX, setArrowLabelOffsetX] = useState<number>(0);
   const [arrowLabelOffsetY, setArrowLabelOffsetY] = useState<number>(0);
   const [arrowSize, setArrowSize] = useState<number>(1);
-  const [arrowBend, setArrowBend] = useState<number>(0.38);
+  const [arrowBend, setArrowBend] = useState<number>(() => arrowAutoBend("top-right"));
   const [circlePaddingX, setCirclePaddingX] = useState(22);
   const [circlePaddingY, setCirclePaddingY] = useState(10);
   const [circleIterations, setCircleIterations] = useState(2);
@@ -572,7 +572,7 @@ export default function RoughlyPage() {
       if (strokeWidth !== 2) propsList.push(`strokeWidth={${strokeWidth}}`);
       if (arrowIterations !== 1) propsList.push(`iterations={${arrowIterations}}`);
       if (arrowSize !== 1) propsList.push(`size={${arrowSize}}`);
-      if (arrowBend !== 0.38) propsList.push(`bend={${arrowBend}}`);
+      if (arrowBend !== arrowAutoBend(arrowPlacement)) propsList.push(`bend={${arrowBend}}`);
       if (arrowLabel) propsList.push(`label="${arrowLabel}"`);
       if (arrowLabelFont !== "caveat") propsList.push(`labelFont="${arrowLabelFont}"`);
       if (arrowLabelFontSize !== 24) propsList.push(`labelFontSize={${arrowLabelFontSize}}`);
@@ -1399,7 +1399,11 @@ export default function RoughlyPage() {
                         return (
                           <button
                             key={p.id}
-                            onClick={() => setArrowPlacement(p.id as ArrowPlacement)}
+                            onClick={() => {
+                              setArrowPlacement(p.id as ArrowPlacement);
+                              // follow the placement: its auto bend lands the head on the target
+                              setArrowBend(arrowAutoBend(p.id as ArrowPlacement));
+                            }}
                             className={`py-2 px-1 flex flex-col items-center justify-center text-[10px] font-mono rounded-lg transition-all cursor-pointer ${
                               isSelected
                                 ? `${PLAYGROUND_RAISED_CLASS} text-amber-300 font-semibold ring-1 ring-amber-400/30`
@@ -1486,7 +1490,7 @@ export default function RoughlyPage() {
                     <div className="space-y-1">
                       <div className="flex justify-between text-[11px] font-mono text-neutral-400">
                         <span>Bend</span>
-                        <span>{arrowBend === 0 ? "straight" : arrowBend.toFixed(2)}</span>
+                        <span>{arrowBend === 0 ? "straight" : arrowBend.toFixed(2)}{arrowBend === arrowAutoBend(arrowPlacement) ? " · auto" : ""}</span>
                       </div>
                       <input
                         type="range"
@@ -2507,9 +2511,9 @@ export default function RoughlyPage() {
                 <tr>
                   <td className="p-3 font-semibold text-white">arrowBend / bend</td>
                   <td className="p-3 text-indigo-400">number</td>
-                  <td className="p-3 text-neutral-500">0.38</td>
+                  <td className="p-3 text-neutral-500">auto</td>
                   <td className="p-3 font-sans text-neutral-400">
-                    Signed arc from -1 to 1. 0 is a straight line, negative bends to the other side. Always one smooth arc
+                    Signed arc from -1 to 1 (0 = straight). Unset, it picks the sign and depth that land the head on the target for the placement (±0.32 corners, ±0.2 sides). The sign decides whether the head points into the target or skims its edge
                   </td>
                 </tr>
                 <tr>

@@ -272,7 +272,7 @@ export { RoughHighlight } from "./animated/roughly/RoughHighlight";
 export type { RoughHighlightProps } from "./animated/roughly/RoughHighlight";
 export { RoughBox } from "./animated/roughly/RoughBox";
 export type { RoughBoxProps, BoxVariant } from "./animated/roughly/RoughBox";
-export { RoughArrow } from "./animated/roughly/RoughArrow";
+export { RoughArrow, arrowAutoBend } from "./animated/roughly/RoughArrow";
 export type {
   RoughArrowProps,
   ArrowPlacement,
@@ -404,3 +404,23 @@ export { PromptSuggestions } from "./ai/PromptSuggestions";
 export type { PromptSuggestionsProps, PromptSuggestion, PromptSuggestionsVariant, PromptSuggestionsSize } from "./ai/PromptSuggestions";
 export { ChatSidebar } from "./ai/ChatSidebar";
 export type { ChatSidebarProps, ChatThread } from "./ai/ChatSidebar";
+
+// Templates
+export { DeveloperPortfolio, defaultPortfolioData } from "./templates/developer-portfolio";
+export type {
+  DeveloperPortfolioProps,
+  PortfolioData,
+  PortfolioProfile,
+  PortfolioSocialLink,
+  PortfolioSocialPlatform,
+  ResumeLink,
+  StackGroup,
+  PortfolioExperience,
+  PortfolioExperienceRole,
+  PortfolioProject,
+  PortfolioRecognition,
+  RecognitionKind,
+  PortfolioFeaturedCard,
+  PortfolioEducation,
+  PortfolioPost,
+} from "./templates/developer-portfolio";

@@ -13,6 +13,9 @@
 | Horizontal scrollbar at 390px (screenshot.mjs warns) | Reserved side space or a side placement doesn't fit | Responsive placement (`useIsNarrow`) and responsive padding; see composition.md › Mobile |
 | Highlight invisible | Marker drawn at z-index −1 slipped behind an opaque parent background | `isolate` (isolation: isolate) on the nearest block parent |
 | Highlighted text hard to read | Light marker under light text or dark marker under dark text | Use the pairs in color.md |
+| Arrowhead lies along the target's edge or points past it | `bend` set with the wrong sign for the placement (e.g. `bottom-right` with a positive bend) | Remove `bend`; the auto bend lands the head head-on (arrows.md › Bend) |
+| Arrow is a loop / half-circle | `bend` beyond ±0.5 | Remove it, or ±0.2–0.4 with the auto sign |
+| Arrowhead looks oversized | Thick stroke on a short arrow (head ≥ 3.5 × stroke) | `strokeWidth` 1.5 for `size < 0.8`, or `arrowhead="filled"` |
 | Arrow label in the page font, not handwriting | Caveat/Kalam/Reenie Beanie not loaded | setup.md › Fonts |
 | Handwriting doesn't render | Font file 404 and the CDN fallback is blocked (CSP/offline) | Put the TTFs in `public/fonts/` |
 | Mark offset from its text after load | Web font swapped in after measuring and something stopped the remeasure (fixed widths, `transform: scale` ancestors) | Marks re-measure on resize and `document.fonts.ready`; avoid animating `scale` on an annotated ancestor; or set `animate={false}` and render after fonts load |

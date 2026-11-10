@@ -4,7 +4,7 @@
  * Chromium already on the machine. No npm dependencies (Node 22+ for the built-in WebSocket).
  *
  *   node screenshot.mjs <url> [--out dir] [--name shot] [--widths 1440,390] [--wait 2500] [--animated]
- *                             [--selector "#pricing"] [--segments] [--max-height 8000]
+ *                             [--selector "#pricing"] [--click "#tab-annual"] [--segments] [--max-height 8000]
  *
  * Writes <out>/<name>-<width>.png and prints the paths. READ every image it prints: annotations are not
  * done until they have been looked at.
@@ -19,6 +19,8 @@
  *   faithful), otherwise cropped from the full page with 160px around it for arrows and sticky notes.
  * - --segments writes one viewport-sized shot per screen (<name>-<width>-01.png, -02 …). Use it when marks
  *   you know exist are missing from the full-page shot: some pages relayout during full-page capture.
+ * - --click clicks an element (a tab, toggle, accordion) before capture, for marks that only show after
+ *   an interaction. Comma-separate several selectors to click them in order.
  * - If a mark is missing, run again with a longer --wait; first loads on a dev server compile slowly.
  */
 
@@ -46,6 +48,7 @@ const maxHeight = Number(flag("max-height", "8000"));
 const selector = flag("selector", null);
 const animated = argv.includes("--animated");
 const segments = argv.includes("--segments");
+const clicks = (flag("click", "") || "").split(",").map((x) => x.trim()).filter(Boolean);
 
 if (typeof WebSocket === "undefined") {
   console.error("This script needs Node 22+ (built-in WebSocket). Run `node --version` and upgrade.");
@@ -204,6 +207,18 @@ try {
     })()`);
     await sleep(wait);
 
+    for (const sel of clicks) {
+      const ok = await evaluate(`(() => {
+        const el = document.querySelector(${JSON.stringify(sel)});
+        if (!el) return false;
+        el.scrollIntoView({ block: "center" });
+        el.click();
+        return true;
+      })()`);
+      if (!ok) throw new Error(`--click selector not found: ${sel}`);
+      await sleep(Math.max(800, wait / 2));
+    }
+
     // Capture strategy:
     //  - selector that fits in the viewport → scroll it to the centre and take a plain viewport shot
     //  - --segments → one plain viewport shot per screen of the page
@@ -251,7 +266,12 @@ try {
               if (clipped) continue;
               const cls = String(el.className && el.className.baseVal !== undefined ? el.className.baseVal : el.className || "").slice(0, 60);
               const text = (el.textContent || "").trim().replace(/\\s+/g, " ").slice(0, 30);
-              out.push("    " + el.tagName.toLowerCase() + (cls ? "." + cls.split(" ").join(".") : "") + " (right edge " + Math.round(r.right) + "px)" + (text ? ' "' + text + '"' : ""));
+              // Where it lives: nearest ancestor with an id, else the nearest section's heading
+              const host = el.parentElement && el.parentElement.closest("[id]");
+              const sec = el.closest("section, article, main > div");
+              const hd = sec && sec.querySelector("h1, h2, h3");
+              const where = host ? " in #" + host.id : hd ? ' in section "' + hd.textContent.trim().slice(0, 30) + '"' : "";
+              out.push("    " + el.tagName.toLowerCase() + (cls ? "." + cls.split(" ").join(".") : "") + " (right edge " + Math.round(r.right) + "px)" + (text ? ' "' + text + '"' : "") + where);
               if (out.length >= 6) break;
             }
             return out.join(" ¶ ");

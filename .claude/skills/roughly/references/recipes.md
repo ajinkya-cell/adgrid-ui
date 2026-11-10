@@ -219,6 +219,39 @@ Needs the font files (setup.md › Handwriting).
 ```
 Body text: stroke 1.5, no delay needed, at most one per paragraph.
 
+## R13 — Arrow at a form input (from the empty margin on the right)
+
+```tsx
+{/* right, size 0.9, label 20px "≈ 9 chars × 0.45 × 20 = 81px" → needs 73·0.9 + 8 + 81 ≈ 155px on the right */}
+<label className="grid max-w-xs gap-1.5 text-sm">
+  Work email
+  <span className="inline-block w-full pr-[160px]">
+    {/* no bend: "right" auto-bends to −0.2 so the head points left, into the field */}
+    <Roughly.Arrow color={INK} strokeWidth={2} size={0.9} placement="right" label="no spam" labelFontSize={20} className="w-full">
+      <input type="email" className="w-full rounded-md border px-3 py-2" />
+    </Roughly.Arrow>
+  </span>
+</label>
+```
+At 390px there is no right margin: switch to `placement="bottom-right"` with `useIsNarrow()`
+(composition.md › Mobile) and reserve space below instead.
+
+## R14 — Arrow at a detail inside a screenshot
+
+```tsx
+<figure className="relative">
+  <img src="/app.png" alt="Dashboard with the revenue total in the top right" className="w-full rounded-xl" />
+  {/* zero-size target on the detail; top-left so the tail sits in the image's empty top-left area */}
+  <span className="pointer-events-none absolute" style={{ left: "74%", top: "22%" }}>
+    <Roughly.Arrow color={INK} strokeWidth={2} size={1} placement="top-left" label="live totals" labelFontSize={22} arrowhead="filled">
+      <span className="block size-1" />
+    </Roughly.Arrow>
+  </span>
+</figure>
+```
+Pick the placement from the image itself: the tail and label must sit over a flat, quiet area of the
+screenshot, never over its text. The figure must not be `overflow-hidden` or the tail is clipped.
+
 ## Arrow placements cheat sheet
 
 | Target position on page | `placement` | Why |
@@ -229,4 +262,6 @@ Body text: stroke 1.5, no delay needed, at most one per paragraph.
 | Centered element | `top-right` (default) | reads naturally left→right, top→down |
 | Input in a form column | `right` | margin beside the form is usually empty |
 
-Point the arrow so the label is in empty space; flip `bend` (negative) if the curve bows toward text.
+Point the arrow so the label is in empty space. **Don't set `bend`**: each placement already gets the
+bend that lands the head on the target (arrows.md › Bend). If the curve bows toward text, change the
+placement or reserve more space; flipping the bend's sign turns the head sideways.

@@ -29,7 +29,7 @@ export interface RoughArrowProps {
   placement?: ArrowPlacement;
   /** Overall scale of the arrow: length, arrowhead and target gap grow together (default: 1) */
   size?: number;
-  /** Signed arc bend from -1 to 1. 0 is a straight line, negative bends the other way (default: 0.38) */
+  /** Signed arc bend, -1 to 1 (0 = straight). Unset = auto: the sign and depth that land the head on the target for this placement (±0.32 corners, ±0.2 sides). Override only the depth, keep the auto sign (default: auto) */
   bend?: number;
   /** Curve shape: 'curved' (single arc) | 'straight' | 's-curve' (default: "curved") */
   variant?: ArrowVariant;
@@ -109,6 +109,30 @@ const BARB_ANGLE = 28 * (Math.PI / 180);
 
 const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
 
+/**
+ * The bend that makes the arrowhead land head-on (within ~15°) on the target's edge for each placement.
+ * The head arrives rotated atan(3·bend) off the tail→tip line, so the sign must turn it *toward* the
+ * target's edge normal: top-right / bottom-left / top / left bow one way, their mirrors the other.
+ * An s-curve arrives on the opposite side of its chord, so its sign flips.
+ */
+const AUTO_BEND: Record<ArrowPlacement, number> = {
+  "top-right": 0.32,
+  "bottom-left": 0.32,
+  "top-left": -0.32,
+  "bottom-right": -0.32,
+  top: 0.2,
+  left: 0.2,
+  bottom: -0.2,
+  right: -0.2,
+};
+
+/** Default `bend` for a placement (and variant): the arc that lands the arrowhead head-on. */
+export function arrowAutoBend(placement: ArrowPlacement, variant: ArrowVariant = "curved"): number {
+  if (variant === "straight") return 0;
+  const b = AUTO_BEND[placement] ?? 0.32;
+  return variant === "s-curve" ? -b : b;
+}
+
 // Deterministic PRNG so server and client draw the same arrow (no hydration mismatch)
 function mulberry32(seed: number) {
   let a = seed >>> 0;
@@ -154,7 +178,7 @@ export function RoughArrow({
   labelOffsetY = 0,
   distance,
   offset,
-  curvature = 0.38,
+  curvature,
   flipCurve = false,
   animate: animateProp = true,
   animationDuration = 800,
@@ -237,9 +261,19 @@ export function RoughArrow({
   const D = distance ?? BASE_LENGTH * scale;
   const gap = offset ?? BASE_GAP * scale;
 
-  // One signed bend value; legacy curvature/flipCurve map onto it
+  // One signed bend value: explicit `bend`, else legacy curvature/flipCurve, else the per-placement auto bend
+  const autoBend = arrowAutoBend(placement, variant);
   const resolvedBend =
-    variant === "straight" ? 0 : clamp(bend ?? (flipCurve ? -curvature : curvature), -1, 1);
+    variant === "straight"
+      ? 0
+      : clamp(
+          bend ??
+            (curvature !== undefined
+              ? flipCurve ? -curvature : curvature
+              : flipCurve ? -autoBend : autoBend),
+          -1,
+          1
+        );
   const resolvedSeed = seed ?? hashString(`${placement}|${variant}`);
 
   const { tail, tip, labelPos, labelTransform } = useMemo(() => {
@@ -485,31 +519,34 @@ export function RoughArrow({
 
       {/* ── Handwritten Callout Label (Straight at Tail) ───────────── */}
       {label && (
-        <motion.span
-          initial={animate ? { opacity: 0, scale: 0.9, y: 4 } : false}
-          animate={{
-            opacity: inView ? 1 : 0,
-            scale: inView ? 1 : 0.9,
-            y: inView ? 0 : 4,
-          }}
-          transition={animate ? {
-            duration: 0.35,
-            delay: (animationDelay + animationDuration * 0.7) / 1000,
-            ease: [0.16, 1, 0.3, 1],
-          } : INSTANT}
-          className={`absolute pointer-events-none whitespace-nowrap select-none ${labelFontClassMap[labelFont] || labelFontClassMap.caveat} leading-none z-30 ${labelClassName}`}
-          style={{
-            left: labelPos.x,
-            top: labelPos.y,
-            transform: labelTransform,
-            transformOrigin: "center center",
-            color: labelColor || color,
-            fontSize: labelFontSize ? `${labelFontSize}px` : undefined,
-            fontWeight: labelFontWeight || undefined,
-          }}
+        // Position on a plain span: framer-motion owns `transform` on the animated span (y/scale), so a
+        // positioning translate there would be dropped and the label would hang off its top-left corner.
+        <span
+          className="absolute pointer-events-none z-30"
+          style={{ left: labelPos.x, top: labelPos.y, transform: labelTransform, transformOrigin: "center center" }}
         >
-          {label}
-        </motion.span>
+          <motion.span
+            initial={animate ? { opacity: 0, scale: 0.9, y: 4 } : false}
+            animate={{
+              opacity: inView ? 1 : 0,
+              scale: inView ? 1 : 0.9,
+              y: inView ? 0 : 4,
+            }}
+            transition={animate ? {
+              duration: 0.35,
+              delay: (animationDelay + animationDuration * 0.7) / 1000,
+              ease: [0.16, 1, 0.3, 1],
+            } : INSTANT}
+            className={`block whitespace-nowrap select-none ${labelFontClassMap[labelFont] || labelFontClassMap.caveat} leading-none ${labelClassName}`}
+            style={{
+              color: labelColor || color,
+              fontSize: labelFontSize ? `${labelFontSize}px` : undefined,
+              fontWeight: labelFontWeight || undefined,
+            }}
+          >
+            {label}
+          </motion.span>
+        </span>
       )}
 
       {/* ── Target Content ───────────────────────────────────────────── */}

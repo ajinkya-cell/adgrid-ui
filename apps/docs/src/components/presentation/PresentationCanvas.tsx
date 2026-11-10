@@ -5,7 +5,9 @@ import type { DisplayStrategy } from "@/registry";
 
 const classes: Record<Exclude<DisplayStrategy, "auto">, string> = {
   center: "flex min-h-dvh items-center justify-center p-6 md:p-12",
-  fullscreen: "relative min-h-dvh overflow-hidden",
+  // clip, not hidden: hidden makes this a scroll container, which stops `position: sticky`
+  // inside full-page demos (headers, sidebars) from sticking to the viewport.
+  fullscreen: "relative min-h-dvh overflow-clip",
   cover: "flex min-h-dvh items-stretch justify-stretch overflow-hidden",
   fit: "flex min-h-dvh items-center justify-center p-4 md:p-8",
 };

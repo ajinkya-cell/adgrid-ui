@@ -171,7 +171,7 @@ Deprecated props are listed last per component; don't use them.
 | `children` | `React.ReactNode` | Target element or text to point to (optional; if omitted, renders standalone) |
 | `placement` | `ArrowPlacement` | Direction from which the arrow points toward the target (default: "top-right") |
 | `size` | `number` | Overall scale of the arrow: length, arrowhead and target gap grow together (default: 1) |
-| `bend` | `number` | Signed arc bend from -1 to 1. 0 is a straight line, negative bends the other way (default: 0.38) |
+| `bend` | `number` | Signed arc bend, -1 to 1 (0 = straight). Unset = auto: the sign and depth that land the head on the target for this placement (±0.32 corners, ±0.2 sides). Override only the depth, keep the auto sign (default: auto) |
 | `variant` | `ArrowVariant` | Curve shape: 'curved' (single arc) \| 'straight' \| 's-curve' (default: "curved") |
 | `arrowhead` | `ArrowheadStyle` | Arrowhead style: 'open' (>) or 'filled' (solid triangle) (default: "open") |
 | `color` | `string` | Stroke color (default: "#F59E0B" Cyber Amber) |

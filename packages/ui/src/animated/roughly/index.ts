@@ -16,7 +16,7 @@ export { RoughHighlight } from "./RoughHighlight";
 export type { RoughHighlightProps } from "./RoughHighlight";
 export { RoughBox } from "./RoughBox";
 export type { RoughBoxProps, BoxVariant } from "./RoughBox";
-export { RoughArrow } from "./RoughArrow";
+export { RoughArrow, arrowAutoBend } from "./RoughArrow";
 export type {
   RoughArrowProps,
   ArrowPlacement,

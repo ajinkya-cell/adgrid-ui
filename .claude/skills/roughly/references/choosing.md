@@ -82,8 +82,9 @@ know from paper: an underline says "this matters", a circle says "look at this o
 - No label only when the target is self-explanatory and the arrow is pure direction ("look here" is not a
   label — drop it).
 - Max 1–2 arrows per page; never two arrows pointing at the same thing; never arrows crossing.
-- Prefer `variant="curved"` (default) with the default bend; `straight` looks mechanical; `s-curve` for long
-  hops across whitespace.
+- `variant="curved"` (default) and **no `bend` prop**: the auto bend lands the head on the target for each
+  placement. `straight` looks mechanical; `s-curve` only for long hops (≥ 120px) across whitespace.
+  Everything else about arrows (size, gap, label, failures): `arrows.md`.
 
 ### Sticky note
 - A paper note with tape or pin. It's an aside: tips, "drag to reorder", "we're hiring". Max 1 per page.

@@ -1983,6 +1983,158 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "developer-portfolio",
+      "type": "registry:ui",
+      "title": "Developer Portfolio",
+      "description": "A developer portfolio template fusing three portfolios: three-column layout with dashed rails, bracketed section titles in the left column and a sticky right index with search, theme and what you are building. Cover and avatar hero with bullet intro, featured X/community cards, icon info rows and live local time; skills marquee; dotted experience timeline with Active/Done pills; wide project cards; achievements; flat GitHub graph; blog with summaries; light/dark theme and Ctrl+K search. All content comes from one typed data prop.",
+      "dependencies": [
+        "lucide-react",
+        "react-icons",
+        "framer-motion",
+        "roughjs",
+        "rough-notation",
+        "opentype.js"
+      ],
+      "files": [
+        {
+          "path": "components/ui/developer-portfolio/DeveloperPortfolio.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/types.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/developer-portfolio/defaults.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/parts.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/skillIcons.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/index.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/developer-portfolio/sections/Header.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/sections/Sidebar.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/sections/Hero.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/sections/About.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/sections/Stack.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/sections/Experience.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/sections/Projects.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/sections/GithubActivity.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/sections/Lists.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/sections/Footer.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/sections/Contact.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/sections/SearchDialog.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/../../lib/utils.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/developer-portfolio/../../animated/Roughly.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/../../animated/roughly/index.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/developer-portfolio/../../animated/roughly/RoughArrow.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/../../animated/roughly/RoughBox.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/../../animated/roughly/RoughBracket.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/../../animated/roughly/RoughCircle.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/../../animated/roughly/RoughCross.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/../../animated/roughly/RoughHighlight.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/../../animated/roughly/RoughStrike.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/../../animated/roughly/RoughUnderline.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/../../animated/roughly/RoughCheck.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/../../animated/roughly/RoughSticky.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/../../animated/roughly/RoughHandwriting.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/../../animated/roughly/handwriting-fonts.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/developer-portfolio/../../animated/roughly/useRoughMotion.ts",
+          "type": "registry:hook"
+        }
+      ]
     }
   ]
 }

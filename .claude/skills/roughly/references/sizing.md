@@ -61,7 +61,7 @@ space**. You must reserve it:
 ### Arrow geometry
 
 `size` scales the whole arrow. Length `D = 65 × size` px, gap to the target `8 × size` px. The label sits
-`labelDistance` (default 8) beyond the tail.
+`labelDistance` (default 8) beyond the tail. Bend, head and label rules: `arrows.md`.
 
 | Target | `size` | `strokeWidth` | `labelFontSize` |
 |---|---|---|---|

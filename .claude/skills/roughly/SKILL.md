@@ -19,6 +19,7 @@ right place, and prove it on a screenshot.
 | `references/choosing.md` | **Always.** Which mark for which intent, and what each mark must never be used for. |
 | `references/sizing.md` | **Always.** Stroke, padding, arrow size, label size and the clearance each mark needs, keyed to font size. |
 | `references/color.md` | **Always.** One ink per page, dark vs light surfaces, highlighter pairs, semantic red/green. |
+| `references/arrows.md` | **Any arrow.** Placement, the bend that lands the head on the target, size, label, failure → fix. |
 | `references/composition.md` | More than one mark on a page, any arrow or sticky, or mobile layouts. |
 | `references/recipes.md` | Before writing code: copy the closest recipe instead of improvising. |
 | `references/setup.md` | Roughly isn't installed yet, or fonts / Tailwind are missing. |
@@ -67,6 +68,10 @@ Use the three references. They're short tables; follow them rather than taste. T
 prevent: circling a whole sentence, highlighting a paragraph, a 2px line under 72px type, a rainbow of
 colours, red used for emphasis, arrows without a label, marks that run into the next word.
 
+**Arrows get their own pass** (`references/arrows.md`): pick the empty side for `placement`, then **leave
+`bend` unset**. The component picks the bend whose sign lands the head *into* the target; a hand-set bend
+with the wrong sign makes the head skim along the target's edge (the most common broken-looking arrow).
+
 ### 6. Write it
 Start from the closest recipe in `references/recipes.md`. Rules that always apply:
 
@@ -99,7 +104,8 @@ uses true 390px mobile emulation, and prints `✖` if the page is an error scree
 offending elements if anything overflows horizontally. Fix those first. `--selector "#id"` crops to one
 section (with room around it for arrows/stickies). **Read every image.** For each mark check:
 
-- It sits where intended: underline under the words, circle centred, arrow tip near (not on) the target.
+- It sits where intended: underline under the words, circle centred, arrow tip 6–12px from the target
+  and the **arrowhead pointing into it** (not lying along its edge; arrows.md › Checklist).
 - Nothing overlaps: no mark crosses neighbouring text, another mark, a button edge, or gets clipped by a
   card (`overflow:hidden`).
 - At 390px: arrows and stickies still fit, nothing causes horizontal scroll, multi-line wraps still look
@@ -121,6 +127,7 @@ couldn't verify (no dev server, auth wall).
 3. Stroke scales with the text (`sizing.md`): ≈ font-size ÷ 14, between 1.5 and 4.
 4. One ink colour per page; red only for removal/negative, green only for done/positive.
 5. Every overlay mark gets reserved space; nothing touches neighbouring text.
-6. Arrows always carry a short label (≤ 4 words) unless pointing at something self-explanatory.
+6. Arrows always carry a short label (≤ 4 words) unless pointing at something self-explanatory. Don't set
+   `bend` unless you keep its auto sign; the head must point into the target.
 7. Semantic HTML under every mark; reduced motion is handled by the components — don't fight it.
 8. Screenshots at 1440 and 390, read, before you say done.

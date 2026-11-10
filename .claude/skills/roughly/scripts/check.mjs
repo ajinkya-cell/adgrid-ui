@@ -177,6 +177,9 @@ function hexToHsl(hex) {
 const isRed = (c) => { const x = hexToHsl(c); return x && x.s > 0.45 && (x.h < 15 || x.h > 345); };
 const isGreen = (c) => { const x = hexToHsl(c); return x && x.s > 0.35 && x.h > 95 && x.h < 160; };
 
+// Same table as arrowAutoBend in RoughArrow.tsx: the bend that lands the head on the target's edge.
+const AUTO_BEND = { "top-right": 0.32, "bottom-left": 0.32, "top-left": -0.32, "bottom-right": -0.32, top: 0.2, left: 0.2, bottom: -0.2, right: -0.2 };
+
 const DEPRECATED = {
   arrowCurvature: "use arrowBend",
   curvature: "use bend (−1…1)",
@@ -280,6 +283,22 @@ function lintFile(file) {
         else {
           const lab = attr(raw, "label") ?? attr(raw, "arrowLabel");
           if (typeof lab === "string" && words(lab) > 4) add(f, line, "warn", "meaning/arrow-label", `Arrow label is ${words(lab)} words.`, "Keep labels to ≤ 4 words");
+        }
+        {
+          // Geometry: the bend's sign decides whether the head lands on the target or skims along its edge.
+          const pl = attr(raw, "placement") ?? attr(raw, "arrowPlacement") ?? "top-right";
+          const variant = attr(raw, "variant") ?? attr(raw, "arrowVariant") ?? "curved";
+          const bend = attr(raw, "bend") ?? attr(raw, "arrowBend");
+          const auto = typeof pl === "string" && AUTO_BEND[pl] !== undefined ? AUTO_BEND[pl] * (variant === "s-curve" ? -1 : 1) : undefined;
+          if (typeof bend === "number" && auto !== undefined && variant !== "straight") {
+            if (bend !== 0 && Math.sign(bend) !== Math.sign(auto)) {
+              add(f, line, "error", "arrow/bend-sign", `bend={${bend}} with placement="${pl}"${variant === "s-curve" ? " (s-curve)" : ""}: the head arrives along the target's edge instead of into it.`, `Remove bend (auto = ${auto}), or keep its sign: bend={${Math.sign(auto) * Math.abs(bend)}} (arrows.md › Bend)`);
+            } else if (Math.abs(bend) > 0.5) {
+              add(f, line, "warn", "arrow/bend-depth", `bend={${bend}} is a near-semicircle: the head overshoots and the arc reads as a loop.`, "Corners 0.2–0.4, sides 0.1–0.3 (arrows.md › Bend)");
+            }
+          }
+          const lfs = attr(raw, "labelFontSize") ?? attr(raw, "arrowLabelFontSize");
+          if (typeof lfs === "number" && lfs < 16 && (has(raw, "label") || has(raw, "arrowLabel"))) add(f, line, "warn", "size/arrow-label", `labelFontSize ${lfs}: handwriting under 16px is hard to read.`, "18–24 for buttons, 26–34 for hero targets (sizing.md)");
         }
         break;
       case "Sticky": {

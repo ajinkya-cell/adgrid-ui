@@ -242,6 +242,7 @@ function renderPreviewContent(slug: string, category: ComponentCategory, accent:
         primitives: "category",
         widgets: "widgets",
         charts: "bar_chart",
+        templates: "web",
       };
 
       return (

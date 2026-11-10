@@ -58,6 +58,11 @@ export const PRESENTATION_GROUPS: { id: string; label: string; slugs: string[] }
     label: "Pages",
     slugs: ["premium-hero", "hero", "forgeui-landing", "rays-landing", "chalkboard-404"],
   },
+  {
+    id: "templates",
+    label: "Templates",
+    slugs: ["developer-portfolio"],
+  },
 ];
 
 const groupRank = new Map(

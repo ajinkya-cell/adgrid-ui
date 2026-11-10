@@ -6,7 +6,7 @@ import type { PresentationSourceFile } from "./types";
 import { getComponentName } from "./presentation-registry";
 import { Copy, Check } from "lucide-react";
 
-type PackageManager = "pnpm" | "yarn" | "npm" | "bun";
+export type PackageManager = "pnpm" | "yarn" | "npm" | "bun";
 
 function getCliCommand(pm: PackageManager, slug: string): string {
   const baseUrl =
@@ -29,7 +29,7 @@ function getCliCommand(pm: PackageManager, slug: string): string {
 /**
  * Authentic brand icons for the package managers (switched dynamically)
  */
-function renderPackageManagerIcon(pm: PackageManager) {
+export function renderPackageManagerIcon(pm: PackageManager) {
   switch (pm) {
     case "pnpm":
       return (

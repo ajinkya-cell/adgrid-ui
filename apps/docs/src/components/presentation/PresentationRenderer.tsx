@@ -160,6 +160,7 @@ const Hero = dynamic(() => import("@ui/animated/Hero").then((m) => m.Hero));
 const AnimatedIcons1 = dynamic(() => import("@ui/animated/Loaders1").then((m) => m.AnimatedIcons1));
 const ForgeUILanding = dynamic(() => import("@ui/animated/ForgeUILanding").then((m) => m.ForgeUILanding));
 const RaysLanding = dynamic(() => import("@ui/animated/RaysLanding").then((m) => m.RaysLanding));
+const DeveloperPortfolio = dynamic(() => import("@ui/templates/developer-portfolio").then((m) => m.DeveloperPortfolio));
 const PolaroidDevelop = dynamic(() => import("@ui/animated/PolaroidDevelop").then((m) => m.PolaroidDevelop));
 const BreathingScaleCard = dynamic(() => import("@ui/animated/BreathingScaleCard").then((m) => m.BreathingScaleCard));
 const GithubHeatmap = dynamic(() => import("@ui/animated/GithubHeatmap").then((m) => m.GithubHeatmap));
@@ -1874,6 +1875,13 @@ export function PresentationRenderer({
           <ForgeUILanding 
             onDocumentation={() => console.log("Documentation clicked")}
           />
+        </div>
+      );
+    }
+    case "developer-portfolio": {
+      return (
+        <div className="w-full min-h-screen relative">
+          <DeveloperPortfolio {...liveProps} />
         </div>
       );
     }

@@ -304,6 +304,61 @@ export function ProseRecipe({ t }: { t: Theme }) {
   );
 }
 
+/* R13 — Arrow at a form input, from the right margin (bottom-right on mobile) */
+export function InputArrowRecipe({ t }: { t: Theme }) {
+  const narrow = useIsNarrow();
+  return (
+    <label className="grid max-w-md gap-1.5 text-sm">
+      Work email
+      <span className={`inline-block w-full ${narrow ? "pb-[96px]" : "pr-[160px]"}`}>
+        {/* no bend: right → −0.2, bottom-right → −0.32, both land the head on the field */}
+        <Roughly.Arrow
+          color={t.ink}
+          strokeWidth={2}
+          size={0.9}
+          placement={narrow ? "bottom-right" : "right"}
+          label="no spam"
+          labelFontSize={20}
+          className="w-full"
+        >
+          <input type="email" placeholder="you@company.com" className={`w-full rounded-md border bg-transparent px-3 py-2 ${t.border}`} />
+        </Roughly.Arrow>
+      </span>
+    </label>
+  );
+}
+
+/* R14 — Arrow at a detail inside a screenshot: zero-size target on the spot */
+export function ScreenshotArrowRecipe({ t }: { t: Theme }) {
+  return (
+    <figure className={`relative h-56 w-full max-w-lg rounded-xl border ${t.border} ${t.card}`}>
+      <div className={`absolute right-6 top-8 text-2xl font-semibold`}>$48,210</div>
+      <div className={`absolute right-6 top-[72px] text-xs ${t.muted}`}>Revenue · today</div>
+      <span className="pointer-events-none absolute" style={{ left: "74%", top: "22%" }}>
+        <Roughly.Arrow color={t.ink} strokeWidth={2} size={1} placement="top-left" label="live totals" labelFontSize={22} arrowhead="filled">
+          <span className="block size-1" />
+        </Roughly.Arrow>
+      </span>
+    </figure>
+  );
+}
+
+/* Arrow placements: every placement with its auto bend. Every head must point into its target. */
+const PLACEMENTS = ["top-left", "top", "top-right", "left", "right", "bottom-left", "bottom", "bottom-right"] as const;
+export function ArrowPlacementsCheck({ t }: { t: Theme }) {
+  return (
+    <div className="grid max-w-3xl grid-cols-2 gap-x-6 gap-y-2 sm:grid-cols-4">
+      {PLACEMENTS.map((p) => (
+        <div key={p} className="grid h-[200px] place-items-center">
+          <Roughly.Arrow color={t.ink} strokeWidth={2} size={0.9} placement={p}>
+            <span className={`inline-block rounded-md border px-3 py-1.5 font-mono text-xs ${t.border}`}>{p}</span>
+          </Roughly.Arrow>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 const RECIPES: Array<[string, React.ComponentType<{ t: Theme }>]> = [
   ["R1 hero · underline + CTA arrow", HeroRecipe],
   ["R2 pricing · strike + circle", PricingRecipe],
@@ -317,6 +372,9 @@ const RECIPES: Array<[string, React.ComponentType<{ t: Theme }>]> = [
   ["R10 box a badge", BadgeBoxRecipe],
   ["R11 signature · handwriting", SignatureRecipe],
   ["R12 prose · body underline", ProseRecipe],
+  ["R13 input · side arrow (responsive)", InputArrowRecipe],
+  ["R14 screenshot detail · arrow at a spot", ScreenshotArrowRecipe],
+  ["arrows · all placements, auto bend: every head points into its box", ArrowPlacementsCheck],
 ];
 
 function Surface({ t }: { t: Theme }) {
