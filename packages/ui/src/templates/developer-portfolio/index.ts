@@ -13,6 +13,7 @@ export type {
   Project as PortfolioProject,
   Recognition as PortfolioRecognition,
   RecognitionKind,
+  ExperienceIcon as PortfolioExperienceIcon,
   FeaturedCard as PortfolioFeaturedCard,
   Education as PortfolioEducation,
   Post as PortfolioPost,

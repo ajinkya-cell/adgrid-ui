@@ -4,10 +4,11 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Award, BookOpen, Briefcase, FileText, FolderGit2, Hash, Home, Mail, Moon, Sparkles, User } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { defaultPortfolioData } from "./defaults";
-import { DASH, Gap, INK, InkContext, SocialIcon, THEME_CSS } from "./parts";
+import { DASH, Gap, INK, InkContext, PageThemeContext, SocialIcon, THEME_CSS } from "./parts";
 import { Header, type NavLink } from "./sections/Header";
 import { Sidebar } from "./sections/Sidebar";
 import { Hero } from "./sections/Hero";
+import { Terminal } from "./sections/Terminal";
 import { About } from "./sections/About";
 import { Stack } from "./sections/Stack";
 import { Experience } from "./sections/Experience";
@@ -196,7 +197,7 @@ export function DeveloperPortfolio({
   }, [content, show.writing, show.recognition, show.github, toggleTheme]);
 
   const sections: React.ReactNode[] = [
-    show.about && <About key="about" paragraphs={content.about} />,
+    show.about && <About key="about" paragraphs={content.about} highlight={content.aboutHighlight} />,
     show.stack && <Stack key="stack" groups={content.stack} />,
     show.experience && <Experience key="experience" items={content.experience} initialCount={experienceCount} />,
     show.projects && <Projects key="projects" items={content.projects} allUrl={content.projectsUrl} note={content.projectsNote} />,
@@ -209,11 +210,15 @@ export function DeveloperPortfolio({
   return (
     <div data-theme={theme} className={cn("pf-root min-h-dvh w-full bg-[var(--pf-bg)] text-[var(--pf-fg)]", className)}>
       <style>{THEME_CSS}</style>
+      <PageThemeContext.Provider value={theme}>
       <InkContext.Provider value={INK[theme]}>
       <Header nav={nav} activeId={activeId} openSourceUrl={content.openSourceUrl} theme={theme} onToggleTheme={toggleTheme} onOpenSearch={openSearch} />
       <div className={cn("mx-auto grid max-w-[1200px] lg:grid-cols-[minmax(0,1fr)_240px] xl:border-x", DASH)}>
         <main className="min-w-0">
-          <Hero onBook={profile.calLink ? openBooking : undefined} profile={profile} intro={content.intro} featured={content.featured} socials={content.socials} resumes={content.resumes} />
+          <Hero
+            terminal={<Terminal data={content} theme={theme} onToggleTheme={toggleTheme} onBook={profile.calLink ? openBooking : undefined} />}
+            onBook={profile.calLink ? openBooking : undefined}
+            profile={profile} intro={content.intro} featured={content.featured} socials={content.socials} resumes={content.resumes} />
           {sections.map((section, i) => (
             <div key={i}>
               <Gap />
@@ -230,6 +235,7 @@ export function DeveloperPortfolio({
         <BookingDialog open={bookingOpen} onClose={closeBooking} calLink={profile.calLink} theme={theme} name={profile.name} />
       )}
       </InkContext.Provider>
+      </PageThemeContext.Provider>
     </div>
   );
 }

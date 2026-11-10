@@ -2067,6 +2067,10 @@
           "type": "registry:ui"
         },
         {
+          "path": "components/ui/developer-portfolio/sections/Terminal.tsx",
+          "type": "registry:ui"
+        },
+        {
           "path": "components/ui/developer-portfolio/sections/SearchDialog.tsx",
           "type": "registry:ui"
         },

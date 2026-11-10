@@ -39,6 +39,11 @@ export const THEME_CSS = `
 export const INK = { dark: "#FCD34D", light: "#2563EB" } as const;
 export const InkContext = createContext<string>(INK.dark);
 export const useInk = () => useContext(InkContext);
+/** The page theme, for marks whose colour pairs depend on it (the highlighter). */
+export const PageThemeContext = createContext<"dark" | "light">("dark");
+/** Highlighter behind text: deep indigo under light text on dark, classic yellow under dark text on light. */
+export const MARKER = { dark: { color: "#4338CA", opacity: 0.85 }, light: { color: "#FDE68A", opacity: 0.8 } } as const;
+export const useMarker = () => MARKER[useContext(PageThemeContext)];
 /** Handwriting font for every annotation (arrow labels, sticky note, signature). */
 export const HAND = "reenie-beanie" as const;
 

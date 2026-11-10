@@ -1,10 +1,17 @@
 "use client";
 
 import { useId, useState } from "react";
-import { ChevronDown, ExternalLink } from "lucide-react";
+import { Briefcase, ChevronDown, CodeXml, ExternalLink, Rocket, SquareTerminal } from "lucide-react";
 import { cn } from "../../../lib/utils";
 import { DASH, FG, FOCUS, LINE, MUTED, SUBTLE, Section, StatusPill, Tags, externalProps, formatDuration, formatPeriod, formatRange } from "../parts";
-import type { Experience as ExperienceItem } from "../types";
+import type { Experience as ExperienceItem, ExperienceIcon } from "../types";
+
+const TILE_ICONS: Record<ExperienceIcon, typeof Rocket> = {
+  terminal: SquareTerminal,
+  rocket: Rocket,
+  briefcase: Briefcase,
+  code: CodeXml,
+};
 
 /**
  * One company on the timeline: a status dot on the dashed line, logo, name, the latest role and
@@ -15,6 +22,7 @@ function Company({ item, defaultOpen }: { item: ExperienceItem; defaultOpen: boo
   const [open, setOpen] = useState(defaultOpen);
   const panelId = useId();
   const current = item.roles.some((role) => !role.end);
+  const TileIcon = item.icon ? TILE_ICONS[item.icon] : null;
   const latest = item.roles[0];
   const earliest = item.roles[item.roles.length - 1];
 
@@ -36,6 +44,10 @@ function Company({ item, defaultOpen }: { item: ExperienceItem; defaultOpen: boo
       >
         {item.logo ? (
           <img src={item.logo} alt="" className={cn("size-10 shrink-0 rounded-lg border object-cover", LINE)} />
+        ) : TileIcon ? (
+          <span aria-hidden="true" className="grid size-10 shrink-0 place-items-center rounded-lg bg-[var(--pf-fg)] text-[var(--pf-bg)]">
+            <TileIcon className="size-5" strokeWidth={2.25} />
+          </span>
         ) : (
           <span aria-hidden="true" className="pf-display grid size-10 shrink-0 place-items-center rounded-lg bg-[var(--pf-fg)] text-lg font-extrabold text-[var(--pf-bg)]">
             {item.company[0]}

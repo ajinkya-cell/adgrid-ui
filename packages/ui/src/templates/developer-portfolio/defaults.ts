@@ -45,6 +45,7 @@ export const defaultPortfolioData: PortfolioData = {
     { platform: "email", label: "Email", url: "mailto:ajinkyadharkar88@gmail.com" },
   ],
   resumes: [{ label: "Resume", url: `${ASSETS}/resume.pdf` }],
+  aboutHighlight: "I sit down and build it.",
   about: [
     "I build software that I feel genuinely needs to exist. Whenever an idea sparks for an application that solves real friction or reimagines interaction, I sit down and build it. I am always learning and refining my skills.",
     "Behind the screen I like a good balance: coding and learning new things, the gym, and following MMA for the discipline and mindset behind it. I play chess, which taught me to think a few moves ahead and stay calm in a bad position. I read Robert Greene and admire Jaun Elia's writing.",
@@ -60,6 +61,7 @@ export const defaultPortfolioData: PortfolioData = {
     {
       company: "Void UI",
       url: "https://voidui.in",
+      logo: `${ASSETS}/voidui.svg`,
       location: "India",
       mode: "Remote",
       roles: [
@@ -78,6 +80,7 @@ export const defaultPortfolioData: PortfolioData = {
     },
     {
       company: "Independent",
+      icon: "terminal",
       location: "India",
       mode: "Remote",
       roles: [

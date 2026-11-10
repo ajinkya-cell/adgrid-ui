@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ArrowDownToLine, ArrowUpRight, BadgeCheck, CodeXml, Mail, Users } from "lucide-react";
+import { useEffect, useState, type ReactNode } from "react";
+import { ArrowDownToLine, ArrowUpRight, BadgeCheck, Users } from "lucide-react";
 import { cn } from "../../../lib/utils";
 import { Roughly } from "../../../animated/Roughly";
 import {
@@ -9,12 +9,10 @@ import {
   DOTS,
   FG,
   FOCUS,
-  IconBox,
   LINE,
   LinkButton,
   MUTED,
   RichText,
-  SUBTLE,
   SocialIcon,
   externalProps,
   initialsOf,
@@ -23,25 +21,36 @@ import {
 } from "../parts";
 import type { FeaturedCard, PortfolioProfile, ResumeLink, SocialLink } from "../types";
 
-/** Their local time and how far it is from the visitor's. Null until mounted, so SSR matches. */
-function useLocalTime(timezone: string) {
-  const [now, setNow] = useState<Date | null>(null);
+/** True below the given width; read after mount so it's hydration-safe. */
+function useIsNarrow(query = "(max-width: 767px)") {
+  const [narrow, setNarrow] = useState(false);
   useEffect(() => {
-    setNow(new Date());
-    const id = window.setInterval(() => setNow(new Date()), 15_000);
-    return () => window.clearInterval(id);
-  }, []);
-  if (!now) return null;
-  try {
-    const time = new Intl.DateTimeFormat("en-US", { timeZone: timezone, hour: "2-digit", minute: "2-digit", timeZoneName: "short" }).format(now);
-    const theirs = new Date(now.toLocaleString("en-US", { timeZone: timezone })).getTime();
-    const mine = new Date(now.toLocaleString("en-US")).getTime();
-    const hours = Math.round(((theirs - mine) / 3_600_000) * 2) / 2;
-    const diff = hours === 0 ? "same time" : `${Math.abs(hours)}h ${hours > 0 ? "ahead" : "behind"}`;
-    return { time, diff };
-  } catch {
-    return null;
-  }
+    const mq = window.matchMedia(query);
+    const update = () => setNarrow(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, [query]);
+  return narrow;
+}
+
+/** The avatar as an instant photo, taped to the page at a tilt; it straightens on hover. */
+function Polaroid({ src, name }: { src?: string; name: string }) {
+  return (
+    <div className="relative shrink-0 -rotate-[3deg] rounded-[2px] bg-[#FBFAF6] p-1.5 pb-6 shadow-[0_1px_2px_rgba(0,0,0,0.25),0_10px_24px_-8px_rgba(0,0,0,0.55)] transition-transform duration-300 hover:rotate-0 motion-reduce:transition-none">
+      <span
+        aria-hidden="true"
+        className="absolute -top-2.5 left-1/2 h-5 w-14 -translate-x-1/2 rotate-[-4deg] bg-[rgba(226,214,178,0.7)] shadow-[0_1px_2px_rgba(0,0,0,0.15)]"
+      />
+      {src ? (
+        <img src={src} alt={name} className="block size-24 object-cover object-top sm:size-28" />
+      ) : (
+        <span aria-hidden="true" className="pf-display grid size-24 place-items-center bg-[#18181b] text-3xl font-extrabold text-white sm:size-28">
+          {initialsOf(name)}
+        </span>
+      )}
+    </div>
+  );
 }
 
 /**
@@ -127,6 +136,7 @@ function Featured({ card }: { card: FeaturedCard }) {
 }
 
 export function Hero({
+  terminal,
   onBook,
   profile,
   intro,
@@ -134,6 +144,8 @@ export function Hero({
   socials,
   resumes,
 }: {
+  /** The interactive terminal, shown under the intro. */
+  terminal?: ReactNode;
   /** Opens the booking dialog; without it the button follows bookingUrl. */
   onBook?: () => void;
   profile: PortfolioProfile;
@@ -142,15 +154,15 @@ export function Hero({
   socials: SocialLink[];
   resumes: ResumeLink[];
 }) {
-  const local = useLocalTime(profile.timezone);
   const ink = useInk();
+  const narrow = useIsNarrow();
 
   return (
     <section id="home" aria-labelledby="hero-name" className={cn("grid scroll-mt-16 border-b md:grid-cols-[230px_minmax(0,1fr)]", DASH)}>
       {/* Left column: resume downloads */}
-      <div className={cn("order-2 px-5 pb-6 md:order-none md:border-r md:pb-8 md:pt-[300px]", DASH)}>
+      <div className={cn("order-2 px-5 pb-6 md:order-none md:flex md:flex-col md:justify-end md:border-r md:pb-8", DASH)}>
         {resumes.length > 0 && (
-          <div className="md:sticky md:top-20">
+          <div>
             <p className={cn("pf-display text-xl font-bold tracking-tight", FG)}>Resume</p>
             <ul className="mt-2 space-y-1">
               {resumes.map((resume) => (
@@ -176,18 +188,25 @@ export function Hero({
 
         {/* Identity */}
         <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-4">
-          {profile.avatar ? (
-            <img src={profile.avatar} alt={profile.name} className={cn("size-24 shrink-0 rounded-2xl border object-cover object-top sm:size-28", LINE)} />
+          {narrow ? (
+            <Polaroid src={profile.avatar} name={profile.name} />
           ) : (
-            <span
-              aria-hidden="true"
-              className={cn(
-                "pf-display grid size-24 shrink-0 place-items-center rounded-2xl border bg-[var(--pf-fg)] text-3xl font-extrabold text-[var(--pf-bg)] sm:size-28",
-                LINE
-              )}
+            // From the empty left gutter: size 1.1 with a 28px label needs ~200px, which the left column gives.
+            // animate={false}: this arrow is on screen at load, and RoughArrow's draw-in stalls there for a
+            // target with an image child (only the tail dot shows), so it renders already drawn.
+            <Roughly.Arrow
+              placement="left"
+              color={ink}
+              size={1.1}
+              strokeWidth={2}
+              label="that's me"
+              labelFont={HAND}
+              labelFontSize={28}
+              seed={23}
+              animate={false}
             >
-              {initialsOf(profile.name)}
-            </span>
+              <Polaroid src={profile.avatar} name={profile.name} />
+            </Roughly.Arrow>
           )}
           {/* min-w keeps the name block wide enough on phones; the social pill wraps below it. */}
           <div className="min-w-[210px] flex-1">
@@ -197,21 +216,6 @@ export function Hero({
             </h1>
             <p className={cn("mt-0.5 text-[15px] leading-snug", MUTED)}>
               <Tagline text={profile.tagline} emphasis={profile.taglineEmphasis} />
-            </p>
-            <p className={cn("pf-mono mt-2.5 flex flex-wrap items-center gap-x-3 text-[13px]", SUBTLE)}>
-              {profile.handle && <span>{profile.handle}</span>}
-              {profile.building && (
-                <span className={FG}>
-                  Building{" "}
-                  {profile.building.url ? (
-                    <a href={profile.building.url} className={cn("font-semibold underline-offset-4 hover:underline", FOCUS)} {...externalProps(profile.building.url)}>
-                      {profile.building.label}
-                    </a>
-                  ) : (
-                    <span className="font-semibold">{profile.building.label}</span>
-                  )}
-                </span>
-              )}
             </p>
           </div>
           {/* Social pill */}
@@ -243,37 +247,7 @@ export function Hero({
           </ul>
         )}
 
-        {/* Info rows */}
-        <ul className={cn("mt-6 grid gap-3 border-t pt-5 sm:grid-cols-2", DASH)}>
-          <li className="flex min-w-0 items-center gap-3">
-            <IconBox>
-              <CodeXml />
-            </IconBox>
-            <span className={cn("pf-mono truncate text-[13px]", FG)}>
-              {profile.role}
-              {profile.company && (
-                <>
-                  {" @"}
-                  {profile.companyUrl ? (
-                    <a href={profile.companyUrl} className={cn("underline-offset-4 hover:underline", FOCUS)} {...externalProps(profile.companyUrl)}>
-                      {profile.company.toLowerCase()}
-                    </a>
-                  ) : (
-                    profile.company.toLowerCase()
-                  )}
-                </>
-              )}
-            </span>
-          </li>
-          <li className="flex min-w-0 items-center gap-3">
-            <IconBox>
-              <Mail />
-            </IconBox>
-            <a href={`mailto:${profile.email}`} className={cn("pf-mono truncate text-[13px] underline-offset-4 hover:underline", FG, FOCUS)}>
-              {profile.email}
-            </a>
-          </li>
-        </ul>
+        {terminal}
 
         {/* Featured cards */}
         {featured.length > 0 && (
@@ -284,7 +258,7 @@ export function Hero({
           </div>
         )}
 
-        {/* Call to action + status */}
+        {/* Call to action */}
         {profile.bookingUrl && (
           // The arrow comes from the empty space to the right of the button: size 0.9 with a 28px
           // "say hello" label needs ~170px there (73·0.9 + 8 + label width), reserved by pr.
@@ -319,25 +293,6 @@ export function Hero({
           </div>
         )}
         {profile.bookingNote && <p className={cn("mt-3 text-[13px]", MUTED)}>{profile.bookingNote}</p>}
-        <p className={cn("pf-mono mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs", MUTED)}>
-          {profile.available && (
-            <>
-              <span className="flex items-center gap-1.5 text-emerald-500">
-                <span aria-hidden="true" className="size-1.5 rounded-full bg-emerald-500" />
-                Available for projects
-              </span>
-              <span aria-hidden="true">·</span>
-            </>
-          )}
-          <span>{profile.location}</span>
-          {local && (
-            <>
-              <span aria-hidden="true">·</span>
-              <span className="tabular-nums">{local.time}</span>
-              <span className={SUBTLE}>// {local.diff}</span>
-            </>
-          )}
-        </p>
       </div>
     </section>
   );

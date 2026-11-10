@@ -70,11 +70,15 @@ export interface ExperienceRole {
   tags: string[];
 }
 
+export type ExperienceIcon = "terminal" | "rocket" | "briefcase" | "code";
+
 export interface Experience {
   company: string;
   url?: string;
-  /** Logo image URL; falls back to the first letter. */
+  /** Logo image URL. */
   logo?: string;
+  /** Icon for the tile when there's no logo; falls back to the first letter. */
+  icon?: ExperienceIcon;
   location: string;
   /** "Remote", "On-site", "Hybrid" */
   mode: string;
@@ -146,6 +150,8 @@ export interface PortfolioData {
   resumes: ResumeLink[];
   /** Paragraphs under the greeting. */
   about: string[];
+  /** One short clause inside `about` to highlight by hand (≤ ~15 words). */
+  aboutHighlight?: string;
   /** GitHub repo or profile for the "Open-source" pill in the header. */
   openSourceUrl?: string;
   stack: StackGroup[];
