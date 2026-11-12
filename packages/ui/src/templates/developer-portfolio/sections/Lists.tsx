@@ -30,7 +30,7 @@ function Meta({ items }: { items: React.ReactNode[] }) {
 export function Recognition({ items }: { items: RecognitionItem[] }) {
   if (!items.length) return null;
   return (
-    <Section id="achievements" title="Achievements" count={items.length} note="Hackathons, awards and certifications.">
+    <Section id="achievements" title="Achievements" note="Hackathons, awards and certifications.">
       <ul className="grid gap-3 sm:grid-cols-2">
         {items.map((item) => (
           <li key={item.title} className={cn("flex items-start gap-3 rounded-lg border p-3.5", DASH)}>
@@ -81,7 +81,6 @@ export function Writing({ posts, allUrl }: { posts: Post[]; allUrl?: string }) {
     <Section
       id="writing"
       title="Writing"
-      count={posts.length}
       note="Latest notes on building for the web."
       aside={
         allUrl ? (

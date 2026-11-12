@@ -42,7 +42,6 @@ export function Projects({
     <Section
       id="projects"
       title="Projects"
-      count={items.length}
       note="Things I've built, shipped and still maintain."
       aside={
         allUrl || note ? (

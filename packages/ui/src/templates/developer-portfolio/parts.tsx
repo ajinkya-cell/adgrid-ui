@@ -9,7 +9,7 @@ import type { SocialPlatform } from "./types";
 // - a three-column page with dashed rails: section titles on the left, content in the middle,
 //   a sticky index on the right; Cabinet Grotesk display headings;
 // - corner-bracket section titles, dashed boxes, a dotted timeline and status pills;
-// - hatched strips between sections, Geist + Geist Mono, icon-boxed info rows, superscript counts.
+// - hatched strips between sections, Geist + Geist Mono, icon-boxed info rows.
 // Light and dark themes are CSS variables on the root, so everything reads `var(--pf-*)`.
 
 export const THEME_CSS = `
@@ -18,11 +18,13 @@ export const THEME_CSS = `
 .pf-root{font-family:'Geist',ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;color-scheme:dark;
   --pf-bg:#0a0a0a;--pf-fg:#fafafa;--pf-muted:#a1a1aa;--pf-subtle:#71717a;--pf-line:rgba(255,255,255,0.1);--pf-dash:rgba(255,255,255,0.16);
   --pf-panel:#131315;--pf-hatch:rgba(255,255,255,0.07);--pf-dot:rgba(255,255,255,0.12);
-  --pf-l0:#18181b;--pf-l1:#3f3f46;--pf-l2:#71717a;--pf-l3:#a1a1aa;--pf-l4:#f4f4f5;}
+  --pf-l0:#18181b;--pf-l1:#3f3f46;--pf-l2:#71717a;--pf-l3:#a1a1aa;--pf-l4:#f4f4f5;
+  --pf-accent:#FCD34D;--pf-accent-fg:#0a0a0a;}
 .pf-root[data-theme="light"]{color-scheme:light;
   --pf-bg:#ffffff;--pf-fg:#09090b;--pf-muted:#52525b;--pf-subtle:#a1a1aa;--pf-line:#e4e4e7;--pf-dash:#d4d4d8;
   --pf-panel:#f7f7f8;--pf-hatch:rgba(0,0,0,0.07);--pf-dot:rgba(0,0,0,0.12);
-  --pf-l0:#f0f0f2;--pf-l1:#d4d4d8;--pf-l2:#a1a1aa;--pf-l3:#52525b;--pf-l4:#18181b;}
+  --pf-l0:#f0f0f2;--pf-l1:#d4d4d8;--pf-l2:#a1a1aa;--pf-l3:#52525b;--pf-l4:#18181b;
+  --pf-accent:#2563EB;--pf-accent-fg:#ffffff;}
 .pf-mono{font-family:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
 .pf-display{font-family:'Cabinet Grotesk','Geist',ui-sans-serif,system-ui,sans-serif}
 .pf-root ::selection{background:var(--pf-fg);color:var(--pf-bg)}
@@ -62,17 +64,46 @@ export function Gap() {
   return <div aria-hidden="true" className={cn("h-8 border-b", DASH, HATCH)} />;
 }
 
-/** A section title framed by four corner brackets. */
-export function BracketTitle({ id, children, count }: { id: string; children: ReactNode; count?: number }) {
-  const corner = "pointer-events-none absolute size-2 border-[var(--pf-fg)]";
+const BRACKET_CORNERS = [
+  "left-0 top-0 border-l-2 border-t-2 group-hover/bt:-left-1 group-hover/bt:-top-1",
+  "right-0 top-0 border-r-2 border-t-2 group-hover/bt:-right-1 group-hover/bt:-top-1",
+  "bottom-0 left-0 border-b-2 border-l-2 group-hover/bt:-bottom-1 group-hover/bt:-left-1",
+  "bottom-0 right-0 border-b-2 border-r-2 group-hover/bt:-bottom-1 group-hover/bt:-right-1",
+];
+
+/**
+ * A section title framed by four corner brackets. When the pointer is anywhere over its section (the `group/bt` on `Section`) the frame fills with the page's ink
+ * colour (`--pf-accent`), a sheen sweeps across once, and the corners step outward.
+ */
+export function BracketTitle({ id, children }: { id: string; children: ReactNode }) {
   return (
-    <h2 id={id} className={cn("pf-display relative inline-block max-w-full px-2.5 py-1 text-[26px] font-bold leading-tight tracking-[-0.02em]", FG)}>
-      <span aria-hidden="true" className={cn(corner, "left-0 top-0 border-l-2 border-t-2")} />
-      <span aria-hidden="true" className={cn(corner, "right-0 top-0 border-r-2 border-t-2")} />
-      <span aria-hidden="true" className={cn(corner, "bottom-0 left-0 border-b-2 border-l-2")} />
-      <span aria-hidden="true" className={cn(corner, "bottom-0 right-0 border-b-2 border-r-2")} />
-      {children}
-      {count !== undefined && <sup className={cn("pf-mono ml-1 text-xs font-normal tracking-normal", SUBTLE)}>({count})</sup>}
+    <h2
+      id={id}
+      className={cn(
+        "pf-display relative inline-flex max-w-full cursor-default px-2.5 py-1 text-[26px] font-bold leading-tight tracking-[-0.02em] transition-colors duration-200 group-hover/bt:text-[var(--pf-accent-fg)]",
+        FG
+      )}
+    >
+      {/* Accent fill and sheen, clipped to the box */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 overflow-hidden bg-[var(--pf-accent)] opacity-0 transition-opacity duration-200 group-hover/bt:opacity-100"
+      >
+        <span className="absolute -top-1/2 left-[-40px] h-[200%] w-[22px] rotate-[20deg] bg-gradient-to-r from-white/0 via-white/90 to-white/0 transition-none group-hover/bt:left-[calc(100%_+_40px)] group-hover/bt:transition-[left] group-hover/bt:duration-[600ms] group-hover/bt:ease-out motion-reduce:hidden" />
+      </span>
+      <span className="relative">
+        {children}
+      </span>
+      {BRACKET_CORNERS.map((pos) => (
+        <span
+          key={pos}
+          aria-hidden="true"
+          className={cn(
+            "pointer-events-none absolute size-2 border-[var(--pf-fg)] transition-all duration-200 ease-out group-hover/bt:border-[var(--pf-accent)]",
+            pos
+          )}
+        />
+      ))}
     </h2>
   );
 }
@@ -84,14 +115,12 @@ export function BracketTitle({ id, children, count }: { id: string; children: Re
 export function Section({
   id,
   title,
-  count,
   note,
   aside,
   children,
 }: {
   id: string;
   title: string;
-  count?: number;
   /** One line under the title. */
   note?: ReactNode;
   /** Extra content under the title, e.g. a "see all" link. */
@@ -99,10 +128,10 @@ export function Section({
   children: ReactNode;
 }) {
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className={cn("grid scroll-mt-16 border-b md:grid-cols-[230px_minmax(0,1fr)]", DASH)}>
+    <section id={id} aria-labelledby={`${id}-title`} className={cn("group/bt grid scroll-mt-16 border-b md:grid-cols-[230px_minmax(0,1fr)]", DASH)}>
       <div className={cn("px-5 pb-2 pt-8 md:border-r md:pb-8", DASH)}>
         <div className="md:sticky md:top-20">
-          <BracketTitle id={`${id}-title`} count={count}>
+          <BracketTitle id={`${id}-title`}>
             {title}
           </BracketTitle>
           {note && <p className={cn("mt-3 max-w-[30ch] text-sm leading-relaxed", MUTED)}>{note}</p>}

@@ -27,7 +27,7 @@ import type { PortfolioData, PortfolioProfile } from "./types";
 //   bold keywords, featured profile cards, a skills marquee, a dotted experience timeline with
 //   Active/Done pills, wide project cards.
 // - Finish: hatched breaks, Geist + Geist Mono, icon-boxed info rows, "// 1h ahead" local time,
-//   superscript counts, a flat contribution graph, light and dark themes.
+//   a flat contribution graph, light and dark themes.
 // All content comes from `data`; the flat props are shortcuts that win over it. Empty lists hide
 // their section.
 
