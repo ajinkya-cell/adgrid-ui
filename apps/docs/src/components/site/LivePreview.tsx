@@ -27,6 +27,8 @@ const COMPONENT_HEIGHTS: Record<string, number> = {
   SpotlightText: 520,
   SpotlightGrid: 500,
   LuminaWave: 500,
+  HandDrawnHatching: 500,
+  TopographicMap: 500,
   BreathingGrid: 500,
   FloatingEmbers: 500,
   HorizonGlow: 500,

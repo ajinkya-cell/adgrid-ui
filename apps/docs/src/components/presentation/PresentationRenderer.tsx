@@ -136,6 +136,8 @@ const InspectText = dynamic(() => import("@ui/animated/InspectText").then((m) =>
 const HatchedText = dynamic(() => import("@ui/animated/HatchedText").then((m) => m.HatchedText));
 const NumberTickerPlayground = dynamic(() => import("@ui/animated/number-ticker").then((m) => m.NumberTickerPlayground));
 const LuminaWave = dynamic(() => import("@ui/backgrounds/LuminaWave").then((m) => m.LuminaWave));
+const TopographicMapLanding = dynamic(() => import("./TopographicMapLanding").then((m) => m.TopographicMapLanding));
+const HandDrawnHatchingLanding = dynamic(() => import("./HandDrawnHatchingLanding").then((m) => m.HandDrawnHatchingLanding));
 const MatrixRain = dynamic(() => import("@ui/backgrounds/MatrixRain").then((m) => m.MatrixRain));
 const NowPlayingCard = dynamic(() => import("@ui/animated/NowPlayingCard").then((m) => m.NowPlayingCard));
 const PixelMeltBackground = dynamic(() => import("@ui/backgrounds/PixelMelt").then((m) => m.PixelMeltBackground));
@@ -1696,6 +1698,10 @@ export function PresentationRenderer({
       return <SpotlightGrid />;
     case "lumina-wave":
       return <LuminaWave {...liveProps} />;
+    case "topographic-map":
+      return <TopographicMapLanding {...liveProps} />;
+    case "hand-drawn-hatching":
+      return <HandDrawnHatchingLanding {...liveProps} />;
     case "matrix-rain": {
       const rainProps = {
         speed: 1.0,

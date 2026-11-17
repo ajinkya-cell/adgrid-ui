@@ -93,6 +93,10 @@ export type { HorizonGlowProps, HorizonGlowVariant } from "./backgrounds/Horizon
 export { SpotlightGrid } from "./backgrounds/SpotlightGrid";
 export { LuminaWave } from "./backgrounds/LuminaWave";
 export type { LuminaWaveProps } from "./backgrounds/LuminaWave";
+export { HandDrawnHatching } from "./backgrounds/HandDrawnHatching";
+export type { HandDrawnHatchingProps, HatchingPaper } from "./backgrounds/HandDrawnHatching";
+export { TopographicMap } from "./backgrounds/TopographicMap";
+export type { TopographicMapProps, TopographicTheme } from "./backgrounds/TopographicMap";
 export { MatrixRain } from "./backgrounds/MatrixRain";
 export type { MatrixRainProps } from "./backgrounds/MatrixRain";
 

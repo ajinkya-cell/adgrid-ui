@@ -53,6 +53,8 @@ packages/ui/
     │   ├── BreathingGrid.tsx
     │   ├── FloatingEmbers.tsx
     │   ├── LuminaWave.tsx
+    │   ├── HandDrawnHatching.tsx
+    │   ├── TopographicMap.tsx
     │   ├── MatrixRain.tsx
     │   ├── PixelMelt.tsx
     │   └── SpotlightGrid.tsx
@@ -146,6 +148,8 @@ packages/ui/
 3. **`FloatingEmbers`**: High-performance canvas particle system simulating floating luminous embers in zero gravity.
 4. **`SpotlightGrid`**: Dark grid with dual cursor-following spotlight shaders and ambient illumination.
 5. **`LuminaWave`**: Fullscreen WebGL aurora wave simulation using custom vertex and fragment shaders.
+   - **`HandDrawnHatching`**: WebGL2 drifting tone field drawn as hand-drawn pen cross-hatching (wobbly, tapered, broken strokes with line boil); paper presets light/dark/blueprint, pointer acts as a lamp.
+   - **`TopographicMap`**: WebGL2 drifting height field drawn as survey contours (index every 5th, survey grid); the cursor raises an accent-tinted hill with a survey marker; themes dark/light/terminal.
 6. **`MatrixRain`**: Classic phosphor green digital rain terminal background.
 
 ### D. Skeuomorphic & Machined Primitives

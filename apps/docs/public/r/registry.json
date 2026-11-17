@@ -452,6 +452,30 @@
       ]
     },
     {
+      "name": "topographic-map",
+      "type": "registry:ui",
+      "title": "Topographic Map",
+      "description": "A slowly drifting terrain drawn as survey contour lines, with heavier index contours, a faint survey grid and crosshair ticks. The cursor raises a hill under it, tinted in the accent colour and marked with a survey point; when the pointer is away the hill wanders on its own.",
+      "files": [
+        {
+          "path": "components/ui/TopographicMap.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "hand-drawn-hatching",
+      "type": "registry:ui",
+      "title": "Hand Drawn Hatching",
+      "description": "A drifting shadow field drawn the way an illustrator shades with a pen: up to four layers of cross-hatching, each stroke wobbling, tapering and lifting off the paper, with hand-animated line boil. A lamp clears the shading: it follows the pointer and drifts on its own when idle, and a soft clearing keeps the middle bare for hero content.",
+      "files": [
+        {
+          "path": "components/ui/HandDrawnHatching.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "lumina-wave",
       "type": "registry:ui",
       "title": "Lumina Wave",
