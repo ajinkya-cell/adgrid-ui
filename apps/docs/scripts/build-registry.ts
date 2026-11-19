@@ -155,7 +155,7 @@ for (const entry of registry) {
 const registryJson = {
   $schema: "https://ui.shadcn.com/schema/registry.json",
   name: "voidui",
-  homepage: process.env.NEXT_PUBLIC_APP_URL || "https://void-ui-phi.vercel.app",
+  homepage: process.env.NEXT_PUBLIC_APP_URL || "https://voidui.in",
   items: catalogItems,
 };
 

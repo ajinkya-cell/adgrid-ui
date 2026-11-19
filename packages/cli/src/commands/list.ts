@@ -10,7 +10,7 @@ export async function listCommand(options: ListOptions) {
   const spinner = ora("Fetching components...").start();
   try {
     const registryUrl =
-      options.registry ?? "https://void-ui.vercel.app/api/registry";
+      options.registry ?? "https://voidui.in/api/registry";
 
     const components = await listComponents(registryUrl);
     spinner.succeed("Available components:");

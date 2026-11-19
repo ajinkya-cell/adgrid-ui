@@ -640,7 +640,7 @@ export default function RoughlyPage() {
 
   const handleCopyInstall = () => {
     navigator.clipboard.writeText(
-      "pnpm dlx shadcn@latest add https://void-ui.vercel.app/r/roughly.json"
+      "pnpm dlx shadcn@latest add https://voidui.in/r/roughly.json"
     );
     setCopiedInstall(true);
     setTimeout(() => setCopiedInstall(false), 2000);
@@ -656,10 +656,10 @@ export default function RoughlyPage() {
   };
 
   const installCommands: Record<string, string> = {
-    pnpm: "pnpm dlx shadcn@latest add https://void-ui.vercel.app/r/roughly.json",
-    npm: "npx shadcn@latest add https://void-ui.vercel.app/r/roughly.json",
-    yarn: "yarn dlx shadcn@latest add https://void-ui.vercel.app/r/roughly.json",
-    bun: "bunx --bun shadcn@latest add https://void-ui.vercel.app/r/roughly.json",
+    pnpm: "pnpm dlx shadcn@latest add https://voidui.in/r/roughly.json",
+    npm: "npx shadcn@latest add https://voidui.in/r/roughly.json",
+    yarn: "yarn dlx shadcn@latest add https://voidui.in/r/roughly.json",
+    bun: "bunx --bun shadcn@latest add https://voidui.in/r/roughly.json",
   };
 
   return (
@@ -711,7 +711,7 @@ export default function RoughlyPage() {
               <div className="flex items-center gap-1.5 tracking-tight">
                 <span className="text-neutral-500 select-none">$</span>
                 <span className="text-neutral-400">pnpm dlx shadcn@latest add</span>
-                <span className="text-white font-medium">https://void-ui.vercel.app/r/roughly.json</span>
+                <span className="text-white font-medium">https://voidui.in/r/roughly.json</span>
               </div>
             </div>
 
