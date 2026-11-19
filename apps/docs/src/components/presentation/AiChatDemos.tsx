@@ -624,7 +624,7 @@ async def pace(stream, beat=0.032):
             yield buffer.pop(0)
             await asyncio.sleep(beat / max(1, len(buffer) / 12))`,
   bash: `# Add a component to your project
-npx shadcn@latest add "https://void-ui-phi.vercel.app/r/code-block.json"
+npx shadcn@latest add "https://voidui.in/r/code-block.json"
 
 pnpm dev  # then open /present/primitives/code-block`,
 };

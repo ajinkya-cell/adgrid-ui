@@ -16,7 +16,7 @@ export async function addCommand(component: string, options: AddOptions) {
 
   // 1. Resolve registry URL
   const registryUrl =
-    options.registry ?? "https://void-ui.vercel.app/api/registry";
+    options.registry ?? "https://voidui.in/api/registry";
 
   // 2. Fetch component
   spinner.start(`Fetching ${chalk.cyan(component)}...`);
