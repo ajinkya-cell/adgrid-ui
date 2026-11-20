@@ -6,6 +6,7 @@ import { NumberTickerClock } from "@ui/animated/number-ticker";
 import { presentationEntries } from "@/components/presentation/presentation-registry";
 import { BOTTOM_TILES, SHOWCASE_COUNT, TOP_TILES, type ResolvedTile } from "./showcase";
 import { LiveTile } from "./LiveTile";
+import { PixelKnight } from "./PixelKnight";
 
 // Muted embers: the glow should read as warmth at the bottom of the screen, never as colour.
 const GLOW_COLORS = ["#3a1a12", "#5a2f18", "#3d3420", "#16303d"]; // void-lint-ignore: dimmed horizon tones
@@ -57,7 +58,11 @@ export default function GalleryPage() {
           </header>
 
           <div className="space-y-5 pb-24">
-            <Grid tiles={TOP_TILES} />
+            <div className="relative">
+              {/* Just for show: a pixel cat knight patrols the top edge of the first card. Click it to attack. */}
+              <PixelKnight scale={3} className="absolute! bottom-full left-0 z-20 -mb-1.5" />
+              <Grid tiles={TOP_TILES} />
+            </div>
             <Grid tiles={BOTTOM_TILES} />
           </div>
         </div>

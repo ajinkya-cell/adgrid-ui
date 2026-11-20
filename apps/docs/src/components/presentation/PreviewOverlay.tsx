@@ -37,6 +37,7 @@ const UI = {
   HorizonGlow: React.lazy(() => import("@ui/backgrounds/HorizonGlow").then(m => ({ default: m.HorizonGlow }))),
   SpotlightGrid: React.lazy(() => import("@ui/backgrounds/SpotlightGrid").then(m => ({ default: m.SpotlightGrid }))),
   LuminaWave: React.lazy(() => import("@ui/backgrounds/LuminaWave").then(m => ({ default: m.LuminaWave }))),
+  AsciiField: React.lazy(() => import("@ui/backgrounds/AsciiField").then(m => ({ default: m.AsciiField }))),
   TopographicMap: React.lazy(() => import("@ui/backgrounds/TopographicMap").then(m => ({ default: m.TopographicMap }))),
   HandDrawnHatching: React.lazy(() => import("@ui/backgrounds/HandDrawnHatching").then(m => ({ default: m.HandDrawnHatching }))),
   MatrixRain: React.lazy(() => import("@ui/backgrounds/MatrixRain").then(m => ({ default: m.MatrixRain }))),
@@ -250,6 +251,14 @@ export function MiniPreviewRenderer({ slug }: { slug: string }) {
       );
 
     // ── Backgrounds (render inside the card absolute) ────────────────────
+    case "ascii-field":
+      return (
+        <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl pointer-events-none">
+          <Suspense fallback={null}>
+            <UI.AsciiField />
+          </Suspense>
+        </div>
+      );
     case "topographic-map":
       return (
         <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl pointer-events-none">

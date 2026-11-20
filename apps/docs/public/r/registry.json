@@ -452,6 +452,18 @@
       ]
     },
     {
+      "name": "ascii-field",
+      "type": "registry:ui",
+      "title": "Ascii Field",
+      "description": "Glowing ribbons of light rendered as a terminal: every cell is a monospace character picked from a brightness ramp ( .:-=+*#%@), coloured in OKLCH by the hue of the light under it, with faint scanlines and the odd glitching character. The cursor lights up the field around it.",
+      "files": [
+        {
+          "path": "components/ui/AsciiField.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "topographic-map",
       "type": "registry:ui",
       "title": "Topographic Map",

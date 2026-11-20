@@ -97,6 +97,8 @@ export { HandDrawnHatching } from "./backgrounds/HandDrawnHatching";
 export type { HandDrawnHatchingProps, HatchingPaper } from "./backgrounds/HandDrawnHatching";
 export { TopographicMap } from "./backgrounds/TopographicMap";
 export type { TopographicMapProps, TopographicTheme } from "./backgrounds/TopographicMap";
+export { AsciiField } from "./backgrounds/AsciiField";
+export type { AsciiFieldProps, AsciiPalette } from "./backgrounds/AsciiField";
 export { MatrixRain } from "./backgrounds/MatrixRain";
 export type { MatrixRainProps } from "./backgrounds/MatrixRain";
 

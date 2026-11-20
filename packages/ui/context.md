@@ -55,6 +55,7 @@ packages/ui/
     │   ├── LuminaWave.tsx
     │   ├── HandDrawnHatching.tsx
     │   ├── TopographicMap.tsx
+    │   ├── AsciiField.tsx
     │   ├── MatrixRain.tsx
     │   ├── PixelMelt.tsx
     │   └── SpotlightGrid.tsx
@@ -150,6 +151,7 @@ packages/ui/
 5. **`LuminaWave`**: Fullscreen WebGL aurora wave simulation using custom vertex and fragment shaders.
    - **`HandDrawnHatching`**: WebGL2 drifting tone field drawn as hand-drawn pen cross-hatching (wobbly, tapered, broken strokes with line boil); paper presets light/dark/blueprint, pointer acts as a lamp.
    - **`TopographicMap`**: WebGL2 drifting height field drawn as survey contours (index every 5th, survey grid); the cursor raises an accent-tinted hill with a survey marker; themes dark/light/terminal.
+   - **`AsciiField`**: WebGL2 glowing sine ribbons rendered as a monospace character grid (brightness ramp from a runtime glyph atlas), OKLCH hue tint, scanlines, rare glitches; cursor lights the field; palettes spectrum/phosphor/amber/mono.
 6. **`MatrixRain`**: Classic phosphor green digital rain terminal background.
 
 ### D. Skeuomorphic & Machined Primitives

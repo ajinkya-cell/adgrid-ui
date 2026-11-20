@@ -51,7 +51,7 @@ export const PRESENTATION_GROUPS: { id: string; label: string; slugs: string[] }
   {
     id: "backgrounds",
     label: "Backgrounds",
-    slugs: ["topographic-map", "hand-drawn-hatching", "lumina-wave", "breathing-background", "breathing-grid", "spotlight-grid", "floating-embers", "horizon-glow", "pixel-melt", "matrix-rain", "matrix-ripple-background", "flickering-grid-playground", "dot-pattern-playground"],
+    slugs: ["ascii-field", "topographic-map", "hand-drawn-hatching", "lumina-wave", "breathing-background", "breathing-grid", "spotlight-grid", "floating-embers", "horizon-glow", "pixel-melt", "matrix-rain", "matrix-ripple-background", "flickering-grid-playground", "dot-pattern-playground"],
   },
   {
     id: "pages",

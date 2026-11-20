@@ -1,0 +1,22 @@
+{
+  "name": "promo-3",
+  "version": "0.1.0",
+  "private": true,
+  "license": "FSL-1.1-MIT",
+  "scripts": {
+    "sound": "node --no-warnings scripts/make-score.mts",
+    "studio": "remotion studio src/index.ts",
+    "render": "pnpm sound && remotion render src/index.ts VoidPromo3 out/voidui-promo-3-1080p.mp4 --codec=h264 --crf=16 --concurrency=4"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.534",
+    "@remotion/google-fonts": "4.0.534",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "remotion": "4.0.534"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "typescript": "^5"
+  }
+}
