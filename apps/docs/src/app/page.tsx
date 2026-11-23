@@ -88,39 +88,39 @@ function FooterTime() {
 export default function HomePage() {
   const featuredComponents = [
     {
-      name: "Dot Matrix",
-      href: "/present/animated/dot-matrix",
-      tag: "LED Simulation",
+      name: "Ticket Printer",
+      href: "/present/ticket-printer",
+      tag: "Live Deploys",
     },
     {
-      name: "Coverflow Carousel",
-      href: "/present/animated/coverflow-carousel",
-      tag: "3D Perspective",
+      name: "Split-Flap Board",
+      href: "/present/split-flap-board",
+      tag: "Flap Physics",
     },
     {
-      name: "Spotlight Text",
-      href: "/present/animated/spotlight-text",
-      tag: "Interactive Shader",
+      name: "Turntable Card",
+      href: "/present/turntable-card",
+      tag: "Now Playing",
     },
     {
-      name: "Void Button",
-      href: "/present/buttons/void-button",
-      tag: "Micro-haptics",
+      name: "Ascii Field",
+      href: "/present/ascii-field",
+      tag: "Character Shading",
     },
     {
-      name: "Wheel Picker",
-      href: "/present/animated/wheel-picker",
-      tag: "Web Audio Synthesis",
+      name: "Topographic Map",
+      href: "/present/topographic-map",
+      tag: "Contour Lines",
     },
     {
-      name: "Image Reveal",
-      href: "/present/animated/image-reveal",
-      tag: "Scroll Depth",
+      name: "Hand Drawn Hatching",
+      href: "/present/hand-drawn-hatching",
+      tag: "Pen Strokes",
     },
     {
-      name: "Living Text",
-      href: "/present/animated/living-text",
-      tag: "Kinetic Typography",
+      name: "Developer Portfolio",
+      href: "/present/developer-portfolio",
+      tag: "Full Template",
     },
   ];
 
