@@ -21,6 +21,8 @@ const UI = {
   SpotlightText: React.lazy(() => import("@ui/animated/spotlight-text").then(m => ({ default: m.SpotlightText }))),
   TextShuffle: React.lazy(() => import("@ui/animated/text-shuffle").then(m => ({ default: m.TextShuffle }))),
   TurntableCardDemo: React.lazy(() => import("@ui/animated/turntable-card").then(m => ({ default: m.TurntableCardDemo }))),
+  SplitFlapBoardDemo: React.lazy(() => import("@ui/animated/split-flap-board").then(m => ({ default: m.SplitFlapBoardDemo }))),
+  TicketPrinterDemo: React.lazy(() => import("@ui/animated/ticket-printer").then(m => ({ default: m.TicketPrinterDemo }))),
   NowPlayingCard: React.lazy(() => import("@ui/animated/NowPlayingCard").then(m => ({ default: m.NowPlayingCard }))),
   SimpleCard: React.lazy(() => import("@ui/animated/SimpleCard").then(m => ({ default: m.SimpleCard }))),
   Marquee: React.lazy(() => import("@ui/animated/Marquee").then(m => ({ default: m.Marquee }))),
@@ -148,6 +150,22 @@ export function MiniPreviewRenderer({ slug }: { slug: string }) {
         <div className="flex h-full w-full items-center justify-center p-4">
           <Suspense fallback={null}>
             <UI.TurntableCardDemo />
+          </Suspense>
+        </div>
+      );
+    case "ticket-printer":
+      return (
+        <div className="flex h-full w-full items-start justify-center p-4">
+          <Suspense fallback={null}>
+            <UI.TicketPrinterDemo simulate={false} />
+          </Suspense>
+        </div>
+      );
+    case "split-flap-board":
+      return (
+        <div className="flex h-full w-full items-center justify-center p-4">
+          <Suspense fallback={null}>
+            <UI.SplitFlapBoardDemo />
           </Suspense>
         </div>
       );

@@ -141,6 +141,8 @@ const TopographicMapLanding = dynamic(() => import("./TopographicMapLanding").th
 const HandDrawnHatchingLanding = dynamic(() => import("./HandDrawnHatchingLanding").then((m) => m.HandDrawnHatchingLanding));
 const MatrixRain = dynamic(() => import("@ui/backgrounds/MatrixRain").then((m) => m.MatrixRain));
 const TurntableCardLive = dynamic(() => import("@ui/animated/turntable-card").then((m) => m.TurntableCardLive));
+const SplitFlapBoardLive = dynamic(() => import("@ui/animated/split-flap-board").then((m) => m.SplitFlapBoardLive));
+const TicketPrinterLive = dynamic(() => import("@ui/animated/ticket-printer").then((m) => m.TicketPrinterLive));
 const NowPlayingCard = dynamic(() => import("@ui/animated/NowPlayingCard").then((m) => m.NowPlayingCard));
 const PixelMeltBackground = dynamic(() => import("@ui/backgrounds/PixelMelt").then((m) => m.PixelMeltBackground));
 const PremiumHero = dynamic(() => import("@ui/animated/PremiumHero").then((m) => m.PremiumHero));
@@ -1850,6 +1852,15 @@ export function PresentationRenderer({
     case "turntable-card":
       // The tweaker toggle can only send true/false; off means "follow the pointer", not "force closed".
       return <TurntableCardLive {...liveProps} open={liveProps.open ? true : undefined} />;
+    case "split-flap-board":
+      return <SplitFlapBoardLive {...liveProps} open={liveProps.open ? true : undefined} />;
+    case "ticket-printer":
+      // Room below for the strip it feeds out on hover. With no deploy endpoint configured it prints samples on a loop.
+      return (
+        <div className="w-full max-w-[380px] pb-[150%]">
+          <TicketPrinterLive simulate {...liveProps} open={liveProps.open ? true : undefined} />
+        </div>
+      );
     case "wheel-picker":
       return <WheelPickerDemo liveProps={liveProps} playTactileSounds={playTactileSounds} />;
     case "weapon-wheel":

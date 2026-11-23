@@ -1218,6 +1218,88 @@
       ]
     },
     {
+      "name": "split-flap-board",
+      "type": "registry:ui",
+      "title": "Split-Flap Board",
+      "description": "Your latest commit on a split-flap board, live from GitHub. Each flap falls under gravity and bounces off the stop, cells turn through the alphabet to their letter and settle at their own pace, and the light from above shades every fall. Hover and the rows below turn over to the commits before. SplitFlapBoardLive polls an endpoint returning { user, commits } (see /api/recent-commits in the docs).",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/split-flap-board/SplitFlapBoard.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/split-flap-board/FlapBoard.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/split-flap-board/flap.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/split-flap-board/charset.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/split-flap-board/types.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/split-flap-board/index.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/split-flap-board/SplitFlapBoardDemo.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/split-flap-board/SplitFlapBoardLive.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "ticket-printer",
+      "type": "registry:ui",
+      "title": "Ticket Printer",
+      "description": "Your last deploy on a train ticket hanging out of a printer, stamped OK. Hover and it feeds out the tickets before, perforated and curling a little more under their weight. A new deploy prints live, line by line in the jerky steps of a thermal head, gets stamped, and the ticket below tears off along the perforation; a failed build prints in red. TicketPrinterLive polls an endpoint returning { source, project, deploys } (see /api/recent-deploys in the docs, backed by Vercel or GitHub Actions).",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/ticket-printer/TicketPrinter.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/ticket-printer/Ticket.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/ticket-printer/format.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/ticket-printer/types.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/ticket-printer/index.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/ticket-printer/TicketPrinterDemo.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/ticket-printer/TicketPrinterLive.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "wheel-picker",
       "type": "registry:ui",
       "title": "Wheel Picker",
