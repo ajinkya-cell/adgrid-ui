@@ -45,3 +45,4 @@ yarn-error.log*
 apps/promo/
 apps/promo-2/
 apps/docs/public/promo/
+.claude/worktrees/
