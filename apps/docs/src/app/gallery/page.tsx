@@ -1,15 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { HorizonGlow } from "@ui/backgrounds/HorizonGlow";
 import { NumberTickerClock } from "@ui/animated/number-ticker";
 import { presentationEntries } from "@/components/presentation/presentation-registry";
 import { BOTTOM_TILES, SHOWCASE_COUNT, TOP_TILES, type ResolvedTile } from "./showcase";
 import { LiveTile } from "./LiveTile";
 import { PixelKnight } from "./PixelKnight";
-
-// Muted embers: the glow should read as warmth at the bottom of the screen, never as colour.
-const GLOW_COLORS = ["#3a1a12", "#5a2f18", "#3d3420", "#16303d"]; // void-lint-ignore: dimmed horizon tones
+import { AsciiSky } from "./AsciiSky";
 
 function Grid({ tiles }: { tiles: ResolvedTile[] }) {
   return (
@@ -26,30 +23,21 @@ function Grid({ tiles }: { tiles: ResolvedTile[] }) {
 export default function GalleryPage() {
   return (
     <div className="relative min-h-screen bg-[#050505] font-poppins">
-      {/* A barely-there visualizer glow pinned behind everything; it never takes a click. */}
-      <div aria-hidden className="pointer-events-none fixed inset-0 z-0">
-        <HorizonGlow
-          fixed
-          variant="visualizer"
-          colors={GLOW_COLORS}
-          intensity={0.35}
-          height={0.32}
-          speed={0.5}
-          grain={0}
-          interactive={false}
-          className="h-full w-full"
-        />
+      {/* A daytime sky of tiny text cells across the top, after unvalley.me. It scrolls away with the
+          page and fades into it; the pointer stirs it from above the cards, so it never takes a click. */}
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[78vh] min-h-[520px]">
+        <AsciiSky className="h-full w-full" />
       </div>
 
       <div className="relative z-10">
         <div className="mx-auto w-full max-w-[1160px] px-4 sm:px-6">
           <header className="pt-28 sm:pt-32 pb-10">
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white leading-tight">Components</h1>
-            <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/50">
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-[#07182b] leading-tight">Components</h1>
+            <p className="mt-3 max-w-xl text-sm font-medium leading-relaxed text-[#07182b]/85">
               {SHOWCASE_COUNT} components, all live: hover, click and drag them right here. Browse all{" "}
               <Link
                 href="/present/buttons/void-button"
-                className="text-white/80 underline decoration-white/25 underline-offset-4 transition-colors hover:text-white hover:decoration-white"
+                className="text-[#07182b] underline decoration-[#07182b]/35 underline-offset-4 transition-colors hover:decoration-[#07182b]"
               >
                 {presentationEntries.length} in the navigator
               </Link>

@@ -36,7 +36,7 @@ export const PRESENTATION_GROUPS: { id: string; label: string; slugs: string[] }
   {
     id: "cards",
     label: "Cards",
-    slugs: ["preview-card", "simple-card", "cards", "sticker-card", "developer-id-card", "now-playing-card", "breathing-scale-card", "expand-on-hover", "gravity-card-stack", "stacked-cards", "stacked-card-fan", "polaroid-develop", "polaroid-stack", "activity-card", "folder-reveal", "book"],
+    slugs: ["preview-card", "simple-card", "cards", "sticker-card", "developer-id-card", "now-playing-card", "turntable-card", "breathing-scale-card", "expand-on-hover", "gravity-card-stack", "stacked-cards", "stacked-card-fan", "polaroid-develop", "polaroid-stack", "activity-card", "folder-reveal", "book"],
   },
   {
     id: "text",

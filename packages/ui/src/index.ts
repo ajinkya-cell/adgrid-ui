@@ -68,6 +68,8 @@ export { TapedMarquee } from "./animated/paper/TapedMarquee";
 export type { TapedMarqueeProps, MarqueePhoto } from "./animated/paper/TapedMarquee";
 export { NowPlayingCard } from "./animated/NowPlayingCard";
 export type { Song } from "./animated/NowPlayingCard";
+export { TurntableCard, TurntableCardDemo, TurntableCardLive } from "./animated/turntable-card";
+export type { TurntableCardProps, TurntableCardLiveProps, TurntableFeed, Track as TurntableTrack } from "./animated/turntable-card";
 export { WheelPicker } from "./animated/WheelPicker";
 export type { WheelPickerProps, WheelPickerRef } from "./animated/WheelPicker";
 export { ExpandOnHover } from "./animated/expand-on-hover";

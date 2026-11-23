@@ -140,6 +140,7 @@ const AsciiFieldLanding = dynamic(() => import("./AsciiFieldLanding").then((m) =
 const TopographicMapLanding = dynamic(() => import("./TopographicMapLanding").then((m) => m.TopographicMapLanding));
 const HandDrawnHatchingLanding = dynamic(() => import("./HandDrawnHatchingLanding").then((m) => m.HandDrawnHatchingLanding));
 const MatrixRain = dynamic(() => import("@ui/backgrounds/MatrixRain").then((m) => m.MatrixRain));
+const TurntableCardLive = dynamic(() => import("@ui/animated/turntable-card").then((m) => m.TurntableCardLive));
 const NowPlayingCard = dynamic(() => import("@ui/animated/NowPlayingCard").then((m) => m.NowPlayingCard));
 const PixelMeltBackground = dynamic(() => import("@ui/backgrounds/PixelMelt").then((m) => m.PixelMeltBackground));
 const PremiumHero = dynamic(() => import("@ui/animated/PremiumHero").then((m) => m.PremiumHero));
@@ -1846,6 +1847,9 @@ export function PresentationRenderer({
 
     case "now-playing-card":
       return <NowPlayingCard song={{ isPlaying: true, title: "Main Chala Jaunga", artist: "Fiddlecraft", album: "Hawai Jahaaz", image: "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/41/c7/65/41c765a0-5a1e-3e35-9c22-5d664da2b95e/cover.jpg/600x600bb.jpg", songUrl: "https://open.spotify.com", playedAt: null }} />;
+    case "turntable-card":
+      // The tweaker toggle can only send true/false; off means "follow the pointer", not "force closed".
+      return <TurntableCardLive {...liveProps} open={liveProps.open ? true : undefined} />;
     case "wheel-picker":
       return <WheelPickerDemo liveProps={liveProps} playTactileSounds={playTactileSounds} />;
     case "weapon-wheel":

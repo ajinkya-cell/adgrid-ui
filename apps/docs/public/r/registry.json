@@ -1155,6 +1155,69 @@
       ]
     },
     {
+      "name": "turntable-card",
+      "type": "registry:ui",
+      "title": "Turntable Card",
+      "description": "Your listening on a machined turntable, live from Spotify. While a song plays the record spins and the arm sits on it; hover and the deck slides aside, the arm swings in and earlier plays rise into view. TurntableCardLive polls an endpoint returning { user, tracks } (see /api/recent-tracks in the docs).",
+      "dependencies": [
+        "framer-motion"
+      ],
+      "files": [
+        {
+          "path": "components/ui/turntable-card/TurntableCard.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/turntable-card/HistoryList.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/turntable-card/Deck.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/turntable-card/Record.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/turntable-card/Tonearm.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/turntable-card/useRecordSpin.ts",
+          "type": "registry:hook"
+        },
+        {
+          "path": "components/ui/turntable-card/reveal.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/turntable-card/motion.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/turntable-card/time.ts",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/turntable-card/types.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/turntable-card/index.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "components/ui/turntable-card/TurntableCardDemo.tsx",
+          "type": "registry:ui"
+        },
+        {
+          "path": "components/ui/turntable-card/TurntableCardLive.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "wheel-picker",
       "type": "registry:ui",
       "title": "Wheel Picker",

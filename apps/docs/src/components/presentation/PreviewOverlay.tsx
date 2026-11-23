@@ -20,6 +20,7 @@ const UI = {
   LivingText: React.lazy(() => import("@ui/animated/LivingText").then(m => ({ default: m.LivingText }))),
   SpotlightText: React.lazy(() => import("@ui/animated/spotlight-text").then(m => ({ default: m.SpotlightText }))),
   TextShuffle: React.lazy(() => import("@ui/animated/text-shuffle").then(m => ({ default: m.TextShuffle }))),
+  TurntableCardDemo: React.lazy(() => import("@ui/animated/turntable-card").then(m => ({ default: m.TurntableCardDemo }))),
   NowPlayingCard: React.lazy(() => import("@ui/animated/NowPlayingCard").then(m => ({ default: m.NowPlayingCard }))),
   SimpleCard: React.lazy(() => import("@ui/animated/SimpleCard").then(m => ({ default: m.SimpleCard }))),
   Marquee: React.lazy(() => import("@ui/animated/Marquee").then(m => ({ default: m.Marquee }))),
@@ -139,6 +140,14 @@ export function MiniPreviewRenderer({ slug }: { slug: string }) {
         <div className="flex h-full w-full items-center justify-center p-2 scale-85">
           <Suspense fallback={null}>
             <UI.NowPlayingCard song={{ isPlaying: true, title: "Main Chala Jaunga", artist: "Fiddlecraft", album: "Hawai Jahaaz", image: "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/41/c7/65/41c765a0-5a1e-3e35-9c22-5d664da2b95e/cover.jpg/600x600bb.jpg", songUrl: "https://open.spotify.com", playedAt: null }} />
+          </Suspense>
+        </div>
+      );
+    case "turntable-card":
+      return (
+        <div className="flex h-full w-full items-center justify-center p-4">
+          <Suspense fallback={null}>
+            <UI.TurntableCardDemo />
           </Suspense>
         </div>
       );
