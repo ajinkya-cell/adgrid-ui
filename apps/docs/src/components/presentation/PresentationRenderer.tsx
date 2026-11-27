@@ -142,6 +142,7 @@ const HandDrawnHatchingLanding = dynamic(() => import("./HandDrawnHatchingLandin
 const MatrixRain = dynamic(() => import("@ui/backgrounds/MatrixRain").then((m) => m.MatrixRain));
 const TurntableCardLive = dynamic(() => import("@ui/animated/turntable-card").then((m) => m.TurntableCardLive));
 const SplitFlapBoardLive = dynamic(() => import("@ui/animated/split-flap-board").then((m) => m.SplitFlapBoardLive));
+const DjController = dynamic(() => import("@ui/animated/dj-controller").then((m) => m.DjController));
 const TicketPrinterLive = dynamic(() => import("@ui/animated/ticket-printer").then((m) => m.TicketPrinterLive));
 const NowPlayingCard = dynamic(() => import("@ui/animated/NowPlayingCard").then((m) => m.NowPlayingCard));
 const PixelMeltBackground = dynamic(() => import("@ui/backgrounds/PixelMelt").then((m) => m.PixelMeltBackground));
@@ -1854,6 +1855,12 @@ export function PresentationRenderer({
       return <TurntableCardLive {...liveProps} open={liveProps.open ? true : undefined} />;
     case "split-flap-board":
       return <SplitFlapBoardLive {...liveProps} open={liveProps.open ? true : undefined} />;
+    case "dj-controller":
+      return (
+        <div className="w-full max-w-[1100px]">
+          <DjController {...liveProps} />
+        </div>
+      );
     case "ticket-printer":
       // Room below for the strip it feeds out on hover. With no deploy endpoint configured it prints samples on a loop.
       return (

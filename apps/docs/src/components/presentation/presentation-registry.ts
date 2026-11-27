@@ -6,7 +6,7 @@ export const PRESENTATION_GROUPS: { id: string; label: string; slugs: string[] }
   {
     id: "inputs",
     label: "Inputs",
-    slugs: ["text-field", "select", "color-picker", "choice", "switch", "segmented-control", "combobox", "otp-input", "datepicker", "wheel-picker", "anisotropic-knob", "file-upload", "laser-vault-password"],
+    slugs: ["text-field", "select", "color-picker", "choice", "switch", "segmented-control", "combobox", "otp-input", "datepicker", "wheel-picker", "anisotropic-knob", "dj-controller", "file-upload", "laser-vault-password"],
   },
   {
     id: "buttons",

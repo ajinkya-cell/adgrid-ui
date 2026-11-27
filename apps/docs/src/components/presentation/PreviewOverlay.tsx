@@ -22,6 +22,7 @@ const UI = {
   TextShuffle: React.lazy(() => import("@ui/animated/text-shuffle").then(m => ({ default: m.TextShuffle }))),
   TurntableCardDemo: React.lazy(() => import("@ui/animated/turntable-card").then(m => ({ default: m.TurntableCardDemo }))),
   SplitFlapBoardDemo: React.lazy(() => import("@ui/animated/split-flap-board").then(m => ({ default: m.SplitFlapBoardDemo }))),
+  DjControllerDemo: React.lazy(() => import("@ui/animated/dj-controller").then(m => ({ default: m.DjControllerDemo }))),
   TicketPrinterDemo: React.lazy(() => import("@ui/animated/ticket-printer").then(m => ({ default: m.TicketPrinterDemo }))),
   NowPlayingCard: React.lazy(() => import("@ui/animated/NowPlayingCard").then(m => ({ default: m.NowPlayingCard }))),
   SimpleCard: React.lazy(() => import("@ui/animated/SimpleCard").then(m => ({ default: m.SimpleCard }))),
@@ -150,6 +151,14 @@ export function MiniPreviewRenderer({ slug }: { slug: string }) {
         <div className="flex h-full w-full items-center justify-center p-4">
           <Suspense fallback={null}>
             <UI.TurntableCardDemo />
+          </Suspense>
+        </div>
+      );
+    case "dj-controller":
+      return (
+        <div className="flex h-full w-full items-center justify-center p-4">
+          <Suspense fallback={null}>
+            <UI.DjControllerDemo autoPlay={false} />
           </Suspense>
         </div>
       );

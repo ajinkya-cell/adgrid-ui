@@ -35,6 +35,35 @@ export interface ShowcaseTile {
 }
 
 // Each block closes whole rows of 3 cells so the bento has no holes.
+
+// The newest components, shown first. The three backgrounds render bare (see page.tsx), without
+// the hero copy their /present landings put over them.
+export const GALLERY_NEW: ShowcaseTile[] = [
+  {
+    slug: "turntable-card",
+    size: "lg",
+    hint: { label: "hover the deck", placement: "bottom-right", at: { x: 58, y: 72 }, bend: -0.4 },
+  },
+  {
+    slug: "ticket-printer",
+    size: "tall",
+    hint: { label: "hover", placement: "bottom-right", at: { x: 70, y: 58 }, bend: -0.4 },
+  },
+
+  {
+    slug: "split-flap-board",
+    size: "full",
+    rows: 2,
+    hint: { label: "hover for older commits", placement: "bottom-right", at: { x: 64, y: 66 }, bend: -0.4 },
+  },
+
+  { slug: "ascii-field", size: "sm", fit: "fill" },
+  { slug: "topographic-map", size: "sm", fit: "fill" },
+  { slug: "hand-drawn-hatching", size: "sm", fit: "fill" },
+
+  { slug: "developer-portfolio", size: "full", rows: 3, fit: "scroll", note: "a full template, scroll it" },
+];
+
 export const GALLERY_TOP: ShowcaseTile[] = [
   // The AI section: sidebar, thread list and a live chat panel in one piece.
   { slug: "chat-sidebar", size: "full", rows: 3, fit: "native", note: "check out all the AI components" },
@@ -101,8 +130,9 @@ const resolve = (tiles: ShowcaseTile[]) =>
     .map((tile) => ({ ...tile, entry: registry.find((item) => item.slug === tile.slug) }))
     .filter((tile): tile is ResolvedTile => Boolean(tile.entry));
 
+export const NEW_TILES = resolve(GALLERY_NEW);
 export const TOP_TILES = resolve(GALLERY_TOP);
 export const BOTTOM_TILES = resolve(GALLERY_BOTTOM);
 
 // + the clock.
-export const SHOWCASE_COUNT = TOP_TILES.length + BOTTOM_TILES.length + 1;
+export const SHOWCASE_COUNT = NEW_TILES.length + TOP_TILES.length + BOTTOM_TILES.length + 1;

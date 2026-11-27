@@ -74,6 +74,8 @@ export { SplitFlapBoard, SplitFlapBoardDemo, SplitFlapBoardLive, FlapBoard } fro
 export type { SplitFlapBoardProps, SplitFlapBoardLiveProps, FlapBoardProps, CommitFeed, Commit as SplitFlapCommit } from "./animated/split-flap-board";
 export { TicketPrinter, TicketPrinterDemo, TicketPrinterLive, Ticket, sampleDeploys, useSimulatedDeploys } from "./animated/ticket-printer";
 export type { TicketPrinterProps, TicketPrinterLiveProps, TicketPrinterDemoProps, TicketProps, DeployFeed, Deploy, DeployStatus, DeploySource } from "./animated/ticket-printer";
+export { DjController, DjControllerDemo, sampleDeckTracks } from "./animated/dj-controller";
+export type { DjControllerProps, DjControllerDemoProps, DeckTrack, PadMode } from "./animated/dj-controller";
 export { WheelPicker } from "./animated/WheelPicker";
 export type { WheelPickerProps, WheelPickerRef } from "./animated/WheelPicker";
 export { ExpandOnHover } from "./animated/expand-on-hover";
