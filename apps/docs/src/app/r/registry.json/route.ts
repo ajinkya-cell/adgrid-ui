@@ -17,7 +17,7 @@ export async function GET() {
   return NextResponse.json({
     $schema: "https://ui.shadcn.com/schema/registry.json",
     name: "voidui",
-    homepage: "https://void-ui.vercel.app",
+    homepage: "https://voidui.in",
     items,
   });
 }

@@ -54,7 +54,7 @@ packages/cli/
 
 ### A. `void-ui add <component>`
 Adds one or more Void UI components into the user's local project.
-1. **Fetch**: Queries the registry endpoint (`https://void-ui.vercel.app/api/registry` or custom via `--registry`) for the component manifest and source files.
+1. **Fetch**: Queries the registry endpoint (`https://voidui.in/api/registry` or custom via `--registry`) for the component manifest and source files.
 2. **Path Resolution**: Determines whether the project uses `src/` directory conventions or root folders, defaulting target output to `components/ui/`.
 3. **Write Files**: Copies the component files and generates `lib/utils.ts` (`cn()` helper) if missing.
 4. **Install Dependencies**: Detects the active package manager (`pnpm`, `npm`, `yarn`, or `bun`) by checking for lockfiles and runs the corresponding install command for peer packages (e.g. `framer-motion`, `matter-js`, `gsap`).
